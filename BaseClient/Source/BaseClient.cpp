@@ -1,12 +1,13 @@
 #include "BaseClient.h"
 
-BaseClient::BaseClient(QWidget *parent)
-	: QWidget(parent)
+#include <QTextEdit>
+
+BaseClient::BaseClient()
 {
-	ui.setupUi(this);
+	setWindowTitle("Base");
+	setCentralWidget(new QTextEdit);
 }
 
 BaseClient::~BaseClient()
 {
-
 }

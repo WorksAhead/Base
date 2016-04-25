@@ -1,19 +1,16 @@
-#ifndef BASECLIENT_H
-#define BASECLIENT_H
+#ifndef BASECLIENT_HEADER_
+#define BASECLIENT_HEADER_
 
-#include <QtWidgets/QWidget>
-#include "ui_BaseClient.h"
+#include "Window.h"
 
-class BaseClient : public QWidget
-{
+class BaseClient : public Window {
+private:
 	Q_OBJECT
 
 public:
-	BaseClient(QWidget *parent = 0);
+	BaseClient();
 	~BaseClient();
-
-private:
-	Ui::BaseClientClass ui;
 };
 
-#endif // BASECLIENT_H
+#endif // BASECLIENT_HEADER_
+

@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Icons/IndicatorArrowDown.png</file>
+        <file>Icons/IndicatorArrowLeft.png</file>
+        <file>Icons/IndicatorArrowRight.png</file>
+        <file>Icons/IndicatorArrowUp.png</file>
+        <file>Icons/WindowClose.png</file>
+        <file>Icons/WindowMaximize.png</file>
+        <file>Icons/WindowMinimize.png</file>
+        <file>Icons/WindowRestore.png</file>
+    </qresource>
+</RCC>
