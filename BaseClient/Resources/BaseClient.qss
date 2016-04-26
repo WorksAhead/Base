@@ -1,0 +1,29 @@
+QTabWidget#MainTab::pane {
+	margin: 0;
+	border: 0;
+}
+
+QTabWidget#MainTab::tab-bar {
+	margin: 0;
+	border: 0;
+	background: rgb(200, 0, 0);
+}
+
+QTabBar#MainTabBar::tab {
+	margin: 0;
+	border: 0;
+	padding: 10px 20px 10px 20px;
+}
+
+QTabBar#MainTabBar::tab:selected {
+	border-top: 2px solid rgb(246, 96, 0);
+	background: rgb(30, 30, 30);
+}
+
+QTabBar#MainTabBar::tab:hover:!selected {
+	background: rgb(45, 45, 45);
+}
+
+QTabBar#MainTabBar::tab:!selected {
+	
+}

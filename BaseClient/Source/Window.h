@@ -22,6 +22,8 @@ public:
 	Window();
 	~Window();
 
+	void setWindowIcon(const QIcon&);
+
 	void setWindowTitle(const QString&);
 	QString windowTitle() const;
 
@@ -94,6 +96,7 @@ private:
 	void onHover(const QPoint&);
 
 private:
+	QLabel* iconWidget_;
 	QLabel* titleWidget_;
 	QWidget* centralWidget_;
 

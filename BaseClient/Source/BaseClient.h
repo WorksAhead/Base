@@ -3,6 +3,8 @@
 
 #include "Window.h"
 
+#include <QTabWidget>
+
 class BaseClient : public Window {
 private:
 	Q_OBJECT
@@ -10,6 +12,9 @@ private:
 public:
 	BaseClient();
 	~BaseClient();
+
+private:
+	QTabWidget* tab_;
 };
 
 #endif // BASECLIENT_HEADER_

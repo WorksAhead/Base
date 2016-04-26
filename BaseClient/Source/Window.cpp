@@ -11,6 +11,7 @@ Window::Window()
 	setAttribute(Qt::WA_TranslucentBackground);
 	setAttribute(Qt::WA_Hover);
 
+	iconWidget_ = new QLabel;
 	titleWidget_ = new QLabel;
 	centralWidget_ = new QWidget;
 
@@ -48,6 +49,7 @@ Window::Window()
 	topLayout_ = new QBoxLayout(QBoxLayout::LeftToRight);
 	topLayout_->setContentsMargins(10, 0, 0, 0);
 	topLayout_->setSpacing(5);
+	topLayout_->addWidget(iconWidget_, 0);
 	topLayout_->addWidget(titleWidget_, 1);
 	topLayout_->addWidget(minimizeButton_, 0, Qt::AlignTop);
 	topLayout_->addWidget(maximizeButton_, 0, Qt::AlignTop);
@@ -82,6 +84,11 @@ Window::Window()
 
 Window::~Window()
 {
+}
+
+void Window::setWindowIcon(const QIcon& icon)
+{
+	iconWidget_->setPixmap(icon.pixmap(QSize(20, 20)));
 }
 
 void Window::setWindowTitle(const QString& title)
@@ -474,7 +481,7 @@ void Window::onDrag(const QPoint& pos)
 	else if (dragDetector_.onBottomEdge()) {
 		bottom = top + pos.y() + dragDetector_.yOffset();
 	}
-	else {
+	else if (titleWidget_->geometry().contains(dragStartPos_)) {
 		left = left + pos.x() - dragStartPos_.x();
 		right = right + pos.x() - dragStartPos_.x();
 		top = top + pos.y() - dragStartPos_.y();
