@@ -1,7 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file>BaseClient.qss</file>
-        <file>Icons/BaseClient.png</file>
+        <file>Icons/Base20x20.png</file>
         <file>Icons/IndicatorArrowDown.png</file>
         <file>Icons/IndicatorArrowLeft.png</file>
         <file>Icons/IndicatorArrowRight.png</file>

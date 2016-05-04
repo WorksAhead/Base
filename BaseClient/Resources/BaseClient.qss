@@ -1,3 +1,32 @@
+QTabWidget#loginDialogTab::pane {
+	margin: 0;
+	border: 0;
+	background-color: rgb(30, 30, 30);
+}
+
+QTabWidget#loginDialogTab::tab-bar {
+	margin: 0;
+	border: 0;
+}
+
+QTabBar#loginDialogTabBar::tab {
+	margin: 0;
+	border: 0;
+	padding: 10px 20px 10px 20px;
+}
+
+QTabBar#loginDialogTabBar::tab:selected {
+	background: rgb(30, 30, 30);
+}
+
+QTabBar#loginDialogTabBar::tab:hover:!selected {
+	background: rgb(45, 45, 45);
+}
+
+QTabBar#loginDialogTabBar::tab:!selected {
+	
+}
+
 QTabWidget#MainTab::pane {
 	margin: 0;
 	border: 0;
@@ -6,7 +35,6 @@ QTabWidget#MainTab::pane {
 QTabWidget#MainTab::tab-bar {
 	margin: 0;
 	border: 0;
-	background: rgb(200, 0, 0);
 }
 
 QTabBar#MainTabBar::tab {
@@ -27,3 +55,15 @@ QTabBar#MainTabBar::tab:hover:!selected {
 QTabBar#MainTabBar::tab:!selected {
 	
 }
+
+QLineEdit {
+	background: rgb(20, 20, 20);
+	border: 1px solid rgb(40, 40, 40);
+	border-radius: 2px;
+}
+
+QLineEdit:focus {
+	border: 1px solid rgb(246, 96, 0);
+	border-radius: 2px;
+}
+

@@ -1,10 +1,17 @@
+#include "LoginDialog.h"
 #include "BaseClient.h"
+
+#include "RpcStart.h"
 
 #include <QApplication>
 #include <QStyleFactory>
 #include <QFile>
 #include <QPalette>
 #include <QFont>
+#include <QMessageBox>
+
+#include <IceUtil/IceUtil.h>
+#include <Ice/Ice.h>
 
 int main(int argc, char* argv[])
 {
@@ -31,11 +38,44 @@ int main(int argc, char* argv[])
 	//font.setPointSize(9);
 	app.setFont(font);
 
-	BaseClient w;
+	Ice::CommunicatorPtr ic;
 
-	w.setMinimumSize(800, 500);
-	w.resize(1280, 800);
-	w.show();
+	try {
+		ic = Ice::initialize(Ice::StringSeq{"--Ice.Config=BaseClient.cfg"});
 
-	return app.exec();
+		Rpc::StartPrx startPrx = Rpc::StartPrx::checkedCast(ic->propertyToProxy("Start"));
+
+		startPrx->getServerVersion();
+
+		LoginDialog ld(startPrx);
+		const int rc = ld.exec();
+
+		BaseClient w;
+
+		if (rc == 1) {
+			w.setSession(ld.session());
+		}
+
+		w.setMinimumSize(800, 500);
+		w.resize(1280, 800);
+		w.show();
+
+		return app.exec();
+	}
+	catch (const Ice::Exception& e) {
+		QMessageBox msg;
+		msg.setWindowTitle("Base");
+		msg.setText(e.what());
+		msg.exec();
+	}
+	catch (const char* msg) {
+		//std::cout << msg << std::endl;
+	}
+	catch (...) {
+	}
+
+	if (ic) {
+		ic->destroy();
+	}
 }
+

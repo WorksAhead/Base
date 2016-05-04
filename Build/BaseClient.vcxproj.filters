@@ -43,6 +43,9 @@
       <Extensions>cpp;moc</Extensions>
       <SourceControlFiles>False</SourceControlFiles>
     </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{0c84e15c-d59a-411e-973f-e023cb2f662d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\BaseClient\Source\BaseClient.h">
@@ -53,6 +56,12 @@
     </CustomBuild>
     <CustomBuild Include="..\BaseClient\Resources\BaseClient.qrc">
       <Filter>Resource Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\LoginDialog.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\LoginDialog.h">
+      <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
@@ -92,6 +101,33 @@
     <ClCompile Include="..\BaseClient\GeneratedFiles\qrc_BaseClient.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\BaseClient\Source\LoginDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Debug\moc_LoginDialog.cpp">
+      <Filter>Generated Files\Debug_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Debug\moc_LoginDialog.cpp">
+      <Filter>Generated Files\Debug_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_LoginDialog.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_LoginDialog.cpp">
+      <Filter>Generated Files\Release_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\Rpc\RpcErrorCode.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\Rpc\RpcSession.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\Rpc\RpcStart.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\ErrorMessage.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\BaseClient\Resources\BaseClient.rc">
@@ -102,5 +138,34 @@
     <ClInclude Include="..\BaseClient\Source\EdgeDetector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_LoginDialog.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\Rpc\RpcErrorCode.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\Rpc\RpcSession.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\Rpc\RpcStart.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ErrorMessage.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Common\Rpc\RpcErrorCode.ice">
+      <Filter>Common</Filter>
+    </None>
+    <None Include="..\Common\Rpc\RpcLogin.ice">
+      <Filter>Common</Filter>
+    </None>
+    <None Include="..\Common\Rpc\RpcSession.ice">
+      <Filter>Common</Filter>
+    </None>
+    <None Include="..\Common\Rpc\RpcStart.ice">
+      <Filter>Common</Filter>
+    </None>
   </ItemGroup>
 </Project>

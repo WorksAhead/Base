@@ -90,6 +90,8 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>..\Ext\sqlite3\;..\Ext\SQLiteCpp\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4819;</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -104,6 +106,8 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>..\Ext\sqlite3\;..\Ext\SQLiteCpp\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4819;</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -120,6 +124,8 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>..\Ext\sqlite3\;..\Ext\SQLiteCpp\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4819;</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -138,6 +144,8 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>..\Ext\sqlite3\;..\Ext\SQLiteCpp\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4819;</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -147,7 +155,44 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\BaseServer\Source\BaseServer.cpp" />
     <ClCompile Include="..\BaseServer\Source\Main.cpp" />
+    <ClCompile Include="..\BaseServer\Source\RpcSessionImpl.cpp" />
+    <ClCompile Include="..\BaseServer\Source\RpcSessionMaintainer.cpp" />
+    <ClCompile Include="..\BaseServer\Source\RpcStartImpl.cpp" />
+    <ClCompile Include="..\Common\Rpc\RpcErrorCode.cpp" />
+    <ClCompile Include="..\Common\Rpc\RpcSession.cpp" />
+    <ClCompile Include="..\Common\Rpc\RpcStart.cpp" />
+    <ClCompile Include="..\Ext\sqlite3\sqlite3.c" />
+    <ClCompile Include="..\Ext\SQLiteCpp\src\Column.cpp" />
+    <ClCompile Include="..\Ext\SQLiteCpp\src\Database.cpp" />
+    <ClCompile Include="..\Ext\SQLiteCpp\src\Statement.cpp" />
+    <ClCompile Include="..\Ext\SQLiteCpp\src\Transaction.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\BaseServer\Source\BaseServer.h" />
+    <ClInclude Include="..\BaseServer\Source\Common.h" />
+    <ClInclude Include="..\BaseServer\Source\Datetime.h" />
+    <ClInclude Include="..\BaseServer\Source\RpcSessionImpl.h" />
+    <ClInclude Include="..\BaseServer\Source\RpcSessionMaintainer.h" />
+    <ClInclude Include="..\BaseServer\Source\RpcStartImpl.h" />
+    <ClInclude Include="..\BaseServer\Source\SQLiteUtil.h" />
+    <ClInclude Include="..\Common\Rpc\RpcErrorCode.h" />
+    <ClInclude Include="..\Common\Rpc\RpcSession.h" />
+    <ClInclude Include="..\Common\Rpc\RpcStart.h" />
+    <ClInclude Include="..\Ext\SQLiteCpp\include\SQLiteCpp\Assertion.h" />
+    <ClInclude Include="..\Ext\SQLiteCpp\include\SQLiteCpp\Column.h" />
+    <ClInclude Include="..\Ext\SQLiteCpp\include\SQLiteCpp\Database.h" />
+    <ClInclude Include="..\Ext\SQLiteCpp\include\SQLiteCpp\Exception.h" />
+    <ClInclude Include="..\Ext\SQLiteCpp\include\SQLiteCpp\SQLiteCpp.h" />
+    <ClInclude Include="..\Ext\SQLiteCpp\include\SQLiteCpp\Statement.h" />
+    <ClInclude Include="..\Ext\SQLiteCpp\include\SQLiteCpp\Transaction.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Common\Rpc\RpcErrorCode.ice" />
+    <None Include="..\Common\Rpc\RpcLogin.ice" />
+    <None Include="..\Common\Rpc\RpcSession.ice" />
+    <None Include="..\Common\Rpc\RpcStart.ice" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

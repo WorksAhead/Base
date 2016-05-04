@@ -3,9 +3,28 @@
 #include <QTabBar>
 #include <QTextEdit>
 
+class RefreshTask : public IceUtil::TimerTask {
+public:
+	RefreshTask(Rpc::SessionPrx session) : session_(session)
+	{
+	}
+
+	virtual void runTimerTask()
+	{
+		try {
+			session_->refresh();
+		}
+		catch (const Ice::Exception& e) {
+		}
+	}
+
+private:
+	Rpc::SessionPrx session_;
+};
+
 BaseClient::BaseClient()
 {
-	setWindowIcon(QIcon(":/Icons/BaseClient.png"));
+	setWindowIcon(QIcon(":/Icons/Base20x20.png"));
 	setWindowTitle("Base");
 
 	tab_ = new QTabWidget;
@@ -28,3 +47,11 @@ BaseClient::BaseClient()
 BaseClient::~BaseClient()
 {
 }
+
+void BaseClient::setSession(Rpc::SessionPrx session)
+{
+	timer_ = new IceUtil::Timer;
+	timer_->scheduleRepeated(new RefreshTask(session), IceUtil::Time::seconds(5));
+	session_ = session;
+}
+

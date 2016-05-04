@@ -13,10 +13,119 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{f5d01c78-e234-4075-aac3-892d6a7ebe4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SQLite">
+      <UniqueIdentifier>{4c9b483a-d352-432d-97ce-0ce05b0caa73}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\BaseServer\Source\Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\Common\Rpc\RpcErrorCode.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\Rpc\RpcSession.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\Rpc\RpcStart.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Ext\sqlite3\sqlite3.c">
+      <Filter>SQLite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Ext\SQLiteCpp\src\Column.cpp">
+      <Filter>SQLite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Ext\SQLiteCpp\src\Database.cpp">
+      <Filter>SQLite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Ext\SQLiteCpp\src\Statement.cpp">
+      <Filter>SQLite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Ext\SQLiteCpp\src\Transaction.cpp">
+      <Filter>SQLite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseServer\Source\BaseServer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseServer\Source\RpcStartImpl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseServer\Source\RpcSessionImpl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseServer\Source\RpcSessionMaintainer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Common\Rpc\RpcErrorCode.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\Rpc\RpcSession.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\Rpc\RpcStart.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseServer\Source\Datetime.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseServer\Source\BaseServer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Ext\SQLiteCpp\include\SQLiteCpp\Assertion.h">
+      <Filter>SQLite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Ext\SQLiteCpp\include\SQLiteCpp\Column.h">
+      <Filter>SQLite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Ext\SQLiteCpp\include\SQLiteCpp\Database.h">
+      <Filter>SQLite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Ext\SQLiteCpp\include\SQLiteCpp\Exception.h">
+      <Filter>SQLite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Ext\SQLiteCpp\include\SQLiteCpp\SQLiteCpp.h">
+      <Filter>SQLite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Ext\SQLiteCpp\include\SQLiteCpp\Statement.h">
+      <Filter>SQLite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Ext\SQLiteCpp\include\SQLiteCpp\Transaction.h">
+      <Filter>SQLite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseServer\Source\Common.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseServer\Source\SQLiteUtil.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseServer\Source\RpcStartImpl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseServer\Source\RpcSessionImpl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseServer\Source\RpcSessionMaintainer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Common\Rpc\RpcErrorCode.ice">
+      <Filter>Common</Filter>
+    </None>
+    <None Include="..\Common\Rpc\RpcLogin.ice">
+      <Filter>Common</Filter>
+    </None>
+    <None Include="..\Common\Rpc\RpcSession.ice">
+      <Filter>Common</Filter>
+    </None>
+    <None Include="..\Common\Rpc\RpcStart.ice">
+      <Filter>Common</Filter>
+    </None>
   </ItemGroup>
 </Project>
