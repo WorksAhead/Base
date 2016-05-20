@@ -1,4 +1,5 @@
 #include "BaseClient.h"
+#include "Manage.h"
 
 #include <QTabBar>
 #include <QTextEdit>
@@ -22,10 +23,12 @@ private:
 	Rpc::SessionPrx session_;
 };
 
-BaseClient::BaseClient()
+BaseClient::BaseClient(Rpc::SessionPrx session) : session_(session)
 {
 	setWindowIcon(QIcon(":/Icons/Base20x20.png"));
 	setWindowTitle("Base");
+
+	manage_ = new Manage(session);
 
 	tab_ = new QTabWidget;
 	tab_->setAutoFillBackground(true);
@@ -36,22 +39,15 @@ BaseClient::BaseClient()
 	font.setPixelSize(16);
 	tab_->tabBar()->setFont(font);
 
-	tab_->addTab(new QTextEdit, "UE4");
-	tab_->addTab(new QTextEdit, "MTitan");
-	tab_->addTab(new QTextEdit, "A very very long tab name");
-	tab_->addTab(new QTextEdit, "Manager");
+	tab_->addTab(manage_, "Manage");
 
-	setCentralWidget(tab_);	
+	setCentralWidget(tab_);
+
+	timer_ = new IceUtil::Timer;
+	timer_->scheduleRepeated(new RefreshTask(session), IceUtil::Time::seconds(5));
 }
 
 BaseClient::~BaseClient()
 {
-}
-
-void BaseClient::setSession(Rpc::SessionPrx session)
-{
-	timer_ = new IceUtil::Timer;
-	timer_->scheduleRepeated(new RefreshTask(session), IceUtil::Time::seconds(5));
-	session_ = session;
 }
 

@@ -9,8 +9,11 @@
 
 #include <sstream>
 
-RpcStartImpl::RpcStartImpl(RpcSessionMaintainerPtr maintainer, DatabasePtr db) : maintainer_(maintainer), db_(db)
+RpcStartImpl::RpcStartImpl(CenterPtr center) : center_(center)
 {
+	timer_ = new IceUtil::Timer();
+	maintainer_ = new RpcSessionMaintainer;
+	timer_->scheduleRepeated(maintainer_, IceUtil::Time::seconds(1));
 }
 
 std::string RpcStartImpl::getServerVersion(const Ice::Current&)
@@ -28,11 +31,11 @@ Rpc::ErrorCode RpcStartImpl::signup(const std::string& username, const std::stri
 	oss << sqlText(getCurrentTimeString()) << ", ";
 	oss << sqlText("") << ")";
 
-	SQLite::Transaction t(*db_);
-	const int n = db_->exec(oss.str());
+	SQLite::Transaction t(*center_->db());
+	const int n = center_->db()->exec(oss.str());
 	t.commit();
 
-	return (n == 1) ? Rpc::ec_success : Rpc::username_already_exists;
+	return (n == 1) ? Rpc::ec_success : Rpc::ec_username_already_exists;
 }
 
 Rpc::ErrorCode RpcStartImpl::login(const std::string& username, const std::string& password, Rpc::SessionPrx& sessionPrx, const Ice::Current& c)
@@ -44,13 +47,13 @@ Rpc::ErrorCode RpcStartImpl::login(const std::string& username, const std::strin
 	oss << " AND ";
 	oss << "Password=" << sqlText(password);
 
-	SQLite::Statement s(*db_, oss.str());
+	SQLite::Statement s(*center_->db(), oss.str());
 	s.executeStep();
 	if (!s.isOk()) {
-		return Rpc::username_or_password_incorrect;
+		return Rpc::ec_username_or_password_incorrect;
 	}
 
-	RpcSessionImplPtr session = new RpcSessionImpl(db_);
+	RpcSessionImplPtr session = new RpcSessionImpl(center_);
 	sessionPrx = Rpc::SessionPrx::uncheckedCast(c.adapter->addWithUUID(session));
 
 	maintainer_->add(std::make_pair(sessionPrx, session));

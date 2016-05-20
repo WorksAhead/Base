@@ -10,18 +10,20 @@
 
 #include <QTabWidget>
 
+// forward declaration
+class Manage;
+
 class BaseClient : public Window {
 private:
 	Q_OBJECT
 
 public:
-	BaseClient();
+	explicit BaseClient(Rpc::SessionPrx);
 	~BaseClient();
-
-	void setSession(Rpc::SessionPrx);
 
 private:
 	QTabWidget* tab_;
+	Manage* manage_;
 
 	Rpc::SessionPrx session_;
 	IceUtil::TimerPtr timer_;

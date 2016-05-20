@@ -3,6 +3,8 @@
 
 #include "RpcSessionImpl.h"
 
+#include <RpcSession.h>
+
 #include <Ice/Ice.h>
 #include <IceUtil/IceUtil.h>
 

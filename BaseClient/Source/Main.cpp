@@ -50,11 +50,11 @@ int main(int argc, char* argv[])
 		LoginDialog ld(startPrx);
 		const int rc = ld.exec();
 
-		BaseClient w;
-
-		if (rc == 1) {
-			w.setSession(ld.session());
+		if (rc != 1) {
+			return 0;
 		}
+
+		BaseClient w(ld.session());
 
 		w.setMinimumSize(800, 500);
 		w.resize(1280, 800);

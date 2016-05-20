@@ -6,10 +6,18 @@ const char* errorMessage(Rpc::ErrorCode ec)
 	{
 	case Rpc::ec_success:
 		return "Success";
-	case Rpc::username_already_exists:
+	case Rpc::ec_username_already_exists:
 		return "Username already exists";
-	case Rpc::username_or_password_incorrect:
+	case Rpc::ec_username_or_password_incorrect:
 		return "Username or password incorrect";
+	case Rpc::ec_engine_version_is_locked:
+		return "Engine version is locked";
+	case Rpc::ec_engine_version_already_exists:
+		return "Engine version already exists";
+	case Rpc::ec_file_io_error:
+		return "File IO error";
+	case Rpc::ec_file_data_error:
+		return "File data error";
 	default:
 		return "";
 	}
