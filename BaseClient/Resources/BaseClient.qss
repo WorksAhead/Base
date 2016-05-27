@@ -190,7 +190,25 @@ QListWidget#VTabList::item:selected {
 	background-color: rgb(20, 20, 20);
 }
 
+QProgressBar {
+    border: 1px solid rgb(80, 80, 80);
+	border-radius: 3px;
+}
+
+QProgressBar::chunk {
+    background-color: rgb(80, 80, 80);
+}
+
 ManageEngine {
 	background: rgb(30, 30, 30);
 	/*border: 2px solid rgb(20, 20, 20);*/
 }
+
+ASyncTaskWidget, ASyncTaskWidget[selected="false"] {	
+	background: rgb(40, 40, 40);
+}
+
+ASyncTaskWidget[selected="true"] {
+	background: rgb(246, 96, 0);
+}
+

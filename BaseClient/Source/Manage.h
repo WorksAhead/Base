@@ -1,9 +1,9 @@
 #ifndef MANAGE_HEADER_
 #define MANAGE_HEADER_
 
-#include <QWidget>
+#include "Context.h"
 
-#include <RpcSession.h>
+#include <QWidget>
 
 // forward declaration
 class ManageEngine;
@@ -13,13 +13,13 @@ private:
 	Q_OBJECT
 
 public:
-	explicit Manage(Rpc::SessionPrx, QWidget* parent = 0);
+	explicit Manage(ContextPtr, QWidget* parent = 0);
 	~Manage();
 
 private:
 	ManageEngine* manageEngine_;
 
-	Rpc::SessionPrx session_;
+	ContextPtr context_;
 };
 
 #endif // MANAGE_HEADER_

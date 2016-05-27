@@ -1,14 +1,16 @@
 #ifndef BASECLIENT_HEADER_
 #define BASECLIENT_HEADER_
 
-#include <RpcSession.h>
+#include "Context.h"
+
+#include "Window.h"
+#include "ui_DecoratorWidget.h"
+#include "ASyncTaskManagerDialog.h"
+
+#include <QTabWidget>
 
 #include <IceUtil/IceUtil.h>
 #include <Ice/Ice.h>
-
-#include "Window.h"
-
-#include <QTabWidget>
 
 // forward declaration
 class Manage;
@@ -22,10 +24,14 @@ public:
 	~BaseClient();
 
 private:
+	Ui::DecoratorWidget decoratorWidgetUi_;
+
+	ASyncTaskManagerDialog* taskManagerDialog_;
+
 	QTabWidget* tab_;
 	Manage* manage_;
 
-	Rpc::SessionPrx session_;
+	ContextPtr context_;
 	IceUtil::TimerPtr timer_;
 };
 

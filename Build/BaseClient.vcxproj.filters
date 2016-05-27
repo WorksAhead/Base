@@ -84,6 +84,24 @@
     <CustomBuild Include="..\BaseClient\Source\SubmitEngineDialog.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\ASyncTaskWidget.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\ASyncTaskWidget.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\DecoratorWidget.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\ASyncTaskManagerDialog.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\ASyncTaskListWidget.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\ASyncTaskManagerDialog.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\BaseClient\Source\Main.cpp">
@@ -269,6 +287,51 @@
     <ClCompile Include="..\Common\Crc.cpp">
       <Filter>Common</Filter>
     </ClCompile>
+    <ClCompile Include="..\BaseClient\Source\ASyncTaskWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Debug\moc_ASyncTaskWidget.cpp">
+      <Filter>Generated Files\Debug_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Debug\moc_ASyncTaskWidget.cpp">
+      <Filter>Generated Files\Debug_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_ASyncTaskWidget.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_ASyncTaskWidget.cpp">
+      <Filter>Generated Files\Release_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Debug\moc_ASyncTaskListWidget.cpp">
+      <Filter>Generated Files\Debug_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Debug\moc_ASyncTaskListWidget.cpp">
+      <Filter>Generated Files\Debug_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_ASyncTaskListWidget.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_ASyncTaskListWidget.cpp">
+      <Filter>Generated Files\Release_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\Source\ASyncTaskListWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\Source\ASyncTaskManagerDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Debug\moc_ASyncTaskManagerDialog.cpp">
+      <Filter>Generated Files\Debug_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Debug\moc_ASyncTaskManagerDialog.cpp">
+      <Filter>Generated Files\Debug_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_ASyncTaskManagerDialog.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_ASyncTaskManagerDialog.cpp">
+      <Filter>Generated Files\Release_x64</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\BaseClient\Resources\BaseClient.rc">
@@ -350,6 +413,24 @@
     </ClInclude>
     <ClInclude Include="..\Common\Crc.h">
       <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\Source\ASyncTask.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_ASyncTaskWidget.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_DecoratorWidget.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_ASyncTaskManagerDialog.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\Source\Context.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\Source\QtUtils.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

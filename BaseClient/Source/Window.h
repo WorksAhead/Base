@@ -9,6 +9,7 @@
 #include <QPoint>
 #include <QShowEvent>
 #include <QEvent>
+#include <QList>
 #include <QLabel>
 
 // forward declaration
@@ -27,8 +28,11 @@ public:
 	void setWindowTitle(const QString&);
 	QString windowTitle() const;
 
-	void setCentralWidget(QWidget*);
+	void setCentralWidget(QWidget*, QWidget** outOldCentralWidget = 0);
 	QWidget* centralWidget() const;
+
+	void setDecoratorWidget(QWidget*, QWidget** outOldDecoratorWidget = 0);
+	QWidget* decoratorWidget() const;
 
 	QRect frameGeometry() const;
 	const QRect& geometry() const;
@@ -68,18 +72,18 @@ public:
 	void setFixedWidth(int w);
 	void setFixedHeight(int h);
 
-	void show();
-	void showMinimized();
-	void showMaximized();
-	void showFullScreen();
-	void showNormal();
-
 	void move(int x, int y);
 	void move(const QPoint&);
 	void resize(int w, int h);
 	void resize(const QSize&);
 
 	QPoint origin() const;
+
+	bool resizeable() const;
+	void setResizeable(bool);
+
+	void registerEventReceiver(QObject*, int priority = 0);
+	void unregisterEventReceiver(QObject*);
 
 protected:
 	virtual bool event(QEvent*);
@@ -92,12 +96,15 @@ protected:
 
 private:
 	void setFrame(int);
+	void onStateChange();
 	void onDrag(const QPoint&);
 	void onHover(const QPoint&);
+	QPushButton* createStateButton(int);
 
 private:
 	QLabel* iconWidget_;
 	QLabel* titleWidget_;
+	QWidget* decoratorWidget_;
 	QWidget* centralWidget_;
 
 	QWidget* topWidget_;
@@ -105,8 +112,7 @@ private:
 	QBoxLayout* layout_;
 
 	QPushButton* minimizeButton_;
-	QPushButton* maximizeButton_;
-	QPushButton* restoreButton_;
+	QPushButton* maximizeOrRestoreButton_;
 	QPushButton* closeButton_;
 
 	EdgeDetector hoverDetector_;

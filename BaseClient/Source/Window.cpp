@@ -1,9 +1,15 @@
 #include "Window.h"
 
 #include <QPainter>
+#include <QApplication>
 #include <QtMath>
 
-#define WINDOW_FRAME_BORDER 8
+#define STATE_BUTTON_MINIMIZE 0
+#define STATE_BUTTON_MAXIMIZE 1
+#define STATE_BUTTON_RESTORE 2
+#define STATE_BUTTON_CLOSE 3
+
+#define SIZEWINDOWFRAME 9
 
 Window::Window()
 {
@@ -13,55 +19,27 @@ Window::Window()
 
 	iconWidget_ = new QLabel;
 	titleWidget_ = new QLabel;
+	decoratorWidget_ = new QWidget;
 	centralWidget_ = new QWidget;
 
-	QSize smallIconSize(20, 20);
-	QSize stateButtonSize(45, 26);
-
-	minimizeButton_ = new QPushButton;
-	minimizeButton_->setFlat(true);
-	minimizeButton_->setFixedSize(stateButtonSize);
-	minimizeButton_->setIcon(QIcon(":/Icons/WindowMinimize.png"));
-	minimizeButton_->setIconSize(smallIconSize);
-	minimizeButton_->setToolTip(tr("Minimize"));
-
-	maximizeButton_ = new QPushButton;
-	maximizeButton_->setFlat(true);
-	maximizeButton_->setFixedSize(stateButtonSize);
-	maximizeButton_->setIcon(QIcon(":/Icons/WindowMaximize.png"));
-	maximizeButton_->setIconSize(smallIconSize);
-	maximizeButton_->setToolTip(tr("Maximize"));
-
-	restoreButton_ = new QPushButton;
-	restoreButton_->setFlat(true);
-	restoreButton_->setFixedSize(stateButtonSize);
-	restoreButton_->setIcon(QIcon(":/Icons/WindowRestore.png"));
-	restoreButton_->setIconSize(smallIconSize);
-	restoreButton_->setToolTip(tr("Restore"));
-
-	closeButton_ = new QPushButton;
-	closeButton_->setFlat(true);
-	closeButton_->setFixedSize(stateButtonSize);
-	closeButton_->setIcon(QIcon(":/Icons/WindowClose.png"));
-	closeButton_->setIconSize(smallIconSize);
-	closeButton_->setToolTip(tr("Close"));
+	minimizeButton_ = createStateButton(STATE_BUTTON_MINIMIZE);
+	maximizeOrRestoreButton_ = createStateButton(STATE_BUTTON_MAXIMIZE);
+	closeButton_ = createStateButton(STATE_BUTTON_CLOSE);
 
 	topLayout_ = new QBoxLayout(QBoxLayout::LeftToRight);
 	topLayout_->setContentsMargins(10, 0, 0, 0);
 	topLayout_->setSpacing(5);
 	topLayout_->addWidget(iconWidget_, 0);
 	topLayout_->addWidget(titleWidget_, 1);
+	topLayout_->addWidget(decoratorWidget_, 0);
 	topLayout_->addWidget(minimizeButton_, 0, Qt::AlignTop);
-	topLayout_->addWidget(maximizeButton_, 0, Qt::AlignTop);
-	topLayout_->addWidget(restoreButton_, 0, Qt::AlignTop);
+	topLayout_->addWidget(maximizeOrRestoreButton_, 0, Qt::AlignTop);
 	topLayout_->addWidget(closeButton_, 0, Qt::AlignTop);
 
 	topWidget_ = new QWidget;
 	topWidget_->setAutoFillBackground(true);
 	topWidget_->setLayout(topLayout_);
 	topWidget_->setFixedHeight(30);
-
-	const int frame = WINDOW_FRAME_BORDER;
 
 	layout_ = new QBoxLayout(QBoxLayout::TopToBottom);
 	layout_->setMargin(0);
@@ -72,11 +50,10 @@ Window::Window()
 	setLayout(layout_);
 
 	QObject::connect(minimizeButton_, &QPushButton::clicked, this, &Window::showMinimized);
-	QObject::connect(maximizeButton_, &QPushButton::clicked, this, &Window::showMaximized);
-	QObject::connect(restoreButton_, &QPushButton::clicked, this, &Window::showNormal);
+	QObject::connect(maximizeOrRestoreButton_, &QPushButton::clicked, this, &Window::showMaximized);
 	QObject::connect(closeButton_, &QPushButton::clicked, this, &Window::close);
 
-	setFrame(WINDOW_FRAME_BORDER);
+	setFrame(SIZEWINDOWFRAME);
 
 	cursorChanged_ = false;
 	dragging_ = false;
@@ -102,20 +79,54 @@ QString Window::windowTitle() const
 	return titleWidget_->text();
 }
 
-void Window::setCentralWidget(QWidget* centralWidget)
+void Window::setCentralWidget(QWidget* centralWidget, QWidget** outOldCentralWidget)
 {
-	QLayoutItem* li = layout_->replaceWidget(centralWidget_, centralWidget);
-	if (li) {
-		centralWidget_->hide();
-		centralWidget_->deleteLater();
-		centralWidget_ = centralWidget;
-		delete li;
+	QWidget* oldCentralWidget = centralWidget_;
+
+	QLayoutItem* li = layout_->replaceWidget(oldCentralWidget, centralWidget);
+	delete li;
+
+	centralWidget->setVisible(true);
+
+	centralWidget_ = centralWidget;
+
+	if (outOldCentralWidget) {
+		*outOldCentralWidget = oldCentralWidget;
 	}
+	else {
+		delete oldCentralWidget;
+	}
+
+	setAttribute(Qt::WA_DeleteOnClose, centralWidget->testAttribute(Qt::WA_DeleteOnClose));
 }
 
 QWidget* Window::centralWidget() const
 {
 	return centralWidget_;
+}
+
+void Window::setDecoratorWidget(QWidget* decoratorWidget, QWidget** outOldDecoratorWidget)
+{
+	QWidget* oldDecoratorWidget = decoratorWidget_;
+
+	QLayoutItem* li = topLayout_->replaceWidget(oldDecoratorWidget, decoratorWidget);
+	delete li;
+
+	decoratorWidget->setVisible(true);
+
+	decoratorWidget_ = decoratorWidget;
+
+	if (outOldDecoratorWidget) {
+		*outOldDecoratorWidget = oldDecoratorWidget;
+	}
+	else {
+		delete oldDecoratorWidget;
+	}
+}
+
+QWidget* Window::decoratorWidget() const
+{
+	return decoratorWidget_;
 }
 
 QRect Window::frameGeometry() const
@@ -193,31 +204,31 @@ QSize Window::maximumSize() const
 
 int Window::minimumWidth() const
 {
-	const int frame = WINDOW_FRAME_BORDER;
+	const int frame = SIZEWINDOWFRAME;
 	return QWidget::minimumWidth() - frame;
 }
 
 int Window::minimumHeight() const
 {
-	const int frame = WINDOW_FRAME_BORDER;
+	const int frame = SIZEWINDOWFRAME;
 	return QWidget::minimumHeight() - frame;
 }
 
 int Window::maximumWidth() const
 {
-	const int frame = WINDOW_FRAME_BORDER;
+	const int frame = SIZEWINDOWFRAME;
 	return QWidget::maximumWidth() - frame;
 }
 
 int Window::maximumHeight() const
 {
-	const int frame = WINDOW_FRAME_BORDER;
+	const int frame = SIZEWINDOWFRAME;
 	return QWidget::maximumHeight() - frame;
 }
 
 void Window::setMinimumSize(const QSize& s)
 {
-	const int frame = WINDOW_FRAME_BORDER;
+	const int frame = SIZEWINDOWFRAME;
 	QWidget::setMinimumSize(s + QSize(frame * 2, frame * 2));
 }
 
@@ -228,7 +239,7 @@ void Window::setMinimumSize(int minw, int minh)
 
 void Window::setMaximumSize(const QSize& s)
 {
-	const int frame = WINDOW_FRAME_BORDER;
+	const int frame = SIZEWINDOWFRAME;
 	QWidget::setMaximumSize(s + QSize(frame * 2, frame * 2));
 }
 
@@ -239,31 +250,31 @@ void Window::setMaximumSize(int maxw, int maxh)
 
 void Window::setMinimumWidth(int minw)
 {
-	const int frame = WINDOW_FRAME_BORDER;
+	const int frame = SIZEWINDOWFRAME;
 	QWidget::setMinimumWidth(minw + frame * 2);
 }
 
 void Window::setMinimumHeight(int minh)
 {
-	const int frame = WINDOW_FRAME_BORDER;
+	const int frame = SIZEWINDOWFRAME;
 	QWidget::setMinimumHeight(minh + frame * 2);
 }
 
 void Window::setMaximumWidth(int maxw)
 {
-	const int frame = WINDOW_FRAME_BORDER;
+	const int frame = SIZEWINDOWFRAME;
 	QWidget::setMaximumWidth(maxw + frame * 2);
 }
 
 void Window::setMaximumHeight(int maxh)
 {
-	const int frame = WINDOW_FRAME_BORDER;
+	const int frame = SIZEWINDOWFRAME;
 	QWidget::setMaximumHeight(maxh + frame * 2);
 }
 
 void Window::setFixedSize(const QSize& s)
 {
-	const int frame = WINDOW_FRAME_BORDER;
+	const int frame = SIZEWINDOWFRAME;
 	QWidget::setFixedSize(s + QSize(frame * 2, frame * 2));
 }
 
@@ -274,50 +285,14 @@ void Window::setFixedSize(int w, int h)
 
 void Window::setFixedWidth(int w)
 {
-	const int frame = WINDOW_FRAME_BORDER;
+	const int frame = SIZEWINDOWFRAME;
 	QWidget::setFixedWidth(w + frame * 2);
 }
 
 void Window::setFixedHeight(int h)
 {
-	const int frame = WINDOW_FRAME_BORDER;
+	const int frame = SIZEWINDOWFRAME;
 	QWidget::setFixedWidth(h + frame * 2);
-}
-
-void Window::show()
-{
-	showNormal();
-}
-
-void Window::showMinimized()
-{
-	QWidget::showMinimized();
-}
-
-void Window::showMaximized()
-{
-	setFrame(0);
-
-	topWidget_->setVisible(true);
-	maximizeButton_->setVisible(false);
-	restoreButton_->setVisible(true);
-
-	QWidget::showMaximized();
-}
-
-void Window::showFullScreen()
-{
-}
-
-void Window::showNormal()
-{
-	setFrame(WINDOW_FRAME_BORDER);
-
-	topWidget_->setVisible(true);
-	maximizeButton_->setVisible(true);
-	restoreButton_->setVisible(false);
-
-	QWidget::showNormal();
 }
 
 void Window::move(int x, int y)
@@ -372,6 +347,10 @@ bool Window::event(QEvent* e)
 	}
 	else if (type == QEvent::Enter)
 	{
+	}
+	else if (type == QEvent::WindowStateChange)
+	{
+		onStateChange();
 	}
 
 	return QWidget::event(e);
@@ -436,6 +415,36 @@ void Window::setFrame(int frame)
 	hoverDetector_.setBorder(frame);
 	dragDetector_.setBorder(frame);
 	frame_ = frame;
+}
+
+void Window::onStateChange()
+{
+	Qt::WindowStates state = windowState();
+
+	if (state == Qt::WindowMaximized || state == Qt::WindowFullScreen)
+	{
+		QPushButton* restoreButton = createStateButton(STATE_BUTTON_RESTORE);
+		QLayoutItem* li = topLayout_->replaceWidget(maximizeOrRestoreButton_, restoreButton);
+		delete li->widget();
+		delete li;
+
+		QObject::connect(restoreButton, &QPushButton::clicked, this, &Window::showNormal);
+		maximizeOrRestoreButton_ = restoreButton;
+
+		setFrame(0);
+	}
+	else
+	{
+		QPushButton* maximizeButton = createStateButton(STATE_BUTTON_MAXIMIZE);
+		QLayoutItem* li = topLayout_->replaceWidget(maximizeOrRestoreButton_, maximizeButton);
+		delete li->widget();
+		delete li;
+
+		QObject::connect(maximizeButton, &QPushButton::clicked, this, &Window::showMaximized);
+		maximizeOrRestoreButton_ = maximizeButton;
+
+		setFrame(SIZEWINDOWFRAME);
+	}
 }
 
 void Window::onDrag(const QPoint& pos)
@@ -543,5 +552,37 @@ void Window::onHover(const QPoint& pos)
 		unsetCursor();
 		cursorChanged_ = false;
 	}
+}
+
+QPushButton* Window::createStateButton(int type)
+{
+	QPushButton* button = new QPushButton;
+
+	button->setFlat(true);
+	button->setFixedSize(QSize(45, 26));
+
+	switch (type)
+	{
+	case STATE_BUTTON_MINIMIZE:
+		button->setToolTip(tr("Minimize"));
+		button->setIcon(QIcon(":/Icons/WindowMinimize.png"));
+		break;
+	case STATE_BUTTON_MAXIMIZE:
+		button->setToolTip(tr("Maximize"));
+		button->setIcon(QIcon(":/Icons/WindowMaximize.png"));
+		break;
+	case STATE_BUTTON_RESTORE:
+		button->setToolTip(tr("Restore"));
+		button->setIcon(QIcon(":/Icons/WindowRestore.png"));
+		break;
+	case STATE_BUTTON_CLOSE:
+		button->setToolTip(tr("Close"));
+		button->setIcon(QIcon(":/Icons/WindowClose.png"));
+		break;
+	};
+
+	button->setIconSize(QSize(20, 20));
+	
+	return button;
 }
 

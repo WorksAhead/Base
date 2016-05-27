@@ -5,16 +5,15 @@
 #include <QBoxLayout>
 #include <QTextEdit>
 
-Manage::Manage(Rpc::SessionPrx session, QWidget* parent) : QWidget(parent), session_(session)
+Manage::Manage(ContextPtr context, QWidget* parent) : QWidget(parent), context_(context)
 {
 	VTabWidget* p = new VTabWidget;
 
-	manageEngine_ = new ManageEngine(session);
+	manageEngine_ = new ManageEngine(context_);
 
 	p->addTab("Engines", manageEngine_);
 	p->addTab("Users", new QTextEdit);
-	p->addTab("Transfer", new QTextEdit);
-	p->setCurrentIndex(1);
+	p->setCurrentIndex(0);
 
 	QBoxLayout* layout = new QBoxLayout(QBoxLayout::TopToBottom);
 	layout->setMargin(0);

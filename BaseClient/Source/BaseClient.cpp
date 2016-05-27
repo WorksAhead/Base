@@ -23,12 +23,23 @@ private:
 	Rpc::SessionPrx session_;
 };
 
-BaseClient::BaseClient(Rpc::SessionPrx session) : session_(session)
+BaseClient::BaseClient(Rpc::SessionPrx session)
 {
 	setWindowIcon(QIcon(":/Icons/Base20x20.png"));
 	setWindowTitle("Base");
 
-	manage_ = new Manage(session);
+	taskManagerDialog_ = new ASyncTaskManagerDialog(this);
+
+	context_.reset(new Context);
+	context_->session = session;
+	context_->addTask = std::bind(&ASyncTaskListWidget::addTask, taskManagerDialog_->listWidget(), std::placeholders::_1);
+
+	QWidget* decoratorWidget = new QWidget;
+	decoratorWidgetUi_.setupUi(decoratorWidget);
+
+	setDecoratorWidget(decoratorWidget);
+
+	manage_ = new Manage(context_);
 
 	tab_ = new QTabWidget;
 	tab_->setAutoFillBackground(true);
@@ -42,6 +53,8 @@ BaseClient::BaseClient(Rpc::SessionPrx session) : session_(session)
 	tab_->addTab(manage_, "Manage");
 
 	setCentralWidget(tab_);
+
+	QObject::connect(decoratorWidgetUi_.taskButton, &QPushButton::clicked, taskManagerDialog_, &QDialog::show);
 
 	timer_ = new IceUtil::Timer;
 	timer_->scheduleRepeated(new RefreshTask(session), IceUtil::Time::seconds(5));

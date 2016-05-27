@@ -1,16 +1,16 @@
 #ifndef MANAGEENGINE_HEADER_
 #define MANAGEENGINE_HEADER_
 
-#include "ui_ManageEngine.h"
+#include "Context.h"
 
-#include <RpcSession.h>
+#include "ui_ManageEngine.h"
 
 class ManageEngine : public QWidget {
 private:
 	Q_OBJECT
 
 public:
-	explicit ManageEngine(Rpc::SessionPrx, QWidget* parent = 0);
+	explicit ManageEngine(ContextPtr, QWidget* parent = 0);
 	~ManageEngine();
 
 protected:
@@ -30,8 +30,10 @@ private:
 
 private:
 	Ui::ManageEngine ui_;
+	bool firstShow_;
 
-	Rpc::SessionPrx session_;
+	ContextPtr context_;
+
 	Rpc::EngineBrowserPrx browser_;
 	Rpc::EngineUploaderPrx engineUploader_; // test
 };

@@ -10,5 +10,6 @@
         <file>Icons/WindowMaximize.png</file>
         <file>Icons/WindowMinimize.png</file>
         <file>Icons/WindowRestore.png</file>
+        <file>Icons/Task.png</file>
     </qresource>
 </RCC>

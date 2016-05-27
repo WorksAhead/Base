@@ -12,10 +12,102 @@
 #include <algorithm>
 #include <numeric>
 
-ManageEngine::ManageEngine(Rpc::SessionPrx session, QWidget* parent) : QWidget(parent), session_(session)
+#define ITEMS_PER_REQUEST 100
+
+#include "ASyncTask.h"
+#include <boost/thread.hpp>
+#include <thread>
+#include <memory>
+
+class FooTask : public ASyncTask {
+public:
+	FooTask()
+	{
+		state_ = ASyncTask::state_idle;
+		progress_ = 0;
+		info_ = "FooTask";
+		cancel_ = false;
+	}
+
+	~FooTask()
+	{
+		if (t_->joinable()) {
+			t_->join();
+		}
+	}
+
+	virtual void start()
+	{
+		t_.reset(new std::thread(std::bind(&FooTask::foo, this)));
+	}
+
+	virtual void cancel()
+	{
+		boost::unique_lock<boost::mutex> lock(sync_);
+		if (cancel_ || state_ != ASyncTask::state_running) {
+			return;
+		}
+		cancel_ = true;
+		lock.unlock();
+		t_->join();
+	}
+
+	virtual int state()
+	{
+		boost::mutex::scoped_lock lock(sync_);
+		return state_;
+	}
+
+	virtual int progress()
+	{
+		boost::mutex::scoped_lock lock(sync_);
+		return progress_;
+	}
+
+	virtual std::string information()
+	{
+		boost::mutex::scoped_lock lock(sync_);
+		return info_;
+	}
+
+private:
+	void foo()
+	{
+		sync_.lock();
+		state_ = ASyncTask::state_running;
+		sync_.unlock();
+
+		for (int i = 0; i < 100; ++i)
+		{
+			std::this_thread::sleep_for(std::chrono::milliseconds(100));
+			boost::mutex::scoped_lock lock(sync_);
+			if (cancel_) {
+				state_ = ASyncTask::state_cancelled;
+				return;
+			}
+			++progress_;
+		}
+
+		sync_.lock();
+		state_ = ASyncTask::state_finished;
+		sync_.unlock();
+	}
+
+private:
+	int state_;
+	int progress_;
+	std::string info_;
+	bool cancel_;
+	boost::mutex sync_;
+	std::shared_ptr<std::thread> t_;
+};
+
+ManageEngine::ManageEngine(ContextPtr context, QWidget* parent) : QWidget(parent), context_(context)
 {
 	ui_.setupUi(this);
 	ui_.endTimeEdit->setDateTime(QDateTime::currentDateTime());
+
+	firstShow_ = true;
 
 	QObject::connect(ui_.showMoreButton, &QPushButton::clicked, this, &ManageEngine::onShowMore);
 	QObject::connect(ui_.showAllButton, &QPushButton::clicked, this, &ManageEngine::onShowAll);
@@ -32,9 +124,10 @@ ManageEngine::~ManageEngine()
 
 void ManageEngine::showEvent(QShowEvent* e)
 {
-	if (!browser_) {
-		session_->browseEngines(browser_);
-		showMore(1);
+	if (firstShow_) {
+		context_->session->browseEngines(browser_);
+		showMore(ITEMS_PER_REQUEST);
+		firstShow_ = false;
 	}
 }
 
@@ -52,7 +145,7 @@ void ManageEngine::onShowMore()
 		return;
 	}
 
-	showMore(1);
+	showMore(ITEMS_PER_REQUEST);
 }
 
 void ManageEngine::onShowAll()
@@ -67,26 +160,37 @@ void ManageEngine::onShowAll()
 void ManageEngine::onRefresh()
 {
 	ui_.engineList->clear();
-	session_->browseEngines(browser_);
-	showMore(1);
+	context_->session->browseEngines(browser_);
+	showMore(ITEMS_PER_REQUEST);
 }
 
 void ManageEngine::onRemove()
 {
+	const int rc = QMessageBox::question(
+		0, "Base",
+		"Are you sure you want to remove these versions ?\nWarning: This operation cannot be undone.",
+		QMessageBox::Yes, QMessageBox::No|QMessageBox::Default);
+
+	if (rc != QMessageBox::Yes) {
+		return;
+	}
+
 	QList<QTreeWidgetItem*> items = ui_.engineList->selectedItems();
 	for (int i = 0; i < items.count(); ++i) {
-		session_->removeEngine(items[i]->text(0).toStdString(), items[i]->text(1).toStdString());
+		context_->session->removeEngine(items[i]->text(0).toStdString(), items[i]->text(1).toStdString());
 	}
 }
 
 void ManageEngine::showSubmitDialog()
 {
-	SubmitEngineDialog d;
+	context_->addTask(new FooTask);
+
+	/*SubmitEngineDialog d;
 
 	if (d.exec() == 1)
 	{
 		Rpc::EngineUploaderPrx engineUploader;
-		Rpc::ErrorCode ec = session_->uploadEngine(d.engine().toStdString(), d.version().toStdString(), d.info().toStdString(), engineUploader);
+		Rpc::ErrorCode ec = context_->session->uploadEngine(d.engine().toStdString(), d.version().toStdString(), d.info().toStdString(), engineUploader);
 		if (ec != Rpc::ec_success) {
 			QMessageBox msg;
 			msg.setWindowTitle("Base");
@@ -121,14 +225,14 @@ void ManageEngine::showSubmitDialog()
 		}
 
 		engineUploader_ = engineUploader;
-	}
+	}*/
 }
 
 void ManageEngine::showMore(int count)
 {
 	while (count > 0)
 	{
-		const int n = std::min(count, 100);
+		const int n = std::min(count, ITEMS_PER_REQUEST);
 
 		Rpc::EngineItemSeq engineItems;
 		browser_->next(n, engineItems);
