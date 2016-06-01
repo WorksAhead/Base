@@ -4,6 +4,12 @@
 #include <QTabBar>
 #include <QTextEdit>
 
+#include <boost/filesystem.hpp>
+#include <boost/uuid/uuid.hpp>
+#include <boost/uuid/uuid_io.hpp>
+
+namespace fs = boost::filesystem;
+
 class RefreshTask : public IceUtil::TimerTask {
 public:
 	RefreshTask(Rpc::SessionPrx session) : session_(session)
@@ -33,6 +39,7 @@ BaseClient::BaseClient(Rpc::SessionPrx session)
 	context_.reset(new Context);
 	context_->session = session;
 	context_->addTask = std::bind(&ASyncTaskListWidget::addTask, taskManagerDialog_->listWidget(), std::placeholders::_1);
+	context_->uniquePath = std::bind(&BaseClient::uniquePath, this);
 
 	QWidget* decoratorWidget = new QWidget;
 	decoratorWidgetUi_.setupUi(decoratorWidget);
@@ -62,5 +69,12 @@ BaseClient::BaseClient(Rpc::SessionPrx session)
 
 BaseClient::~BaseClient()
 {
+}
+
+std::string BaseClient::uniquePath()
+{
+	fs::path p = fs::temp_directory_path();
+	p = p / boost::uuids::to_string(uniquePathGen_());
+	return p.string();
 }
 

@@ -5,6 +5,7 @@
 #include <QStyleOption>
 #include <QGridLayout>
 #include <QMouseEvent>
+#include <QKeyEvent>
 #include <QList>
 
 #include "QtUtils.h"
@@ -92,25 +93,40 @@ void ASyncTaskListWidget::mousePressEvent(QMouseEvent* e)
 			if (!selectedTaskWidget) {
 				selectedTaskWidget = findParent<ASyncTaskWidget*>(widget);
 			}
-			if (selectedTaskWidget)
-			{
-				for (int i = 0; i < listLayout_->count(); ++i) {
-					ASyncTaskWidget* taskWidget = qobject_cast<ASyncTaskWidget*>(listLayout_->itemAt(i)->widget());
-					Q_ASSERT(taskWidget);
-					if (taskWidget == selectedTaskWidget) {
-						taskWidget->setProperty("selected", true);
-						selectedTask_ = taskWidget->task();
-					}
-					else {
-						taskWidget->setProperty("selected", false);
-					}
-					taskWidget->style()->unpolish(taskWidget);
-					taskWidget->style()->polish(taskWidget);
-				}
+			if (selectedTaskWidget) {
+				int index = listLayout_->indexOf(selectedTaskWidget);
+				selectTaskByIndex(index);
 			}
 		}
 	}
 }
+
+//void ASyncTaskListWidget::keyPressEvent(QKeyEvent* e)
+//{
+//	if (e->key() == Qt::Key_Up || e->key() == Qt::Key_Down)
+//	{
+//		if (!selectedTask_) {
+//			return;
+//		}
+//
+//		int index = -1;
+//		for (int i = 0; i < listLayout_->count(); ++i) {
+//			ASyncTaskWidget* taskWidget = qobject_cast<ASyncTaskWidget*>(listLayout_->itemAt(i)->widget());
+//			Q_ASSERT(taskWidget);
+//			if (selectedTask_ == taskWidget->task()) {
+//				index = i;
+//				break;
+//			}
+//		}
+//
+//		if (e->key() == Qt::Key_Up && index > 0) {
+//			selectTaskByIndex(index - 1);
+//		}
+//		else if (e->key() == Qt::Key_Down && index < listLayout_->count() - 1) {
+//			selectTaskByIndex(index + 1);
+//		}
+//	}
+//}
 
 void ASyncTaskListWidget::paintEvent(QPaintEvent* e)
 {
@@ -118,5 +134,23 @@ void ASyncTaskListWidget::paintEvent(QPaintEvent* e)
 	opt.init(this);
 	QPainter p(this);
 	style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+}
+
+void ASyncTaskListWidget::selectTaskByIndex(int index)
+{
+	for (int i = 0; i < listLayout_->count(); ++i)
+	{
+		ASyncTaskWidget* taskWidget = qobject_cast<ASyncTaskWidget*>(listLayout_->itemAt(i)->widget());
+		Q_ASSERT(taskWidget);
+		if (i == index) {
+			taskWidget->setProperty("selected", true);
+			selectedTask_ = taskWidget->task();
+		}
+		else {
+			taskWidget->setProperty("selected", false);
+		}
+		taskWidget->style()->unpolish(taskWidget);
+		taskWidget->style()->polish(taskWidget);
+	}
 }
 

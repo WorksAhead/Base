@@ -26,7 +26,12 @@ public Q_SLOTS:
 protected:
 	virtual void mousePressEvent(QMouseEvent*);
 
+	//virtual void keyPressEvent(QKeyEvent*);
+
 	virtual void paintEvent(QPaintEvent*);
+
+private:
+	void selectTaskByIndex(int);
 
 private:
 	QTimer* timer_;

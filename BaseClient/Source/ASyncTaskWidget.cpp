@@ -19,7 +19,10 @@ ASyncTask* ASyncTaskWidget::task() const
 
 void ASyncTaskWidget::refresh()
 {
-	ui_.infoLabel->setText(task_->information().c_str());
+	QFontMetrics metrics(ui_.infoLabel->font());
+	QString elidedText = metrics.elidedText(task_->information().c_str(), Qt::ElideRight, ui_.infoLabel->width());
+
+	ui_.infoLabel->setText(elidedText);
 	ui_.progressBar->setValue(task_->progress());
 
 	switch (task_->state())

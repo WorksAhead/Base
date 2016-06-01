@@ -22,16 +22,18 @@ module Rpc
 		ErrorCode finish();
 	};
 
-	interface EngineUploader
+	interface Uploader
 	{
 		ErrorCode write(long offset, ["cpp:array"] ByteSeq bytes);
 		ErrorCode finish(int crc32);
+		void cancel();
 	};
 
-	interface EngineDownloader
+	interface Downloader
 	{
 		ErrorCode read(long offset, int num, out ByteSeq bytes);
 		ErrorCode finish();
+		void cancel();
 	};
 
 	interface Session
@@ -40,8 +42,8 @@ module Rpc
 		void refresh();
 
 		ErrorCode browseEngines(out EngineBrowser* browser);
-		ErrorCode uploadEngine(string name, string version, string info, out EngineUploader* uploader);
-		ErrorCode downloadEngine(string name, string version, out EngineDownloader* downloader);
+		ErrorCode uploadEngine(string name, string version, string info, out Uploader* uploader);
+		ErrorCode downloadEngine(string name, string version, out Downloader* downloader);
 		ErrorCode removeEngine(string name, string version);
 	};
 };

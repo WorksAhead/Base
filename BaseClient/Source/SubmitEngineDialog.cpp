@@ -2,6 +2,12 @@
 
 #include <QFileDialog>
 #include <QRegExpValidator>
+#include <QFileInfo>
+#include <QMessageBox>
+
+#include <boost/filesystem.hpp>
+
+namespace fs = boost::filesystem;
 
 SubmitEngineDialog::SubmitEngineDialog(QWidget* parent) : QDialog(parent)
 {
@@ -27,7 +33,9 @@ void SubmitEngineDialog::selectPath()
 {
 	QString path = QFileDialog::getExistingDirectory(this, "Select Path");
 	if (!path.isEmpty()) {
-		ui_.pathEdit->setText(path);
+		fs::path p = path.toStdString();
+		p.make_preferred();
+		ui_.pathEdit->setText(p.string().c_str());
 	}
 }
 
@@ -37,6 +45,41 @@ void SubmitEngineDialog::submit()
 	version_ = ui_.versionEdit->text();
 	path_ = ui_.pathEdit->text();
 	info_ = ui_.infoEdit->toPlainText();
+
+	if (engine_.isEmpty()) {
+		QMessageBox msg;
+		msg.setWindowTitle("Base");
+		msg.setText(tr("The Engine field cannot be left empty."));
+		msg.exec();
+		return;
+	}
+
+	if (version_.isEmpty()) {
+		QMessageBox msg;
+		msg.setWindowTitle("Base");
+		msg.setText(tr("The Version field cannot be left empty."));
+		msg.exec();
+		return;
+	}
+
+	if (path_.isEmpty()) {
+		QMessageBox msg;
+		msg.setWindowTitle("Base");
+		msg.setText(tr("The Path field cannot be left empty."));
+		msg.exec();
+		return;
+	}
+
+	QFileInfo fileInfo(path_);
+
+	if (!fileInfo.exists() ||!fileInfo.isDir() || fileInfo.isRoot()) {
+		QMessageBox msg;
+		msg.setWindowTitle("Base");
+		msg.setText(QString(tr("\"%1\" is not a valid path.")).arg(path_));
+		msg.exec();
+		return;
+	}
+
 	done(1);
 }
 

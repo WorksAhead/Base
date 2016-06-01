@@ -12,6 +12,8 @@
 #include <IceUtil/IceUtil.h>
 #include <Ice/Ice.h>
 
+#include <boost/uuid/random_generator.hpp>
+
 // forward declaration
 class Manage;
 
@@ -24,6 +26,9 @@ public:
 	~BaseClient();
 
 private:
+	std::string uniquePath();
+
+private:
 	Ui::DecoratorWidget decoratorWidgetUi_;
 
 	ASyncTaskManagerDialog* taskManagerDialog_;
@@ -33,6 +38,8 @@ private:
 
 	ContextPtr context_;
 	IceUtil::TimerPtr timer_;
+
+	boost::uuids::random_generator uniquePathGen_;
 };
 
 #endif // BASECLIENT_HEADER_

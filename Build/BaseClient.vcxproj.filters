@@ -332,6 +332,12 @@
     <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_ASyncTaskManagerDialog.cpp">
       <Filter>Generated Files\Release_x64</Filter>
     </ClCompile>
+    <ClCompile Include="..\BaseClient\Source\Package.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\Source\UploadTask.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\BaseClient\Resources\BaseClient.rc">
@@ -430,6 +436,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\BaseClient\Source\QtUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\Source\Package.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\Source\FileScanner.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\Source\UploadTask.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

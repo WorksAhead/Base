@@ -11,7 +11,7 @@
 #include <fstream>
 #include <string>
 
-class RpcEngineDownloaderImpl : public Rpc::EngineDownloader {
+class RpcEngineDownloaderImpl : public Rpc::Downloader {
 public:
 	explicit RpcEngineDownloaderImpl(CenterPtr);
 	~RpcEngineDownloaderImpl();
@@ -20,6 +20,7 @@ public:
 
 	virtual Rpc::ErrorCode read(Ice::Long, Ice::Int, Rpc::ByteSeq&, const Ice::Current&);
 	virtual Rpc::ErrorCode finish(const Ice::Current&);
+	virtual void cancel(const Ice::Current&);
 
 private:
 	CenterPtr center_;

@@ -93,13 +93,13 @@ Rpc::ErrorCode RpcEngineUploaderImpl::finish(Ice::Int crc32, const Ice::Current&
 
 	center_->addEngineVersion(name_, version_, info_);
 
-	if (EngineVerLocked_) {
-		center_->unlockEngineVersion(name_, version_, Center::lock_write);
-		EngineVerLocked_ = false;
-	}
-
 	c.adapter->remove(c.id);
 
 	return Rpc::ec_success;
+}
+
+void RpcEngineUploaderImpl::cancel(const Ice::Current& c)
+{
+	c.adapter->remove(c.id);
 }
 

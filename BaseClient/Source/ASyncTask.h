@@ -8,6 +8,7 @@ public:
 	enum State {
 		state_idle,
 		state_running,
+		state_cancelling,
 		state_cancelled,
 		state_finished,
 		state_failed,
@@ -25,8 +26,6 @@ public:
 	virtual int progress() = 0;
 	virtual std::string information() = 0;
 };
-
-void publishAsyncTask(ASyncTask*);
 
 #endif // ASYNCTASK_HEADER_
 

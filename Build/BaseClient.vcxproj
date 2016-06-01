@@ -372,12 +372,14 @@
     </ClCompile>
     <ClCompile Include="..\BaseClient\Source\ASyncTaskListWidget.cpp" />
     <ClCompile Include="..\BaseClient\Source\ASyncTaskManagerDialog.cpp" />
+    <ClCompile Include="..\BaseClient\Source\UploadTask.cpp" />
     <ClCompile Include="..\BaseClient\Source\ASyncTaskWidget.cpp" />
     <ClCompile Include="..\BaseClient\Source\BaseClient.cpp" />
     <ClCompile Include="..\BaseClient\Source\LoginDialog.cpp" />
     <ClCompile Include="..\BaseClient\Source\Main.cpp" />
     <ClCompile Include="..\BaseClient\Source\Manage.cpp" />
     <ClCompile Include="..\BaseClient\Source\ManageEngine.cpp" />
+    <ClCompile Include="..\BaseClient\Source\Package.cpp" />
     <ClCompile Include="..\BaseClient\Source\SubmitEngineDialog.cpp" />
     <ClCompile Include="..\BaseClient\Source\VTabWidget.cpp" />
     <ClCompile Include="..\BaseClient\Source\Window.cpp" />
@@ -491,8 +493,11 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DNDEBUG -DQT_CORE_LIB -DQT_DLL -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_CRT_SECURE_NO_WARNINGS -D_WINSOCK_DEPRECATED_NO_WARNINGS "-I.\..\Ext\zlib" "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtWebEngine" "-I$(QTDIR)\include\QtWebEngineWidgets" "-I.\..\BaseClient\GeneratedFiles" "-I.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I.\..\Common" "-I.\..\Common\Rpc" "-IC:\Work\_lib\boost_1_59_0" "-IC:\Work\_lib\Ice-3.6.2\include"</Command>
     </CustomBuild>
+    <ClInclude Include="..\BaseClient\Source\FileScanner.h" />
+    <ClInclude Include="..\BaseClient\Source\UploadTask.h" />
     <ClInclude Include="..\BaseClient\Source\Context.h" />
     <ClInclude Include="..\BaseClient\Source\EdgeDetector.h" />
+    <ClInclude Include="..\BaseClient\Source\Package.h" />
     <ClInclude Include="..\BaseClient\Source\QtUtils.h" />
     <ClInclude Include="..\Common\Crc.h" />
     <ClInclude Include="..\Common\Rpc\RpcTypedefs.h" />

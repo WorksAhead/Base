@@ -47,13 +47,17 @@ const ::std::string __Rpc__EngineBrowser__next_name = "next";
 
 const ::std::string __Rpc__EngineBrowser__finish_name = "finish";
 
-const ::std::string __Rpc__EngineUploader__write_name = "write";
+const ::std::string __Rpc__Uploader__write_name = "write";
 
-const ::std::string __Rpc__EngineUploader__finish_name = "finish";
+const ::std::string __Rpc__Uploader__finish_name = "finish";
 
-const ::std::string __Rpc__EngineDownloader__read_name = "read";
+const ::std::string __Rpc__Uploader__cancel_name = "cancel";
 
-const ::std::string __Rpc__EngineDownloader__finish_name = "finish";
+const ::std::string __Rpc__Downloader__read_name = "read";
+
+const ::std::string __Rpc__Downloader__finish_name = "finish";
+
+const ::std::string __Rpc__Downloader__cancel_name = "cancel";
 
 const ::std::string __Rpc__Session__destroy_name = "destroy";
 
@@ -331,10 +335,10 @@ IceProxy::Rpc::EngineBrowser::__newInstance() const
 {
     return new EngineBrowser;
 }
-::IceProxy::Ice::Object* ::IceProxy::Rpc::upCast(::IceProxy::Rpc::EngineUploader* p) { return p; }
+::IceProxy::Ice::Object* ::IceProxy::Rpc::upCast(::IceProxy::Rpc::Uploader* p) { return p; }
 
 void
-::IceProxy::Rpc::__read(::IceInternal::BasicStream* __is, ::IceInternal::ProxyHandle< ::IceProxy::Rpc::EngineUploader>& v)
+::IceProxy::Rpc::__read(::IceInternal::BasicStream* __is, ::IceInternal::ProxyHandle< ::IceProxy::Rpc::Uploader>& v)
 {
     ::Ice::ObjectPrx proxy;
     __is->read(proxy);
@@ -344,16 +348,16 @@ void
     }
     else
     {
-        v = new ::IceProxy::Rpc::EngineUploader;
+        v = new ::IceProxy::Rpc::Uploader;
         v->__copyFrom(proxy);
     }
 }
 
 ::Rpc::ErrorCode
-IceProxy::Rpc::EngineUploader::write(::Ice::Long __p_offset, const ::std::pair<const ::Ice::Byte*, const ::Ice::Byte*>& __p_bytes, const ::Ice::Context* __ctx)
+IceProxy::Rpc::Uploader::write(::Ice::Long __p_offset, const ::std::pair<const ::Ice::Byte*, const ::Ice::Byte*>& __p_bytes, const ::Ice::Context* __ctx)
 {
-    __checkTwowayOnly(__Rpc__EngineUploader__write_name);
-    ::IceInternal::Outgoing __og(this, __Rpc__EngineUploader__write_name, ::Ice::Normal, __ctx);
+    __checkTwowayOnly(__Rpc__Uploader__write_name);
+    ::IceInternal::Outgoing __og(this, __Rpc__Uploader__write_name, ::Ice::Normal, __ctx);
     try
     {
         ::IceInternal::BasicStream* __os = __og.startWriteParams(::Ice::DefaultFormat);
@@ -385,13 +389,13 @@ IceProxy::Rpc::EngineUploader::write(::Ice::Long __p_offset, const ::std::pair<c
 }
 
 ::Ice::AsyncResultPtr
-IceProxy::Rpc::EngineUploader::begin_write(::Ice::Long __p_offset, const ::std::pair<const ::Ice::Byte*, const ::Ice::Byte*>& __p_bytes, const ::Ice::Context* __ctx, const ::IceInternal::CallbackBasePtr& __del, const ::Ice::LocalObjectPtr& __cookie)
+IceProxy::Rpc::Uploader::begin_write(::Ice::Long __p_offset, const ::std::pair<const ::Ice::Byte*, const ::Ice::Byte*>& __p_bytes, const ::Ice::Context* __ctx, const ::IceInternal::CallbackBasePtr& __del, const ::Ice::LocalObjectPtr& __cookie)
 {
-    __checkAsyncTwowayOnly(__Rpc__EngineUploader__write_name);
-    ::IceInternal::OutgoingAsyncPtr __result = new ::IceInternal::OutgoingAsync(this, __Rpc__EngineUploader__write_name, __del, __cookie);
+    __checkAsyncTwowayOnly(__Rpc__Uploader__write_name);
+    ::IceInternal::OutgoingAsyncPtr __result = new ::IceInternal::OutgoingAsync(this, __Rpc__Uploader__write_name, __del, __cookie);
     try
     {
-        __result->prepare(__Rpc__EngineUploader__write_name, ::Ice::Normal, __ctx);
+        __result->prepare(__Rpc__Uploader__write_name, ::Ice::Normal, __ctx);
         ::IceInternal::BasicStream* __os = __result->startWriteParams(::Ice::DefaultFormat);
         __os->write(__p_offset);
         __os->write(__p_bytes);
@@ -408,7 +412,7 @@ IceProxy::Rpc::EngineUploader::begin_write(::Ice::Long __p_offset, const ::std::
 #ifdef ICE_CPP11
 
 ::Ice::AsyncResultPtr
-IceProxy::Rpc::EngineUploader::__begin_write(::Ice::Long __p_offset, const ::std::pair<const ::Ice::Byte*, const ::Ice::Byte*>& __p_bytes, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent)
+IceProxy::Rpc::Uploader::__begin_write(::Ice::Long __p_offset, const ::std::pair<const ::Ice::Byte*, const ::Ice::Byte*>& __p_bytes, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent)
 {
     class Cpp11CB : public ::IceInternal::Cpp11FnCallbackNC
     {
@@ -423,7 +427,7 @@ IceProxy::Rpc::EngineUploader::__begin_write(::Ice::Long __p_offset, const ::std
 
         virtual void completed(const ::Ice::AsyncResultPtr& __result) const
         {
-            ::Rpc::EngineUploaderPrx __proxy = ::Rpc::EngineUploaderPrx::uncheckedCast(__result->getProxy());
+            ::Rpc::UploaderPrx __proxy = ::Rpc::UploaderPrx::uncheckedCast(__result->getProxy());
             ::Rpc::ErrorCode __ret;
             try
             {
@@ -449,9 +453,9 @@ IceProxy::Rpc::EngineUploader::__begin_write(::Ice::Long __p_offset, const ::std
 #endif
 
 ::Rpc::ErrorCode
-IceProxy::Rpc::EngineUploader::end_write(const ::Ice::AsyncResultPtr& __result)
+IceProxy::Rpc::Uploader::end_write(const ::Ice::AsyncResultPtr& __result)
 {
-    ::Ice::AsyncResult::__check(__result, this, __Rpc__EngineUploader__write_name);
+    ::Ice::AsyncResult::__check(__result, this, __Rpc__Uploader__write_name);
     ::Rpc::ErrorCode __ret;
     if(!__result->__wait())
     {
@@ -471,10 +475,10 @@ IceProxy::Rpc::EngineUploader::end_write(const ::Ice::AsyncResultPtr& __result)
 }
 
 ::Rpc::ErrorCode
-IceProxy::Rpc::EngineUploader::finish(::Ice::Int __p_crc32, const ::Ice::Context* __ctx)
+IceProxy::Rpc::Uploader::finish(::Ice::Int __p_crc32, const ::Ice::Context* __ctx)
 {
-    __checkTwowayOnly(__Rpc__EngineUploader__finish_name);
-    ::IceInternal::Outgoing __og(this, __Rpc__EngineUploader__finish_name, ::Ice::Normal, __ctx);
+    __checkTwowayOnly(__Rpc__Uploader__finish_name);
+    ::IceInternal::Outgoing __og(this, __Rpc__Uploader__finish_name, ::Ice::Normal, __ctx);
     try
     {
         ::IceInternal::BasicStream* __os = __og.startWriteParams(::Ice::DefaultFormat);
@@ -505,13 +509,13 @@ IceProxy::Rpc::EngineUploader::finish(::Ice::Int __p_crc32, const ::Ice::Context
 }
 
 ::Ice::AsyncResultPtr
-IceProxy::Rpc::EngineUploader::begin_finish(::Ice::Int __p_crc32, const ::Ice::Context* __ctx, const ::IceInternal::CallbackBasePtr& __del, const ::Ice::LocalObjectPtr& __cookie)
+IceProxy::Rpc::Uploader::begin_finish(::Ice::Int __p_crc32, const ::Ice::Context* __ctx, const ::IceInternal::CallbackBasePtr& __del, const ::Ice::LocalObjectPtr& __cookie)
 {
-    __checkAsyncTwowayOnly(__Rpc__EngineUploader__finish_name);
-    ::IceInternal::OutgoingAsyncPtr __result = new ::IceInternal::OutgoingAsync(this, __Rpc__EngineUploader__finish_name, __del, __cookie);
+    __checkAsyncTwowayOnly(__Rpc__Uploader__finish_name);
+    ::IceInternal::OutgoingAsyncPtr __result = new ::IceInternal::OutgoingAsync(this, __Rpc__Uploader__finish_name, __del, __cookie);
     try
     {
-        __result->prepare(__Rpc__EngineUploader__finish_name, ::Ice::Normal, __ctx);
+        __result->prepare(__Rpc__Uploader__finish_name, ::Ice::Normal, __ctx);
         ::IceInternal::BasicStream* __os = __result->startWriteParams(::Ice::DefaultFormat);
         __os->write(__p_crc32);
         __result->endWriteParams();
@@ -527,7 +531,7 @@ IceProxy::Rpc::EngineUploader::begin_finish(::Ice::Int __p_crc32, const ::Ice::C
 #ifdef ICE_CPP11
 
 ::Ice::AsyncResultPtr
-IceProxy::Rpc::EngineUploader::__begin_finish(::Ice::Int __p_crc32, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent)
+IceProxy::Rpc::Uploader::__begin_finish(::Ice::Int __p_crc32, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent)
 {
     class Cpp11CB : public ::IceInternal::Cpp11FnCallbackNC
     {
@@ -542,7 +546,7 @@ IceProxy::Rpc::EngineUploader::__begin_finish(::Ice::Int __p_crc32, const ::Ice:
 
         virtual void completed(const ::Ice::AsyncResultPtr& __result) const
         {
-            ::Rpc::EngineUploaderPrx __proxy = ::Rpc::EngineUploaderPrx::uncheckedCast(__result->getProxy());
+            ::Rpc::UploaderPrx __proxy = ::Rpc::UploaderPrx::uncheckedCast(__result->getProxy());
             ::Rpc::ErrorCode __ret;
             try
             {
@@ -568,9 +572,9 @@ IceProxy::Rpc::EngineUploader::__begin_finish(::Ice::Int __p_crc32, const ::Ice:
 #endif
 
 ::Rpc::ErrorCode
-IceProxy::Rpc::EngineUploader::end_finish(const ::Ice::AsyncResultPtr& __result)
+IceProxy::Rpc::Uploader::end_finish(const ::Ice::AsyncResultPtr& __result)
 {
-    ::Ice::AsyncResult::__check(__result, this, __Rpc__EngineUploader__finish_name);
+    ::Ice::AsyncResult::__check(__result, this, __Rpc__Uploader__finish_name);
     ::Rpc::ErrorCode __ret;
     if(!__result->__wait())
     {
@@ -589,21 +593,52 @@ IceProxy::Rpc::EngineUploader::end_finish(const ::Ice::AsyncResultPtr& __result)
     return __ret;
 }
 
-const ::std::string&
-IceProxy::Rpc::EngineUploader::ice_staticId()
+void
+IceProxy::Rpc::Uploader::cancel(const ::Ice::Context* __ctx)
 {
-    return ::Rpc::EngineUploader::ice_staticId();
+    ::IceInternal::Outgoing __og(this, __Rpc__Uploader__cancel_name, ::Ice::Normal, __ctx);
+    __og.writeEmptyParams();
+    __invoke(__og);
+}
+
+::Ice::AsyncResultPtr
+IceProxy::Rpc::Uploader::begin_cancel(const ::Ice::Context* __ctx, const ::IceInternal::CallbackBasePtr& __del, const ::Ice::LocalObjectPtr& __cookie)
+{
+    ::IceInternal::OutgoingAsyncPtr __result = new ::IceInternal::OutgoingAsync(this, __Rpc__Uploader__cancel_name, __del, __cookie);
+    try
+    {
+        __result->prepare(__Rpc__Uploader__cancel_name, ::Ice::Normal, __ctx);
+        __result->writeEmptyParams();
+        __result->invoke();
+    }
+    catch(const ::Ice::Exception& __ex)
+    {
+        __result->abort(__ex);
+    }
+    return __result;
+}
+
+void
+IceProxy::Rpc::Uploader::end_cancel(const ::Ice::AsyncResultPtr& __result)
+{
+    __end(__result, __Rpc__Uploader__cancel_name);
+}
+
+const ::std::string&
+IceProxy::Rpc::Uploader::ice_staticId()
+{
+    return ::Rpc::Uploader::ice_staticId();
 }
 
 ::IceProxy::Ice::Object*
-IceProxy::Rpc::EngineUploader::__newInstance() const
+IceProxy::Rpc::Uploader::__newInstance() const
 {
-    return new EngineUploader;
+    return new Uploader;
 }
-::IceProxy::Ice::Object* ::IceProxy::Rpc::upCast(::IceProxy::Rpc::EngineDownloader* p) { return p; }
+::IceProxy::Ice::Object* ::IceProxy::Rpc::upCast(::IceProxy::Rpc::Downloader* p) { return p; }
 
 void
-::IceProxy::Rpc::__read(::IceInternal::BasicStream* __is, ::IceInternal::ProxyHandle< ::IceProxy::Rpc::EngineDownloader>& v)
+::IceProxy::Rpc::__read(::IceInternal::BasicStream* __is, ::IceInternal::ProxyHandle< ::IceProxy::Rpc::Downloader>& v)
 {
     ::Ice::ObjectPrx proxy;
     __is->read(proxy);
@@ -613,16 +648,16 @@ void
     }
     else
     {
-        v = new ::IceProxy::Rpc::EngineDownloader;
+        v = new ::IceProxy::Rpc::Downloader;
         v->__copyFrom(proxy);
     }
 }
 
 ::Rpc::ErrorCode
-IceProxy::Rpc::EngineDownloader::read(::Ice::Long __p_offset, ::Ice::Int __p_num, ::Rpc::ByteSeq& __p_bytes, const ::Ice::Context* __ctx)
+IceProxy::Rpc::Downloader::read(::Ice::Long __p_offset, ::Ice::Int __p_num, ::Rpc::ByteSeq& __p_bytes, const ::Ice::Context* __ctx)
 {
-    __checkTwowayOnly(__Rpc__EngineDownloader__read_name);
-    ::IceInternal::Outgoing __og(this, __Rpc__EngineDownloader__read_name, ::Ice::Normal, __ctx);
+    __checkTwowayOnly(__Rpc__Downloader__read_name);
+    ::IceInternal::Outgoing __og(this, __Rpc__Downloader__read_name, ::Ice::Normal, __ctx);
     try
     {
         ::IceInternal::BasicStream* __os = __og.startWriteParams(::Ice::DefaultFormat);
@@ -655,13 +690,13 @@ IceProxy::Rpc::EngineDownloader::read(::Ice::Long __p_offset, ::Ice::Int __p_num
 }
 
 ::Ice::AsyncResultPtr
-IceProxy::Rpc::EngineDownloader::begin_read(::Ice::Long __p_offset, ::Ice::Int __p_num, const ::Ice::Context* __ctx, const ::IceInternal::CallbackBasePtr& __del, const ::Ice::LocalObjectPtr& __cookie)
+IceProxy::Rpc::Downloader::begin_read(::Ice::Long __p_offset, ::Ice::Int __p_num, const ::Ice::Context* __ctx, const ::IceInternal::CallbackBasePtr& __del, const ::Ice::LocalObjectPtr& __cookie)
 {
-    __checkAsyncTwowayOnly(__Rpc__EngineDownloader__read_name);
-    ::IceInternal::OutgoingAsyncPtr __result = new ::IceInternal::OutgoingAsync(this, __Rpc__EngineDownloader__read_name, __del, __cookie);
+    __checkAsyncTwowayOnly(__Rpc__Downloader__read_name);
+    ::IceInternal::OutgoingAsyncPtr __result = new ::IceInternal::OutgoingAsync(this, __Rpc__Downloader__read_name, __del, __cookie);
     try
     {
-        __result->prepare(__Rpc__EngineDownloader__read_name, ::Ice::Normal, __ctx);
+        __result->prepare(__Rpc__Downloader__read_name, ::Ice::Normal, __ctx);
         ::IceInternal::BasicStream* __os = __result->startWriteParams(::Ice::DefaultFormat);
         __os->write(__p_offset);
         __os->write(__p_num);
@@ -678,7 +713,7 @@ IceProxy::Rpc::EngineDownloader::begin_read(::Ice::Long __p_offset, ::Ice::Int _
 #ifdef ICE_CPP11
 
 ::Ice::AsyncResultPtr
-IceProxy::Rpc::EngineDownloader::__begin_read(::Ice::Long __p_offset, ::Ice::Int __p_num, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::ByteSeq&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent)
+IceProxy::Rpc::Downloader::__begin_read(::Ice::Long __p_offset, ::Ice::Int __p_num, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::ByteSeq&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent)
 {
     class Cpp11CB : public ::IceInternal::Cpp11FnCallbackNC
     {
@@ -693,7 +728,7 @@ IceProxy::Rpc::EngineDownloader::__begin_read(::Ice::Long __p_offset, ::Ice::Int
 
         virtual void completed(const ::Ice::AsyncResultPtr& __result) const
         {
-            ::Rpc::EngineDownloaderPrx __proxy = ::Rpc::EngineDownloaderPrx::uncheckedCast(__result->getProxy());
+            ::Rpc::DownloaderPrx __proxy = ::Rpc::DownloaderPrx::uncheckedCast(__result->getProxy());
             ::Rpc::ByteSeq __p_bytes;
             ::Rpc::ErrorCode __ret;
             try
@@ -720,9 +755,9 @@ IceProxy::Rpc::EngineDownloader::__begin_read(::Ice::Long __p_offset, ::Ice::Int
 #endif
 
 ::Rpc::ErrorCode
-IceProxy::Rpc::EngineDownloader::end_read(::Rpc::ByteSeq& __p_bytes, const ::Ice::AsyncResultPtr& __result)
+IceProxy::Rpc::Downloader::end_read(::Rpc::ByteSeq& __p_bytes, const ::Ice::AsyncResultPtr& __result)
 {
-    ::Ice::AsyncResult::__check(__result, this, __Rpc__EngineDownloader__read_name);
+    ::Ice::AsyncResult::__check(__result, this, __Rpc__Downloader__read_name);
     ::Rpc::ErrorCode __ret;
     if(!__result->__wait())
     {
@@ -743,10 +778,10 @@ IceProxy::Rpc::EngineDownloader::end_read(::Rpc::ByteSeq& __p_bytes, const ::Ice
 }
 
 ::Rpc::ErrorCode
-IceProxy::Rpc::EngineDownloader::finish(const ::Ice::Context* __ctx)
+IceProxy::Rpc::Downloader::finish(const ::Ice::Context* __ctx)
 {
-    __checkTwowayOnly(__Rpc__EngineDownloader__finish_name);
-    ::IceInternal::Outgoing __og(this, __Rpc__EngineDownloader__finish_name, ::Ice::Normal, __ctx);
+    __checkTwowayOnly(__Rpc__Downloader__finish_name);
+    ::IceInternal::Outgoing __og(this, __Rpc__Downloader__finish_name, ::Ice::Normal, __ctx);
     __og.writeEmptyParams();
     if(!__og.invoke())
     {
@@ -768,13 +803,13 @@ IceProxy::Rpc::EngineDownloader::finish(const ::Ice::Context* __ctx)
 }
 
 ::Ice::AsyncResultPtr
-IceProxy::Rpc::EngineDownloader::begin_finish(const ::Ice::Context* __ctx, const ::IceInternal::CallbackBasePtr& __del, const ::Ice::LocalObjectPtr& __cookie)
+IceProxy::Rpc::Downloader::begin_finish(const ::Ice::Context* __ctx, const ::IceInternal::CallbackBasePtr& __del, const ::Ice::LocalObjectPtr& __cookie)
 {
-    __checkAsyncTwowayOnly(__Rpc__EngineDownloader__finish_name);
-    ::IceInternal::OutgoingAsyncPtr __result = new ::IceInternal::OutgoingAsync(this, __Rpc__EngineDownloader__finish_name, __del, __cookie);
+    __checkAsyncTwowayOnly(__Rpc__Downloader__finish_name);
+    ::IceInternal::OutgoingAsyncPtr __result = new ::IceInternal::OutgoingAsync(this, __Rpc__Downloader__finish_name, __del, __cookie);
     try
     {
-        __result->prepare(__Rpc__EngineDownloader__finish_name, ::Ice::Normal, __ctx);
+        __result->prepare(__Rpc__Downloader__finish_name, ::Ice::Normal, __ctx);
         __result->writeEmptyParams();
         __result->invoke();
     }
@@ -788,7 +823,7 @@ IceProxy::Rpc::EngineDownloader::begin_finish(const ::Ice::Context* __ctx, const
 #ifdef ICE_CPP11
 
 ::Ice::AsyncResultPtr
-IceProxy::Rpc::EngineDownloader::__begin_finish(const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent)
+IceProxy::Rpc::Downloader::__begin_finish(const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent)
 {
     class Cpp11CB : public ::IceInternal::Cpp11FnCallbackNC
     {
@@ -803,7 +838,7 @@ IceProxy::Rpc::EngineDownloader::__begin_finish(const ::Ice::Context* __ctx, con
 
         virtual void completed(const ::Ice::AsyncResultPtr& __result) const
         {
-            ::Rpc::EngineDownloaderPrx __proxy = ::Rpc::EngineDownloaderPrx::uncheckedCast(__result->getProxy());
+            ::Rpc::DownloaderPrx __proxy = ::Rpc::DownloaderPrx::uncheckedCast(__result->getProxy());
             ::Rpc::ErrorCode __ret;
             try
             {
@@ -829,9 +864,9 @@ IceProxy::Rpc::EngineDownloader::__begin_finish(const ::Ice::Context* __ctx, con
 #endif
 
 ::Rpc::ErrorCode
-IceProxy::Rpc::EngineDownloader::end_finish(const ::Ice::AsyncResultPtr& __result)
+IceProxy::Rpc::Downloader::end_finish(const ::Ice::AsyncResultPtr& __result)
 {
-    ::Ice::AsyncResult::__check(__result, this, __Rpc__EngineDownloader__finish_name);
+    ::Ice::AsyncResult::__check(__result, this, __Rpc__Downloader__finish_name);
     ::Rpc::ErrorCode __ret;
     if(!__result->__wait())
     {
@@ -850,16 +885,47 @@ IceProxy::Rpc::EngineDownloader::end_finish(const ::Ice::AsyncResultPtr& __resul
     return __ret;
 }
 
-const ::std::string&
-IceProxy::Rpc::EngineDownloader::ice_staticId()
+void
+IceProxy::Rpc::Downloader::cancel(const ::Ice::Context* __ctx)
 {
-    return ::Rpc::EngineDownloader::ice_staticId();
+    ::IceInternal::Outgoing __og(this, __Rpc__Downloader__cancel_name, ::Ice::Normal, __ctx);
+    __og.writeEmptyParams();
+    __invoke(__og);
+}
+
+::Ice::AsyncResultPtr
+IceProxy::Rpc::Downloader::begin_cancel(const ::Ice::Context* __ctx, const ::IceInternal::CallbackBasePtr& __del, const ::Ice::LocalObjectPtr& __cookie)
+{
+    ::IceInternal::OutgoingAsyncPtr __result = new ::IceInternal::OutgoingAsync(this, __Rpc__Downloader__cancel_name, __del, __cookie);
+    try
+    {
+        __result->prepare(__Rpc__Downloader__cancel_name, ::Ice::Normal, __ctx);
+        __result->writeEmptyParams();
+        __result->invoke();
+    }
+    catch(const ::Ice::Exception& __ex)
+    {
+        __result->abort(__ex);
+    }
+    return __result;
+}
+
+void
+IceProxy::Rpc::Downloader::end_cancel(const ::Ice::AsyncResultPtr& __result)
+{
+    __end(__result, __Rpc__Downloader__cancel_name);
+}
+
+const ::std::string&
+IceProxy::Rpc::Downloader::ice_staticId()
+{
+    return ::Rpc::Downloader::ice_staticId();
 }
 
 ::IceProxy::Ice::Object*
-IceProxy::Rpc::EngineDownloader::__newInstance() const
+IceProxy::Rpc::Downloader::__newInstance() const
 {
-    return new EngineDownloader;
+    return new Downloader;
 }
 ::IceProxy::Ice::Object* ::IceProxy::Rpc::upCast(::IceProxy::Rpc::Session* p) { return p; }
 
@@ -1053,7 +1119,7 @@ IceProxy::Rpc::Session::end_browseEngines(::Rpc::EngineBrowserPrx& __p_browser, 
 }
 
 ::Rpc::ErrorCode
-IceProxy::Rpc::Session::uploadEngine(const ::std::string& __p_name, const ::std::string& __p_version, const ::std::string& __p_info, ::Rpc::EngineUploaderPrx& __p_uploader, const ::Ice::Context* __ctx)
+IceProxy::Rpc::Session::uploadEngine(const ::std::string& __p_name, const ::std::string& __p_version, const ::std::string& __p_info, ::Rpc::UploaderPrx& __p_uploader, const ::Ice::Context* __ctx)
 {
     __checkTwowayOnly(__Rpc__Session__uploadEngine_name);
     ::IceInternal::Outgoing __og(this, __Rpc__Session__uploadEngine_name, ::Ice::Normal, __ctx);
@@ -1114,13 +1180,13 @@ IceProxy::Rpc::Session::begin_uploadEngine(const ::std::string& __p_name, const 
 #ifdef ICE_CPP11
 
 ::Ice::AsyncResultPtr
-IceProxy::Rpc::Session::__begin_uploadEngine(const ::std::string& __p_name, const ::std::string& __p_version, const ::std::string& __p_info, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::EngineUploaderPrx&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent)
+IceProxy::Rpc::Session::__begin_uploadEngine(const ::std::string& __p_name, const ::std::string& __p_version, const ::std::string& __p_info, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::UploaderPrx&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent)
 {
     class Cpp11CB : public ::IceInternal::Cpp11FnCallbackNC
     {
     public:
 
-        Cpp11CB(const ::std::function<void (::Rpc::ErrorCode, const ::Rpc::EngineUploaderPrx&)>& responseFunc, const ::std::function<void (const ::Ice::Exception&)>& exceptionFunc, const ::std::function<void (bool)>& sentFunc) :
+        Cpp11CB(const ::std::function<void (::Rpc::ErrorCode, const ::Rpc::UploaderPrx&)>& responseFunc, const ::std::function<void (const ::Ice::Exception&)>& exceptionFunc, const ::std::function<void (bool)>& sentFunc) :
             ::IceInternal::Cpp11FnCallbackNC(exceptionFunc, sentFunc),
             _response(responseFunc)
         {
@@ -1130,7 +1196,7 @@ IceProxy::Rpc::Session::__begin_uploadEngine(const ::std::string& __p_name, cons
         virtual void completed(const ::Ice::AsyncResultPtr& __result) const
         {
             ::Rpc::SessionPrx __proxy = ::Rpc::SessionPrx::uncheckedCast(__result->getProxy());
-            ::Rpc::EngineUploaderPrx __p_uploader;
+            ::Rpc::UploaderPrx __p_uploader;
             ::Rpc::ErrorCode __ret;
             try
             {
@@ -1149,14 +1215,14 @@ IceProxy::Rpc::Session::__begin_uploadEngine(const ::std::string& __p_name, cons
     
     private:
         
-        ::std::function<void (::Rpc::ErrorCode, const ::Rpc::EngineUploaderPrx&)> _response;
+        ::std::function<void (::Rpc::ErrorCode, const ::Rpc::UploaderPrx&)> _response;
     };
     return begin_uploadEngine(__p_name, __p_version, __p_info, __ctx, new Cpp11CB(__response, __exception, __sent));
 }
 #endif
 
 ::Rpc::ErrorCode
-IceProxy::Rpc::Session::end_uploadEngine(::Rpc::EngineUploaderPrx& __p_uploader, const ::Ice::AsyncResultPtr& __result)
+IceProxy::Rpc::Session::end_uploadEngine(::Rpc::UploaderPrx& __p_uploader, const ::Ice::AsyncResultPtr& __result)
 {
     ::Ice::AsyncResult::__check(__result, this, __Rpc__Session__uploadEngine_name);
     ::Rpc::ErrorCode __ret;
@@ -1179,7 +1245,7 @@ IceProxy::Rpc::Session::end_uploadEngine(::Rpc::EngineUploaderPrx& __p_uploader,
 }
 
 ::Rpc::ErrorCode
-IceProxy::Rpc::Session::downloadEngine(const ::std::string& __p_name, const ::std::string& __p_version, ::Rpc::EngineDownloaderPrx& __p_downloader, const ::Ice::Context* __ctx)
+IceProxy::Rpc::Session::downloadEngine(const ::std::string& __p_name, const ::std::string& __p_version, ::Rpc::DownloaderPrx& __p_downloader, const ::Ice::Context* __ctx)
 {
     __checkTwowayOnly(__Rpc__Session__downloadEngine_name);
     ::IceInternal::Outgoing __og(this, __Rpc__Session__downloadEngine_name, ::Ice::Normal, __ctx);
@@ -1238,13 +1304,13 @@ IceProxy::Rpc::Session::begin_downloadEngine(const ::std::string& __p_name, cons
 #ifdef ICE_CPP11
 
 ::Ice::AsyncResultPtr
-IceProxy::Rpc::Session::__begin_downloadEngine(const ::std::string& __p_name, const ::std::string& __p_version, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::EngineDownloaderPrx&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent)
+IceProxy::Rpc::Session::__begin_downloadEngine(const ::std::string& __p_name, const ::std::string& __p_version, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::DownloaderPrx&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent)
 {
     class Cpp11CB : public ::IceInternal::Cpp11FnCallbackNC
     {
     public:
 
-        Cpp11CB(const ::std::function<void (::Rpc::ErrorCode, const ::Rpc::EngineDownloaderPrx&)>& responseFunc, const ::std::function<void (const ::Ice::Exception&)>& exceptionFunc, const ::std::function<void (bool)>& sentFunc) :
+        Cpp11CB(const ::std::function<void (::Rpc::ErrorCode, const ::Rpc::DownloaderPrx&)>& responseFunc, const ::std::function<void (const ::Ice::Exception&)>& exceptionFunc, const ::std::function<void (bool)>& sentFunc) :
             ::IceInternal::Cpp11FnCallbackNC(exceptionFunc, sentFunc),
             _response(responseFunc)
         {
@@ -1254,7 +1320,7 @@ IceProxy::Rpc::Session::__begin_downloadEngine(const ::std::string& __p_name, co
         virtual void completed(const ::Ice::AsyncResultPtr& __result) const
         {
             ::Rpc::SessionPrx __proxy = ::Rpc::SessionPrx::uncheckedCast(__result->getProxy());
-            ::Rpc::EngineDownloaderPrx __p_downloader;
+            ::Rpc::DownloaderPrx __p_downloader;
             ::Rpc::ErrorCode __ret;
             try
             {
@@ -1273,14 +1339,14 @@ IceProxy::Rpc::Session::__begin_downloadEngine(const ::std::string& __p_name, co
     
     private:
         
-        ::std::function<void (::Rpc::ErrorCode, const ::Rpc::EngineDownloaderPrx&)> _response;
+        ::std::function<void (::Rpc::ErrorCode, const ::Rpc::DownloaderPrx&)> _response;
     };
     return begin_downloadEngine(__p_name, __p_version, __ctx, new Cpp11CB(__response, __exception, __sent));
 }
 #endif
 
 ::Rpc::ErrorCode
-IceProxy::Rpc::Session::end_downloadEngine(::Rpc::EngineDownloaderPrx& __p_downloader, const ::Ice::AsyncResultPtr& __result)
+IceProxy::Rpc::Session::end_downloadEngine(::Rpc::DownloaderPrx& __p_downloader, const ::Ice::AsyncResultPtr& __result)
 {
     ::Ice::AsyncResult::__check(__result, this, __Rpc__Session__downloadEngine_name);
     ::Rpc::ErrorCode __ret;
@@ -1584,49 +1650,49 @@ Rpc::__patch(EngineBrowserPtr& handle, const ::Ice::ObjectPtr& v)
     }
 }
 
-::Ice::Object* Rpc::upCast(::Rpc::EngineUploader* p) { return p; }
+::Ice::Object* Rpc::upCast(::Rpc::Uploader* p) { return p; }
 
 namespace
 {
-const ::std::string __Rpc__EngineUploader_ids[2] =
+const ::std::string __Rpc__Uploader_ids[2] =
 {
     "::Ice::Object",
-    "::Rpc::EngineUploader"
+    "::Rpc::Uploader"
 };
 
 }
 
 bool
-Rpc::EngineUploader::ice_isA(const ::std::string& _s, const ::Ice::Current&) const
+Rpc::Uploader::ice_isA(const ::std::string& _s, const ::Ice::Current&) const
 {
-    return ::std::binary_search(__Rpc__EngineUploader_ids, __Rpc__EngineUploader_ids + 2, _s);
+    return ::std::binary_search(__Rpc__Uploader_ids, __Rpc__Uploader_ids + 2, _s);
 }
 
 ::std::vector< ::std::string>
-Rpc::EngineUploader::ice_ids(const ::Ice::Current&) const
+Rpc::Uploader::ice_ids(const ::Ice::Current&) const
 {
-    return ::std::vector< ::std::string>(&__Rpc__EngineUploader_ids[0], &__Rpc__EngineUploader_ids[2]);
+    return ::std::vector< ::std::string>(&__Rpc__Uploader_ids[0], &__Rpc__Uploader_ids[2]);
 }
 
 const ::std::string&
-Rpc::EngineUploader::ice_id(const ::Ice::Current&) const
+Rpc::Uploader::ice_id(const ::Ice::Current&) const
 {
-    return __Rpc__EngineUploader_ids[1];
+    return __Rpc__Uploader_ids[1];
 }
 
 const ::std::string&
-Rpc::EngineUploader::ice_staticId()
+Rpc::Uploader::ice_staticId()
 {
 #ifdef ICE_HAS_THREAD_SAFE_LOCAL_STATIC
-    static const ::std::string typeId = "::Rpc::EngineUploader";
+    static const ::std::string typeId = "::Rpc::Uploader";
     return typeId;
 #else
-    return __Rpc__EngineUploader_ids[1];
+    return __Rpc__Uploader_ids[1];
 #endif
 }
 
 ::Ice::DispatchStatus
-Rpc::EngineUploader::___write(::IceInternal::Incoming& __inS, const ::Ice::Current& __current)
+Rpc::Uploader::___write(::IceInternal::Incoming& __inS, const ::Ice::Current& __current)
 {
     __checkMode(::Ice::Normal, __current.mode);
     ::IceInternal::BasicStream* __is = __inS.startReadParams();
@@ -1643,7 +1709,7 @@ Rpc::EngineUploader::___write(::IceInternal::Incoming& __inS, const ::Ice::Curre
 }
 
 ::Ice::DispatchStatus
-Rpc::EngineUploader::___finish(::IceInternal::Incoming& __inS, const ::Ice::Current& __current)
+Rpc::Uploader::___finish(::IceInternal::Incoming& __inS, const ::Ice::Current& __current)
 {
     __checkMode(::Ice::Normal, __current.mode);
     ::IceInternal::BasicStream* __is = __inS.startReadParams();
@@ -1657,10 +1723,21 @@ Rpc::EngineUploader::___finish(::IceInternal::Incoming& __inS, const ::Ice::Curr
     return ::Ice::DispatchOK;
 }
 
+::Ice::DispatchStatus
+Rpc::Uploader::___cancel(::IceInternal::Incoming& __inS, const ::Ice::Current& __current)
+{
+    __checkMode(::Ice::Normal, __current.mode);
+    __inS.readEmptyParams();
+    cancel(__current);
+    __inS.__writeEmptyParams();
+    return ::Ice::DispatchOK;
+}
+
 namespace
 {
-const ::std::string __Rpc__EngineUploader_all[] =
+const ::std::string __Rpc__Uploader_all[] =
 {
+    "cancel",
     "finish",
     "ice_id",
     "ice_ids",
@@ -1672,37 +1749,41 @@ const ::std::string __Rpc__EngineUploader_all[] =
 }
 
 ::Ice::DispatchStatus
-Rpc::EngineUploader::__dispatch(::IceInternal::Incoming& in, const ::Ice::Current& current)
+Rpc::Uploader::__dispatch(::IceInternal::Incoming& in, const ::Ice::Current& current)
 {
-    ::std::pair< const ::std::string*, const ::std::string*> r = ::std::equal_range(__Rpc__EngineUploader_all, __Rpc__EngineUploader_all + 6, current.operation);
+    ::std::pair< const ::std::string*, const ::std::string*> r = ::std::equal_range(__Rpc__Uploader_all, __Rpc__Uploader_all + 7, current.operation);
     if(r.first == r.second)
     {
         throw ::Ice::OperationNotExistException(__FILE__, __LINE__, current.id, current.facet, current.operation);
     }
 
-    switch(r.first - __Rpc__EngineUploader_all)
+    switch(r.first - __Rpc__Uploader_all)
     {
         case 0:
         {
-            return ___finish(in, current);
+            return ___cancel(in, current);
         }
         case 1:
         {
-            return ___ice_id(in, current);
+            return ___finish(in, current);
         }
         case 2:
         {
-            return ___ice_ids(in, current);
+            return ___ice_id(in, current);
         }
         case 3:
         {
-            return ___ice_isA(in, current);
+            return ___ice_ids(in, current);
         }
         case 4:
         {
-            return ___ice_ping(in, current);
+            return ___ice_isA(in, current);
         }
         case 5:
+        {
+            return ___ice_ping(in, current);
+        }
+        case 6:
         {
             return ___write(in, current);
         }
@@ -1713,72 +1794,72 @@ Rpc::EngineUploader::__dispatch(::IceInternal::Incoming& in, const ::Ice::Curren
 }
 
 void
-Rpc::EngineUploader::__writeImpl(::IceInternal::BasicStream* __os) const
+Rpc::Uploader::__writeImpl(::IceInternal::BasicStream* __os) const
 {
     __os->startWriteSlice(ice_staticId(), -1, true);
     __os->endWriteSlice();
 }
 
 void
-Rpc::EngineUploader::__readImpl(::IceInternal::BasicStream* __is)
+Rpc::Uploader::__readImpl(::IceInternal::BasicStream* __is)
 {
     __is->startReadSlice();
     __is->endReadSlice();
 }
 
 void 
-Rpc::__patch(EngineUploaderPtr& handle, const ::Ice::ObjectPtr& v)
+Rpc::__patch(UploaderPtr& handle, const ::Ice::ObjectPtr& v)
 {
-    handle = ::Rpc::EngineUploaderPtr::dynamicCast(v);
+    handle = ::Rpc::UploaderPtr::dynamicCast(v);
     if(v && !handle)
     {
-        IceInternal::Ex::throwUOE(::Rpc::EngineUploader::ice_staticId(), v);
+        IceInternal::Ex::throwUOE(::Rpc::Uploader::ice_staticId(), v);
     }
 }
 
-::Ice::Object* Rpc::upCast(::Rpc::EngineDownloader* p) { return p; }
+::Ice::Object* Rpc::upCast(::Rpc::Downloader* p) { return p; }
 
 namespace
 {
-const ::std::string __Rpc__EngineDownloader_ids[2] =
+const ::std::string __Rpc__Downloader_ids[2] =
 {
     "::Ice::Object",
-    "::Rpc::EngineDownloader"
+    "::Rpc::Downloader"
 };
 
 }
 
 bool
-Rpc::EngineDownloader::ice_isA(const ::std::string& _s, const ::Ice::Current&) const
+Rpc::Downloader::ice_isA(const ::std::string& _s, const ::Ice::Current&) const
 {
-    return ::std::binary_search(__Rpc__EngineDownloader_ids, __Rpc__EngineDownloader_ids + 2, _s);
+    return ::std::binary_search(__Rpc__Downloader_ids, __Rpc__Downloader_ids + 2, _s);
 }
 
 ::std::vector< ::std::string>
-Rpc::EngineDownloader::ice_ids(const ::Ice::Current&) const
+Rpc::Downloader::ice_ids(const ::Ice::Current&) const
 {
-    return ::std::vector< ::std::string>(&__Rpc__EngineDownloader_ids[0], &__Rpc__EngineDownloader_ids[2]);
+    return ::std::vector< ::std::string>(&__Rpc__Downloader_ids[0], &__Rpc__Downloader_ids[2]);
 }
 
 const ::std::string&
-Rpc::EngineDownloader::ice_id(const ::Ice::Current&) const
+Rpc::Downloader::ice_id(const ::Ice::Current&) const
 {
-    return __Rpc__EngineDownloader_ids[1];
+    return __Rpc__Downloader_ids[1];
 }
 
 const ::std::string&
-Rpc::EngineDownloader::ice_staticId()
+Rpc::Downloader::ice_staticId()
 {
 #ifdef ICE_HAS_THREAD_SAFE_LOCAL_STATIC
-    static const ::std::string typeId = "::Rpc::EngineDownloader";
+    static const ::std::string typeId = "::Rpc::Downloader";
     return typeId;
 #else
-    return __Rpc__EngineDownloader_ids[1];
+    return __Rpc__Downloader_ids[1];
 #endif
 }
 
 ::Ice::DispatchStatus
-Rpc::EngineDownloader::___read(::IceInternal::Incoming& __inS, const ::Ice::Current& __current)
+Rpc::Downloader::___read(::IceInternal::Incoming& __inS, const ::Ice::Current& __current)
 {
     __checkMode(::Ice::Normal, __current.mode);
     ::IceInternal::BasicStream* __is = __inS.startReadParams();
@@ -1797,7 +1878,7 @@ Rpc::EngineDownloader::___read(::IceInternal::Incoming& __inS, const ::Ice::Curr
 }
 
 ::Ice::DispatchStatus
-Rpc::EngineDownloader::___finish(::IceInternal::Incoming& __inS, const ::Ice::Current& __current)
+Rpc::Downloader::___finish(::IceInternal::Incoming& __inS, const ::Ice::Current& __current)
 {
     __checkMode(::Ice::Normal, __current.mode);
     __inS.readEmptyParams();
@@ -1808,10 +1889,21 @@ Rpc::EngineDownloader::___finish(::IceInternal::Incoming& __inS, const ::Ice::Cu
     return ::Ice::DispatchOK;
 }
 
+::Ice::DispatchStatus
+Rpc::Downloader::___cancel(::IceInternal::Incoming& __inS, const ::Ice::Current& __current)
+{
+    __checkMode(::Ice::Normal, __current.mode);
+    __inS.readEmptyParams();
+    cancel(__current);
+    __inS.__writeEmptyParams();
+    return ::Ice::DispatchOK;
+}
+
 namespace
 {
-const ::std::string __Rpc__EngineDownloader_all[] =
+const ::std::string __Rpc__Downloader_all[] =
 {
+    "cancel",
     "finish",
     "ice_id",
     "ice_ids",
@@ -1823,37 +1915,41 @@ const ::std::string __Rpc__EngineDownloader_all[] =
 }
 
 ::Ice::DispatchStatus
-Rpc::EngineDownloader::__dispatch(::IceInternal::Incoming& in, const ::Ice::Current& current)
+Rpc::Downloader::__dispatch(::IceInternal::Incoming& in, const ::Ice::Current& current)
 {
-    ::std::pair< const ::std::string*, const ::std::string*> r = ::std::equal_range(__Rpc__EngineDownloader_all, __Rpc__EngineDownloader_all + 6, current.operation);
+    ::std::pair< const ::std::string*, const ::std::string*> r = ::std::equal_range(__Rpc__Downloader_all, __Rpc__Downloader_all + 7, current.operation);
     if(r.first == r.second)
     {
         throw ::Ice::OperationNotExistException(__FILE__, __LINE__, current.id, current.facet, current.operation);
     }
 
-    switch(r.first - __Rpc__EngineDownloader_all)
+    switch(r.first - __Rpc__Downloader_all)
     {
         case 0:
         {
-            return ___finish(in, current);
+            return ___cancel(in, current);
         }
         case 1:
         {
-            return ___ice_id(in, current);
+            return ___finish(in, current);
         }
         case 2:
         {
-            return ___ice_ids(in, current);
+            return ___ice_id(in, current);
         }
         case 3:
         {
-            return ___ice_isA(in, current);
+            return ___ice_ids(in, current);
         }
         case 4:
         {
-            return ___ice_ping(in, current);
+            return ___ice_isA(in, current);
         }
         case 5:
+        {
+            return ___ice_ping(in, current);
+        }
+        case 6:
         {
             return ___read(in, current);
         }
@@ -1864,26 +1960,26 @@ Rpc::EngineDownloader::__dispatch(::IceInternal::Incoming& in, const ::Ice::Curr
 }
 
 void
-Rpc::EngineDownloader::__writeImpl(::IceInternal::BasicStream* __os) const
+Rpc::Downloader::__writeImpl(::IceInternal::BasicStream* __os) const
 {
     __os->startWriteSlice(ice_staticId(), -1, true);
     __os->endWriteSlice();
 }
 
 void
-Rpc::EngineDownloader::__readImpl(::IceInternal::BasicStream* __is)
+Rpc::Downloader::__readImpl(::IceInternal::BasicStream* __is)
 {
     __is->startReadSlice();
     __is->endReadSlice();
 }
 
 void 
-Rpc::__patch(EngineDownloaderPtr& handle, const ::Ice::ObjectPtr& v)
+Rpc::__patch(DownloaderPtr& handle, const ::Ice::ObjectPtr& v)
 {
-    handle = ::Rpc::EngineDownloaderPtr::dynamicCast(v);
+    handle = ::Rpc::DownloaderPtr::dynamicCast(v);
     if(v && !handle)
     {
-        IceInternal::Ex::throwUOE(::Rpc::EngineDownloader::ice_staticId(), v);
+        IceInternal::Ex::throwUOE(::Rpc::Downloader::ice_staticId(), v);
     }
 }
 
@@ -1974,7 +2070,7 @@ Rpc::Session::___uploadEngine(::IceInternal::Incoming& __inS, const ::Ice::Curre
     __is->read(__p_version);
     __is->read(__p_info);
     __inS.endReadParams();
-    ::Rpc::EngineUploaderPrx __p_uploader;
+    ::Rpc::UploaderPrx __p_uploader;
     ::Rpc::ErrorCode __ret = uploadEngine(__p_name, __p_version, __p_info, __p_uploader, __current);
     ::IceInternal::BasicStream* __os = __inS.__startWriteParams(::Ice::DefaultFormat);
     __os->write(__p_uploader);
@@ -1993,7 +2089,7 @@ Rpc::Session::___downloadEngine(::IceInternal::Incoming& __inS, const ::Ice::Cur
     __is->read(__p_name);
     __is->read(__p_version);
     __inS.endReadParams();
-    ::Rpc::EngineDownloaderPrx __p_downloader;
+    ::Rpc::DownloaderPrx __p_downloader;
     ::Rpc::ErrorCode __ret = downloadEngine(__p_name, __p_version, __p_downloader, __current);
     ::IceInternal::BasicStream* __os = __inS.__startWriteParams(::Ice::DefaultFormat);
     __os->write(__p_downloader);

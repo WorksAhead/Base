@@ -5,6 +5,7 @@
 
 #include <functional>
 #include <memory>
+#include <string>
 
 // forward declaration
 class ASyncTask;
@@ -13,6 +14,7 @@ struct Context
 {
 	Rpc::SessionPrx session;
 	std::function<void(ASyncTask*)> addTask;
+	std::function<std::string()> uniquePath;
 };
 
 typedef std::shared_ptr<Context> ContextPtr;

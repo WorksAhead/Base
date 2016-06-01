@@ -74,13 +74,12 @@ Rpc::ErrorCode RpcEngineDownloaderImpl::finish(const Ice::Current& c)
 
 	stream_.reset();
 
-	if (EngineVerLocked_) {
-		center_->unlockEngineVersion(name_, version_, Center::lock_read);
-		EngineVerLocked_ = false;
-	}
-
 	c.adapter->remove(c.id);
 
 	return Rpc::ec_success;
 }
 
+void RpcEngineDownloaderImpl::cancel(const Ice::Current& c)
+{
+	c.adapter->remove(c.id);
+}

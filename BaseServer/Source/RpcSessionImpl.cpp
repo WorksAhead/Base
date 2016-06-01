@@ -65,7 +65,7 @@ Rpc::ErrorCode RpcSessionImpl::browseEngines(Rpc::EngineBrowserPrx& browserPrx, 
 	return Rpc::ec_success;
 }
 
-Rpc::ErrorCode RpcSessionImpl::uploadEngine(const std::string& name, const std::string& version, const std::string& info, Rpc::EngineUploaderPrx& uploaderPrx, const Ice::Current& c)
+Rpc::ErrorCode RpcSessionImpl::uploadEngine(const std::string& name, const std::string& version, const std::string& info, Rpc::UploaderPrx& uploaderPrx, const Ice::Current& c)
 {
 	boost::recursive_mutex::scoped_lock lock(sync_);
 	checkIsDestroyed();
@@ -77,14 +77,14 @@ Rpc::ErrorCode RpcSessionImpl::uploadEngine(const std::string& name, const std::
 		return ec;
 	}
 
-	uploaderPrx = Rpc::EngineUploaderPrx::uncheckedCast(c.adapter->addWithUUID(uploader));
+	uploaderPrx = Rpc::UploaderPrx::uncheckedCast(c.adapter->addWithUUID(uploader));
 
 	ids_.insert(uploaderPrx->ice_getIdentity());
 
 	return Rpc::ec_success;
 }
 
-Rpc::ErrorCode RpcSessionImpl::downloadEngine(const std::string& name, const std::string& version, Rpc::EngineDownloaderPrx& downloaderPrx, const Ice::Current& c)
+Rpc::ErrorCode RpcSessionImpl::downloadEngine(const std::string& name, const std::string& version, Rpc::DownloaderPrx& downloaderPrx, const Ice::Current& c)
 {
 	boost::recursive_mutex::scoped_lock lock(sync_);
 	checkIsDestroyed();
@@ -96,7 +96,7 @@ Rpc::ErrorCode RpcSessionImpl::downloadEngine(const std::string& name, const std
 		return ec;
 	}
 
-	downloaderPrx = Rpc::EngineDownloaderPrx::uncheckedCast(c.adapter->addWithUUID(downloader));
+	downloaderPrx = Rpc::DownloaderPrx::uncheckedCast(c.adapter->addWithUUID(downloader));
 
 	ids_.insert(downloaderPrx->ice_getIdentity());
 

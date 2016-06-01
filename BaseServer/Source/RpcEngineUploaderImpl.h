@@ -11,7 +11,7 @@
 #include <fstream>
 #include <string>
 
-class RpcEngineUploaderImpl : public Rpc::EngineUploader {
+class RpcEngineUploaderImpl : public Rpc::Uploader {
 public:
 	explicit RpcEngineUploaderImpl(CenterPtr);
 	~RpcEngineUploaderImpl();
@@ -20,6 +20,7 @@ public:
 
 	virtual Rpc::ErrorCode write(Ice::Long, const std::pair<const Ice::Byte*, const Ice::Byte*>&, const Ice::Current&);
 	virtual Rpc::ErrorCode finish(Ice::Int, const Ice::Current&);
+	virtual void cancel(const Ice::Current&);
 
 private:
 	CenterPtr center_;

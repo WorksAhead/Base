@@ -20,7 +20,7 @@ void RpcSessionMaintainer::runTimerTask()
 
 	std::list<Session>::iterator p = sessions_.begin();
 
-	const IceUtil::Time timeout(IceUtil::Time::seconds(10));
+	const IceUtil::Time timeout(IceUtil::Time::seconds(60));
 
 	while (p != sessions_.end())
 	{

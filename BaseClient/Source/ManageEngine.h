@@ -3,6 +3,8 @@
 
 #include "Context.h"
 
+#include <RpcSession.h>
+
 #include "ui_ManageEngine.h"
 
 class ManageEngine : public QWidget {
@@ -35,7 +37,6 @@ private:
 	ContextPtr context_;
 
 	Rpc::EngineBrowserPrx browser_;
-	Rpc::EngineUploaderPrx engineUploader_; // test
 };
 
 #endif // MANAGEENGINE_HEADER_
