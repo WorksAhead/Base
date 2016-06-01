@@ -48,6 +48,8 @@ namespace Rpc
 
 typedef ::std::vector< ::Ice::Byte> ByteSeq;
 
+typedef ::std::vector< ::std::string> StringSeq;
+
 }
 
 #include <IceUtil/PopDisableWarnings.h>

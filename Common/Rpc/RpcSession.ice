@@ -5,7 +5,7 @@
 
 module Rpc
 {
-	struct EngineItem
+	struct EngineVersionItem
 	{
 		string name;
 		string version;
@@ -14,11 +14,11 @@ module Rpc
 		string state;
 	};
 
-	sequence<EngineItem> EngineItemSeq;
+	sequence<EngineVersionItem> EngineVersionItemSeq;
 
-	interface EngineBrowser
+	interface EngineVersionBrowser
 	{
-		ErrorCode next(int n, out EngineItemSeq items);
+		ErrorCode next(int n, out EngineVersionItemSeq items);
 		ErrorCode finish();
 	};
 
@@ -41,10 +41,10 @@ module Rpc
 		void destroy();
 		void refresh();
 
-		ErrorCode browseEngines(out EngineBrowser* browser);
-		ErrorCode uploadEngine(string name, string version, string info, out Uploader* uploader);
-		ErrorCode downloadEngine(string name, string version, out Downloader* downloader);
-		ErrorCode removeEngine(string name, string version);
+		ErrorCode browseEngineVersions(out EngineVersionBrowser* browser);
+		ErrorCode uploadEngineVersion(string name, string version, string info, out Uploader* uploader);
+		ErrorCode downloadEngineVersion(string name, string version, out Downloader* downloader);
+		ErrorCode removeEngineVersion(string name, string version);
 	};
 };
 

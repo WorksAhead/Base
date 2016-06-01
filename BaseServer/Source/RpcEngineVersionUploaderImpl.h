@@ -11,10 +11,10 @@
 #include <fstream>
 #include <string>
 
-class RpcEngineUploaderImpl : public Rpc::Uploader {
+class RpcEngineVersionUploaderImpl : public Rpc::Uploader {
 public:
-	explicit RpcEngineUploaderImpl(CenterPtr);
-	~RpcEngineUploaderImpl();
+	explicit RpcEngineVersionUploaderImpl(CenterPtr);
+	~RpcEngineVersionUploaderImpl();
 
 	Rpc::ErrorCode init(const std::string& name, const std::string& version, const std::string& info);
 
@@ -32,7 +32,7 @@ private:
 	boost::recursive_mutex sync_;
 };
 
-typedef IceUtil::Handle<RpcEngineUploaderImpl> RpcEngineUploaderImplPtr;
+typedef IceUtil::Handle<RpcEngineVersionUploaderImpl> RpcEngineUploaderImplPtr;
 
 #endif // BASESERVER_RPCENGINEUPLOADERIMPL_HEADER_
 

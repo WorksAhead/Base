@@ -1,4 +1,4 @@
-#include "RpcEngineDownloaderImpl.h"
+#include "RpcEngineVersionDownloaderImpl.h"
 #include "SQLiteUtil.h"
 #include "Datetime.h"
 
@@ -6,11 +6,11 @@
 
 #include <assert.h>
 
-RpcEngineDownloaderImpl::RpcEngineDownloaderImpl(CenterPtr center) : center_(center)
+RpcEngineVersionDownloaderImpl::RpcEngineVersionDownloaderImpl(CenterPtr center) : center_(center)
 {
 }
 
-RpcEngineDownloaderImpl::~RpcEngineDownloaderImpl()
+RpcEngineVersionDownloaderImpl::~RpcEngineVersionDownloaderImpl()
 {
 	if (EngineVerLocked_) {
 		center_->unlockEngineVersion(name_, version_, Center::lock_read);
@@ -18,7 +18,7 @@ RpcEngineDownloaderImpl::~RpcEngineDownloaderImpl()
 	}
 }
 
-Rpc::ErrorCode RpcEngineDownloaderImpl::init(const std::string& name, const std::string& version)
+Rpc::ErrorCode RpcEngineVersionDownloaderImpl::init(const std::string& name, const std::string& version)
 {
 	name_ = name;
 	version_ = version;
@@ -51,7 +51,7 @@ Rpc::ErrorCode RpcEngineDownloaderImpl::init(const std::string& name, const std:
 	return Rpc::ec_success;
 }
 
-Rpc::ErrorCode RpcEngineDownloaderImpl::read(Ice::Long offset, Ice::Int num, Rpc::ByteSeq& bytes, const Ice::Current&)
+Rpc::ErrorCode RpcEngineVersionDownloaderImpl::read(Ice::Long offset, Ice::Int num, Rpc::ByteSeq& bytes, const Ice::Current&)
 {
 	boost::recursive_mutex::scoped_lock lock(sync_);
 
@@ -68,7 +68,7 @@ Rpc::ErrorCode RpcEngineDownloaderImpl::read(Ice::Long offset, Ice::Int num, Rpc
 	return Rpc::ec_success;
 }
 
-Rpc::ErrorCode RpcEngineDownloaderImpl::finish(const Ice::Current& c)
+Rpc::ErrorCode RpcEngineVersionDownloaderImpl::finish(const Ice::Current& c)
 {
 	boost::recursive_mutex::scoped_lock lock(sync_);
 
@@ -79,7 +79,7 @@ Rpc::ErrorCode RpcEngineDownloaderImpl::finish(const Ice::Current& c)
 	return Rpc::ec_success;
 }
 
-void RpcEngineDownloaderImpl::cancel(const Ice::Current& c)
+void RpcEngineVersionDownloaderImpl::cancel(const Ice::Current& c)
 {
 	c.adapter->remove(c.id);
 }

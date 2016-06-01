@@ -43,9 +43,9 @@
 namespace
 {
 
-const ::std::string __Rpc__EngineBrowser__next_name = "next";
+const ::std::string __Rpc__EngineVersionBrowser__next_name = "next";
 
-const ::std::string __Rpc__EngineBrowser__finish_name = "finish";
+const ::std::string __Rpc__EngineVersionBrowser__finish_name = "finish";
 
 const ::std::string __Rpc__Uploader__write_name = "write";
 
@@ -63,23 +63,23 @@ const ::std::string __Rpc__Session__destroy_name = "destroy";
 
 const ::std::string __Rpc__Session__refresh_name = "refresh";
 
-const ::std::string __Rpc__Session__browseEngines_name = "browseEngines";
+const ::std::string __Rpc__Session__browseEngineVersions_name = "browseEngineVersions";
 
-const ::std::string __Rpc__Session__uploadEngine_name = "uploadEngine";
+const ::std::string __Rpc__Session__uploadEngineVersion_name = "uploadEngineVersion";
 
-const ::std::string __Rpc__Session__downloadEngine_name = "downloadEngine";
+const ::std::string __Rpc__Session__downloadEngineVersion_name = "downloadEngineVersion";
 
-const ::std::string __Rpc__Session__removeEngine_name = "removeEngine";
+const ::std::string __Rpc__Session__removeEngineVersion_name = "removeEngineVersion";
 
 }
 
 namespace Ice
 {
 }
-::IceProxy::Ice::Object* ::IceProxy::Rpc::upCast(::IceProxy::Rpc::EngineBrowser* p) { return p; }
+::IceProxy::Ice::Object* ::IceProxy::Rpc::upCast(::IceProxy::Rpc::EngineVersionBrowser* p) { return p; }
 
 void
-::IceProxy::Rpc::__read(::IceInternal::BasicStream* __is, ::IceInternal::ProxyHandle< ::IceProxy::Rpc::EngineBrowser>& v)
+::IceProxy::Rpc::__read(::IceInternal::BasicStream* __is, ::IceInternal::ProxyHandle< ::IceProxy::Rpc::EngineVersionBrowser>& v)
 {
     ::Ice::ObjectPrx proxy;
     __is->read(proxy);
@@ -89,16 +89,16 @@ void
     }
     else
     {
-        v = new ::IceProxy::Rpc::EngineBrowser;
+        v = new ::IceProxy::Rpc::EngineVersionBrowser;
         v->__copyFrom(proxy);
     }
 }
 
 ::Rpc::ErrorCode
-IceProxy::Rpc::EngineBrowser::next(::Ice::Int __p_n, ::Rpc::EngineItemSeq& __p_items, const ::Ice::Context* __ctx)
+IceProxy::Rpc::EngineVersionBrowser::next(::Ice::Int __p_n, ::Rpc::EngineVersionItemSeq& __p_items, const ::Ice::Context* __ctx)
 {
-    __checkTwowayOnly(__Rpc__EngineBrowser__next_name);
-    ::IceInternal::Outgoing __og(this, __Rpc__EngineBrowser__next_name, ::Ice::Normal, __ctx);
+    __checkTwowayOnly(__Rpc__EngineVersionBrowser__next_name);
+    ::IceInternal::Outgoing __og(this, __Rpc__EngineVersionBrowser__next_name, ::Ice::Normal, __ctx);
     try
     {
         ::IceInternal::BasicStream* __os = __og.startWriteParams(::Ice::DefaultFormat);
@@ -130,13 +130,13 @@ IceProxy::Rpc::EngineBrowser::next(::Ice::Int __p_n, ::Rpc::EngineItemSeq& __p_i
 }
 
 ::Ice::AsyncResultPtr
-IceProxy::Rpc::EngineBrowser::begin_next(::Ice::Int __p_n, const ::Ice::Context* __ctx, const ::IceInternal::CallbackBasePtr& __del, const ::Ice::LocalObjectPtr& __cookie)
+IceProxy::Rpc::EngineVersionBrowser::begin_next(::Ice::Int __p_n, const ::Ice::Context* __ctx, const ::IceInternal::CallbackBasePtr& __del, const ::Ice::LocalObjectPtr& __cookie)
 {
-    __checkAsyncTwowayOnly(__Rpc__EngineBrowser__next_name);
-    ::IceInternal::OutgoingAsyncPtr __result = new ::IceInternal::OutgoingAsync(this, __Rpc__EngineBrowser__next_name, __del, __cookie);
+    __checkAsyncTwowayOnly(__Rpc__EngineVersionBrowser__next_name);
+    ::IceInternal::OutgoingAsyncPtr __result = new ::IceInternal::OutgoingAsync(this, __Rpc__EngineVersionBrowser__next_name, __del, __cookie);
     try
     {
-        __result->prepare(__Rpc__EngineBrowser__next_name, ::Ice::Normal, __ctx);
+        __result->prepare(__Rpc__EngineVersionBrowser__next_name, ::Ice::Normal, __ctx);
         ::IceInternal::BasicStream* __os = __result->startWriteParams(::Ice::DefaultFormat);
         __os->write(__p_n);
         __result->endWriteParams();
@@ -152,13 +152,13 @@ IceProxy::Rpc::EngineBrowser::begin_next(::Ice::Int __p_n, const ::Ice::Context*
 #ifdef ICE_CPP11
 
 ::Ice::AsyncResultPtr
-IceProxy::Rpc::EngineBrowser::__begin_next(::Ice::Int __p_n, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::EngineItemSeq&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent)
+IceProxy::Rpc::EngineVersionBrowser::__begin_next(::Ice::Int __p_n, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::EngineVersionItemSeq&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent)
 {
     class Cpp11CB : public ::IceInternal::Cpp11FnCallbackNC
     {
     public:
 
-        Cpp11CB(const ::std::function<void (::Rpc::ErrorCode, const ::Rpc::EngineItemSeq&)>& responseFunc, const ::std::function<void (const ::Ice::Exception&)>& exceptionFunc, const ::std::function<void (bool)>& sentFunc) :
+        Cpp11CB(const ::std::function<void (::Rpc::ErrorCode, const ::Rpc::EngineVersionItemSeq&)>& responseFunc, const ::std::function<void (const ::Ice::Exception&)>& exceptionFunc, const ::std::function<void (bool)>& sentFunc) :
             ::IceInternal::Cpp11FnCallbackNC(exceptionFunc, sentFunc),
             _response(responseFunc)
         {
@@ -167,8 +167,8 @@ IceProxy::Rpc::EngineBrowser::__begin_next(::Ice::Int __p_n, const ::Ice::Contex
 
         virtual void completed(const ::Ice::AsyncResultPtr& __result) const
         {
-            ::Rpc::EngineBrowserPrx __proxy = ::Rpc::EngineBrowserPrx::uncheckedCast(__result->getProxy());
-            ::Rpc::EngineItemSeq __p_items;
+            ::Rpc::EngineVersionBrowserPrx __proxy = ::Rpc::EngineVersionBrowserPrx::uncheckedCast(__result->getProxy());
+            ::Rpc::EngineVersionItemSeq __p_items;
             ::Rpc::ErrorCode __ret;
             try
             {
@@ -187,16 +187,16 @@ IceProxy::Rpc::EngineBrowser::__begin_next(::Ice::Int __p_n, const ::Ice::Contex
     
     private:
         
-        ::std::function<void (::Rpc::ErrorCode, const ::Rpc::EngineItemSeq&)> _response;
+        ::std::function<void (::Rpc::ErrorCode, const ::Rpc::EngineVersionItemSeq&)> _response;
     };
     return begin_next(__p_n, __ctx, new Cpp11CB(__response, __exception, __sent));
 }
 #endif
 
 ::Rpc::ErrorCode
-IceProxy::Rpc::EngineBrowser::end_next(::Rpc::EngineItemSeq& __p_items, const ::Ice::AsyncResultPtr& __result)
+IceProxy::Rpc::EngineVersionBrowser::end_next(::Rpc::EngineVersionItemSeq& __p_items, const ::Ice::AsyncResultPtr& __result)
 {
-    ::Ice::AsyncResult::__check(__result, this, __Rpc__EngineBrowser__next_name);
+    ::Ice::AsyncResult::__check(__result, this, __Rpc__EngineVersionBrowser__next_name);
     ::Rpc::ErrorCode __ret;
     if(!__result->__wait())
     {
@@ -217,10 +217,10 @@ IceProxy::Rpc::EngineBrowser::end_next(::Rpc::EngineItemSeq& __p_items, const ::
 }
 
 ::Rpc::ErrorCode
-IceProxy::Rpc::EngineBrowser::finish(const ::Ice::Context* __ctx)
+IceProxy::Rpc::EngineVersionBrowser::finish(const ::Ice::Context* __ctx)
 {
-    __checkTwowayOnly(__Rpc__EngineBrowser__finish_name);
-    ::IceInternal::Outgoing __og(this, __Rpc__EngineBrowser__finish_name, ::Ice::Normal, __ctx);
+    __checkTwowayOnly(__Rpc__EngineVersionBrowser__finish_name);
+    ::IceInternal::Outgoing __og(this, __Rpc__EngineVersionBrowser__finish_name, ::Ice::Normal, __ctx);
     __og.writeEmptyParams();
     if(!__og.invoke())
     {
@@ -242,13 +242,13 @@ IceProxy::Rpc::EngineBrowser::finish(const ::Ice::Context* __ctx)
 }
 
 ::Ice::AsyncResultPtr
-IceProxy::Rpc::EngineBrowser::begin_finish(const ::Ice::Context* __ctx, const ::IceInternal::CallbackBasePtr& __del, const ::Ice::LocalObjectPtr& __cookie)
+IceProxy::Rpc::EngineVersionBrowser::begin_finish(const ::Ice::Context* __ctx, const ::IceInternal::CallbackBasePtr& __del, const ::Ice::LocalObjectPtr& __cookie)
 {
-    __checkAsyncTwowayOnly(__Rpc__EngineBrowser__finish_name);
-    ::IceInternal::OutgoingAsyncPtr __result = new ::IceInternal::OutgoingAsync(this, __Rpc__EngineBrowser__finish_name, __del, __cookie);
+    __checkAsyncTwowayOnly(__Rpc__EngineVersionBrowser__finish_name);
+    ::IceInternal::OutgoingAsyncPtr __result = new ::IceInternal::OutgoingAsync(this, __Rpc__EngineVersionBrowser__finish_name, __del, __cookie);
     try
     {
-        __result->prepare(__Rpc__EngineBrowser__finish_name, ::Ice::Normal, __ctx);
+        __result->prepare(__Rpc__EngineVersionBrowser__finish_name, ::Ice::Normal, __ctx);
         __result->writeEmptyParams();
         __result->invoke();
     }
@@ -262,7 +262,7 @@ IceProxy::Rpc::EngineBrowser::begin_finish(const ::Ice::Context* __ctx, const ::
 #ifdef ICE_CPP11
 
 ::Ice::AsyncResultPtr
-IceProxy::Rpc::EngineBrowser::__begin_finish(const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent)
+IceProxy::Rpc::EngineVersionBrowser::__begin_finish(const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent)
 {
     class Cpp11CB : public ::IceInternal::Cpp11FnCallbackNC
     {
@@ -277,7 +277,7 @@ IceProxy::Rpc::EngineBrowser::__begin_finish(const ::Ice::Context* __ctx, const 
 
         virtual void completed(const ::Ice::AsyncResultPtr& __result) const
         {
-            ::Rpc::EngineBrowserPrx __proxy = ::Rpc::EngineBrowserPrx::uncheckedCast(__result->getProxy());
+            ::Rpc::EngineVersionBrowserPrx __proxy = ::Rpc::EngineVersionBrowserPrx::uncheckedCast(__result->getProxy());
             ::Rpc::ErrorCode __ret;
             try
             {
@@ -303,9 +303,9 @@ IceProxy::Rpc::EngineBrowser::__begin_finish(const ::Ice::Context* __ctx, const 
 #endif
 
 ::Rpc::ErrorCode
-IceProxy::Rpc::EngineBrowser::end_finish(const ::Ice::AsyncResultPtr& __result)
+IceProxy::Rpc::EngineVersionBrowser::end_finish(const ::Ice::AsyncResultPtr& __result)
 {
-    ::Ice::AsyncResult::__check(__result, this, __Rpc__EngineBrowser__finish_name);
+    ::Ice::AsyncResult::__check(__result, this, __Rpc__EngineVersionBrowser__finish_name);
     ::Rpc::ErrorCode __ret;
     if(!__result->__wait())
     {
@@ -325,15 +325,15 @@ IceProxy::Rpc::EngineBrowser::end_finish(const ::Ice::AsyncResultPtr& __result)
 }
 
 const ::std::string&
-IceProxy::Rpc::EngineBrowser::ice_staticId()
+IceProxy::Rpc::EngineVersionBrowser::ice_staticId()
 {
-    return ::Rpc::EngineBrowser::ice_staticId();
+    return ::Rpc::EngineVersionBrowser::ice_staticId();
 }
 
 ::IceProxy::Ice::Object*
-IceProxy::Rpc::EngineBrowser::__newInstance() const
+IceProxy::Rpc::EngineVersionBrowser::__newInstance() const
 {
-    return new EngineBrowser;
+    return new EngineVersionBrowser;
 }
 ::IceProxy::Ice::Object* ::IceProxy::Rpc::upCast(::IceProxy::Rpc::Uploader* p) { return p; }
 
@@ -1008,10 +1008,10 @@ IceProxy::Rpc::Session::end_refresh(const ::Ice::AsyncResultPtr& __result)
 }
 
 ::Rpc::ErrorCode
-IceProxy::Rpc::Session::browseEngines(::Rpc::EngineBrowserPrx& __p_browser, const ::Ice::Context* __ctx)
+IceProxy::Rpc::Session::browseEngineVersions(::Rpc::EngineVersionBrowserPrx& __p_browser, const ::Ice::Context* __ctx)
 {
-    __checkTwowayOnly(__Rpc__Session__browseEngines_name);
-    ::IceInternal::Outgoing __og(this, __Rpc__Session__browseEngines_name, ::Ice::Normal, __ctx);
+    __checkTwowayOnly(__Rpc__Session__browseEngineVersions_name);
+    ::IceInternal::Outgoing __og(this, __Rpc__Session__browseEngineVersions_name, ::Ice::Normal, __ctx);
     __og.writeEmptyParams();
     if(!__og.invoke())
     {
@@ -1034,13 +1034,13 @@ IceProxy::Rpc::Session::browseEngines(::Rpc::EngineBrowserPrx& __p_browser, cons
 }
 
 ::Ice::AsyncResultPtr
-IceProxy::Rpc::Session::begin_browseEngines(const ::Ice::Context* __ctx, const ::IceInternal::CallbackBasePtr& __del, const ::Ice::LocalObjectPtr& __cookie)
+IceProxy::Rpc::Session::begin_browseEngineVersions(const ::Ice::Context* __ctx, const ::IceInternal::CallbackBasePtr& __del, const ::Ice::LocalObjectPtr& __cookie)
 {
-    __checkAsyncTwowayOnly(__Rpc__Session__browseEngines_name);
-    ::IceInternal::OutgoingAsyncPtr __result = new ::IceInternal::OutgoingAsync(this, __Rpc__Session__browseEngines_name, __del, __cookie);
+    __checkAsyncTwowayOnly(__Rpc__Session__browseEngineVersions_name);
+    ::IceInternal::OutgoingAsyncPtr __result = new ::IceInternal::OutgoingAsync(this, __Rpc__Session__browseEngineVersions_name, __del, __cookie);
     try
     {
-        __result->prepare(__Rpc__Session__browseEngines_name, ::Ice::Normal, __ctx);
+        __result->prepare(__Rpc__Session__browseEngineVersions_name, ::Ice::Normal, __ctx);
         __result->writeEmptyParams();
         __result->invoke();
     }
@@ -1054,13 +1054,13 @@ IceProxy::Rpc::Session::begin_browseEngines(const ::Ice::Context* __ctx, const :
 #ifdef ICE_CPP11
 
 ::Ice::AsyncResultPtr
-IceProxy::Rpc::Session::__begin_browseEngines(const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::EngineBrowserPrx&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent)
+IceProxy::Rpc::Session::__begin_browseEngineVersions(const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::EngineVersionBrowserPrx&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent)
 {
     class Cpp11CB : public ::IceInternal::Cpp11FnCallbackNC
     {
     public:
 
-        Cpp11CB(const ::std::function<void (::Rpc::ErrorCode, const ::Rpc::EngineBrowserPrx&)>& responseFunc, const ::std::function<void (const ::Ice::Exception&)>& exceptionFunc, const ::std::function<void (bool)>& sentFunc) :
+        Cpp11CB(const ::std::function<void (::Rpc::ErrorCode, const ::Rpc::EngineVersionBrowserPrx&)>& responseFunc, const ::std::function<void (const ::Ice::Exception&)>& exceptionFunc, const ::std::function<void (bool)>& sentFunc) :
             ::IceInternal::Cpp11FnCallbackNC(exceptionFunc, sentFunc),
             _response(responseFunc)
         {
@@ -1070,11 +1070,11 @@ IceProxy::Rpc::Session::__begin_browseEngines(const ::Ice::Context* __ctx, const
         virtual void completed(const ::Ice::AsyncResultPtr& __result) const
         {
             ::Rpc::SessionPrx __proxy = ::Rpc::SessionPrx::uncheckedCast(__result->getProxy());
-            ::Rpc::EngineBrowserPrx __p_browser;
+            ::Rpc::EngineVersionBrowserPrx __p_browser;
             ::Rpc::ErrorCode __ret;
             try
             {
-                __ret = __proxy->end_browseEngines(__p_browser, __result);
+                __ret = __proxy->end_browseEngineVersions(__p_browser, __result);
             }
             catch(const ::Ice::Exception& ex)
             {
@@ -1089,16 +1089,16 @@ IceProxy::Rpc::Session::__begin_browseEngines(const ::Ice::Context* __ctx, const
     
     private:
         
-        ::std::function<void (::Rpc::ErrorCode, const ::Rpc::EngineBrowserPrx&)> _response;
+        ::std::function<void (::Rpc::ErrorCode, const ::Rpc::EngineVersionBrowserPrx&)> _response;
     };
-    return begin_browseEngines(__ctx, new Cpp11CB(__response, __exception, __sent));
+    return begin_browseEngineVersions(__ctx, new Cpp11CB(__response, __exception, __sent));
 }
 #endif
 
 ::Rpc::ErrorCode
-IceProxy::Rpc::Session::end_browseEngines(::Rpc::EngineBrowserPrx& __p_browser, const ::Ice::AsyncResultPtr& __result)
+IceProxy::Rpc::Session::end_browseEngineVersions(::Rpc::EngineVersionBrowserPrx& __p_browser, const ::Ice::AsyncResultPtr& __result)
 {
-    ::Ice::AsyncResult::__check(__result, this, __Rpc__Session__browseEngines_name);
+    ::Ice::AsyncResult::__check(__result, this, __Rpc__Session__browseEngineVersions_name);
     ::Rpc::ErrorCode __ret;
     if(!__result->__wait())
     {
@@ -1119,10 +1119,10 @@ IceProxy::Rpc::Session::end_browseEngines(::Rpc::EngineBrowserPrx& __p_browser, 
 }
 
 ::Rpc::ErrorCode
-IceProxy::Rpc::Session::uploadEngine(const ::std::string& __p_name, const ::std::string& __p_version, const ::std::string& __p_info, ::Rpc::UploaderPrx& __p_uploader, const ::Ice::Context* __ctx)
+IceProxy::Rpc::Session::uploadEngineVersion(const ::std::string& __p_name, const ::std::string& __p_version, const ::std::string& __p_info, ::Rpc::UploaderPrx& __p_uploader, const ::Ice::Context* __ctx)
 {
-    __checkTwowayOnly(__Rpc__Session__uploadEngine_name);
-    ::IceInternal::Outgoing __og(this, __Rpc__Session__uploadEngine_name, ::Ice::Normal, __ctx);
+    __checkTwowayOnly(__Rpc__Session__uploadEngineVersion_name);
+    ::IceInternal::Outgoing __og(this, __Rpc__Session__uploadEngineVersion_name, ::Ice::Normal, __ctx);
     try
     {
         ::IceInternal::BasicStream* __os = __og.startWriteParams(::Ice::DefaultFormat);
@@ -1156,13 +1156,13 @@ IceProxy::Rpc::Session::uploadEngine(const ::std::string& __p_name, const ::std:
 }
 
 ::Ice::AsyncResultPtr
-IceProxy::Rpc::Session::begin_uploadEngine(const ::std::string& __p_name, const ::std::string& __p_version, const ::std::string& __p_info, const ::Ice::Context* __ctx, const ::IceInternal::CallbackBasePtr& __del, const ::Ice::LocalObjectPtr& __cookie)
+IceProxy::Rpc::Session::begin_uploadEngineVersion(const ::std::string& __p_name, const ::std::string& __p_version, const ::std::string& __p_info, const ::Ice::Context* __ctx, const ::IceInternal::CallbackBasePtr& __del, const ::Ice::LocalObjectPtr& __cookie)
 {
-    __checkAsyncTwowayOnly(__Rpc__Session__uploadEngine_name);
-    ::IceInternal::OutgoingAsyncPtr __result = new ::IceInternal::OutgoingAsync(this, __Rpc__Session__uploadEngine_name, __del, __cookie);
+    __checkAsyncTwowayOnly(__Rpc__Session__uploadEngineVersion_name);
+    ::IceInternal::OutgoingAsyncPtr __result = new ::IceInternal::OutgoingAsync(this, __Rpc__Session__uploadEngineVersion_name, __del, __cookie);
     try
     {
-        __result->prepare(__Rpc__Session__uploadEngine_name, ::Ice::Normal, __ctx);
+        __result->prepare(__Rpc__Session__uploadEngineVersion_name, ::Ice::Normal, __ctx);
         ::IceInternal::BasicStream* __os = __result->startWriteParams(::Ice::DefaultFormat);
         __os->write(__p_name);
         __os->write(__p_version);
@@ -1180,7 +1180,7 @@ IceProxy::Rpc::Session::begin_uploadEngine(const ::std::string& __p_name, const 
 #ifdef ICE_CPP11
 
 ::Ice::AsyncResultPtr
-IceProxy::Rpc::Session::__begin_uploadEngine(const ::std::string& __p_name, const ::std::string& __p_version, const ::std::string& __p_info, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::UploaderPrx&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent)
+IceProxy::Rpc::Session::__begin_uploadEngineVersion(const ::std::string& __p_name, const ::std::string& __p_version, const ::std::string& __p_info, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::UploaderPrx&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent)
 {
     class Cpp11CB : public ::IceInternal::Cpp11FnCallbackNC
     {
@@ -1200,7 +1200,7 @@ IceProxy::Rpc::Session::__begin_uploadEngine(const ::std::string& __p_name, cons
             ::Rpc::ErrorCode __ret;
             try
             {
-                __ret = __proxy->end_uploadEngine(__p_uploader, __result);
+                __ret = __proxy->end_uploadEngineVersion(__p_uploader, __result);
             }
             catch(const ::Ice::Exception& ex)
             {
@@ -1217,14 +1217,14 @@ IceProxy::Rpc::Session::__begin_uploadEngine(const ::std::string& __p_name, cons
         
         ::std::function<void (::Rpc::ErrorCode, const ::Rpc::UploaderPrx&)> _response;
     };
-    return begin_uploadEngine(__p_name, __p_version, __p_info, __ctx, new Cpp11CB(__response, __exception, __sent));
+    return begin_uploadEngineVersion(__p_name, __p_version, __p_info, __ctx, new Cpp11CB(__response, __exception, __sent));
 }
 #endif
 
 ::Rpc::ErrorCode
-IceProxy::Rpc::Session::end_uploadEngine(::Rpc::UploaderPrx& __p_uploader, const ::Ice::AsyncResultPtr& __result)
+IceProxy::Rpc::Session::end_uploadEngineVersion(::Rpc::UploaderPrx& __p_uploader, const ::Ice::AsyncResultPtr& __result)
 {
-    ::Ice::AsyncResult::__check(__result, this, __Rpc__Session__uploadEngine_name);
+    ::Ice::AsyncResult::__check(__result, this, __Rpc__Session__uploadEngineVersion_name);
     ::Rpc::ErrorCode __ret;
     if(!__result->__wait())
     {
@@ -1245,10 +1245,10 @@ IceProxy::Rpc::Session::end_uploadEngine(::Rpc::UploaderPrx& __p_uploader, const
 }
 
 ::Rpc::ErrorCode
-IceProxy::Rpc::Session::downloadEngine(const ::std::string& __p_name, const ::std::string& __p_version, ::Rpc::DownloaderPrx& __p_downloader, const ::Ice::Context* __ctx)
+IceProxy::Rpc::Session::downloadEngineVersion(const ::std::string& __p_name, const ::std::string& __p_version, ::Rpc::DownloaderPrx& __p_downloader, const ::Ice::Context* __ctx)
 {
-    __checkTwowayOnly(__Rpc__Session__downloadEngine_name);
-    ::IceInternal::Outgoing __og(this, __Rpc__Session__downloadEngine_name, ::Ice::Normal, __ctx);
+    __checkTwowayOnly(__Rpc__Session__downloadEngineVersion_name);
+    ::IceInternal::Outgoing __og(this, __Rpc__Session__downloadEngineVersion_name, ::Ice::Normal, __ctx);
     try
     {
         ::IceInternal::BasicStream* __os = __og.startWriteParams(::Ice::DefaultFormat);
@@ -1281,13 +1281,13 @@ IceProxy::Rpc::Session::downloadEngine(const ::std::string& __p_name, const ::st
 }
 
 ::Ice::AsyncResultPtr
-IceProxy::Rpc::Session::begin_downloadEngine(const ::std::string& __p_name, const ::std::string& __p_version, const ::Ice::Context* __ctx, const ::IceInternal::CallbackBasePtr& __del, const ::Ice::LocalObjectPtr& __cookie)
+IceProxy::Rpc::Session::begin_downloadEngineVersion(const ::std::string& __p_name, const ::std::string& __p_version, const ::Ice::Context* __ctx, const ::IceInternal::CallbackBasePtr& __del, const ::Ice::LocalObjectPtr& __cookie)
 {
-    __checkAsyncTwowayOnly(__Rpc__Session__downloadEngine_name);
-    ::IceInternal::OutgoingAsyncPtr __result = new ::IceInternal::OutgoingAsync(this, __Rpc__Session__downloadEngine_name, __del, __cookie);
+    __checkAsyncTwowayOnly(__Rpc__Session__downloadEngineVersion_name);
+    ::IceInternal::OutgoingAsyncPtr __result = new ::IceInternal::OutgoingAsync(this, __Rpc__Session__downloadEngineVersion_name, __del, __cookie);
     try
     {
-        __result->prepare(__Rpc__Session__downloadEngine_name, ::Ice::Normal, __ctx);
+        __result->prepare(__Rpc__Session__downloadEngineVersion_name, ::Ice::Normal, __ctx);
         ::IceInternal::BasicStream* __os = __result->startWriteParams(::Ice::DefaultFormat);
         __os->write(__p_name);
         __os->write(__p_version);
@@ -1304,7 +1304,7 @@ IceProxy::Rpc::Session::begin_downloadEngine(const ::std::string& __p_name, cons
 #ifdef ICE_CPP11
 
 ::Ice::AsyncResultPtr
-IceProxy::Rpc::Session::__begin_downloadEngine(const ::std::string& __p_name, const ::std::string& __p_version, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::DownloaderPrx&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent)
+IceProxy::Rpc::Session::__begin_downloadEngineVersion(const ::std::string& __p_name, const ::std::string& __p_version, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::DownloaderPrx&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent)
 {
     class Cpp11CB : public ::IceInternal::Cpp11FnCallbackNC
     {
@@ -1324,7 +1324,7 @@ IceProxy::Rpc::Session::__begin_downloadEngine(const ::std::string& __p_name, co
             ::Rpc::ErrorCode __ret;
             try
             {
-                __ret = __proxy->end_downloadEngine(__p_downloader, __result);
+                __ret = __proxy->end_downloadEngineVersion(__p_downloader, __result);
             }
             catch(const ::Ice::Exception& ex)
             {
@@ -1341,14 +1341,14 @@ IceProxy::Rpc::Session::__begin_downloadEngine(const ::std::string& __p_name, co
         
         ::std::function<void (::Rpc::ErrorCode, const ::Rpc::DownloaderPrx&)> _response;
     };
-    return begin_downloadEngine(__p_name, __p_version, __ctx, new Cpp11CB(__response, __exception, __sent));
+    return begin_downloadEngineVersion(__p_name, __p_version, __ctx, new Cpp11CB(__response, __exception, __sent));
 }
 #endif
 
 ::Rpc::ErrorCode
-IceProxy::Rpc::Session::end_downloadEngine(::Rpc::DownloaderPrx& __p_downloader, const ::Ice::AsyncResultPtr& __result)
+IceProxy::Rpc::Session::end_downloadEngineVersion(::Rpc::DownloaderPrx& __p_downloader, const ::Ice::AsyncResultPtr& __result)
 {
-    ::Ice::AsyncResult::__check(__result, this, __Rpc__Session__downloadEngine_name);
+    ::Ice::AsyncResult::__check(__result, this, __Rpc__Session__downloadEngineVersion_name);
     ::Rpc::ErrorCode __ret;
     if(!__result->__wait())
     {
@@ -1369,10 +1369,10 @@ IceProxy::Rpc::Session::end_downloadEngine(::Rpc::DownloaderPrx& __p_downloader,
 }
 
 ::Rpc::ErrorCode
-IceProxy::Rpc::Session::removeEngine(const ::std::string& __p_name, const ::std::string& __p_version, const ::Ice::Context* __ctx)
+IceProxy::Rpc::Session::removeEngineVersion(const ::std::string& __p_name, const ::std::string& __p_version, const ::Ice::Context* __ctx)
 {
-    __checkTwowayOnly(__Rpc__Session__removeEngine_name);
-    ::IceInternal::Outgoing __og(this, __Rpc__Session__removeEngine_name, ::Ice::Normal, __ctx);
+    __checkTwowayOnly(__Rpc__Session__removeEngineVersion_name);
+    ::IceInternal::Outgoing __og(this, __Rpc__Session__removeEngineVersion_name, ::Ice::Normal, __ctx);
     try
     {
         ::IceInternal::BasicStream* __os = __og.startWriteParams(::Ice::DefaultFormat);
@@ -1404,13 +1404,13 @@ IceProxy::Rpc::Session::removeEngine(const ::std::string& __p_name, const ::std:
 }
 
 ::Ice::AsyncResultPtr
-IceProxy::Rpc::Session::begin_removeEngine(const ::std::string& __p_name, const ::std::string& __p_version, const ::Ice::Context* __ctx, const ::IceInternal::CallbackBasePtr& __del, const ::Ice::LocalObjectPtr& __cookie)
+IceProxy::Rpc::Session::begin_removeEngineVersion(const ::std::string& __p_name, const ::std::string& __p_version, const ::Ice::Context* __ctx, const ::IceInternal::CallbackBasePtr& __del, const ::Ice::LocalObjectPtr& __cookie)
 {
-    __checkAsyncTwowayOnly(__Rpc__Session__removeEngine_name);
-    ::IceInternal::OutgoingAsyncPtr __result = new ::IceInternal::OutgoingAsync(this, __Rpc__Session__removeEngine_name, __del, __cookie);
+    __checkAsyncTwowayOnly(__Rpc__Session__removeEngineVersion_name);
+    ::IceInternal::OutgoingAsyncPtr __result = new ::IceInternal::OutgoingAsync(this, __Rpc__Session__removeEngineVersion_name, __del, __cookie);
     try
     {
-        __result->prepare(__Rpc__Session__removeEngine_name, ::Ice::Normal, __ctx);
+        __result->prepare(__Rpc__Session__removeEngineVersion_name, ::Ice::Normal, __ctx);
         ::IceInternal::BasicStream* __os = __result->startWriteParams(::Ice::DefaultFormat);
         __os->write(__p_name);
         __os->write(__p_version);
@@ -1427,7 +1427,7 @@ IceProxy::Rpc::Session::begin_removeEngine(const ::std::string& __p_name, const 
 #ifdef ICE_CPP11
 
 ::Ice::AsyncResultPtr
-IceProxy::Rpc::Session::__begin_removeEngine(const ::std::string& __p_name, const ::std::string& __p_version, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent)
+IceProxy::Rpc::Session::__begin_removeEngineVersion(const ::std::string& __p_name, const ::std::string& __p_version, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent)
 {
     class Cpp11CB : public ::IceInternal::Cpp11FnCallbackNC
     {
@@ -1446,7 +1446,7 @@ IceProxy::Rpc::Session::__begin_removeEngine(const ::std::string& __p_name, cons
             ::Rpc::ErrorCode __ret;
             try
             {
-                __ret = __proxy->end_removeEngine(__result);
+                __ret = __proxy->end_removeEngineVersion(__result);
             }
             catch(const ::Ice::Exception& ex)
             {
@@ -1463,14 +1463,14 @@ IceProxy::Rpc::Session::__begin_removeEngine(const ::std::string& __p_name, cons
         
         ::std::function<void (::Rpc::ErrorCode)> _response;
     };
-    return begin_removeEngine(__p_name, __p_version, __ctx, new Cpp11CB(__response, __exception, __sent));
+    return begin_removeEngineVersion(__p_name, __p_version, __ctx, new Cpp11CB(__response, __exception, __sent));
 }
 #endif
 
 ::Rpc::ErrorCode
-IceProxy::Rpc::Session::end_removeEngine(const ::Ice::AsyncResultPtr& __result)
+IceProxy::Rpc::Session::end_removeEngineVersion(const ::Ice::AsyncResultPtr& __result)
 {
-    ::Ice::AsyncResult::__check(__result, this, __Rpc__Session__removeEngine_name);
+    ::Ice::AsyncResult::__check(__result, this, __Rpc__Session__removeEngineVersion_name);
     ::Rpc::ErrorCode __ret;
     if(!__result->__wait())
     {
@@ -1501,56 +1501,56 @@ IceProxy::Rpc::Session::__newInstance() const
     return new Session;
 }
 
-::Ice::Object* Rpc::upCast(::Rpc::EngineBrowser* p) { return p; }
+::Ice::Object* Rpc::upCast(::Rpc::EngineVersionBrowser* p) { return p; }
 
 namespace
 {
-const ::std::string __Rpc__EngineBrowser_ids[2] =
+const ::std::string __Rpc__EngineVersionBrowser_ids[2] =
 {
     "::Ice::Object",
-    "::Rpc::EngineBrowser"
+    "::Rpc::EngineVersionBrowser"
 };
 
 }
 
 bool
-Rpc::EngineBrowser::ice_isA(const ::std::string& _s, const ::Ice::Current&) const
+Rpc::EngineVersionBrowser::ice_isA(const ::std::string& _s, const ::Ice::Current&) const
 {
-    return ::std::binary_search(__Rpc__EngineBrowser_ids, __Rpc__EngineBrowser_ids + 2, _s);
+    return ::std::binary_search(__Rpc__EngineVersionBrowser_ids, __Rpc__EngineVersionBrowser_ids + 2, _s);
 }
 
 ::std::vector< ::std::string>
-Rpc::EngineBrowser::ice_ids(const ::Ice::Current&) const
+Rpc::EngineVersionBrowser::ice_ids(const ::Ice::Current&) const
 {
-    return ::std::vector< ::std::string>(&__Rpc__EngineBrowser_ids[0], &__Rpc__EngineBrowser_ids[2]);
+    return ::std::vector< ::std::string>(&__Rpc__EngineVersionBrowser_ids[0], &__Rpc__EngineVersionBrowser_ids[2]);
 }
 
 const ::std::string&
-Rpc::EngineBrowser::ice_id(const ::Ice::Current&) const
+Rpc::EngineVersionBrowser::ice_id(const ::Ice::Current&) const
 {
-    return __Rpc__EngineBrowser_ids[1];
+    return __Rpc__EngineVersionBrowser_ids[1];
 }
 
 const ::std::string&
-Rpc::EngineBrowser::ice_staticId()
+Rpc::EngineVersionBrowser::ice_staticId()
 {
 #ifdef ICE_HAS_THREAD_SAFE_LOCAL_STATIC
-    static const ::std::string typeId = "::Rpc::EngineBrowser";
+    static const ::std::string typeId = "::Rpc::EngineVersionBrowser";
     return typeId;
 #else
-    return __Rpc__EngineBrowser_ids[1];
+    return __Rpc__EngineVersionBrowser_ids[1];
 #endif
 }
 
 ::Ice::DispatchStatus
-Rpc::EngineBrowser::___next(::IceInternal::Incoming& __inS, const ::Ice::Current& __current)
+Rpc::EngineVersionBrowser::___next(::IceInternal::Incoming& __inS, const ::Ice::Current& __current)
 {
     __checkMode(::Ice::Normal, __current.mode);
     ::IceInternal::BasicStream* __is = __inS.startReadParams();
     ::Ice::Int __p_n;
     __is->read(__p_n);
     __inS.endReadParams();
-    ::Rpc::EngineItemSeq __p_items;
+    ::Rpc::EngineVersionItemSeq __p_items;
     ::Rpc::ErrorCode __ret = next(__p_n, __p_items, __current);
     ::IceInternal::BasicStream* __os = __inS.__startWriteParams(::Ice::DefaultFormat);
     __os->write(__p_items);
@@ -1560,7 +1560,7 @@ Rpc::EngineBrowser::___next(::IceInternal::Incoming& __inS, const ::Ice::Current
 }
 
 ::Ice::DispatchStatus
-Rpc::EngineBrowser::___finish(::IceInternal::Incoming& __inS, const ::Ice::Current& __current)
+Rpc::EngineVersionBrowser::___finish(::IceInternal::Incoming& __inS, const ::Ice::Current& __current)
 {
     __checkMode(::Ice::Normal, __current.mode);
     __inS.readEmptyParams();
@@ -1573,7 +1573,7 @@ Rpc::EngineBrowser::___finish(::IceInternal::Incoming& __inS, const ::Ice::Curre
 
 namespace
 {
-const ::std::string __Rpc__EngineBrowser_all[] =
+const ::std::string __Rpc__EngineVersionBrowser_all[] =
 {
     "finish",
     "ice_id",
@@ -1586,15 +1586,15 @@ const ::std::string __Rpc__EngineBrowser_all[] =
 }
 
 ::Ice::DispatchStatus
-Rpc::EngineBrowser::__dispatch(::IceInternal::Incoming& in, const ::Ice::Current& current)
+Rpc::EngineVersionBrowser::__dispatch(::IceInternal::Incoming& in, const ::Ice::Current& current)
 {
-    ::std::pair< const ::std::string*, const ::std::string*> r = ::std::equal_range(__Rpc__EngineBrowser_all, __Rpc__EngineBrowser_all + 6, current.operation);
+    ::std::pair< const ::std::string*, const ::std::string*> r = ::std::equal_range(__Rpc__EngineVersionBrowser_all, __Rpc__EngineVersionBrowser_all + 6, current.operation);
     if(r.first == r.second)
     {
         throw ::Ice::OperationNotExistException(__FILE__, __LINE__, current.id, current.facet, current.operation);
     }
 
-    switch(r.first - __Rpc__EngineBrowser_all)
+    switch(r.first - __Rpc__EngineVersionBrowser_all)
     {
         case 0:
         {
@@ -1627,26 +1627,26 @@ Rpc::EngineBrowser::__dispatch(::IceInternal::Incoming& in, const ::Ice::Current
 }
 
 void
-Rpc::EngineBrowser::__writeImpl(::IceInternal::BasicStream* __os) const
+Rpc::EngineVersionBrowser::__writeImpl(::IceInternal::BasicStream* __os) const
 {
     __os->startWriteSlice(ice_staticId(), -1, true);
     __os->endWriteSlice();
 }
 
 void
-Rpc::EngineBrowser::__readImpl(::IceInternal::BasicStream* __is)
+Rpc::EngineVersionBrowser::__readImpl(::IceInternal::BasicStream* __is)
 {
     __is->startReadSlice();
     __is->endReadSlice();
 }
 
 void 
-Rpc::__patch(EngineBrowserPtr& handle, const ::Ice::ObjectPtr& v)
+Rpc::__patch(EngineVersionBrowserPtr& handle, const ::Ice::ObjectPtr& v)
 {
-    handle = ::Rpc::EngineBrowserPtr::dynamicCast(v);
+    handle = ::Rpc::EngineVersionBrowserPtr::dynamicCast(v);
     if(v && !handle)
     {
-        IceInternal::Ex::throwUOE(::Rpc::EngineBrowser::ice_staticId(), v);
+        IceInternal::Ex::throwUOE(::Rpc::EngineVersionBrowser::ice_staticId(), v);
     }
 }
 
@@ -2045,12 +2045,12 @@ Rpc::Session::___refresh(::IceInternal::Incoming& __inS, const ::Ice::Current& _
 }
 
 ::Ice::DispatchStatus
-Rpc::Session::___browseEngines(::IceInternal::Incoming& __inS, const ::Ice::Current& __current)
+Rpc::Session::___browseEngineVersions(::IceInternal::Incoming& __inS, const ::Ice::Current& __current)
 {
     __checkMode(::Ice::Normal, __current.mode);
     __inS.readEmptyParams();
-    ::Rpc::EngineBrowserPrx __p_browser;
-    ::Rpc::ErrorCode __ret = browseEngines(__p_browser, __current);
+    ::Rpc::EngineVersionBrowserPrx __p_browser;
+    ::Rpc::ErrorCode __ret = browseEngineVersions(__p_browser, __current);
     ::IceInternal::BasicStream* __os = __inS.__startWriteParams(::Ice::DefaultFormat);
     __os->write(__p_browser);
     __os->write(__ret);
@@ -2059,7 +2059,7 @@ Rpc::Session::___browseEngines(::IceInternal::Incoming& __inS, const ::Ice::Curr
 }
 
 ::Ice::DispatchStatus
-Rpc::Session::___uploadEngine(::IceInternal::Incoming& __inS, const ::Ice::Current& __current)
+Rpc::Session::___uploadEngineVersion(::IceInternal::Incoming& __inS, const ::Ice::Current& __current)
 {
     __checkMode(::Ice::Normal, __current.mode);
     ::IceInternal::BasicStream* __is = __inS.startReadParams();
@@ -2071,7 +2071,7 @@ Rpc::Session::___uploadEngine(::IceInternal::Incoming& __inS, const ::Ice::Curre
     __is->read(__p_info);
     __inS.endReadParams();
     ::Rpc::UploaderPrx __p_uploader;
-    ::Rpc::ErrorCode __ret = uploadEngine(__p_name, __p_version, __p_info, __p_uploader, __current);
+    ::Rpc::ErrorCode __ret = uploadEngineVersion(__p_name, __p_version, __p_info, __p_uploader, __current);
     ::IceInternal::BasicStream* __os = __inS.__startWriteParams(::Ice::DefaultFormat);
     __os->write(__p_uploader);
     __os->write(__ret);
@@ -2080,7 +2080,7 @@ Rpc::Session::___uploadEngine(::IceInternal::Incoming& __inS, const ::Ice::Curre
 }
 
 ::Ice::DispatchStatus
-Rpc::Session::___downloadEngine(::IceInternal::Incoming& __inS, const ::Ice::Current& __current)
+Rpc::Session::___downloadEngineVersion(::IceInternal::Incoming& __inS, const ::Ice::Current& __current)
 {
     __checkMode(::Ice::Normal, __current.mode);
     ::IceInternal::BasicStream* __is = __inS.startReadParams();
@@ -2090,7 +2090,7 @@ Rpc::Session::___downloadEngine(::IceInternal::Incoming& __inS, const ::Ice::Cur
     __is->read(__p_version);
     __inS.endReadParams();
     ::Rpc::DownloaderPrx __p_downloader;
-    ::Rpc::ErrorCode __ret = downloadEngine(__p_name, __p_version, __p_downloader, __current);
+    ::Rpc::ErrorCode __ret = downloadEngineVersion(__p_name, __p_version, __p_downloader, __current);
     ::IceInternal::BasicStream* __os = __inS.__startWriteParams(::Ice::DefaultFormat);
     __os->write(__p_downloader);
     __os->write(__ret);
@@ -2099,7 +2099,7 @@ Rpc::Session::___downloadEngine(::IceInternal::Incoming& __inS, const ::Ice::Cur
 }
 
 ::Ice::DispatchStatus
-Rpc::Session::___removeEngine(::IceInternal::Incoming& __inS, const ::Ice::Current& __current)
+Rpc::Session::___removeEngineVersion(::IceInternal::Incoming& __inS, const ::Ice::Current& __current)
 {
     __checkMode(::Ice::Normal, __current.mode);
     ::IceInternal::BasicStream* __is = __inS.startReadParams();
@@ -2108,7 +2108,7 @@ Rpc::Session::___removeEngine(::IceInternal::Incoming& __inS, const ::Ice::Curre
     __is->read(__p_name);
     __is->read(__p_version);
     __inS.endReadParams();
-    ::Rpc::ErrorCode __ret = removeEngine(__p_name, __p_version, __current);
+    ::Rpc::ErrorCode __ret = removeEngineVersion(__p_name, __p_version, __current);
     ::IceInternal::BasicStream* __os = __inS.__startWriteParams(::Ice::DefaultFormat);
     __os->write(__ret);
     __inS.__endWriteParams(true);
@@ -2119,16 +2119,16 @@ namespace
 {
 const ::std::string __Rpc__Session_all[] =
 {
-    "browseEngines",
+    "browseEngineVersions",
     "destroy",
-    "downloadEngine",
+    "downloadEngineVersion",
     "ice_id",
     "ice_ids",
     "ice_isA",
     "ice_ping",
     "refresh",
-    "removeEngine",
-    "uploadEngine"
+    "removeEngineVersion",
+    "uploadEngineVersion"
 };
 
 }
@@ -2146,7 +2146,7 @@ Rpc::Session::__dispatch(::IceInternal::Incoming& in, const ::Ice::Current& curr
     {
         case 0:
         {
-            return ___browseEngines(in, current);
+            return ___browseEngineVersions(in, current);
         }
         case 1:
         {
@@ -2154,7 +2154,7 @@ Rpc::Session::__dispatch(::IceInternal::Incoming& in, const ::Ice::Current& curr
         }
         case 2:
         {
-            return ___downloadEngine(in, current);
+            return ___downloadEngineVersion(in, current);
         }
         case 3:
         {
@@ -2178,11 +2178,11 @@ Rpc::Session::__dispatch(::IceInternal::Incoming& in, const ::Ice::Current& curr
         }
         case 8:
         {
-            return ___removeEngine(in, current);
+            return ___removeEngineVersion(in, current);
         }
         case 9:
         {
-            return ___uploadEngine(in, current);
+            return ___uploadEngineVersion(in, current);
         }
     }
 

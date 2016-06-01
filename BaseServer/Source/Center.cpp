@@ -17,7 +17,7 @@ Center::Center()
 	const fs::path currentPath = boost::filesystem::current_path();
 
 	baseDir_ = currentPath.string();
-	engineDir_ = (currentPath / "Engines").string();
+	engineDir_ = (currentPath / "EngineVersions").string();
 
 	if (!fs::exists(engineDir_) && !fs::create_directories(engineDir_)) {
 		throw std::runtime_error("failed to create directory");
@@ -29,9 +29,11 @@ Center::Center()
 		"Username TEXT COLLATE NOCASE UNIQUE, Password TEXT, \"Group\" TEXT, "
 		"RegTime DATETIME, Info TEXT)");
 
-	db_->exec("CREATE TABLE IF NOT EXISTS Engines ("
+	db_->exec("CREATE TABLE IF NOT EXISTS EngineVersions ("
 		"Name TEXT COLLATE NOCASE, Version TEXT COLLATE NOCASE, "
 		"UpTime DATETIME, Info TEXT, State TEXT)");
+
+	//db_->exec("CREATE TABLE IF NOT EXISTS Pages (Name TEXT PRIMARY KEY COLLATE NOCASE)");
 }
 
 Center::~Center()
@@ -85,7 +87,7 @@ std::string Center::engineFileName(const std::string& name, const std::string& v
 bool Center::getEngineVersionState(const std::string& name, const std::string& version, std::string& outState)
 {
 	std::ostringstream oss;
-	oss << "SELECT * FROM Engines";
+	oss << "SELECT * FROM EngineVersions";
 	oss << " WHERE ";
 	oss << "Name=" << sqlText(name);
 	oss << " AND ";
@@ -105,22 +107,27 @@ bool Center::getEngineVersionState(const std::string& name, const std::string& v
 void Center::addEngineVersion(const std::string& name, const std::string& version, const std::string& info)
 {
 	std::ostringstream oss;
-	oss << "INSERT INTO Engines VALUES (";
+	oss << "INSERT INTO EngineVersions VALUES (";
 	oss << sqlText(name) << ", ";
 	oss << sqlText(version) << ", ";
 	oss << sqlText(getCurrentTimeString()) << ", ";
 	oss << sqlText(info) << ", ";
 	oss << sqlText("Normal") << ")";
 
+	std::ostringstream oss2;
+	oss2 << "INSERT OR IGNORE INTO EngineNames VALUES (";
+	oss2 << sqlText(name) << ")";
+
 	SQLite::Transaction t(*db_);
 	db_->exec(oss.str());
+	db_->exec(oss2.str());
 	t.commit();
 }
 
 void Center::changeEngineVersionState(const std::string& name, const std::string& version, const std::string& state)
 {
 	std::ostringstream oss;
-	oss << "UPDATE Engines SET State=";
+	oss << "UPDATE EngineVersions SET State=";
 	oss << sqlText(state);
 	oss << " WHERE Name=";
 	oss << sqlText(name);

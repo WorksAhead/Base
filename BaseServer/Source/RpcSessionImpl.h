@@ -19,10 +19,10 @@ public:
 	virtual void destroy(const Ice::Current&);
 	virtual void refresh(const Ice::Current&);
 
-	virtual Rpc::ErrorCode browseEngines(Rpc::EngineBrowserPrx&, const Ice::Current&);
-	virtual Rpc::ErrorCode uploadEngine(const std::string&, const std::string&, const std::string&, Rpc::UploaderPrx&, const Ice::Current&);
-	virtual Rpc::ErrorCode downloadEngine(const std::string&, const std::string&, Rpc::DownloaderPrx&, const Ice::Current&);
-	virtual Rpc::ErrorCode removeEngine(const std::string&, const std::string&, const Ice::Current&);
+	virtual Rpc::ErrorCode browseEngineVersions(Rpc::EngineVersionBrowserPrx&, const Ice::Current&);
+	virtual Rpc::ErrorCode uploadEngineVersion(const std::string&, const std::string&, const std::string&, Rpc::UploaderPrx&, const Ice::Current&);
+	virtual Rpc::ErrorCode downloadEngineVersion(const std::string&, const std::string&, Rpc::DownloaderPrx&, const Ice::Current&);
+	virtual Rpc::ErrorCode removeEngineVersion(const std::string&, const std::string&, const Ice::Current&);
 
 	IceUtil::Time timestamp();
 

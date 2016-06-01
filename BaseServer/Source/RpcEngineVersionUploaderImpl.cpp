@@ -1,4 +1,4 @@
-#include "RpcEngineUploaderImpl.h"
+#include "RpcEngineVersionUploaderImpl.h"
 #include "SQLiteUtil.h"
 #include "Datetime.h"
 
@@ -6,11 +6,11 @@
 
 #include <Ice/Ice.h>
 
-RpcEngineUploaderImpl::RpcEngineUploaderImpl(CenterPtr center) : center_(center), EngineVerLocked_(false)
+RpcEngineVersionUploaderImpl::RpcEngineVersionUploaderImpl(CenterPtr center) : center_(center), EngineVerLocked_(false)
 {
 }
 
-RpcEngineUploaderImpl::~RpcEngineUploaderImpl()
+RpcEngineVersionUploaderImpl::~RpcEngineVersionUploaderImpl()
 {
 	if (EngineVerLocked_) {
 		center_->unlockEngineVersion(name_, version_, Center::lock_write);
@@ -18,7 +18,7 @@ RpcEngineUploaderImpl::~RpcEngineUploaderImpl()
 	}
 }
 
-Rpc::ErrorCode RpcEngineUploaderImpl::init(const std::string& name, const std::string& version, const std::string& info)
+Rpc::ErrorCode RpcEngineVersionUploaderImpl::init(const std::string& name, const std::string& version, const std::string& info)
 {
 	name_ = name;
 	version_ = version;
@@ -45,7 +45,7 @@ Rpc::ErrorCode RpcEngineUploaderImpl::init(const std::string& name, const std::s
 	return Rpc::ec_success;
 }
 
-Rpc::ErrorCode RpcEngineUploaderImpl::write(Ice::Long offset, const std::pair<const Ice::Byte*, const Ice::Byte*>& bytes, const Ice::Current& c)
+Rpc::ErrorCode RpcEngineVersionUploaderImpl::write(Ice::Long offset, const std::pair<const Ice::Byte*, const Ice::Byte*>& bytes, const Ice::Current& c)
 {
 	boost::recursive_mutex::scoped_lock lock(sync_);
 
@@ -60,7 +60,7 @@ Rpc::ErrorCode RpcEngineUploaderImpl::write(Ice::Long offset, const std::pair<co
 	return Rpc::ec_success;
 }
 
-Rpc::ErrorCode RpcEngineUploaderImpl::finish(Ice::Int crc32, const Ice::Current& c)
+Rpc::ErrorCode RpcEngineVersionUploaderImpl::finish(Ice::Int crc32, const Ice::Current& c)
 {
 	boost::recursive_mutex::scoped_lock lock(sync_);
 
@@ -98,7 +98,7 @@ Rpc::ErrorCode RpcEngineUploaderImpl::finish(Ice::Int crc32, const Ice::Current&
 	return Rpc::ec_success;
 }
 
-void RpcEngineUploaderImpl::cancel(const Ice::Current& c)
+void RpcEngineVersionUploaderImpl::cancel(const Ice::Current& c)
 {
 	c.adapter->remove(c.id);
 }

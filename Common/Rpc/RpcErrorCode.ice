@@ -12,6 +12,7 @@ module Rpc
 		ec_engine_version_is_removed,
 		ec_file_io_error,
 		ec_file_data_error,
+		ec_access_denied,
 	};
 };
 

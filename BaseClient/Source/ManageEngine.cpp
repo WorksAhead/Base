@@ -21,7 +21,6 @@ namespace fs = boost::filesystem;
 ManageEngine::ManageEngine(ContextPtr context, QWidget* parent) : QWidget(parent), context_(context)
 {
 	ui_.setupUi(this);
-	ui_.endTimeEdit->setDateTime(QDateTime::currentDateTime());
 
 	firstShow_ = true;
 
@@ -41,7 +40,7 @@ ManageEngine::~ManageEngine()
 void ManageEngine::showEvent(QShowEvent* e)
 {
 	if (firstShow_) {
-		context_->session->browseEngines(browser_);
+		context_->session->browseEngineVersions(browser_);
 		showMore(ITEMS_PER_REQUEST);
 		firstShow_ = false;
 	}
@@ -76,7 +75,7 @@ void ManageEngine::onShowAll()
 void ManageEngine::onRefresh()
 {
 	ui_.engineList->clear();
-	context_->session->browseEngines(browser_);
+	context_->session->browseEngineVersions(browser_);
 	showMore(ITEMS_PER_REQUEST);
 }
 
@@ -93,7 +92,7 @@ void ManageEngine::onRemove()
 
 	QList<QTreeWidgetItem*> items = ui_.engineList->selectedItems();
 	for (int i = 0; i < items.count(); ++i) {
-		context_->session->removeEngine(items[i]->text(0).toStdString(), items[i]->text(1).toStdString());
+		context_->session->removeEngineVersion(items[i]->text(0).toStdString(), items[i]->text(1).toStdString());
 	}
 }
 
@@ -105,7 +104,7 @@ void ManageEngine::showSubmitDialog()
 	{
 		Rpc::UploaderPrx uploader;
 
-		Rpc::ErrorCode ec = context_->session->uploadEngine(d.engine().toStdString(), d.version().toStdString(), d.info().toStdString(), uploader);
+		Rpc::ErrorCode ec = context_->session->uploadEngineVersion(d.engine().toStdString(), d.version().toStdString(), d.info().toStdString(), uploader);
 		if (ec != Rpc::ec_success) {
 			QMessageBox msg;
 			msg.setWindowTitle("Base");
@@ -124,7 +123,7 @@ void ManageEngine::showMore(int count)
 	{
 		const int n = std::min(count, ITEMS_PER_REQUEST);
 
-		Rpc::EngineItemSeq engineItems;
+		Rpc::EngineVersionItemSeq engineItems;
 		browser_->next(n, engineItems);
 
 		QList<QTreeWidgetItem*> items;

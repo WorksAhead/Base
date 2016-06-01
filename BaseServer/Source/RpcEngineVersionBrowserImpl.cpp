@@ -1,23 +1,23 @@
-#include "RpcEngineBrowserImpl.h"
+#include "RpcEngineVersionBrowserImpl.h"
 
 #include <Ice/Ice.h>
 
-RpcEngineBrowserImpl::RpcEngineBrowserImpl(CenterPtr center) : center_(center)
+RpcEngineVersionBrowserImpl::RpcEngineVersionBrowserImpl(CenterPtr center) : center_(center)
 {
 }
 
-RpcEngineBrowserImpl::~RpcEngineBrowserImpl()
+RpcEngineVersionBrowserImpl::~RpcEngineVersionBrowserImpl()
 {
 }
 
-Rpc::ErrorCode RpcEngineBrowserImpl::init()
+Rpc::ErrorCode RpcEngineVersionBrowserImpl::init()
 {
-	s_.reset(new SQLite::Statement(*center_->db(), "SELECT * FROM Engines ORDER BY UpTime DESC"));
+	s_.reset(new SQLite::Statement(*center_->db(), "SELECT * FROM EngineVersions ORDER BY UpTime DESC"));
 
 	return Rpc::ec_success;
 }
 
-Rpc::ErrorCode RpcEngineBrowserImpl::next(Ice::Int n, Rpc::EngineItemSeq& items, const Ice::Current&)
+Rpc::ErrorCode RpcEngineVersionBrowserImpl::next(Ice::Int n, Rpc::EngineVersionItemSeq& items, const Ice::Current&)
 {
 	boost::recursive_mutex::scoped_lock lock(sync_);
 
@@ -29,7 +29,7 @@ Rpc::ErrorCode RpcEngineBrowserImpl::next(Ice::Int n, Rpc::EngineItemSeq& items,
 			break;
 		}
 
-		Rpc::EngineItem item;
+		Rpc::EngineVersionItem item;
 		item.name = s_->getColumn("Name").getText();
 		item.version = s_->getColumn("Version").getText();
 		item.uptime = s_->getColumn("UpTime").getText();
@@ -42,7 +42,7 @@ Rpc::ErrorCode RpcEngineBrowserImpl::next(Ice::Int n, Rpc::EngineItemSeq& items,
 	return Rpc::ec_success;
 }
 
-Rpc::ErrorCode RpcEngineBrowserImpl::finish(const Ice::Current& c)
+Rpc::ErrorCode RpcEngineVersionBrowserImpl::finish(const Ice::Current& c)
 {
 	boost::recursive_mutex::scoped_lock lock(sync_);
 	c.adapter->remove(c.id);

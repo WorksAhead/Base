@@ -63,19 +63,22 @@
     <ClCompile Include="..\BaseServer\Source\Center.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\BaseServer\Source\RpcEngineUploaderImpl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\Common\Rpc\RpcTypedefs.cpp">
       <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="..\Common\Crc.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\BaseServer\Source\RpcEngineDownloaderImpl.cpp">
+    <ClCompile Include="..\Common\ErrorMessage.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseServer\Source\RpcEngineVersionBrowserImpl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\BaseServer\Source\RpcEngineBrowserImpl.cpp">
+    <ClCompile Include="..\BaseServer\Source\RpcEngineVersionDownloaderImpl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseServer\Source\RpcEngineVersionUploaderImpl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -134,19 +137,22 @@
     <ClInclude Include="..\BaseServer\Source\Center.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\BaseServer\Source\RpcEngineUploaderImpl.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\Common\Rpc\RpcTypedefs.h">
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="..\Common\Crc.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\BaseServer\Source\RpcEngineDownloaderImpl.h">
+    <ClInclude Include="..\Common\ErrorMessage.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseServer\Source\RpcEngineVersionBrowserImpl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\BaseServer\Source\RpcEngineBrowserImpl.h">
+    <ClInclude Include="..\BaseServer\Source\RpcEngineVersionDownloaderImpl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseServer\Source\RpcEngineVersionUploaderImpl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

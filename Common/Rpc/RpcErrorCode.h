@@ -56,7 +56,8 @@ enum ErrorCode
     ec_engine_version_does_not_exist = 5,
     ec_engine_version_is_removed = 6,
     ec_file_io_error = 7,
-    ec_file_data_error = 8
+    ec_file_data_error = 8,
+    ec_access_denied = 9
 };
 
 }
@@ -68,7 +69,7 @@ struct StreamableTraits< ::Rpc::ErrorCode>
 {
     static const StreamHelperCategory helper = StreamHelperCategoryEnum;
     static const int minValue = 0;
-    static const int maxValue = 8;
+    static const int maxValue = 9;
     static const int minWireSize = 1;
     static const bool fixedLength = false;
 };

@@ -10,14 +10,14 @@
 #include <boost/thread/recursive_mutex.hpp>
 #include <boost/shared_ptr.hpp>
 
-class RpcEngineBrowserImpl : public Rpc::EngineBrowser {
+class RpcEngineVersionBrowserImpl : public Rpc::EngineVersionBrowser {
 public:
-	explicit RpcEngineBrowserImpl(CenterPtr);
-	~RpcEngineBrowserImpl();
+	explicit RpcEngineVersionBrowserImpl(CenterPtr);
+	~RpcEngineVersionBrowserImpl();
 
 	Rpc::ErrorCode init();
 
-	virtual Rpc::ErrorCode next(Ice::Int, Rpc::EngineItemSeq&, const Ice::Current&);
+	virtual Rpc::ErrorCode next(Ice::Int, Rpc::EngineVersionItemSeq&, const Ice::Current&);
 	virtual Rpc::ErrorCode finish(const Ice::Current&);
 
 private:
@@ -26,7 +26,7 @@ private:
 	boost::recursive_mutex sync_;
 };
 
-typedef IceUtil::Handle<RpcEngineBrowserImpl> RpcEngineBrowserImplPtr;
+typedef IceUtil::Handle<RpcEngineVersionBrowserImpl> RpcEngineBrowserImplPtr;
 
 #endif // BASESERVER_RPCENGINEBROWSERIMPL_HEADER_
 

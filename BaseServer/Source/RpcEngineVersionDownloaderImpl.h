@@ -11,10 +11,10 @@
 #include <fstream>
 #include <string>
 
-class RpcEngineDownloaderImpl : public Rpc::Downloader {
+class RpcEngineVersionDownloaderImpl : public Rpc::Downloader {
 public:
-	explicit RpcEngineDownloaderImpl(CenterPtr);
-	~RpcEngineDownloaderImpl();
+	explicit RpcEngineVersionDownloaderImpl(CenterPtr);
+	~RpcEngineVersionDownloaderImpl();
 
 	Rpc::ErrorCode init(const std::string& name, const std::string& version);
 
@@ -31,7 +31,7 @@ private:
 	boost::recursive_mutex sync_;
 };
 
-typedef IceUtil::Handle<RpcEngineDownloaderImpl> RpcEngineDownloaderImplPtr;
+typedef IceUtil::Handle<RpcEngineVersionDownloaderImpl> RpcEngineDownloaderImplPtr;
 
 #endif // BASESERVER_RPCENGINEDOWNLOADERIMPL_HEADER_
 

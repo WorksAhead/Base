@@ -36,7 +36,7 @@ private:
 
 	ContextPtr context_;
 
-	Rpc::EngineBrowserPrx browser_;
+	Rpc::EngineVersionBrowserPrx browser_;
 };
 
 #endif // MANAGEENGINE_HEADER_
