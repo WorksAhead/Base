@@ -6,6 +6,7 @@
 #include <SQLiteCpp/Transaction.h>
 
 #include <boost/filesystem.hpp>
+#include <boost/algorithm/string.hpp>
 
 #include <sstream>
 #include <assert.h>
@@ -33,11 +34,75 @@ Center::Center()
 		"Name TEXT COLLATE NOCASE, Version TEXT COLLATE NOCASE, "
 		"UpTime DATETIME, Info TEXT, State TEXT)");
 
-	//db_->exec("CREATE TABLE IF NOT EXISTS Pages (Name TEXT PRIMARY KEY COLLATE NOCASE)");
+	db_->exec("CREATE TABLE IF NOT EXISTS Info ("
+		"Key TEXT UNIQUE, Value TEXT)");
+
+	loadPagesFromDb();
+	loadCategoriesFromDb();
 }
 
 Center::~Center()
 {
+}
+
+void Center::setPages(const std::vector<std::string>& pages)
+{
+	boost::mutex::scoped_lock lock(pagesSync_);
+
+	std::string s;
+	for (const std::string& page : pages) {
+		if (s.size()) {
+			s += ",";
+		}
+		s += page;
+	}
+
+	std::ostringstream oss;
+	oss << "INSERT OR REPLACE INTO Info VALUES ('Pages', ";
+	oss << sqlText(s);
+	oss << ")";
+
+	SQLite::Transaction t(*db_);
+	db_->exec(oss.str());
+	t.commit();
+
+	pages_ = pages;
+}
+
+void Center::getPages(std::vector<std::string>& pages)
+{
+	boost::mutex::scoped_lock lock(pagesSync_);
+	pages = pages_;
+}
+
+void Center::setCategories(const std::vector<std::string>& categories)
+{
+	boost::mutex::scoped_lock lock(categoriesSync_);
+
+	std::string s;
+	for (const std::string& category : categories) {
+		if (s.size()) {
+			s += ",";
+		}
+		s += category;
+	}
+
+	std::ostringstream oss;
+	oss << "INSERT OR REPLACE INTO Info VALUES ('Categories', ";
+	oss << sqlText(s);
+	oss << ")";
+
+	SQLite::Transaction t(*db_);
+	db_->exec(oss.str());
+	t.commit();
+
+	categories_ = categories;
+}
+
+void Center::getCategories(std::vector<std::string>& categories)
+{
+	boost::mutex::scoped_lock lock(categoriesSync_);
+	categories = categories_;
 }
 
 bool Center::lockEngineVersion(const std::string& name, const std::string& version, LockMode mode)
@@ -137,5 +202,33 @@ void Center::changeEngineVersionState(const std::string& name, const std::string
 	SQLite::Transaction t(*db_);
 	db_->exec(oss.str());
 	t.commit();
+}
+
+void Center::loadPagesFromDb()
+{
+	boost::mutex::scoped_lock lock(pagesSync_);
+
+	SQLite::Statement s(*db_, "SELECT Value FROM Info WHERE Key='Pages'");
+	if (!s.executeStep()) {
+		return;
+	}
+
+	SQLite::Column col = s.getColumn("Value");
+
+	boost::split(pages_, std::string(col.getText()), boost::is_any_of(","), boost::token_compress_on);
+}
+
+void Center::loadCategoriesFromDb()
+{
+	boost::mutex::scoped_lock lock(categoriesSync_);
+
+	SQLite::Statement s(*db_, "SELECT Value FROM Info WHERE Key='Categories'");
+	if (!s.executeStep()) {
+		return;
+	}
+
+	SQLite::Column col = s.getColumn("Value");
+
+	boost::split(categories_, std::string(col.getText()), boost::is_any_of(","), boost::token_compress_on);
 }
 

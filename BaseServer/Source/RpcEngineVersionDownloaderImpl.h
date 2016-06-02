@@ -18,8 +18,10 @@ public:
 
 	Rpc::ErrorCode init(const std::string& name, const std::string& version);
 
+	virtual Rpc::ErrorCode getSize(Ice::Long&, const Ice::Current&);
+
 	virtual Rpc::ErrorCode read(Ice::Long, Ice::Int, Rpc::ByteSeq&, const Ice::Current&);
-	virtual Rpc::ErrorCode finish(const Ice::Current&);
+	virtual void finish(const Ice::Current&);
 	virtual void cancel(const Ice::Current&);
 
 private:
@@ -28,6 +30,7 @@ private:
 	std::string name_;
 	std::string version_;
 	boost::shared_ptr<std::fstream> stream_;
+	std::streamsize size_;
 	boost::recursive_mutex sync_;
 };
 

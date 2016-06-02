@@ -48,35 +48,45 @@ Rpc::ErrorCode RpcEngineVersionDownloaderImpl::init(const std::string& name, con
 		return Rpc::ec_file_io_error;
 	}
 
+	stream_->seekg(0, std::ios::end);
+	size_ = stream_->tellg();
+	stream_->seekg(0, std::ios::beg);
+
 	return Rpc::ec_success;
 }
 
-Rpc::ErrorCode RpcEngineVersionDownloaderImpl::read(Ice::Long offset, Ice::Int num, Rpc::ByteSeq& bytes, const Ice::Current&)
+Rpc::ErrorCode RpcEngineVersionDownloaderImpl::getSize(Ice::Long& size, const Ice::Current&)
+{
+	size = size_;
+	return Rpc::ec_success;
+}
+
+Rpc::ErrorCode RpcEngineVersionDownloaderImpl::read(Ice::Long offset, Ice::Int size, Rpc::ByteSeq& bytes, const Ice::Current&)
 {
 	boost::recursive_mutex::scoped_lock lock(sync_);
+
+	if (offset + size > size_) {
+		return Rpc::ec_out_of_range;
+	}
 
 	if (!stream_->seekg(offset)) {
 		return Rpc::ec_file_io_error;
 	}
 
-	bytes.resize(num);
+	bytes.resize(size);
 
-	if (!stream_->read((char*)&bytes[0], num)) {
+	if (!stream_->read((char*)&bytes[0], size)) {
 		return Rpc::ec_file_io_error;
 	}
 
 	return Rpc::ec_success;
 }
 
-Rpc::ErrorCode RpcEngineVersionDownloaderImpl::finish(const Ice::Current& c)
+void RpcEngineVersionDownloaderImpl::finish(const Ice::Current& c)
 {
 	boost::recursive_mutex::scoped_lock lock(sync_);
-
 	stream_.reset();
-
 	c.adapter->remove(c.id);
-
-	return Rpc::ec_success;
 }
 
 void RpcEngineVersionDownloaderImpl::cancel(const Ice::Current& c)

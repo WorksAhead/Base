@@ -19,6 +19,14 @@ public:
 	virtual void destroy(const Ice::Current&);
 	virtual void refresh(const Ice::Current&);
 
+	virtual Rpc::ErrorCode setPages(const Rpc::StringSeq&, const Ice::Current&);
+	virtual Rpc::ErrorCode getPages(Rpc::StringSeq&, const Ice::Current&);
+
+	virtual Rpc::ErrorCode setCategories(const Rpc::StringSeq&, const Ice::Current&);
+	virtual Rpc::ErrorCode getCategories(Rpc::StringSeq&, const Ice::Current&);
+
+	virtual Rpc::ErrorCode browseContent(const ::std::string&, const ::std::string&, const ::std::string&, Rpc::ContentBrowserPrx&, const Ice::Current&);
+
 	virtual Rpc::ErrorCode browseEngineVersions(Rpc::EngineVersionBrowserPrx&, const Ice::Current&);
 	virtual Rpc::ErrorCode uploadEngineVersion(const std::string&, const std::string&, const std::string&, Rpc::UploaderPrx&, const Ice::Current&);
 	virtual Rpc::ErrorCode downloadEngineVersion(const std::string&, const std::string&, Rpc::DownloaderPrx&, const Ice::Current&);

@@ -106,10 +106,7 @@ void ManageEngine::showSubmitDialog()
 
 		Rpc::ErrorCode ec = context_->session->uploadEngineVersion(d.engine().toStdString(), d.version().toStdString(), d.info().toStdString(), uploader);
 		if (ec != Rpc::ec_success) {
-			QMessageBox msg;
-			msg.setWindowTitle("Base");
-			msg.setText(errorMessage(ec));
-			msg.exec();
+			context_->promptRpcError(ec);
 			return;
 		}
 

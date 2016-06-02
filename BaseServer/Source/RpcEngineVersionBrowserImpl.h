@@ -18,7 +18,7 @@ public:
 	Rpc::ErrorCode init();
 
 	virtual Rpc::ErrorCode next(Ice::Int, Rpc::EngineVersionItemSeq&, const Ice::Current&);
-	virtual Rpc::ErrorCode finish(const Ice::Current&);
+	virtual void finish(const Ice::Current&);
 
 private:
 	CenterPtr center_;

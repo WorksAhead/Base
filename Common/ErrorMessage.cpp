@@ -18,6 +18,8 @@ const char* errorMessage(Rpc::ErrorCode ec)
 		return "File IO error";
 	case Rpc::ec_file_data_error:
 		return "File data error";
+	case Rpc::ec_out_of_range:
+		return "Out of range";
 	case Rpc::ec_access_denied:
 		return "Access denied";
 	default:

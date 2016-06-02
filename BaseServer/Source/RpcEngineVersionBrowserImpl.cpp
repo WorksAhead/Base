@@ -42,10 +42,9 @@ Rpc::ErrorCode RpcEngineVersionBrowserImpl::next(Ice::Int n, Rpc::EngineVersionI
 	return Rpc::ec_success;
 }
 
-Rpc::ErrorCode RpcEngineVersionBrowserImpl::finish(const Ice::Current& c)
+void RpcEngineVersionBrowserImpl::finish(const Ice::Current& c)
 {
 	boost::recursive_mutex::scoped_lock lock(sync_);
 	c.adapter->remove(c.id);
-	return Rpc::ec_success;
 }
 

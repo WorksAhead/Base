@@ -27,6 +27,7 @@ public:
 
 private:
 	std::string uniquePath();
+	void promptRpcError(Rpc::ErrorCode);
 
 private:
 	Ui::DecoratorWidget decoratorWidgetUi_;

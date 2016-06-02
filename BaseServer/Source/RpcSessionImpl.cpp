@@ -46,6 +46,39 @@ void RpcSessionImpl::refresh(const Ice::Current&)
 	timestamp_ = IceUtil::Time::now(IceUtil::Time::Monotonic);
 }
 
+Rpc::ErrorCode RpcSessionImpl::setPages(const Rpc::StringSeq& pages, const Ice::Current&)
+{
+	boost::recursive_mutex::scoped_lock lock(sync_);
+	center_->setPages(pages);
+	return Rpc::ec_success;
+}
+
+Rpc::ErrorCode RpcSessionImpl::getPages(Rpc::StringSeq& pages, const Ice::Current&)
+{
+	boost::recursive_mutex::scoped_lock lock(sync_);
+	center_->getPages(pages);
+	return Rpc::ec_success;
+}
+
+Rpc::ErrorCode RpcSessionImpl::setCategories(const Rpc::StringSeq& categories, const Ice::Current&)
+{
+	boost::recursive_mutex::scoped_lock lock(sync_);
+	center_->setCategories(categories);
+	return Rpc::ec_success;
+}
+
+Rpc::ErrorCode RpcSessionImpl::getCategories(Rpc::StringSeq& categories, const Ice::Current&)
+{
+	boost::recursive_mutex::scoped_lock lock(sync_);
+	center_->getCategories(categories);
+	return Rpc::ec_success;
+}
+
+Rpc::ErrorCode RpcSessionImpl::browseContent(const ::std::string& page, const ::std::string& category, const ::std::string& orderBy, Rpc::ContentBrowserPrx& browserPrx, const Ice::Current& c)
+{
+	return Rpc::ec_access_denied;
+}
+
 Rpc::ErrorCode RpcSessionImpl::browseEngineVersions(Rpc::EngineVersionBrowserPrx& browserPrx, const Ice::Current& c)
 {
 	boost::recursive_mutex::scoped_lock lock(sync_);

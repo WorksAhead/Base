@@ -174,7 +174,7 @@ QListWidget#VTabList {
 	border-top: 0;
 	border-left: 0;
 	border-bottom: 0;
-	border-right: 0;/*2px solid rgb(40, 40, 40);*/
+	border-right: 1px solid rgb(20, 20, 20);
 	background-color: rgb(30, 30, 30);
 	font-size: 16px;
 }
@@ -200,6 +200,11 @@ QProgressBar::chunk {
 }
 
 ManageEngine {
+	background: rgb(30, 30, 30);
+	/*border: 2px solid rgb(20, 20, 20);*/
+}
+
+ManagePage {
 	background: rgb(30, 30, 30);
 	/*border: 2px solid rgb(20, 20, 20);*/
 }

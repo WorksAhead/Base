@@ -5,6 +5,11 @@
 
 module Rpc
 {
+	interface ContentBrowser
+	{
+		void finish();
+	};
+
 	struct EngineVersionItem
 	{
 		string name;
@@ -19,7 +24,7 @@ module Rpc
 	interface EngineVersionBrowser
 	{
 		ErrorCode next(int n, out EngineVersionItemSeq items);
-		ErrorCode finish();
+		void finish();
 	};
 
 	interface Uploader
@@ -31,15 +36,23 @@ module Rpc
 
 	interface Downloader
 	{
-		ErrorCode read(long offset, int num, out ByteSeq bytes);
-		ErrorCode finish();
-		void cancel();
+		ErrorCode getSize(out long size);
+		ErrorCode read(long offset, int size, out ByteSeq bytes);
+		void finish();
 	};
 
 	interface Session
 	{
 		void destroy();
 		void refresh();
+
+		ErrorCode setPages(StringSeq pages);
+		ErrorCode getPages(out StringSeq pages);
+
+		ErrorCode setCategories(StringSeq categories);
+		ErrorCode getCategories(out StringSeq categories);
+
+		ErrorCode browseContent(string page, string category, string orderBy, out ContentBrowser* browser);
 
 		ErrorCode browseEngineVersions(out EngineVersionBrowser* browser);
 		ErrorCode uploadEngineVersion(string name, string version, string info, out Uploader* uploader);

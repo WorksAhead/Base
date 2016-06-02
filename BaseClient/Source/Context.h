@@ -15,6 +15,7 @@ struct Context
 	Rpc::SessionPrx session;
 	std::function<void(ASyncTask*)> addTask;
 	std::function<std::string()> uniquePath;
+	std::function<void(Rpc::ErrorCode)> promptRpcError;
 };
 
 typedef std::shared_ptr<Context> ContextPtr;

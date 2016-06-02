@@ -5,8 +5,10 @@
 
 #include <boost/shared_ptr.hpp>
 #include <boost/thread/mutex.hpp>
+#include <boost/thread/recursive_mutex.hpp>
 
 #include <unordered_map>
+#include <vector>
 #include <string>
 
 class Center {
@@ -19,6 +21,12 @@ public:
 public:
 	Center();
 	~Center();
+
+	void setPages(const std::vector<std::string>&);
+	void getPages(std::vector<std::string>&);
+
+	void setCategories(const std::vector<std::string>&);
+	void getCategories(std::vector<std::string>&);
 
 	bool lockEngineVersion(const std::string& name, const std::string& version, LockMode);
 	void unlockEngineVersion(const std::string& name, const std::string& version, LockMode);
@@ -35,9 +43,21 @@ public:
 	DatabasePtr db() const { return db_; }
 
 private:
+	void loadPagesFromDb();
+	void loadCategoriesFromDb();
+
+private:
 	std::string baseDir_;
 	std::string engineDir_;
+
 	DatabasePtr db_;
+
+	std::vector<std::string> pages_;
+	boost::mutex pagesSync_;
+
+	std::vector<std::string> categories_;
+	boost::mutex categoriesSync_;
+
 	std::unordered_map<std::string, int> lockedEngineVersionSet_;
 	boost::mutex lockedEngineVersionSetSync_;
 };

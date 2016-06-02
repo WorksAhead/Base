@@ -1,8 +1,10 @@
 #include "BaseClient.h"
 #include "Manage.h"
+#include "ErrorMessage.h"
 
 #include <QTabBar>
 #include <QTextEdit>
+#include <QMessageBox>
 
 #include <boost/filesystem.hpp>
 #include <boost/uuid/uuid.hpp>
@@ -40,6 +42,7 @@ BaseClient::BaseClient(Rpc::SessionPrx session)
 	context_->session = session;
 	context_->addTask = std::bind(&ASyncTaskListWidget::addTask, taskManagerDialog_->listWidget(), std::placeholders::_1);
 	context_->uniquePath = std::bind(&BaseClient::uniquePath, this);
+	context_->promptRpcError = std::bind(&BaseClient::promptRpcError, this, std::placeholders::_1);
 
 	QWidget* decoratorWidget = new QWidget;
 	decoratorWidgetUi_.setupUi(decoratorWidget);
@@ -78,3 +81,11 @@ std::string BaseClient::uniquePath()
 	return p.string();
 }
 
+void BaseClient::promptRpcError(Rpc::ErrorCode ec)
+{
+	QMessageBox msg;
+	msg.setWindowTitle("Base");
+	msg.setText(errorMessage(ec));
+	msg.exec();
+	return;
+}
