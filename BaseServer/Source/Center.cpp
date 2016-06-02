@@ -179,13 +179,8 @@ void Center::addEngineVersion(const std::string& name, const std::string& versio
 	oss << sqlText(info) << ", ";
 	oss << sqlText("Normal") << ")";
 
-	std::ostringstream oss2;
-	oss2 << "INSERT OR IGNORE INTO EngineNames VALUES (";
-	oss2 << sqlText(name) << ")";
-
 	SQLite::Transaction t(*db_);
 	db_->exec(oss.str());
-	db_->exec(oss2.str());
 	t.commit();
 }
 

@@ -174,7 +174,7 @@ QListWidget#VTabList {
 	border-top: 0;
 	border-left: 0;
 	border-bottom: 0;
-	border-right: 1px solid rgb(20, 20, 20);
+	/*border-right: 1px solid rgb(20, 20, 20);*/
 	background-color: rgb(30, 30, 30);
 	font-size: 16px;
 }
@@ -190,6 +190,13 @@ QListWidget#VTabList::item:selected {
 	background-color: rgb(20, 20, 20);
 }
 
+QHeaderView::section {
+    background-color: rgb(40, 40, 40);
+    color: rgb(250, 250, 250);
+    padding-left: 4px;
+    border: 1px solid rgb(30, 30, 30);
+}
+
 QProgressBar {
     border: 1px solid rgb(80, 80, 80);
 	border-radius: 3px;
@@ -197,6 +204,16 @@ QProgressBar {
 
 QProgressBar::chunk {
     background-color: rgb(80, 80, 80);
+}
+
+QTreeView,
+QListView {
+	background: rgb(20, 20, 20);
+}
+
+QTreeView::item:selected,
+QListView::item:selected {
+    background: rgb(246, 96, 0);
 }
 
 ManageEngine {

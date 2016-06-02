@@ -89,3 +89,4 @@ void BaseClient::promptRpcError(Rpc::ErrorCode ec)
 	msg.exec();
 	return;
 }
+
