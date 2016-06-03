@@ -8,6 +8,7 @@
 // forward declaration
 class ManageEngine;
 class ManagePage;
+class ManageCategory;
 
 class Manage : public QWidget {
 private:
@@ -20,6 +21,7 @@ public:
 private:
 	ManageEngine* manageEngine_;
 	ManagePage* managePage_;
+	ManageCategory* manageCategory_;
 
 	ContextPtr context_;
 };

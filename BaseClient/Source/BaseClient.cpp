@@ -1,4 +1,5 @@
 #include "BaseClient.h"
+#include "Page.h"
 #include "Manage.h"
 #include "ErrorMessage.h"
 
@@ -49,8 +50,6 @@ BaseClient::BaseClient(Rpc::SessionPrx session)
 
 	setDecoratorWidget(decoratorWidget);
 
-	manage_ = new Manage(context_);
-
 	tab_ = new QTabWidget;
 	tab_->setAutoFillBackground(true);
 	tab_->setObjectName("MainTab");
@@ -59,6 +58,19 @@ BaseClient::BaseClient(Rpc::SessionPrx session)
 	QFont font = tab_->tabBar()->font();
 	font.setPixelSize(16);
 	tab_->tabBar()->setFont(font);
+
+	Rpc::StringSeq pages;
+	Rpc::ErrorCode ec = session->getPages(pages);
+	if (ec != Rpc::ec_success) {
+		promptRpcError(ec);
+		throw int(0);
+	}
+
+	for (const std::string& page : pages) {
+		tab_->addTab(new Page(context_, page.c_str()), page.c_str());
+	}
+
+	manage_ = new Manage(context_);
 
 	tab_->addTab(manage_, "Manage");
 

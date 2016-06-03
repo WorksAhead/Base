@@ -100,6 +100,24 @@ QPushButton:!flat:pressed {
 	border: 1px solid rgb(246, 96, 0);
 }
 
+QComboBox {
+	color: rgb(250, 250, 250);
+	background: rgb(60, 60, 60);
+	border: 1px solid rgb(80, 80, 80);
+	border-radius: 2px;
+	padding: 2px 5px 2px 5px;
+}
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 15px;
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+}
+QComboBox::down-arrow {
+    image: url(:/Icons/IndicatorArrowDown.png);
+}
+
 QTabWidget#loginDialogTab::pane {
 	margin: 0;
 	border: 0;
@@ -216,12 +234,21 @@ QListView::item:selected {
     background: rgb(246, 96, 0);
 }
 
+Page {
+	background: rgb(30, 30, 30);
+}
+
 ManageEngine {
 	background: rgb(30, 30, 30);
 	/*border: 2px solid rgb(20, 20, 20);*/
 }
 
 ManagePage {
+	background: rgb(30, 30, 30);
+	/*border: 2px solid rgb(20, 20, 20);*/
+}
+
+ManageCategory {
 	background: rgb(30, 30, 30);
 	/*border: 2px solid rgb(20, 20, 20);*/
 }
