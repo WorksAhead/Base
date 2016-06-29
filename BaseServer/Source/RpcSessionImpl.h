@@ -1,7 +1,7 @@
 #ifndef BASESERVER_RPCSESSIONIMPL_HEADER_
 #define BASESERVER_RPCSESSIONIMPL_HEADER_
 
-#include "Center.h"
+#include "Context.h"
 
 #include <RpcSession.h>
 
@@ -13,10 +13,11 @@
 
 class RpcSessionImpl : public Rpc::Session {
 public:
-	explicit RpcSessionImpl(CenterPtr);
+	explicit RpcSessionImpl(ContextPtr);
 	~RpcSessionImpl();
 
 	virtual void destroy(const Ice::Current&);
+
 	virtual void refresh(const Ice::Current&);
 
 	virtual Rpc::ErrorCode setPages(const Rpc::StringSeq&, const Ice::Current&);
@@ -26,6 +27,8 @@ public:
 	virtual Rpc::ErrorCode getCategories(Rpc::StringSeq&, const Ice::Current&);
 
 	virtual Rpc::ErrorCode browseContent(const ::std::string&, const ::std::string&, const ::std::string&, Rpc::ContentBrowserPrx&, const Ice::Current&);
+
+	virtual Rpc::ErrorCode submitContent(Rpc::ContentSubmitterPrx&, const Ice::Current&);
 
 	virtual Rpc::ErrorCode browseEngineVersions(Rpc::EngineVersionBrowserPrx&, const Ice::Current&);
 	virtual Rpc::ErrorCode uploadEngineVersion(const std::string&, const std::string&, const std::string&, Rpc::UploaderPrx&, const Ice::Current&);
@@ -38,11 +41,10 @@ private:
 	void checkIsDestroyed();
 
 private:
-	bool destroy_;
+	bool destroyed_;
 	IceUtil::Time timestamp_;
-	CenterPtr center_;
+	ContextPtr context_;
 	boost::recursive_mutex sync_;
-	std::set<Ice::Identity> ids_;
 };
 
 typedef IceUtil::Handle<RpcSessionImpl> RpcSessionImplPtr;

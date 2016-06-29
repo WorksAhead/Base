@@ -17,11 +17,16 @@ public:
 
 	Rpc::ErrorCode init();
 
+	virtual void destroy(const Ice::Current&);
+
 	virtual Rpc::ErrorCode next(Ice::Int, Rpc::EngineVersionItemSeq&, const Ice::Current&);
-	virtual void finish(const Ice::Current&);
+
+private:
+	void checkIsDestroyed();
 
 private:
 	CenterPtr center_;
+	bool destroyed_;
 	boost::shared_ptr<SQLite::Statement> s_;
 	boost::recursive_mutex sync_;
 };

@@ -36,6 +36,11 @@ public:
 
 	QRect frameGeometry() const;
 	const QRect& geometry() const;
+	QRect frameNormalGeometry() const;
+	QRect normalGeometry() const;
+
+	void setFrameGeometry(const QRect&);
+	void setGeometry(const QRect&);
 
 	int x() const;
 	int y() const;

@@ -6,9 +6,11 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/recursive_mutex.hpp>
+#include <boost/uuid/random_generator.hpp>
 
 #include <unordered_map>
 #include <vector>
+#include <map>
 #include <string>
 
 class Center {
@@ -31,10 +33,16 @@ public:
 	bool lockEngineVersion(const std::string& name, const std::string& version, LockMode);
 	void unlockEngineVersion(const std::string& name, const std::string& version, LockMode);
 
-	std::string baseDir() const { return baseDir_; }
 	std::string engineDir() const { return engineDir_; }
+	std::string contentDir() const { return contentDir_; }
 
-	std::string engineFileName(const std::string& name, const std::string& version) const;
+	std::string generateUuid();
+
+	std::string getEnginePath(const std::string& name, const std::string& version);
+	std::string getContentPath(const std::string& uid);
+
+	void addContent(const std::map<std::string, std::string>& form, const std::string& uid);
+	bool getContent(std::map<std::string, std::string>& form, const std::string& uid);
 
 	bool getEngineVersionState(const std::string& name, const std::string& version, std::string& outState);
 	void addEngineVersion(const std::string& name, const std::string& version, const std::string& info);
@@ -49,6 +57,9 @@ private:
 private:
 	std::string baseDir_;
 	std::string engineDir_;
+	std::string contentDir_;
+
+	boost::uuids::random_generator uniquePathGen_;
 
 	DatabasePtr db_;
 

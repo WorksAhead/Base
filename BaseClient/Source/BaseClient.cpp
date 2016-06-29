@@ -95,10 +95,7 @@ std::string BaseClient::uniquePath()
 
 void BaseClient::promptRpcError(Rpc::ErrorCode ec)
 {
-	QMessageBox msg;
-	msg.setWindowTitle("Base");
-	msg.setText(errorMessage(ec));
-	msg.exec();
+	QMessageBox::critical(this, "Base", errorMessage(ec));
 	return;
 }
 

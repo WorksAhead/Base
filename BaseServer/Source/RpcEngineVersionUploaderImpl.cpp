@@ -1,10 +1,4 @@
 #include "RpcEngineVersionUploaderImpl.h"
-#include "SQLiteUtil.h"
-#include "Datetime.h"
-
-#include <Crc.h>
-
-#include <Ice/Ice.h>
 
 RpcEngineVersionUploaderImpl::RpcEngineVersionUploaderImpl(CenterPtr center) : center_(center), EngineVerLocked_(false)
 {
@@ -12,10 +6,7 @@ RpcEngineVersionUploaderImpl::RpcEngineVersionUploaderImpl(CenterPtr center) : c
 
 RpcEngineVersionUploaderImpl::~RpcEngineVersionUploaderImpl()
 {
-	if (EngineVerLocked_) {
-		center_->unlockEngineVersion(name_, version_, Center::lock_write);
-		EngineVerLocked_ = false;
-	}
+	unlockEngineVersionIfLocked();
 }
 
 Rpc::ErrorCode RpcEngineVersionUploaderImpl::init(const std::string& name, const std::string& version, const std::string& info)
@@ -35,71 +26,40 @@ Rpc::ErrorCode RpcEngineVersionUploaderImpl::init(const std::string& name, const
 		return Rpc::ec_engine_version_already_exists;
 	}
 
-	const std::string& filename = center_->engineFileName(name, version);
-	stream_.reset(new std::fstream(filename.c_str(), std::ios::out|std::ios::binary));
-
-	if (!stream_->is_open()) {
-		return Rpc::ec_file_io_error;
-	}
-
-	return Rpc::ec_success;
-}
-
-Rpc::ErrorCode RpcEngineVersionUploaderImpl::write(Ice::Long offset, const std::pair<const Ice::Byte*, const Ice::Byte*>& bytes, const Ice::Current& c)
-{
-	boost::recursive_mutex::scoped_lock lock(sync_);
-
-	if (!stream_->seekp(offset)) {
-		return Rpc::ec_file_io_error;
-	}
-
-	if (!stream_->write((const char*)bytes.first, bytes.second - bytes.first)) {
-		return Rpc::ec_file_io_error;
-	}
-
-	return Rpc::ec_success;
+	return RpcFileUploaderImpl::init(center_->getEnginePath(name, version));
 }
 
 Rpc::ErrorCode RpcEngineVersionUploaderImpl::finish(Ice::Int crc32, const Ice::Current& c)
 {
 	boost::recursive_mutex::scoped_lock lock(sync_);
+	checkIsDestroyed();
 
-	if (!stream_->flush()) {
-		return Rpc::ec_file_io_error;
+	Rpc::ErrorCode ec = RpcFileUploaderImpl::finish(crc32, c);
+
+	if (ec != Rpc::ec_success) {
+		return ec;
 	}
-
-	const std::string& filename = center_->engineFileName(name_, version_);
-	stream_.reset(new std::fstream(filename.c_str(), std::ios::in|std::ios::binary));
-
-	if (!stream_->is_open()) {
-		return Rpc::ec_file_io_error;
-	}
-
-	if (!stream_->seekg(0, std::ios::end)) {
-		return Rpc::ec_file_io_error;
-	}
-
-	const auto len = stream_->tellp();
-
-	if (!stream_->seekg(0, std::ios::beg)) {
-		return Rpc::ec_file_io_error;
-	}
-
-	if (static_cast<uint32_t>(crc32) != calculateCRC(*stream_, len)) {
-		return Rpc::ec_file_data_error;
-	}
-
-	stream_.reset();
 
 	center_->addEngineVersion(name_, version_, info_);
-
-	c.adapter->remove(c.id);
+	unlockEngineVersionIfLocked();
 
 	return Rpc::ec_success;
 }
 
 void RpcEngineVersionUploaderImpl::cancel(const Ice::Current& c)
 {
-	c.adapter->remove(c.id);
+	boost::recursive_mutex::scoped_lock lock(sync_);
+	checkIsDestroyed();
+
+	RpcFileUploaderImpl::cancel(c);
+	unlockEngineVersionIfLocked();
+}
+
+void RpcEngineVersionUploaderImpl::unlockEngineVersionIfLocked()
+{
+	if (EngineVerLocked_) {
+		center_->unlockEngineVersion(name_, version_, Center::lock_write);
+		EngineVerLocked_ = false;
+	}
 }
 

@@ -25,6 +25,7 @@ public:
 	Packer(const Path& packFile, const Path& basePath, const std::vector<Path>& srcFiles, int level);
 	~Packer();
 
+	size_t currentIndex() const;
 	Path currentFile() const;
 	std::string errorMessage() const;
 

@@ -29,6 +29,11 @@ Packer::~Packer()
 	}
 }
 
+size_t Packer::currentIndex() const
+{
+	return currentIdx_;
+}
+
 Packer::Path Packer::currentFile() const
 {
 	if (currentIdx_ < srcFiles_.size()) {

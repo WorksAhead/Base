@@ -1,7 +1,9 @@
-#ifndef UPLOADTASK_HEADER_
-#define UPLOADTASK_HEADER_
+#ifndef ASYNCSUBMITENGINETASK_HEADER_
+#define ASYNCSUBMITENGINETASK_HEADER_
 
 #include "ASyncTask.h"
+#include "AsyncPackTask.h"
+#include "ASyncUploadTask.h"
 #include "Context.h"
 
 #include <RpcSession.h>
@@ -12,10 +14,14 @@
 #include <thread>
 #include <string>
 
-class UploadTask : public ASyncTask {
+class ASyncSubmitEngineTask : public ASyncTask {
 public:
-	UploadTask(ContextPtr context, std::string infoHead, const std::string& path, Rpc::UploaderPrx uploader);
-	~UploadTask();
+	ASyncSubmitEngineTask(ContextPtr context, Rpc::UploaderPrx uploader);
+	~ASyncSubmitEngineTask();
+
+	void setInfoHead(const std::string&);
+
+	void setPath(const std::string&);
 
 	virtual void start();
 	virtual void cancel();
@@ -26,20 +32,22 @@ public:
 
 private:
 	void run();
+	int update(ASyncTask*, int, double);
 
 private:
 	ContextPtr context_;
+	Rpc::UploaderPrx uploader_;
+
 	std::string path_;
 	std::string infoHead_;
-	std::string infoBody_;
-	Rpc::UploaderPrx uploader_;
+	std::string info_;
 
 	int state_;
 	int progress_;
-	bool cancel_;
+	bool cancelled_;
 	boost::mutex sync_;
 	std::shared_ptr<std::thread> t_;
 };
 
-#endif // UPLOADTASK_HEADER_
+#endif // ASYNCSUBMITENGINETASK_HEADER_
 

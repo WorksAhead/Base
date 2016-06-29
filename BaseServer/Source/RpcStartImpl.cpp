@@ -1,6 +1,7 @@
 #include "RpcStartImpl.h"
 #include "RpcSessionImpl.h"
 #include "Datetime.h"
+#include "Context.h"
 
 #include <Ice/Ice.h>
 
@@ -53,7 +54,12 @@ Rpc::ErrorCode RpcStartImpl::login(const std::string& username, const std::strin
 		return Rpc::ec_username_or_password_incorrect;
 	}
 
-	RpcSessionImplPtr session = new RpcSessionImpl(center_);
+	ContextPtr context(new Context(center_));
+
+	context->setUser(s.getColumn("Username").getText());
+	context->setUserGroup(s.getColumn("Group").getText());
+
+	RpcSessionImplPtr session = new RpcSessionImpl(context);
 	sessionPrx = Rpc::SessionPrx::uncheckedCast(c.adapter->addWithUUID(session));
 
 	maintainer_->add(std::make_pair(sessionPrx, session));

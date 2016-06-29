@@ -2,6 +2,7 @@
 #include "RpcEngineVersionBrowserImpl.h"
 #include "RpcEngineVersionUploaderImpl.h"
 #include "RpcEngineVersionDownloaderImpl.h"
+#include "RpcContentSubmitterImpl.h"
 
 #include <Ice/Ice.h>
 
@@ -10,8 +11,8 @@
 
 namespace fs = boost::filesystem;
 
-RpcSessionImpl::RpcSessionImpl(CenterPtr center)
-	: destroy_(false), timestamp_(IceUtil::Time::now(IceUtil::Time::Monotonic)), center_(center)
+RpcSessionImpl::RpcSessionImpl(ContextPtr context)
+	: destroyed_(false), timestamp_(IceUtil::Time::now(IceUtil::Time::Monotonic)), context_(context)
 {
 }
 
@@ -23,54 +24,60 @@ void RpcSessionImpl::destroy(const Ice::Current& c)
 {
 	boost::recursive_mutex::scoped_lock lock(sync_);
 	checkIsDestroyed();
-	destroy_ = true;
+
+	destroyed_ = true;
 
 	try {
+		context_->objectManager()->destroyAllObjects(c);
 		c.adapter->remove(c.id);
-		for (const Ice::Identity& id : ids_) {
-			if (c.adapter->find(id)) {
-				c.adapter->remove(id);
-			}
-		}
 	}
-	catch(const Ice::ObjectAdapterDeactivatedException&) {
+	catch (const Ice::ObjectAdapterDeactivatedException&) {
 	}
-
-	ids_.clear();
 }
 
-void RpcSessionImpl::refresh(const Ice::Current&)
+void RpcSessionImpl::refresh(const Ice::Current& c)
 {
 	boost::recursive_mutex::scoped_lock lock(sync_);
 	checkIsDestroyed();
+
+	context_->objectManager()->refresh(c);
+
 	timestamp_ = IceUtil::Time::now(IceUtil::Time::Monotonic);
 }
 
 Rpc::ErrorCode RpcSessionImpl::setPages(const Rpc::StringSeq& pages, const Ice::Current&)
 {
 	boost::recursive_mutex::scoped_lock lock(sync_);
-	center_->setPages(pages);
+	checkIsDestroyed();
+
+	context_->center()->setPages(pages);
 	return Rpc::ec_success;
 }
 
 Rpc::ErrorCode RpcSessionImpl::getPages(Rpc::StringSeq& pages, const Ice::Current&)
 {
 	boost::recursive_mutex::scoped_lock lock(sync_);
-	center_->getPages(pages);
+	checkIsDestroyed();
+
+	context_->center()->getPages(pages);
 	return Rpc::ec_success;
 }
 
 Rpc::ErrorCode RpcSessionImpl::setCategories(const Rpc::StringSeq& categories, const Ice::Current&)
 {
 	boost::recursive_mutex::scoped_lock lock(sync_);
-	center_->setCategories(categories);
+	checkIsDestroyed();
+
+	context_->center()->setCategories(categories);
 	return Rpc::ec_success;
 }
 
 Rpc::ErrorCode RpcSessionImpl::getCategories(Rpc::StringSeq& categories, const Ice::Current&)
 {
 	boost::recursive_mutex::scoped_lock lock(sync_);
-	center_->getCategories(categories);
+	checkIsDestroyed();
+
+	context_->center()->getCategories(categories);
 	return Rpc::ec_success;
 }
 
@@ -79,12 +86,34 @@ Rpc::ErrorCode RpcSessionImpl::browseContent(const ::std::string& page, const ::
 	return Rpc::ec_access_denied;
 }
 
+Rpc::ErrorCode RpcSessionImpl::submitContent(Rpc::ContentSubmitterPrx& submitterPrx, const Ice::Current& c)
+{
+	boost::recursive_mutex::scoped_lock lock(sync_);
+	checkIsDestroyed();
+
+	RpcContentSubmitterImplPtr submitter = new RpcContentSubmitterImpl(context_);
+
+	Rpc::ErrorCode ec = submitter->init();
+	if (ec != Rpc::ec_success) {
+		return ec;
+	}
+
+	submitterPrx = Rpc::ContentSubmitterPrx::uncheckedCast(c.adapter->addWithUUID(submitter));
+
+	if (!context_->objectManager()->addObject(submitterPrx)) {
+		submitterPrx->destroy();
+		return Rpc::ec_server_busy;
+	}
+
+	return Rpc::ec_success;
+}
+
 Rpc::ErrorCode RpcSessionImpl::browseEngineVersions(Rpc::EngineVersionBrowserPrx& browserPrx, const Ice::Current& c)
 {
 	boost::recursive_mutex::scoped_lock lock(sync_);
 	checkIsDestroyed();
 
-	RpcEngineBrowserImplPtr browser = new RpcEngineVersionBrowserImpl(center_);
+	RpcEngineBrowserImplPtr browser = new RpcEngineVersionBrowserImpl(context_->center());
 
 	Rpc::ErrorCode ec = browser->init();
 	if (ec != Rpc::ec_success) {
@@ -93,7 +122,10 @@ Rpc::ErrorCode RpcSessionImpl::browseEngineVersions(Rpc::EngineVersionBrowserPrx
 
 	browserPrx = Rpc::EngineVersionBrowserPrx::uncheckedCast(c.adapter->addWithUUID(browser));
 
-	ids_.insert(browserPrx->ice_getIdentity());
+	if (!context_->objectManager()->addObject(browserPrx)) {
+		browserPrx->destroy();
+		return Rpc::ec_server_busy;
+	}
 
 	return Rpc::ec_success;
 }
@@ -103,7 +135,7 @@ Rpc::ErrorCode RpcSessionImpl::uploadEngineVersion(const std::string& name, cons
 	boost::recursive_mutex::scoped_lock lock(sync_);
 	checkIsDestroyed();
 
-	RpcEngineUploaderImplPtr uploader = new RpcEngineVersionUploaderImpl(center_);
+	RpcEngineUploaderImplPtr uploader = new RpcEngineVersionUploaderImpl(context_->center());
 
 	Rpc::ErrorCode ec = uploader->init(name, version, info);
 	if (ec != Rpc::ec_success) {
@@ -112,7 +144,10 @@ Rpc::ErrorCode RpcSessionImpl::uploadEngineVersion(const std::string& name, cons
 
 	uploaderPrx = Rpc::UploaderPrx::uncheckedCast(c.adapter->addWithUUID(uploader));
 
-	ids_.insert(uploaderPrx->ice_getIdentity());
+	if (!context_->objectManager()->addObject(uploaderPrx)) {
+		uploaderPrx->destroy();
+		return Rpc::ec_server_busy;
+	}
 
 	return Rpc::ec_success;
 }
@@ -122,7 +157,7 @@ Rpc::ErrorCode RpcSessionImpl::downloadEngineVersion(const std::string& name, co
 	boost::recursive_mutex::scoped_lock lock(sync_);
 	checkIsDestroyed();
 
-	RpcEngineDownloaderImplPtr downloader = new RpcEngineVersionDownloaderImpl(center_);
+	RpcEngineDownloaderImplPtr downloader = new RpcEngineVersionDownloaderImpl(context_->center());
 
 	Rpc::ErrorCode ec = downloader->init(name, version);
 	if (ec != Rpc::ec_success) {
@@ -131,7 +166,10 @@ Rpc::ErrorCode RpcSessionImpl::downloadEngineVersion(const std::string& name, co
 
 	downloaderPrx = Rpc::DownloaderPrx::uncheckedCast(c.adapter->addWithUUID(downloader));
 
-	ids_.insert(downloaderPrx->ice_getIdentity());
+	if (!context_->objectManager()->addObject(downloaderPrx)) {
+		downloaderPrx->destroy();
+		return Rpc::ec_server_busy;
+	}
 
 	return Rpc::ec_success;
 }
@@ -141,14 +179,14 @@ Rpc::ErrorCode RpcSessionImpl::removeEngineVersion(const std::string& name, cons
 	boost::recursive_mutex::scoped_lock lock(sync_);
 	checkIsDestroyed();
 
-	EngineVersionLockGuard engineLock(center_.get(), name, version, Center::lock_write);
+	EngineVersionLockGuard engineLock(context_->center().get(), name, version, Center::lock_write);
 
 	if (!engineLock.isLocked()) {
 		return Rpc::ec_engine_version_is_locked;
 	}
 
 	std::string state;
-	if (!center_->getEngineVersionState(name, version, state)) {
+	if (!context_->center()->getEngineVersionState(name, version, state)) {
 		return Rpc::ec_engine_version_does_not_exist;
 	}
 
@@ -159,9 +197,9 @@ Rpc::ErrorCode RpcSessionImpl::removeEngineVersion(const std::string& name, cons
 		assert(false);
 	}
 
-	center_->changeEngineVersionState(name, version, "Removed");
+	context_->center()->changeEngineVersionState(name, version, "Removed");
 
-	const std::string& filename = center_->engineFileName(name, version);
+	const std::string& filename = context_->center()->getEnginePath(name, version);
 
 	if (!fs::remove(filename)) {
 		return Rpc::ec_file_io_error;
@@ -174,12 +212,13 @@ IceUtil::Time RpcSessionImpl::timestamp()
 {
 	boost::recursive_mutex::scoped_lock lock(sync_);
 	checkIsDestroyed();
+
 	return timestamp_;
 }
 
 void RpcSessionImpl::checkIsDestroyed()
 {
-	if (destroy_) {
+	if (destroyed_) {
 		throw Ice::ObjectNotExistException(__FILE__, __LINE__);
 	}
 }

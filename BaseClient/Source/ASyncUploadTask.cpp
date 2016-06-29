@@ -1,4 +1,4 @@
-#include "UploadTask.h"
+#include "ASyncUploadTask.h"
 #include "Package.h"
 #include "FileScanner.h"
 #include "ErrorMessage.h"
@@ -16,51 +16,60 @@
 
 namespace fs = boost::filesystem;
 
-UploadTask::UploadTask(ContextPtr context, std::string infoHead, const std::string& path, Rpc::UploaderPrx uploader)
-	: context_(context), infoHead_(infoHead), path_(path), uploader_(uploader)
+ASyncUploadTask::ASyncUploadTask(ContextPtr context, Rpc::UploaderPrx uploader) : context_(context), uploader_(uploader)
 {
 	state_ = ASyncTask::state_idle;
 	progress_ = 0;
-	cancel_ = false;
+	cancelled_ = false;
 }
 
-UploadTask::~UploadTask()
+ASyncUploadTask::~ASyncUploadTask()
 {
 	if (t_.get() && t_->joinable()) {
 		t_->join();
 	}
 }
 
-void UploadTask::start()
+void ASyncUploadTask::setInfoHead(const std::string& infoHead)
 {
-	t_.reset(new std::thread(std::bind(&UploadTask::run, this)));
+	infoHead_ = infoHead;
 }
 
-void UploadTask::cancel()
+void ASyncUploadTask::setFilename(const std::string& filename)
+{
+	filename_ = filename;
+}
+
+void ASyncUploadTask::start()
+{
+	t_.reset(new std::thread(std::bind(&ASyncUploadTask::run, this)));
+}
+
+void ASyncUploadTask::cancel()
 {
 	boost::unique_lock<boost::mutex> lock(sync_);
-	if (cancel_ || state_ != ASyncTask::state_running) {
+	if (cancelled_ || state_ != ASyncTask::state_running) {
 		return;
 	}
 	state_ = ASyncTask::state_cancelling;
-	cancel_ = true;
+	cancelled_ = true;
 	lock.unlock();
 	t_->join();
 }
 
-int UploadTask::state()
+int ASyncUploadTask::state()
 {
 	boost::mutex::scoped_lock lock(sync_);
 	return state_;
 }
 
-int UploadTask::progress()
+int ASyncUploadTask::progress()
 {
 	boost::mutex::scoped_lock lock(sync_);
 	return progress_;
 }
 
-std::string UploadTask::information()
+std::string ASyncUploadTask::information()
 {
 	boost::mutex::scoped_lock lock(sync_);
 	std::string info(infoHead_);
@@ -71,7 +80,7 @@ std::string UploadTask::information()
 	return info;
 }
 
-void UploadTask::run()
+void ASyncUploadTask::run()
 {
 	const int level = 0;
 
@@ -88,92 +97,10 @@ void UploadTask::run()
 	state_ = ASyncTask::state_running;
 	sync_.unlock();
 
-	std::vector<FileScanner::Path> srcFiles;
-
-	FileScanner scanner(path_);
-
-	sync_.lock();
-	infoBody_ = "Scanning";
-	sync_.unlock();
-
-	for (;;)
-	{
-		sync_.lock();
-		if (cancel_) {
-			infoBody_.clear();
-			state_ = ASyncTask::state_cancelled;
-			sync_.unlock();
-			return;
-		}
-		sync_.unlock();
-
-		FileScanner::Path path;
-		int ret = scanner.nextFile(path);
-		if (ret > 0) {
-			srcFiles.push_back(path);
-		}
-		else if (ret < 0) {
-			break;
-		}
-	}
-
-	const std::string& packFile = context_->uniquePath() + ".package";
-
-	BOOST_SCOPE_EXIT_ALL(&packFile)
-	{
-		boost::system::error_code ec;
-		if (fs::exists(packFile, ec)) {
-			fs::remove(packFile, ec);
-		}
-	};
-
-	std::shared_ptr<Packer> packer(new Packer(packFile, path_, srcFiles, level));
-
-	sync_.lock();
-	infoBody_ = "Packing";
-	sync_.unlock();
-
-	Packer::Path lastPackingFile;
-
-	for (;;)
-	{
-		sync_.lock();
-		if (cancel_) {
-			packer.reset();
-			boost::system::error_code ec;
-			fs::remove(packFile, ec);
-			infoBody_.clear();
-			state_ = ASyncTask::state_cancelled;
-			sync_.unlock();
-			return;
-		}
-		sync_.unlock();
-
-		const int ret = packer->executeStep();
-
-		if (packer->currentFile() != lastPackingFile) {
-			lastPackingFile = packer->currentFile();
-			boost::mutex::scoped_lock lock(sync_);
-			infoBody_ = "Packing " + lastPackingFile.string();
-		}
-
-		if (ret == 0) {
-			boost::mutex::scoped_lock lock(sync_);
-			infoBody_.clear();
-			break;
-		}
-		else if (ret < 0) {
-			boost::mutex::scoped_lock lock(sync_);
-			infoBody_ = packer->errorMessage();
-			state_ = ASyncTask::state_failed;
-			return;
-		}
-	}
-
-	std::fstream is(packFile.c_str(), std::ios::in|std::ios::binary);
+	std::fstream is(filename_.c_str(), std::ios::in|std::ios::binary);
 	if (!is.is_open()) {
 		boost::mutex::scoped_lock lock(sync_);
-		infoBody_ = "Failed to open package file \"" + packFile + "\"";
+		infoBody_ = "Failed to open file \"" + filename_ + "\"";
 		state_ = ASyncTask::state_failed;
 		return;
 	}
@@ -214,7 +141,7 @@ void UploadTask::run()
 		while (remain)
 		{
 			sync_.lock();
-			if (cancel_) {
+			if (cancelled_) {
 				infoBody_.clear();
 				state_ = ASyncTask::state_cancelled;
 				sync_.unlock();
@@ -240,7 +167,7 @@ void UploadTask::run()
 
 			if (!is.read(&buf.first[0], n)) {
 				boost::mutex::scoped_lock lock(sync_);
-				infoBody_ = "Failed to read package file \"" + packFile + "\"";
+				infoBody_ = "Failed to read file \"" + filename_ + "\"";
 				state_ = ASyncTask::state_failed;
 				return;
 			}
@@ -272,7 +199,7 @@ void UploadTask::run()
 	}
 
 	sync_.lock();
-	if (cancel_) {
+	if (cancelled_) {
 		infoBody_.clear();
 		state_ = ASyncTask::state_cancelled;
 		sync_.unlock();

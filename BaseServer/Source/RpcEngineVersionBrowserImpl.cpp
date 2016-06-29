@@ -2,7 +2,7 @@
 
 #include <Ice/Ice.h>
 
-RpcEngineVersionBrowserImpl::RpcEngineVersionBrowserImpl(CenterPtr center) : center_(center)
+RpcEngineVersionBrowserImpl::RpcEngineVersionBrowserImpl(CenterPtr center) : center_(center), destroyed_(false)
 {
 }
 
@@ -17,9 +17,24 @@ Rpc::ErrorCode RpcEngineVersionBrowserImpl::init()
 	return Rpc::ec_success;
 }
 
+void RpcEngineVersionBrowserImpl::destroy(const Ice::Current& c)
+{
+	boost::recursive_mutex::scoped_lock lock(sync_);
+	checkIsDestroyed();
+
+	destroyed_ = true;
+
+	try {
+		c.adapter->remove(c.id);
+	}
+	catch (const Ice::ObjectAdapterDeactivatedException&) {
+	}
+}
+
 Rpc::ErrorCode RpcEngineVersionBrowserImpl::next(Ice::Int n, Rpc::EngineVersionItemSeq& items, const Ice::Current&)
 {
 	boost::recursive_mutex::scoped_lock lock(sync_);
+	checkIsDestroyed();
 
 	items.clear();
 
@@ -42,9 +57,10 @@ Rpc::ErrorCode RpcEngineVersionBrowserImpl::next(Ice::Int n, Rpc::EngineVersionI
 	return Rpc::ec_success;
 }
 
-void RpcEngineVersionBrowserImpl::finish(const Ice::Current& c)
+void RpcEngineVersionBrowserImpl::checkIsDestroyed()
 {
-	boost::recursive_mutex::scoped_lock lock(sync_);
-	c.adapter->remove(c.id);
+	if (destroyed_) {
+		throw Ice::ObjectNotExistException(__FILE__, __LINE__);
+	}
 }
 

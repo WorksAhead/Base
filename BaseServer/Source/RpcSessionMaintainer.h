@@ -11,7 +11,7 @@
 #include <list>
 #include <utility>
 
-class RpcSessionMaintainer : public IceUtil::TimerTask, public IceUtil::Monitor<IceUtil::Mutex> {
+class RpcSessionMaintainer : public IceUtil::TimerTask, private IceUtil::Monitor<IceUtil::Mutex> {
 public:
 	typedef std::pair<Rpc::SessionPrx, RpcSessionImplPtr> Session;
 

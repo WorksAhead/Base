@@ -6,6 +6,8 @@
 #include <SQLiteCpp/Transaction.h>
 
 #include <boost/filesystem.hpp>
+#include <boost/uuid/uuid.hpp>
+#include <boost/uuid/uuid_io.hpp>
 #include <boost/algorithm/string.hpp>
 
 #include <sstream>
@@ -15,16 +17,18 @@ namespace fs = boost::filesystem;
 
 Center::Center()
 {
-	const fs::path currentPath = boost::filesystem::current_path();
-
-	baseDir_ = currentPath.string();
-	engineDir_ = (currentPath / "EngineVersions").string();
+	engineDir_ = "EngineVersions";
+	contentDir_ = "Contents";
 
 	if (!fs::exists(engineDir_) && !fs::create_directories(engineDir_)) {
 		throw std::runtime_error("failed to create directory");
 	}
 
-	db_.reset(new SQLite::Database((currentPath / "BaseServer.db").string(), SQLITE_OPEN_READWRITE|SQLITE_OPEN_CREATE));
+	if (!fs::exists(contentDir_) && !fs::create_directories(contentDir_)) {
+		throw std::runtime_error("failed to create directory");
+	}
+
+	db_.reset(new SQLite::Database("BaseServer.db", SQLITE_OPEN_READWRITE|SQLITE_OPEN_CREATE));
 
 	db_->exec("CREATE TABLE IF NOT EXISTS Users ("
 		"Username TEXT COLLATE NOCASE UNIQUE, Password TEXT, \"Group\" TEXT, "
@@ -34,8 +38,23 @@ Center::Center()
 		"Name TEXT COLLATE NOCASE, Version TEXT COLLATE NOCASE, "
 		"UpTime DATETIME, Info TEXT, State TEXT)");
 
+	db_->exec("CREATE TABLE IF NOT EXISTS Contents ("
+		"Id TEXT, ParentId TEXT, "
+		"Title TEXT, Page TEXT, Category TEXT, EngineName TEXT, "
+		"EngineVersion TEXT, Command TEXT, ImageCount INT, Desc TEXT, "
+		"User TEXT, UpTime DATETIME, State TEXT)");
+
 	db_->exec("CREATE TABLE IF NOT EXISTS Info ("
 		"Key TEXT UNIQUE, Value TEXT)");
+
+	db_->exec("CREATE INDEX IF NOT EXISTS IndexOfUsers ON Users ("
+		"\"Group\")");
+
+	db_->exec("CREATE INDEX IF NOT EXISTS IndexOfEngineVersions ON EngineVersions ("
+		"Name, Version, UpTime)");
+
+	db_->exec("CREATE INDEX IF NOT EXISTS IndexOfContents ON Contents ("
+		"Id, ParentId, Page, Category, EngineName, EngineVersion, User, UpTime, State)");
 
 	loadPagesFromDb();
 	loadCategoriesFromDb();
@@ -137,7 +156,12 @@ void Center::unlockEngineVersion(const std::string& name, const std::string& ver
 	}
 }
 
-std::string Center::engineFileName(const std::string& name, const std::string& version) const
+std::string Center::generateUuid()
+{
+	return boost::uuids::to_string(uniquePathGen_());
+}
+
+std::string Center::getEnginePath(const std::string& name, const std::string& version)
 {
 	fs::path path = fs::path(engineDir()) /
 		boost::to_lower_copy(
@@ -147,6 +171,69 @@ std::string Center::engineFileName(const std::string& name, const std::string& v
 		);
 
 	return path.string();
+}
+
+std::string Center::getContentPath(const std::string& uid)
+{
+	std::vector<std::string> parts;
+	boost::split(parts, uid, boost::is_any_of("-"));
+
+	fs::path path = contentDir();
+	for (const std::string& part : parts) {
+		path /= part;
+	}
+
+	return path.string();
+}
+
+void Center::addContent(const std::map<std::string, std::string>& form, const std::string& uid)
+{
+	std::ostringstream oss;
+	oss << "INSERT INTO Contents VALUES (";
+	oss << sqlText(uid) << ", ";
+	oss << sqlText(form.at("ParentId")) << ", ";
+	oss << sqlText(form.at("Title")) << ", ";
+	oss << sqlText(form.at("Page")) << ", ";
+	oss << sqlText(form.at("Category")) << ", ";
+	oss << sqlText(form.at("EngineName")) << ", ";
+	oss << sqlText(form.at("EngineVersion")) << ", ";
+	oss << sqlText(form.at("Command")) << ", ";
+	oss << sqlText(form.at("ImageCount")) << ", ";
+	oss << sqlText(form.at("Desc")) << ", ";
+	oss << sqlText(form.at("User")) << ", ";
+	oss << sqlText(getCurrentTimeString()) << ", ";
+	oss << sqlText("Normal") << ")";
+
+	SQLite::Transaction t(*db_);
+	db_->exec(oss.str());
+	t.commit();
+}
+
+bool Center::getContent(std::map<std::string, std::string>& form, const std::string& uid)
+{
+	std::ostringstream oss;
+	oss << "SELECT * FROM Contents";
+	oss << " WHERE ";
+	oss << "Id=" << sqlText(uid);
+
+	SQLite::Statement s(*db_, oss.str());
+	if (!s.executeStep()) {
+		return false;
+	}
+
+	form["Title"] = s.getColumn("Title").getText();
+	form["Page"] = s.getColumn("Page").getText();
+	form["Category"] = s.getColumn("Category").getText();
+	form["EngineName"] = s.getColumn("EngineName").getText();
+	form["EngineVersion"] = s.getColumn("EngineVersion").getText();
+	form["Command"] = s.getColumn("Command").getText();
+	form["ImageCount"] = s.getColumn("ImageCount").getText();
+	form["Desc"] = s.getColumn("Desc").getText();
+	form["User"] = s.getColumn("User").getText();
+	form["UpTime"] = s.getColumn("UpTime").getText();
+	form["State"] = s.getColumn("State").getText();
+
+	return true;
 }
 
 bool Center::getEngineVersionState(const std::string& name, const std::string& version, std::string& outState)
@@ -163,8 +250,7 @@ bool Center::getEngineVersionState(const std::string& name, const std::string& v
 		return false;
 	}
 
-	SQLite::Column col = s.getColumn("State");
-	outState = col.getText();
+	outState = s.getColumn("State").getText();
 
 	return true;
 }

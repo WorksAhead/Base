@@ -2,10 +2,11 @@
 
 #include <RpcErrorCode.ice>
 #include <RpcTypedefs.ice>
+#include <RpcManagedObject.ice>
 
 module Rpc
 {
-	interface ContentBrowser
+	interface ContentBrowser extends ManagedObject
 	{
 		void finish();
 	};
@@ -21,29 +22,42 @@ module Rpc
 
 	sequence<EngineVersionItem> EngineVersionItemSeq;
 
-	interface EngineVersionBrowser
+	interface EngineVersionBrowser extends ManagedObject
 	{
 		ErrorCode next(int n, out EngineVersionItemSeq items);
-		void finish();
 	};
 
-	interface Uploader
+	interface Uploader extends ManagedObject
 	{
 		ErrorCode write(long offset, ["cpp:array"] ByteSeq bytes);
 		ErrorCode finish(int crc32);
 		void cancel();
 	};
 
-	interface Downloader
+	interface Downloader extends ManagedObject
 	{
 		ErrorCode getSize(out long size);
 		ErrorCode read(long offset, int size, out ByteSeq bytes);
 		void finish();
 	};
 
-	interface Session
+	interface ContentSubmitter extends ManagedObject
 	{
-		void destroy();
+		ErrorCode setTitle(string title);
+		ErrorCode setPage(string page);
+		ErrorCode setCategory(string category);
+		ErrorCode setEngine(string name, string version);
+		ErrorCode setCommand(string command);
+		ErrorCode setParentId(string id);
+		ErrorCode setDescription(string description);
+		ErrorCode uploadImage(int index, out Uploader* uploader);
+		ErrorCode uploadContent(out Uploader* uploader);
+		void cancel();
+		ErrorCode finish();
+	};
+
+	interface Session extends ManagedObject
+	{
 		void refresh();
 
 		ErrorCode setPages(StringSeq pages);
@@ -53,6 +67,8 @@ module Rpc
 		ErrorCode getCategories(out StringSeq categories);
 
 		ErrorCode browseContent(string page, string category, string orderBy, out ContentBrowser* browser);
+
+		ErrorCode submitContent(out ContentSubmitter* submitter);
 
 		ErrorCode browseEngineVersions(out EngineVersionBrowser* browser);
 		ErrorCode uploadEngineVersion(string name, string version, string info, out Uploader* uploader);

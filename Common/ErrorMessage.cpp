@@ -14,6 +14,14 @@ const char* errorMessage(Rpc::ErrorCode ec)
 		return "Engine version is locked";
 	case Rpc::ec_engine_version_already_exists:
 		return "Engine version already exists";
+	case Rpc::ec_engine_version_does_not_exist:
+		return "Engine version does not exist";
+	case Rpc::ec_engine_version_is_removed:
+		return "Engine version is removed";
+	case Rpc::ec_page_does_not_exist:
+		return "Page does not exist";
+	case Rpc::ec_category_does_not_exist:
+		return "Category does not exist";
 	case Rpc::ec_file_io_error:
 		return "File IO error";
 	case Rpc::ec_file_data_error:
@@ -22,6 +30,18 @@ const char* errorMessage(Rpc::ErrorCode ec)
 		return "Out of range";
 	case Rpc::ec_access_denied:
 		return "Access denied";
+	case Rpc::ec_invalid_operation:
+		return "Invalid operation";
+	case Rpc::ec_server_busy:
+		return "Server Busy";
+	case Rpc::ec_incomplete_form:
+		return "Incomplete form";
+	case Rpc::ec_incomplete_content:
+		return "Incomplete content";
+	case Rpc::ec_parent_does_not_exist:
+		return "Parent does not exist";
+	case Rpc::ec_content_does_not_exist:
+		return "Content does not exists";
 	default:
 		return "";
 	}

@@ -45,10 +45,7 @@ void LoginDialog::login()
 		done(1);
 	}
 	else {
-		QMessageBox msg;
-		msg.setWindowTitle("Base");
-		msg.setText(errorMessage(ec));
-		msg.exec();
+		QMessageBox::information(this, "Base", errorMessage(ec));
 	}
 }
 
@@ -77,10 +74,7 @@ void LoginDialog::signup()
 
 	Rpc::ErrorCode ec = startPrx_->signup(username.toStdString(), password.toStdString());
 
-	QMessageBox msg;
-	msg.setWindowTitle("Base");
-	msg.setText(errorMessage(ec));
-	msg.exec();
+	QMessageBox::information(this, "Base", errorMessage(ec));
 
 	if (ec == Rpc::ec_success) {
 		ui_.signupUsernameEdit->clear();

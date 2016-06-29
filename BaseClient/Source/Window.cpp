@@ -137,9 +137,35 @@ QRect Window::frameGeometry() const
 const QRect& Window::geometry() const
 {
 	static QRect g;
-	g = frameGeometry();
+	g = QWidget::geometry();
 	g.adjust(frame_, frame_, -frame_, -frame_);
 	return g;
+}
+
+QRect Window::frameNormalGeometry() const
+{
+	return QWidget::normalGeometry();
+}
+
+QRect Window::normalGeometry() const
+{
+	const int frame = SIZEWINDOWFRAME;
+	QRect g = QWidget::normalGeometry();
+	g.adjust(frame, frame, -frame, -frame);
+	return g;
+}
+
+void Window::setFrameGeometry(const QRect& rect)
+{
+	QWidget::setGeometry(rect);
+}
+
+void Window::setGeometry(const QRect& rect)
+{
+	const int frame = SIZEWINDOWFRAME;
+	QRect g = rect;
+	g.adjust(frame, -frame, frame, frame);
+	QWidget::setGeometry(g);
 }
 
 int Window::x() const
@@ -174,7 +200,7 @@ int Window::frameHeight() const
 
 QSize Window::size() const
 {
-	return frameSize() - QSize(frame_ * 2, frame_ * 2);
+	return QWidget::size() - QSize(frame_ * 2, frame_ * 2);
 }
 
 int Window::width() const
@@ -205,25 +231,25 @@ QSize Window::maximumSize() const
 int Window::minimumWidth() const
 {
 	const int frame = SIZEWINDOWFRAME;
-	return QWidget::minimumWidth() - frame;
+	return QWidget::minimumWidth() - frame * 2;
 }
 
 int Window::minimumHeight() const
 {
 	const int frame = SIZEWINDOWFRAME;
-	return QWidget::minimumHeight() - frame;
+	return QWidget::minimumHeight() - frame * 2;
 }
 
 int Window::maximumWidth() const
 {
 	const int frame = SIZEWINDOWFRAME;
-	return QWidget::maximumWidth() - frame;
+	return QWidget::maximumWidth() - frame * 2;
 }
 
 int Window::maximumHeight() const
 {
 	const int frame = SIZEWINDOWFRAME;
-	return QWidget::maximumHeight() - frame;
+	return QWidget::maximumHeight() - frame * 2;
 }
 
 void Window::setMinimumSize(const QSize& s)
@@ -302,10 +328,6 @@ void Window::move(int x, int y)
 
 void Window::move(const QPoint& p)
 {
-	if (isMaximized() || isFullScreen()) {
-		showNormal();
-	}
-
 	QWidget::move(p - origin());
 }
 
@@ -316,10 +338,6 @@ void Window::resize(int w, int h)
 
 void Window::resize(const QSize& s)
 {
-	if (isMaximized() || isFullScreen()) {
-		showNormal();
-	}
-
 	QWidget::resize(s + QSize(frame_ * 2, frame_ * 2));
 }
 
@@ -499,25 +517,46 @@ void Window::onDrag(const QPoint& pos)
 
 	QRect newRect(QPoint(left, top), QPoint(right, bottom));
 
-	if (newRect.width() > QWidget::maximumWidth() || newRect.width() < QWidget::minimumWidth()) {
+	const int maximumWidth = QWidget::maximumWidth();
+	const int minimumWidth = QWidget::minimumWidth();
+	const int maximumHeight = QWidget::maximumHeight();
+	const int minimumHeight = QWidget::minimumHeight();
+
+	if (newRect.width() > maximumWidth) {
 		if (left != rect.left()) {
-			newRect.setLeft(rect.left());
+			newRect.setLeft(newRect.right() - maximumWidth + 1);
 		}
 		else {
-			newRect.setRight(rect.right());
+			newRect.setRight(newRect.left() + maximumWidth - 1);
+		}
+	}
+	else if (newRect.width() < minimumWidth) {
+		if (left != rect.left()) {
+			newRect.setLeft(newRect.right() - minimumWidth + 1);
+		}
+		else {
+			newRect.setRight(newRect.left() + minimumWidth - 1);
 		}
 	}
 
-	if (newRect.height() > QWidget::maximumHeight() || newRect.height() < QWidget::minimumHeight()) {
+	if (newRect.height() > maximumHeight) {
 		if (top != rect.top()) {
-			newRect.setTop(rect.top());
+			newRect.setTop(newRect.bottom() - maximumHeight + 1);
 		}
 		else {
-			newRect.setBottom(rect.bottom());
+			newRect.setBottom(newRect.top() + maximumHeight - 1);
+		}
+	}
+	else if (newRect.height() < minimumHeight) {
+		if (top != rect.top()) {
+			newRect.setTop(newRect.bottom() - minimumHeight + 1);
+		}
+		else {
+			newRect.setBottom(newRect.top() + minimumHeight - 1);
 		}
 	}
 
-	setGeometry(newRect);
+	setFrameGeometry(newRect);
 }
 
 void Window::onHover(const QPoint& pos)

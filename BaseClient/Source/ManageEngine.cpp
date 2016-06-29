@@ -1,6 +1,6 @@
 #include "ManageEngine.h"
 #include "SubmitEngineDialog.h"
-#include "UploadTask.h"
+#include "ASyncSubmitEngineTask.h"
 #include "ErrorMessage.h"
 
 #include <Crc.h>
@@ -13,6 +13,7 @@
 
 #include <algorithm>
 #include <numeric>
+#include <memory>
 
 #define ITEMS_PER_REQUEST 100
 
@@ -21,8 +22,7 @@ namespace fs = boost::filesystem;
 ManageEngine::ManageEngine(ContextPtr context, QWidget* parent) : QWidget(parent), context_(context)
 {
 	ui_.setupUi(this);
-
-	firstShow_ = true;
+	ui_.engineList->header()->setSortIndicator(2, Qt::DescendingOrder);
 
 	QObject::connect(ui_.showMoreButton, &QPushButton::clicked, this, &ManageEngine::onShowMore);
 	QObject::connect(ui_.showAllButton, &QPushButton::clicked, this, &ManageEngine::onShowAll);
@@ -31,6 +31,8 @@ ManageEngine::ManageEngine(ContextPtr context, QWidget* parent) : QWidget(parent
 	QObject::connect(ui_.removeButton, &QPushButton::clicked, this, &ManageEngine::onRemove);
 
 	QObject::connect(ui_.submitButton, &QPushButton::clicked, this, &ManageEngine::showSubmitDialog);
+
+	firstShow_ = true;
 }
 
 ManageEngine::~ManageEngine()
@@ -110,7 +112,11 @@ void ManageEngine::showSubmitDialog()
 			return;
 		}
 
-		context_->addTask(new UploadTask(context_, QString("Upload %1 %2").arg(d.engine(), d.version()).toStdString(), d.path().toStdString(), uploader));
+		std::unique_ptr<ASyncSubmitEngineTask> task(new ASyncSubmitEngineTask(context_, uploader));
+		task->setInfoHead(QString("Submit %1 %2").arg(d.engine(), d.version()).toStdString());
+		task->setPath(d.path().toStdString());
+
+		context_->addTask(task.release());
 	}
 }
 

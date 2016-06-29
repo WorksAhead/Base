@@ -157,16 +157,22 @@
   <ItemGroup>
     <ClCompile Include="..\BaseServer\Source\BaseServer.cpp" />
     <ClCompile Include="..\BaseServer\Source\Center.cpp" />
+    <ClCompile Include="..\BaseServer\Source\Context.cpp" />
     <ClCompile Include="..\BaseServer\Source\Main.cpp" />
+    <ClCompile Include="..\BaseServer\Source\RpcContentSubmitterImpl.cpp" />
     <ClCompile Include="..\BaseServer\Source\RpcEngineVersionBrowserImpl.cpp" />
     <ClCompile Include="..\BaseServer\Source\RpcEngineVersionDownloaderImpl.cpp" />
     <ClCompile Include="..\BaseServer\Source\RpcEngineVersionUploaderImpl.cpp" />
+    <ClCompile Include="..\BaseServer\Source\RpcFileDownloaderImpl.cpp" />
+    <ClCompile Include="..\BaseServer\Source\RpcFileUploaderImpl.cpp" />
+    <ClCompile Include="..\BaseServer\Source\RpcObjectManager.cpp" />
     <ClCompile Include="..\BaseServer\Source\RpcSessionImpl.cpp" />
     <ClCompile Include="..\BaseServer\Source\RpcSessionMaintainer.cpp" />
     <ClCompile Include="..\BaseServer\Source\RpcStartImpl.cpp" />
     <ClCompile Include="..\Common\Crc.cpp" />
     <ClCompile Include="..\Common\ErrorMessage.cpp" />
     <ClCompile Include="..\Common\Rpc\RpcErrorCode.cpp" />
+    <ClCompile Include="..\Common\Rpc\RpcManagedObject.cpp" />
     <ClCompile Include="..\Common\Rpc\RpcSession.cpp" />
     <ClCompile Include="..\Common\Rpc\RpcStart.cpp" />
     <ClCompile Include="..\Common\Rpc\RpcTypedefs.cpp" />
@@ -179,11 +185,15 @@
   <ItemGroup>
     <ClInclude Include="..\BaseServer\Source\BaseServer.h" />
     <ClInclude Include="..\BaseServer\Source\Center.h" />
-    <ClInclude Include="..\BaseServer\Source\Common.h" />
+    <ClInclude Include="..\BaseServer\Source\Context.h" />
     <ClInclude Include="..\BaseServer\Source\Datetime.h" />
+    <ClInclude Include="..\BaseServer\Source\RpcContentSubmitterImpl.h" />
     <ClInclude Include="..\BaseServer\Source\RpcEngineVersionBrowserImpl.h" />
     <ClInclude Include="..\BaseServer\Source\RpcEngineVersionDownloaderImpl.h" />
     <ClInclude Include="..\BaseServer\Source\RpcEngineVersionUploaderImpl.h" />
+    <ClInclude Include="..\BaseServer\Source\RpcFileDownloaderImpl.h" />
+    <ClInclude Include="..\BaseServer\Source\RpcFileUploaderImpl.h" />
+    <ClInclude Include="..\BaseServer\Source\RpcObjectManager.h" />
     <ClInclude Include="..\BaseServer\Source\RpcSessionImpl.h" />
     <ClInclude Include="..\BaseServer\Source\RpcSessionMaintainer.h" />
     <ClInclude Include="..\BaseServer\Source\RpcStartImpl.h" />
@@ -191,6 +201,7 @@
     <ClInclude Include="..\Common\Crc.h" />
     <ClInclude Include="..\Common\ErrorMessage.h" />
     <ClInclude Include="..\Common\Rpc\RpcErrorCode.h" />
+    <ClInclude Include="..\Common\Rpc\RpcManagedObject.h" />
     <ClInclude Include="..\Common\Rpc\RpcSession.h" />
     <ClInclude Include="..\Common\Rpc\RpcStart.h" />
     <ClInclude Include="..\Common\Rpc\RpcTypedefs.h" />
@@ -204,7 +215,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Common\Rpc\RpcErrorCode.ice" />
-    <None Include="..\Common\Rpc\RpcLogin.ice" />
+    <None Include="..\Common\Rpc\RpcManagedObject.ice" />
     <None Include="..\Common\Rpc\RpcSession.ice" />
     <None Include="..\Common\Rpc\RpcStart.ice" />
     <None Include="..\Common\Rpc\RpcTypedefs.ice" />

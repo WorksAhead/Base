@@ -36,6 +36,7 @@
 #include <Ice/StreamF.h>
 #include <RpcErrorCode.h>
 #include <RpcTypedefs.h>
+#include <RpcManagedObject.h>
 #include <IceUtil/UndefSysMacros.h>
 
 #ifndef ICE_IGNORE_VERSION
@@ -72,6 +73,10 @@ class Downloader;
 void __read(::IceInternal::BasicStream*, ::IceInternal::ProxyHandle< ::IceProxy::Rpc::Downloader>&);
 ::IceProxy::Ice::Object* upCast(::IceProxy::Rpc::Downloader*);
 
+class ContentSubmitter;
+void __read(::IceInternal::BasicStream*, ::IceInternal::ProxyHandle< ::IceProxy::Rpc::ContentSubmitter>&);
+::IceProxy::Ice::Object* upCast(::IceProxy::Rpc::ContentSubmitter*);
+
 class Session;
 void __read(::IceInternal::BasicStream*, ::IceInternal::ProxyHandle< ::IceProxy::Rpc::Session>&);
 ::IceProxy::Ice::Object* upCast(::IceProxy::Rpc::Session*);
@@ -106,6 +111,12 @@ class Downloader;
 typedef ::IceInternal::Handle< ::Rpc::Downloader> DownloaderPtr;
 typedef ::IceInternal::ProxyHandle< ::IceProxy::Rpc::Downloader> DownloaderPrx;
 void __patch(DownloaderPtr&, const ::Ice::ObjectPtr&);
+
+class ContentSubmitter;
+::Ice::Object* upCast(::Rpc::ContentSubmitter*);
+typedef ::IceInternal::Handle< ::Rpc::ContentSubmitter> ContentSubmitterPtr;
+typedef ::IceInternal::ProxyHandle< ::IceProxy::Rpc::ContentSubmitter> ContentSubmitterPrx;
+void __patch(ContentSubmitterPtr&, const ::Ice::ObjectPtr&);
 
 class Session;
 ::Ice::Object* upCast(::Rpc::Session*);
@@ -273,9 +284,6 @@ typedef ::IceUtil::Handle< Callback_ContentBrowser_finish_Base> Callback_Content
 class Callback_EngineVersionBrowser_next_Base : virtual public ::IceInternal::CallbackBase { };
 typedef ::IceUtil::Handle< Callback_EngineVersionBrowser_next_Base> Callback_EngineVersionBrowser_nextPtr;
 
-class Callback_EngineVersionBrowser_finish_Base : virtual public ::IceInternal::CallbackBase { };
-typedef ::IceUtil::Handle< Callback_EngineVersionBrowser_finish_Base> Callback_EngineVersionBrowser_finishPtr;
-
 class Callback_Uploader_write_Base : virtual public ::IceInternal::CallbackBase { };
 typedef ::IceUtil::Handle< Callback_Uploader_write_Base> Callback_Uploader_writePtr;
 
@@ -294,8 +302,38 @@ typedef ::IceUtil::Handle< Callback_Downloader_read_Base> Callback_Downloader_re
 class Callback_Downloader_finish_Base : virtual public ::IceInternal::CallbackBase { };
 typedef ::IceUtil::Handle< Callback_Downloader_finish_Base> Callback_Downloader_finishPtr;
 
-class Callback_Session_destroy_Base : virtual public ::IceInternal::CallbackBase { };
-typedef ::IceUtil::Handle< Callback_Session_destroy_Base> Callback_Session_destroyPtr;
+class Callback_ContentSubmitter_setTitle_Base : virtual public ::IceInternal::CallbackBase { };
+typedef ::IceUtil::Handle< Callback_ContentSubmitter_setTitle_Base> Callback_ContentSubmitter_setTitlePtr;
+
+class Callback_ContentSubmitter_setPage_Base : virtual public ::IceInternal::CallbackBase { };
+typedef ::IceUtil::Handle< Callback_ContentSubmitter_setPage_Base> Callback_ContentSubmitter_setPagePtr;
+
+class Callback_ContentSubmitter_setCategory_Base : virtual public ::IceInternal::CallbackBase { };
+typedef ::IceUtil::Handle< Callback_ContentSubmitter_setCategory_Base> Callback_ContentSubmitter_setCategoryPtr;
+
+class Callback_ContentSubmitter_setEngine_Base : virtual public ::IceInternal::CallbackBase { };
+typedef ::IceUtil::Handle< Callback_ContentSubmitter_setEngine_Base> Callback_ContentSubmitter_setEnginePtr;
+
+class Callback_ContentSubmitter_setCommand_Base : virtual public ::IceInternal::CallbackBase { };
+typedef ::IceUtil::Handle< Callback_ContentSubmitter_setCommand_Base> Callback_ContentSubmitter_setCommandPtr;
+
+class Callback_ContentSubmitter_setParentId_Base : virtual public ::IceInternal::CallbackBase { };
+typedef ::IceUtil::Handle< Callback_ContentSubmitter_setParentId_Base> Callback_ContentSubmitter_setParentIdPtr;
+
+class Callback_ContentSubmitter_setDescription_Base : virtual public ::IceInternal::CallbackBase { };
+typedef ::IceUtil::Handle< Callback_ContentSubmitter_setDescription_Base> Callback_ContentSubmitter_setDescriptionPtr;
+
+class Callback_ContentSubmitter_uploadImage_Base : virtual public ::IceInternal::CallbackBase { };
+typedef ::IceUtil::Handle< Callback_ContentSubmitter_uploadImage_Base> Callback_ContentSubmitter_uploadImagePtr;
+
+class Callback_ContentSubmitter_uploadContent_Base : virtual public ::IceInternal::CallbackBase { };
+typedef ::IceUtil::Handle< Callback_ContentSubmitter_uploadContent_Base> Callback_ContentSubmitter_uploadContentPtr;
+
+class Callback_ContentSubmitter_cancel_Base : virtual public ::IceInternal::CallbackBase { };
+typedef ::IceUtil::Handle< Callback_ContentSubmitter_cancel_Base> Callback_ContentSubmitter_cancelPtr;
+
+class Callback_ContentSubmitter_finish_Base : virtual public ::IceInternal::CallbackBase { };
+typedef ::IceUtil::Handle< Callback_ContentSubmitter_finish_Base> Callback_ContentSubmitter_finishPtr;
 
 class Callback_Session_refresh_Base : virtual public ::IceInternal::CallbackBase { };
 typedef ::IceUtil::Handle< Callback_Session_refresh_Base> Callback_Session_refreshPtr;
@@ -314,6 +352,9 @@ typedef ::IceUtil::Handle< Callback_Session_getCategories_Base> Callback_Session
 
 class Callback_Session_browseContent_Base : virtual public ::IceInternal::CallbackBase { };
 typedef ::IceUtil::Handle< Callback_Session_browseContent_Base> Callback_Session_browseContentPtr;
+
+class Callback_Session_submitContent_Base : virtual public ::IceInternal::CallbackBase { };
+typedef ::IceUtil::Handle< Callback_Session_submitContent_Base> Callback_Session_submitContentPtr;
 
 class Callback_Session_browseEngineVersions_Base : virtual public ::IceInternal::CallbackBase { };
 typedef ::IceUtil::Handle< Callback_Session_browseEngineVersions_Base> Callback_Session_browseEngineVersionsPtr;
@@ -335,7 +376,7 @@ namespace IceProxy
 namespace Rpc
 {
 
-class ContentBrowser : virtual public ::IceProxy::Ice::Object
+class ContentBrowser : virtual public ::IceProxy::Rpc::ManagedObject
 {
 public:
 
@@ -520,7 +561,7 @@ private:
     virtual ::IceProxy::Ice::Object* __newInstance() const;
 };
 
-class EngineVersionBrowser : virtual public ::IceProxy::Ice::Object
+class EngineVersionBrowser : virtual public ::IceProxy::Rpc::ManagedObject
 {
 public:
 
@@ -597,76 +638,6 @@ private:
 
     ::Rpc::ErrorCode next(::Ice::Int, ::Rpc::EngineVersionItemSeq&, const ::Ice::Context*);
     ::Ice::AsyncResultPtr begin_next(::Ice::Int, const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
-    
-public:
-
-    void finish()
-    {
-        finish(0);
-    }
-    void finish(const ::Ice::Context& __ctx)
-    {
-        finish(&__ctx);
-    }
-#ifdef ICE_CPP11
-    ::Ice::AsyncResultPtr
-    begin_finish(const ::IceInternal::Function<void ()>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
-    {
-        return begin_finish(0, new ::IceInternal::Cpp11FnOnewayCallbackNC(__response, __exception, __sent));
-    }
-    ::Ice::AsyncResultPtr
-    begin_finish(const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
-    {
-        return begin_finish(0, ::Ice::newCallback(__completed, __sent), 0);
-    }
-    ::Ice::AsyncResultPtr
-    begin_finish(const ::Ice::Context& __ctx, const ::IceInternal::Function<void ()>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
-    {
-        return begin_finish(&__ctx, new ::IceInternal::Cpp11FnOnewayCallbackNC(__response, __exception, __sent), 0);
-    }
-    ::Ice::AsyncResultPtr
-    begin_finish(const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
-    {
-        return begin_finish(&__ctx, ::Ice::newCallback(__completed, __sent));
-    }
-#endif
-
-    ::Ice::AsyncResultPtr begin_finish()
-    {
-        return begin_finish(0, ::IceInternal::__dummyCallback, 0);
-    }
-
-    ::Ice::AsyncResultPtr begin_finish(const ::Ice::Context& __ctx)
-    {
-        return begin_finish(&__ctx, ::IceInternal::__dummyCallback, 0);
-    }
-
-    ::Ice::AsyncResultPtr begin_finish(const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
-    {
-        return begin_finish(0, __del, __cookie);
-    }
-
-    ::Ice::AsyncResultPtr begin_finish(const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
-    {
-        return begin_finish(&__ctx, __del, __cookie);
-    }
-
-    ::Ice::AsyncResultPtr begin_finish(const ::Rpc::Callback_EngineVersionBrowser_finishPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
-    {
-        return begin_finish(0, __del, __cookie);
-    }
-
-    ::Ice::AsyncResultPtr begin_finish(const ::Ice::Context& __ctx, const ::Rpc::Callback_EngineVersionBrowser_finishPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
-    {
-        return begin_finish(&__ctx, __del, __cookie);
-    }
-
-    void end_finish(const ::Ice::AsyncResultPtr&);
-    
-private:
-
-    void finish(const ::Ice::Context*);
-    ::Ice::AsyncResultPtr begin_finish(const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
     
 public:
     
@@ -781,7 +752,7 @@ private:
     virtual ::IceProxy::Ice::Object* __newInstance() const;
 };
 
-class Uploader : virtual public ::IceProxy::Ice::Object
+class Uploader : virtual public ::IceProxy::Rpc::ManagedObject
 {
 public:
 
@@ -1118,7 +1089,7 @@ private:
     virtual ::IceProxy::Ice::Object* __newInstance() const;
 };
 
-class Downloader : virtual public ::IceProxy::Ice::Object
+class Downloader : virtual public ::IceProxy::Rpc::ManagedObject
 {
 public:
 
@@ -1455,78 +1426,953 @@ private:
     virtual ::IceProxy::Ice::Object* __newInstance() const;
 };
 
-class Session : virtual public ::IceProxy::Ice::Object
+class ContentSubmitter : virtual public ::IceProxy::Rpc::ManagedObject
 {
 public:
 
-    void destroy()
+    ::Rpc::ErrorCode setTitle(const ::std::string& __p_title)
     {
-        destroy(0);
+        return setTitle(__p_title, 0);
     }
-    void destroy(const ::Ice::Context& __ctx)
+    ::Rpc::ErrorCode setTitle(const ::std::string& __p_title, const ::Ice::Context& __ctx)
     {
-        destroy(&__ctx);
+        return setTitle(__p_title, &__ctx);
     }
 #ifdef ICE_CPP11
     ::Ice::AsyncResultPtr
-    begin_destroy(const ::IceInternal::Function<void ()>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    begin_setTitle(const ::std::string& __p_title, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
     {
-        return begin_destroy(0, new ::IceInternal::Cpp11FnOnewayCallbackNC(__response, __exception, __sent));
+        return __begin_setTitle(__p_title, 0, __response, __exception, __sent);
     }
     ::Ice::AsyncResultPtr
-    begin_destroy(const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    begin_setTitle(const ::std::string& __p_title, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
     {
-        return begin_destroy(0, ::Ice::newCallback(__completed, __sent), 0);
+        return begin_setTitle(__p_title, 0, ::Ice::newCallback(__completed, __sent), 0);
     }
     ::Ice::AsyncResultPtr
-    begin_destroy(const ::Ice::Context& __ctx, const ::IceInternal::Function<void ()>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    begin_setTitle(const ::std::string& __p_title, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
     {
-        return begin_destroy(&__ctx, new ::IceInternal::Cpp11FnOnewayCallbackNC(__response, __exception, __sent), 0);
+        return __begin_setTitle(__p_title, &__ctx, __response, __exception, __sent);
     }
     ::Ice::AsyncResultPtr
-    begin_destroy(const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    begin_setTitle(const ::std::string& __p_title, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
     {
-        return begin_destroy(&__ctx, ::Ice::newCallback(__completed, __sent));
+        return begin_setTitle(__p_title, &__ctx, ::Ice::newCallback(__completed, __sent));
     }
-#endif
-
-    ::Ice::AsyncResultPtr begin_destroy()
-    {
-        return begin_destroy(0, ::IceInternal::__dummyCallback, 0);
-    }
-
-    ::Ice::AsyncResultPtr begin_destroy(const ::Ice::Context& __ctx)
-    {
-        return begin_destroy(&__ctx, ::IceInternal::__dummyCallback, 0);
-    }
-
-    ::Ice::AsyncResultPtr begin_destroy(const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
-    {
-        return begin_destroy(0, __del, __cookie);
-    }
-
-    ::Ice::AsyncResultPtr begin_destroy(const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
-    {
-        return begin_destroy(&__ctx, __del, __cookie);
-    }
-
-    ::Ice::AsyncResultPtr begin_destroy(const ::Rpc::Callback_Session_destroyPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
-    {
-        return begin_destroy(0, __del, __cookie);
-    }
-
-    ::Ice::AsyncResultPtr begin_destroy(const ::Ice::Context& __ctx, const ::Rpc::Callback_Session_destroyPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
-    {
-        return begin_destroy(&__ctx, __del, __cookie);
-    }
-
-    void end_destroy(const ::Ice::AsyncResultPtr&);
     
 private:
 
-    void destroy(const ::Ice::Context*);
-    ::Ice::AsyncResultPtr begin_destroy(const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
+    ::Ice::AsyncResultPtr __begin_setTitle(const ::std::string& __p_title, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent);
     
+public:
+#endif
+
+    ::Ice::AsyncResultPtr begin_setTitle(const ::std::string& __p_title)
+    {
+        return begin_setTitle(__p_title, 0, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_setTitle(const ::std::string& __p_title, const ::Ice::Context& __ctx)
+    {
+        return begin_setTitle(__p_title, &__ctx, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_setTitle(const ::std::string& __p_title, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_setTitle(__p_title, 0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_setTitle(const ::std::string& __p_title, const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_setTitle(__p_title, &__ctx, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_setTitle(const ::std::string& __p_title, const ::Rpc::Callback_ContentSubmitter_setTitlePtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_setTitle(__p_title, 0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_setTitle(const ::std::string& __p_title, const ::Ice::Context& __ctx, const ::Rpc::Callback_ContentSubmitter_setTitlePtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_setTitle(__p_title, &__ctx, __del, __cookie);
+    }
+
+    ::Rpc::ErrorCode end_setTitle(const ::Ice::AsyncResultPtr&);
+    
+private:
+
+    ::Rpc::ErrorCode setTitle(const ::std::string&, const ::Ice::Context*);
+    ::Ice::AsyncResultPtr begin_setTitle(const ::std::string&, const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
+    
+public:
+
+    ::Rpc::ErrorCode setPage(const ::std::string& __p_page)
+    {
+        return setPage(__p_page, 0);
+    }
+    ::Rpc::ErrorCode setPage(const ::std::string& __p_page, const ::Ice::Context& __ctx)
+    {
+        return setPage(__p_page, &__ctx);
+    }
+#ifdef ICE_CPP11
+    ::Ice::AsyncResultPtr
+    begin_setPage(const ::std::string& __p_page, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return __begin_setPage(__p_page, 0, __response, __exception, __sent);
+    }
+    ::Ice::AsyncResultPtr
+    begin_setPage(const ::std::string& __p_page, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_setPage(__p_page, 0, ::Ice::newCallback(__completed, __sent), 0);
+    }
+    ::Ice::AsyncResultPtr
+    begin_setPage(const ::std::string& __p_page, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return __begin_setPage(__p_page, &__ctx, __response, __exception, __sent);
+    }
+    ::Ice::AsyncResultPtr
+    begin_setPage(const ::std::string& __p_page, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_setPage(__p_page, &__ctx, ::Ice::newCallback(__completed, __sent));
+    }
+    
+private:
+
+    ::Ice::AsyncResultPtr __begin_setPage(const ::std::string& __p_page, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent);
+    
+public:
+#endif
+
+    ::Ice::AsyncResultPtr begin_setPage(const ::std::string& __p_page)
+    {
+        return begin_setPage(__p_page, 0, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_setPage(const ::std::string& __p_page, const ::Ice::Context& __ctx)
+    {
+        return begin_setPage(__p_page, &__ctx, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_setPage(const ::std::string& __p_page, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_setPage(__p_page, 0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_setPage(const ::std::string& __p_page, const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_setPage(__p_page, &__ctx, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_setPage(const ::std::string& __p_page, const ::Rpc::Callback_ContentSubmitter_setPagePtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_setPage(__p_page, 0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_setPage(const ::std::string& __p_page, const ::Ice::Context& __ctx, const ::Rpc::Callback_ContentSubmitter_setPagePtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_setPage(__p_page, &__ctx, __del, __cookie);
+    }
+
+    ::Rpc::ErrorCode end_setPage(const ::Ice::AsyncResultPtr&);
+    
+private:
+
+    ::Rpc::ErrorCode setPage(const ::std::string&, const ::Ice::Context*);
+    ::Ice::AsyncResultPtr begin_setPage(const ::std::string&, const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
+    
+public:
+
+    ::Rpc::ErrorCode setCategory(const ::std::string& __p_category)
+    {
+        return setCategory(__p_category, 0);
+    }
+    ::Rpc::ErrorCode setCategory(const ::std::string& __p_category, const ::Ice::Context& __ctx)
+    {
+        return setCategory(__p_category, &__ctx);
+    }
+#ifdef ICE_CPP11
+    ::Ice::AsyncResultPtr
+    begin_setCategory(const ::std::string& __p_category, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return __begin_setCategory(__p_category, 0, __response, __exception, __sent);
+    }
+    ::Ice::AsyncResultPtr
+    begin_setCategory(const ::std::string& __p_category, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_setCategory(__p_category, 0, ::Ice::newCallback(__completed, __sent), 0);
+    }
+    ::Ice::AsyncResultPtr
+    begin_setCategory(const ::std::string& __p_category, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return __begin_setCategory(__p_category, &__ctx, __response, __exception, __sent);
+    }
+    ::Ice::AsyncResultPtr
+    begin_setCategory(const ::std::string& __p_category, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_setCategory(__p_category, &__ctx, ::Ice::newCallback(__completed, __sent));
+    }
+    
+private:
+
+    ::Ice::AsyncResultPtr __begin_setCategory(const ::std::string& __p_category, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent);
+    
+public:
+#endif
+
+    ::Ice::AsyncResultPtr begin_setCategory(const ::std::string& __p_category)
+    {
+        return begin_setCategory(__p_category, 0, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_setCategory(const ::std::string& __p_category, const ::Ice::Context& __ctx)
+    {
+        return begin_setCategory(__p_category, &__ctx, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_setCategory(const ::std::string& __p_category, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_setCategory(__p_category, 0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_setCategory(const ::std::string& __p_category, const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_setCategory(__p_category, &__ctx, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_setCategory(const ::std::string& __p_category, const ::Rpc::Callback_ContentSubmitter_setCategoryPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_setCategory(__p_category, 0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_setCategory(const ::std::string& __p_category, const ::Ice::Context& __ctx, const ::Rpc::Callback_ContentSubmitter_setCategoryPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_setCategory(__p_category, &__ctx, __del, __cookie);
+    }
+
+    ::Rpc::ErrorCode end_setCategory(const ::Ice::AsyncResultPtr&);
+    
+private:
+
+    ::Rpc::ErrorCode setCategory(const ::std::string&, const ::Ice::Context*);
+    ::Ice::AsyncResultPtr begin_setCategory(const ::std::string&, const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
+    
+public:
+
+    ::Rpc::ErrorCode setEngine(const ::std::string& __p_name, const ::std::string& __p_version)
+    {
+        return setEngine(__p_name, __p_version, 0);
+    }
+    ::Rpc::ErrorCode setEngine(const ::std::string& __p_name, const ::std::string& __p_version, const ::Ice::Context& __ctx)
+    {
+        return setEngine(__p_name, __p_version, &__ctx);
+    }
+#ifdef ICE_CPP11
+    ::Ice::AsyncResultPtr
+    begin_setEngine(const ::std::string& __p_name, const ::std::string& __p_version, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return __begin_setEngine(__p_name, __p_version, 0, __response, __exception, __sent);
+    }
+    ::Ice::AsyncResultPtr
+    begin_setEngine(const ::std::string& __p_name, const ::std::string& __p_version, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_setEngine(__p_name, __p_version, 0, ::Ice::newCallback(__completed, __sent), 0);
+    }
+    ::Ice::AsyncResultPtr
+    begin_setEngine(const ::std::string& __p_name, const ::std::string& __p_version, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return __begin_setEngine(__p_name, __p_version, &__ctx, __response, __exception, __sent);
+    }
+    ::Ice::AsyncResultPtr
+    begin_setEngine(const ::std::string& __p_name, const ::std::string& __p_version, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_setEngine(__p_name, __p_version, &__ctx, ::Ice::newCallback(__completed, __sent));
+    }
+    
+private:
+
+    ::Ice::AsyncResultPtr __begin_setEngine(const ::std::string& __p_name, const ::std::string& __p_version, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent);
+    
+public:
+#endif
+
+    ::Ice::AsyncResultPtr begin_setEngine(const ::std::string& __p_name, const ::std::string& __p_version)
+    {
+        return begin_setEngine(__p_name, __p_version, 0, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_setEngine(const ::std::string& __p_name, const ::std::string& __p_version, const ::Ice::Context& __ctx)
+    {
+        return begin_setEngine(__p_name, __p_version, &__ctx, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_setEngine(const ::std::string& __p_name, const ::std::string& __p_version, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_setEngine(__p_name, __p_version, 0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_setEngine(const ::std::string& __p_name, const ::std::string& __p_version, const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_setEngine(__p_name, __p_version, &__ctx, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_setEngine(const ::std::string& __p_name, const ::std::string& __p_version, const ::Rpc::Callback_ContentSubmitter_setEnginePtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_setEngine(__p_name, __p_version, 0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_setEngine(const ::std::string& __p_name, const ::std::string& __p_version, const ::Ice::Context& __ctx, const ::Rpc::Callback_ContentSubmitter_setEnginePtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_setEngine(__p_name, __p_version, &__ctx, __del, __cookie);
+    }
+
+    ::Rpc::ErrorCode end_setEngine(const ::Ice::AsyncResultPtr&);
+    
+private:
+
+    ::Rpc::ErrorCode setEngine(const ::std::string&, const ::std::string&, const ::Ice::Context*);
+    ::Ice::AsyncResultPtr begin_setEngine(const ::std::string&, const ::std::string&, const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
+    
+public:
+
+    ::Rpc::ErrorCode setCommand(const ::std::string& __p_command)
+    {
+        return setCommand(__p_command, 0);
+    }
+    ::Rpc::ErrorCode setCommand(const ::std::string& __p_command, const ::Ice::Context& __ctx)
+    {
+        return setCommand(__p_command, &__ctx);
+    }
+#ifdef ICE_CPP11
+    ::Ice::AsyncResultPtr
+    begin_setCommand(const ::std::string& __p_command, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return __begin_setCommand(__p_command, 0, __response, __exception, __sent);
+    }
+    ::Ice::AsyncResultPtr
+    begin_setCommand(const ::std::string& __p_command, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_setCommand(__p_command, 0, ::Ice::newCallback(__completed, __sent), 0);
+    }
+    ::Ice::AsyncResultPtr
+    begin_setCommand(const ::std::string& __p_command, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return __begin_setCommand(__p_command, &__ctx, __response, __exception, __sent);
+    }
+    ::Ice::AsyncResultPtr
+    begin_setCommand(const ::std::string& __p_command, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_setCommand(__p_command, &__ctx, ::Ice::newCallback(__completed, __sent));
+    }
+    
+private:
+
+    ::Ice::AsyncResultPtr __begin_setCommand(const ::std::string& __p_command, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent);
+    
+public:
+#endif
+
+    ::Ice::AsyncResultPtr begin_setCommand(const ::std::string& __p_command)
+    {
+        return begin_setCommand(__p_command, 0, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_setCommand(const ::std::string& __p_command, const ::Ice::Context& __ctx)
+    {
+        return begin_setCommand(__p_command, &__ctx, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_setCommand(const ::std::string& __p_command, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_setCommand(__p_command, 0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_setCommand(const ::std::string& __p_command, const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_setCommand(__p_command, &__ctx, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_setCommand(const ::std::string& __p_command, const ::Rpc::Callback_ContentSubmitter_setCommandPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_setCommand(__p_command, 0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_setCommand(const ::std::string& __p_command, const ::Ice::Context& __ctx, const ::Rpc::Callback_ContentSubmitter_setCommandPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_setCommand(__p_command, &__ctx, __del, __cookie);
+    }
+
+    ::Rpc::ErrorCode end_setCommand(const ::Ice::AsyncResultPtr&);
+    
+private:
+
+    ::Rpc::ErrorCode setCommand(const ::std::string&, const ::Ice::Context*);
+    ::Ice::AsyncResultPtr begin_setCommand(const ::std::string&, const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
+    
+public:
+
+    ::Rpc::ErrorCode setParentId(const ::std::string& __p_id)
+    {
+        return setParentId(__p_id, 0);
+    }
+    ::Rpc::ErrorCode setParentId(const ::std::string& __p_id, const ::Ice::Context& __ctx)
+    {
+        return setParentId(__p_id, &__ctx);
+    }
+#ifdef ICE_CPP11
+    ::Ice::AsyncResultPtr
+    begin_setParentId(const ::std::string& __p_id, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return __begin_setParentId(__p_id, 0, __response, __exception, __sent);
+    }
+    ::Ice::AsyncResultPtr
+    begin_setParentId(const ::std::string& __p_id, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_setParentId(__p_id, 0, ::Ice::newCallback(__completed, __sent), 0);
+    }
+    ::Ice::AsyncResultPtr
+    begin_setParentId(const ::std::string& __p_id, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return __begin_setParentId(__p_id, &__ctx, __response, __exception, __sent);
+    }
+    ::Ice::AsyncResultPtr
+    begin_setParentId(const ::std::string& __p_id, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_setParentId(__p_id, &__ctx, ::Ice::newCallback(__completed, __sent));
+    }
+    
+private:
+
+    ::Ice::AsyncResultPtr __begin_setParentId(const ::std::string& __p_id, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent);
+    
+public:
+#endif
+
+    ::Ice::AsyncResultPtr begin_setParentId(const ::std::string& __p_id)
+    {
+        return begin_setParentId(__p_id, 0, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_setParentId(const ::std::string& __p_id, const ::Ice::Context& __ctx)
+    {
+        return begin_setParentId(__p_id, &__ctx, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_setParentId(const ::std::string& __p_id, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_setParentId(__p_id, 0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_setParentId(const ::std::string& __p_id, const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_setParentId(__p_id, &__ctx, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_setParentId(const ::std::string& __p_id, const ::Rpc::Callback_ContentSubmitter_setParentIdPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_setParentId(__p_id, 0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_setParentId(const ::std::string& __p_id, const ::Ice::Context& __ctx, const ::Rpc::Callback_ContentSubmitter_setParentIdPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_setParentId(__p_id, &__ctx, __del, __cookie);
+    }
+
+    ::Rpc::ErrorCode end_setParentId(const ::Ice::AsyncResultPtr&);
+    
+private:
+
+    ::Rpc::ErrorCode setParentId(const ::std::string&, const ::Ice::Context*);
+    ::Ice::AsyncResultPtr begin_setParentId(const ::std::string&, const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
+    
+public:
+
+    ::Rpc::ErrorCode setDescription(const ::std::string& __p_description)
+    {
+        return setDescription(__p_description, 0);
+    }
+    ::Rpc::ErrorCode setDescription(const ::std::string& __p_description, const ::Ice::Context& __ctx)
+    {
+        return setDescription(__p_description, &__ctx);
+    }
+#ifdef ICE_CPP11
+    ::Ice::AsyncResultPtr
+    begin_setDescription(const ::std::string& __p_description, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return __begin_setDescription(__p_description, 0, __response, __exception, __sent);
+    }
+    ::Ice::AsyncResultPtr
+    begin_setDescription(const ::std::string& __p_description, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_setDescription(__p_description, 0, ::Ice::newCallback(__completed, __sent), 0);
+    }
+    ::Ice::AsyncResultPtr
+    begin_setDescription(const ::std::string& __p_description, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return __begin_setDescription(__p_description, &__ctx, __response, __exception, __sent);
+    }
+    ::Ice::AsyncResultPtr
+    begin_setDescription(const ::std::string& __p_description, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_setDescription(__p_description, &__ctx, ::Ice::newCallback(__completed, __sent));
+    }
+    
+private:
+
+    ::Ice::AsyncResultPtr __begin_setDescription(const ::std::string& __p_description, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent);
+    
+public:
+#endif
+
+    ::Ice::AsyncResultPtr begin_setDescription(const ::std::string& __p_description)
+    {
+        return begin_setDescription(__p_description, 0, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_setDescription(const ::std::string& __p_description, const ::Ice::Context& __ctx)
+    {
+        return begin_setDescription(__p_description, &__ctx, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_setDescription(const ::std::string& __p_description, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_setDescription(__p_description, 0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_setDescription(const ::std::string& __p_description, const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_setDescription(__p_description, &__ctx, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_setDescription(const ::std::string& __p_description, const ::Rpc::Callback_ContentSubmitter_setDescriptionPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_setDescription(__p_description, 0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_setDescription(const ::std::string& __p_description, const ::Ice::Context& __ctx, const ::Rpc::Callback_ContentSubmitter_setDescriptionPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_setDescription(__p_description, &__ctx, __del, __cookie);
+    }
+
+    ::Rpc::ErrorCode end_setDescription(const ::Ice::AsyncResultPtr&);
+    
+private:
+
+    ::Rpc::ErrorCode setDescription(const ::std::string&, const ::Ice::Context*);
+    ::Ice::AsyncResultPtr begin_setDescription(const ::std::string&, const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
+    
+public:
+
+    ::Rpc::ErrorCode uploadImage(::Ice::Int __p_index, ::Rpc::UploaderPrx& __p_uploader)
+    {
+        return uploadImage(__p_index, __p_uploader, 0);
+    }
+    ::Rpc::ErrorCode uploadImage(::Ice::Int __p_index, ::Rpc::UploaderPrx& __p_uploader, const ::Ice::Context& __ctx)
+    {
+        return uploadImage(__p_index, __p_uploader, &__ctx);
+    }
+#ifdef ICE_CPP11
+    ::Ice::AsyncResultPtr
+    begin_uploadImage(::Ice::Int __p_index, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::UploaderPrx&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return __begin_uploadImage(__p_index, 0, __response, __exception, __sent);
+    }
+    ::Ice::AsyncResultPtr
+    begin_uploadImage(::Ice::Int __p_index, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_uploadImage(__p_index, 0, ::Ice::newCallback(__completed, __sent), 0);
+    }
+    ::Ice::AsyncResultPtr
+    begin_uploadImage(::Ice::Int __p_index, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::UploaderPrx&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return __begin_uploadImage(__p_index, &__ctx, __response, __exception, __sent);
+    }
+    ::Ice::AsyncResultPtr
+    begin_uploadImage(::Ice::Int __p_index, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_uploadImage(__p_index, &__ctx, ::Ice::newCallback(__completed, __sent));
+    }
+    
+private:
+
+    ::Ice::AsyncResultPtr __begin_uploadImage(::Ice::Int __p_index, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::UploaderPrx&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent);
+    
+public:
+#endif
+
+    ::Ice::AsyncResultPtr begin_uploadImage(::Ice::Int __p_index)
+    {
+        return begin_uploadImage(__p_index, 0, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_uploadImage(::Ice::Int __p_index, const ::Ice::Context& __ctx)
+    {
+        return begin_uploadImage(__p_index, &__ctx, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_uploadImage(::Ice::Int __p_index, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_uploadImage(__p_index, 0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_uploadImage(::Ice::Int __p_index, const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_uploadImage(__p_index, &__ctx, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_uploadImage(::Ice::Int __p_index, const ::Rpc::Callback_ContentSubmitter_uploadImagePtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_uploadImage(__p_index, 0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_uploadImage(::Ice::Int __p_index, const ::Ice::Context& __ctx, const ::Rpc::Callback_ContentSubmitter_uploadImagePtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_uploadImage(__p_index, &__ctx, __del, __cookie);
+    }
+
+    ::Rpc::ErrorCode end_uploadImage(::Rpc::UploaderPrx& __p_uploader, const ::Ice::AsyncResultPtr&);
+    
+private:
+
+    ::Rpc::ErrorCode uploadImage(::Ice::Int, ::Rpc::UploaderPrx&, const ::Ice::Context*);
+    ::Ice::AsyncResultPtr begin_uploadImage(::Ice::Int, const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
+    
+public:
+
+    ::Rpc::ErrorCode uploadContent(::Rpc::UploaderPrx& __p_uploader)
+    {
+        return uploadContent(__p_uploader, 0);
+    }
+    ::Rpc::ErrorCode uploadContent(::Rpc::UploaderPrx& __p_uploader, const ::Ice::Context& __ctx)
+    {
+        return uploadContent(__p_uploader, &__ctx);
+    }
+#ifdef ICE_CPP11
+    ::Ice::AsyncResultPtr
+    begin_uploadContent(const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::UploaderPrx&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return __begin_uploadContent(0, __response, __exception, __sent);
+    }
+    ::Ice::AsyncResultPtr
+    begin_uploadContent(const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_uploadContent(0, ::Ice::newCallback(__completed, __sent), 0);
+    }
+    ::Ice::AsyncResultPtr
+    begin_uploadContent(const ::Ice::Context& __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::UploaderPrx&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return __begin_uploadContent(&__ctx, __response, __exception, __sent);
+    }
+    ::Ice::AsyncResultPtr
+    begin_uploadContent(const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_uploadContent(&__ctx, ::Ice::newCallback(__completed, __sent));
+    }
+    
+private:
+
+    ::Ice::AsyncResultPtr __begin_uploadContent(const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::UploaderPrx&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent);
+    
+public:
+#endif
+
+    ::Ice::AsyncResultPtr begin_uploadContent()
+    {
+        return begin_uploadContent(0, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_uploadContent(const ::Ice::Context& __ctx)
+    {
+        return begin_uploadContent(&__ctx, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_uploadContent(const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_uploadContent(0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_uploadContent(const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_uploadContent(&__ctx, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_uploadContent(const ::Rpc::Callback_ContentSubmitter_uploadContentPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_uploadContent(0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_uploadContent(const ::Ice::Context& __ctx, const ::Rpc::Callback_ContentSubmitter_uploadContentPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_uploadContent(&__ctx, __del, __cookie);
+    }
+
+    ::Rpc::ErrorCode end_uploadContent(::Rpc::UploaderPrx& __p_uploader, const ::Ice::AsyncResultPtr&);
+    
+private:
+
+    ::Rpc::ErrorCode uploadContent(::Rpc::UploaderPrx&, const ::Ice::Context*);
+    ::Ice::AsyncResultPtr begin_uploadContent(const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
+    
+public:
+
+    void cancel()
+    {
+        cancel(0);
+    }
+    void cancel(const ::Ice::Context& __ctx)
+    {
+        cancel(&__ctx);
+    }
+#ifdef ICE_CPP11
+    ::Ice::AsyncResultPtr
+    begin_cancel(const ::IceInternal::Function<void ()>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return begin_cancel(0, new ::IceInternal::Cpp11FnOnewayCallbackNC(__response, __exception, __sent));
+    }
+    ::Ice::AsyncResultPtr
+    begin_cancel(const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_cancel(0, ::Ice::newCallback(__completed, __sent), 0);
+    }
+    ::Ice::AsyncResultPtr
+    begin_cancel(const ::Ice::Context& __ctx, const ::IceInternal::Function<void ()>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return begin_cancel(&__ctx, new ::IceInternal::Cpp11FnOnewayCallbackNC(__response, __exception, __sent), 0);
+    }
+    ::Ice::AsyncResultPtr
+    begin_cancel(const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_cancel(&__ctx, ::Ice::newCallback(__completed, __sent));
+    }
+#endif
+
+    ::Ice::AsyncResultPtr begin_cancel()
+    {
+        return begin_cancel(0, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_cancel(const ::Ice::Context& __ctx)
+    {
+        return begin_cancel(&__ctx, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_cancel(const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_cancel(0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_cancel(const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_cancel(&__ctx, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_cancel(const ::Rpc::Callback_ContentSubmitter_cancelPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_cancel(0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_cancel(const ::Ice::Context& __ctx, const ::Rpc::Callback_ContentSubmitter_cancelPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_cancel(&__ctx, __del, __cookie);
+    }
+
+    void end_cancel(const ::Ice::AsyncResultPtr&);
+    
+private:
+
+    void cancel(const ::Ice::Context*);
+    ::Ice::AsyncResultPtr begin_cancel(const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
+    
+public:
+
+    ::Rpc::ErrorCode finish()
+    {
+        return finish(0);
+    }
+    ::Rpc::ErrorCode finish(const ::Ice::Context& __ctx)
+    {
+        return finish(&__ctx);
+    }
+#ifdef ICE_CPP11
+    ::Ice::AsyncResultPtr
+    begin_finish(const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return __begin_finish(0, __response, __exception, __sent);
+    }
+    ::Ice::AsyncResultPtr
+    begin_finish(const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_finish(0, ::Ice::newCallback(__completed, __sent), 0);
+    }
+    ::Ice::AsyncResultPtr
+    begin_finish(const ::Ice::Context& __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return __begin_finish(&__ctx, __response, __exception, __sent);
+    }
+    ::Ice::AsyncResultPtr
+    begin_finish(const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_finish(&__ctx, ::Ice::newCallback(__completed, __sent));
+    }
+    
+private:
+
+    ::Ice::AsyncResultPtr __begin_finish(const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent);
+    
+public:
+#endif
+
+    ::Ice::AsyncResultPtr begin_finish()
+    {
+        return begin_finish(0, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_finish(const ::Ice::Context& __ctx)
+    {
+        return begin_finish(&__ctx, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_finish(const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_finish(0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_finish(const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_finish(&__ctx, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_finish(const ::Rpc::Callback_ContentSubmitter_finishPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_finish(0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_finish(const ::Ice::Context& __ctx, const ::Rpc::Callback_ContentSubmitter_finishPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_finish(&__ctx, __del, __cookie);
+    }
+
+    ::Rpc::ErrorCode end_finish(const ::Ice::AsyncResultPtr&);
+    
+private:
+
+    ::Rpc::ErrorCode finish(const ::Ice::Context*);
+    ::Ice::AsyncResultPtr begin_finish(const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
+    
+public:
+    
+    ::IceInternal::ProxyHandle<ContentSubmitter> ice_context(const ::Ice::Context& __context) const
+    {
+        return dynamic_cast<ContentSubmitter*>(::IceProxy::Ice::Object::ice_context(__context).get());
+    }
+    
+    ::IceInternal::ProxyHandle<ContentSubmitter> ice_adapterId(const ::std::string& __id) const
+    {
+        return dynamic_cast<ContentSubmitter*>(::IceProxy::Ice::Object::ice_adapterId(__id).get());
+    }
+    
+    ::IceInternal::ProxyHandle<ContentSubmitter> ice_endpoints(const ::Ice::EndpointSeq& __endpoints) const
+    {
+        return dynamic_cast<ContentSubmitter*>(::IceProxy::Ice::Object::ice_endpoints(__endpoints).get());
+    }
+    
+    ::IceInternal::ProxyHandle<ContentSubmitter> ice_locatorCacheTimeout(int __timeout) const
+    {
+        return dynamic_cast<ContentSubmitter*>(::IceProxy::Ice::Object::ice_locatorCacheTimeout(__timeout).get());
+    }
+    
+    ::IceInternal::ProxyHandle<ContentSubmitter> ice_connectionCached(bool __cached) const
+    {
+        return dynamic_cast<ContentSubmitter*>(::IceProxy::Ice::Object::ice_connectionCached(__cached).get());
+    }
+    
+    ::IceInternal::ProxyHandle<ContentSubmitter> ice_endpointSelection(::Ice::EndpointSelectionType __est) const
+    {
+        return dynamic_cast<ContentSubmitter*>(::IceProxy::Ice::Object::ice_endpointSelection(__est).get());
+    }
+    
+    ::IceInternal::ProxyHandle<ContentSubmitter> ice_secure(bool __secure) const
+    {
+        return dynamic_cast<ContentSubmitter*>(::IceProxy::Ice::Object::ice_secure(__secure).get());
+    }
+    
+    ::IceInternal::ProxyHandle<ContentSubmitter> ice_preferSecure(bool __preferSecure) const
+    {
+        return dynamic_cast<ContentSubmitter*>(::IceProxy::Ice::Object::ice_preferSecure(__preferSecure).get());
+    }
+    
+    ::IceInternal::ProxyHandle<ContentSubmitter> ice_router(const ::Ice::RouterPrx& __router) const
+    {
+        return dynamic_cast<ContentSubmitter*>(::IceProxy::Ice::Object::ice_router(__router).get());
+    }
+    
+    ::IceInternal::ProxyHandle<ContentSubmitter> ice_locator(const ::Ice::LocatorPrx& __locator) const
+    {
+        return dynamic_cast<ContentSubmitter*>(::IceProxy::Ice::Object::ice_locator(__locator).get());
+    }
+    
+    ::IceInternal::ProxyHandle<ContentSubmitter> ice_collocationOptimized(bool __co) const
+    {
+        return dynamic_cast<ContentSubmitter*>(::IceProxy::Ice::Object::ice_collocationOptimized(__co).get());
+    }
+    
+    ::IceInternal::ProxyHandle<ContentSubmitter> ice_invocationTimeout(int __timeout) const
+    {
+        return dynamic_cast<ContentSubmitter*>(::IceProxy::Ice::Object::ice_invocationTimeout(__timeout).get());
+    }
+    
+    ::IceInternal::ProxyHandle<ContentSubmitter> ice_twoway() const
+    {
+        return dynamic_cast<ContentSubmitter*>(::IceProxy::Ice::Object::ice_twoway().get());
+    }
+    
+    ::IceInternal::ProxyHandle<ContentSubmitter> ice_oneway() const
+    {
+        return dynamic_cast<ContentSubmitter*>(::IceProxy::Ice::Object::ice_oneway().get());
+    }
+    
+    ::IceInternal::ProxyHandle<ContentSubmitter> ice_batchOneway() const
+    {
+        return dynamic_cast<ContentSubmitter*>(::IceProxy::Ice::Object::ice_batchOneway().get());
+    }
+    
+    ::IceInternal::ProxyHandle<ContentSubmitter> ice_datagram() const
+    {
+        return dynamic_cast<ContentSubmitter*>(::IceProxy::Ice::Object::ice_datagram().get());
+    }
+    
+    ::IceInternal::ProxyHandle<ContentSubmitter> ice_batchDatagram() const
+    {
+        return dynamic_cast<ContentSubmitter*>(::IceProxy::Ice::Object::ice_batchDatagram().get());
+    }
+    
+    ::IceInternal::ProxyHandle<ContentSubmitter> ice_compress(bool __compress) const
+    {
+        return dynamic_cast<ContentSubmitter*>(::IceProxy::Ice::Object::ice_compress(__compress).get());
+    }
+    
+    ::IceInternal::ProxyHandle<ContentSubmitter> ice_timeout(int __timeout) const
+    {
+        return dynamic_cast<ContentSubmitter*>(::IceProxy::Ice::Object::ice_timeout(__timeout).get());
+    }
+    
+    ::IceInternal::ProxyHandle<ContentSubmitter> ice_connectionId(const ::std::string& __id) const
+    {
+        return dynamic_cast<ContentSubmitter*>(::IceProxy::Ice::Object::ice_connectionId(__id).get());
+    }
+    
+    ::IceInternal::ProxyHandle<ContentSubmitter> ice_encodingVersion(const ::Ice::EncodingVersion& __v) const
+    {
+        return dynamic_cast<ContentSubmitter*>(::IceProxy::Ice::Object::ice_encodingVersion(__v).get());
+    }
+    
+    static const ::std::string& ice_staticId();
+
+private: 
+    virtual ::IceProxy::Ice::Object* __newInstance() const;
+};
+
+class Session : virtual public ::IceProxy::Rpc::ManagedObject
+{
 public:
 
     void refresh()
@@ -1979,6 +2825,82 @@ private:
     
 public:
 
+    ::Rpc::ErrorCode submitContent(::Rpc::ContentSubmitterPrx& __p_submitter)
+    {
+        return submitContent(__p_submitter, 0);
+    }
+    ::Rpc::ErrorCode submitContent(::Rpc::ContentSubmitterPrx& __p_submitter, const ::Ice::Context& __ctx)
+    {
+        return submitContent(__p_submitter, &__ctx);
+    }
+#ifdef ICE_CPP11
+    ::Ice::AsyncResultPtr
+    begin_submitContent(const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::ContentSubmitterPrx&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return __begin_submitContent(0, __response, __exception, __sent);
+    }
+    ::Ice::AsyncResultPtr
+    begin_submitContent(const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_submitContent(0, ::Ice::newCallback(__completed, __sent), 0);
+    }
+    ::Ice::AsyncResultPtr
+    begin_submitContent(const ::Ice::Context& __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::ContentSubmitterPrx&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return __begin_submitContent(&__ctx, __response, __exception, __sent);
+    }
+    ::Ice::AsyncResultPtr
+    begin_submitContent(const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_submitContent(&__ctx, ::Ice::newCallback(__completed, __sent));
+    }
+    
+private:
+
+    ::Ice::AsyncResultPtr __begin_submitContent(const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::ContentSubmitterPrx&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent);
+    
+public:
+#endif
+
+    ::Ice::AsyncResultPtr begin_submitContent()
+    {
+        return begin_submitContent(0, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_submitContent(const ::Ice::Context& __ctx)
+    {
+        return begin_submitContent(&__ctx, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_submitContent(const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_submitContent(0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_submitContent(const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_submitContent(&__ctx, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_submitContent(const ::Rpc::Callback_Session_submitContentPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_submitContent(0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_submitContent(const ::Ice::Context& __ctx, const ::Rpc::Callback_Session_submitContentPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_submitContent(&__ctx, __del, __cookie);
+    }
+
+    ::Rpc::ErrorCode end_submitContent(::Rpc::ContentSubmitterPrx& __p_submitter, const ::Ice::AsyncResultPtr&);
+    
+private:
+
+    ::Rpc::ErrorCode submitContent(::Rpc::ContentSubmitterPrx&, const ::Ice::Context*);
+    ::Ice::AsyncResultPtr begin_submitContent(const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
+    
+public:
+
     ::Rpc::ErrorCode browseEngineVersions(::Rpc::EngineVersionBrowserPrx& __p_browser)
     {
         return browseEngineVersions(__p_browser, 0);
@@ -2401,7 +3323,7 @@ private:
 namespace Rpc
 {
 
-class ContentBrowser : virtual public ::Ice::Object
+class ContentBrowser : virtual public ::Rpc::ManagedObject
 {
 public:
 
@@ -2435,7 +3357,7 @@ inline bool operator<(const ContentBrowser& l, const ContentBrowser& r)
     return static_cast<const ::Ice::Object&>(l) < static_cast<const ::Ice::Object&>(r);
 }
 
-class EngineVersionBrowser : virtual public ::Ice::Object
+class EngineVersionBrowser : virtual public ::Rpc::ManagedObject
 {
 public:
 
@@ -2449,9 +3371,6 @@ public:
 
     virtual ::Rpc::ErrorCode next(::Ice::Int, ::Rpc::EngineVersionItemSeq&, const ::Ice::Current& = ::Ice::Current()) = 0;
     ::Ice::DispatchStatus ___next(::IceInternal::Incoming&, const ::Ice::Current&);
-
-    virtual void finish(const ::Ice::Current& = ::Ice::Current()) = 0;
-    ::Ice::DispatchStatus ___finish(::IceInternal::Incoming&, const ::Ice::Current&);
 
     virtual ::Ice::DispatchStatus __dispatch(::IceInternal::Incoming&, const ::Ice::Current&);
 
@@ -2472,7 +3391,7 @@ inline bool operator<(const EngineVersionBrowser& l, const EngineVersionBrowser&
     return static_cast<const ::Ice::Object&>(l) < static_cast<const ::Ice::Object&>(r);
 }
 
-class Uploader : virtual public ::Ice::Object
+class Uploader : virtual public ::Rpc::ManagedObject
 {
 public:
 
@@ -2512,7 +3431,7 @@ inline bool operator<(const Uploader& l, const Uploader& r)
     return static_cast<const ::Ice::Object&>(l) < static_cast<const ::Ice::Object&>(r);
 }
 
-class Downloader : virtual public ::Ice::Object
+class Downloader : virtual public ::Rpc::ManagedObject
 {
 public:
 
@@ -2552,7 +3471,71 @@ inline bool operator<(const Downloader& l, const Downloader& r)
     return static_cast<const ::Ice::Object&>(l) < static_cast<const ::Ice::Object&>(r);
 }
 
-class Session : virtual public ::Ice::Object
+class ContentSubmitter : virtual public ::Rpc::ManagedObject
+{
+public:
+
+    typedef ContentSubmitterPrx ProxyType;
+    typedef ContentSubmitterPtr PointerType;
+
+    virtual bool ice_isA(const ::std::string&, const ::Ice::Current& = ::Ice::Current()) const;
+    virtual ::std::vector< ::std::string> ice_ids(const ::Ice::Current& = ::Ice::Current()) const;
+    virtual const ::std::string& ice_id(const ::Ice::Current& = ::Ice::Current()) const;
+    static const ::std::string& ice_staticId();
+
+    virtual ::Rpc::ErrorCode setTitle(const ::std::string&, const ::Ice::Current& = ::Ice::Current()) = 0;
+    ::Ice::DispatchStatus ___setTitle(::IceInternal::Incoming&, const ::Ice::Current&);
+
+    virtual ::Rpc::ErrorCode setPage(const ::std::string&, const ::Ice::Current& = ::Ice::Current()) = 0;
+    ::Ice::DispatchStatus ___setPage(::IceInternal::Incoming&, const ::Ice::Current&);
+
+    virtual ::Rpc::ErrorCode setCategory(const ::std::string&, const ::Ice::Current& = ::Ice::Current()) = 0;
+    ::Ice::DispatchStatus ___setCategory(::IceInternal::Incoming&, const ::Ice::Current&);
+
+    virtual ::Rpc::ErrorCode setEngine(const ::std::string&, const ::std::string&, const ::Ice::Current& = ::Ice::Current()) = 0;
+    ::Ice::DispatchStatus ___setEngine(::IceInternal::Incoming&, const ::Ice::Current&);
+
+    virtual ::Rpc::ErrorCode setCommand(const ::std::string&, const ::Ice::Current& = ::Ice::Current()) = 0;
+    ::Ice::DispatchStatus ___setCommand(::IceInternal::Incoming&, const ::Ice::Current&);
+
+    virtual ::Rpc::ErrorCode setParentId(const ::std::string&, const ::Ice::Current& = ::Ice::Current()) = 0;
+    ::Ice::DispatchStatus ___setParentId(::IceInternal::Incoming&, const ::Ice::Current&);
+
+    virtual ::Rpc::ErrorCode setDescription(const ::std::string&, const ::Ice::Current& = ::Ice::Current()) = 0;
+    ::Ice::DispatchStatus ___setDescription(::IceInternal::Incoming&, const ::Ice::Current&);
+
+    virtual ::Rpc::ErrorCode uploadImage(::Ice::Int, ::Rpc::UploaderPrx&, const ::Ice::Current& = ::Ice::Current()) = 0;
+    ::Ice::DispatchStatus ___uploadImage(::IceInternal::Incoming&, const ::Ice::Current&);
+
+    virtual ::Rpc::ErrorCode uploadContent(::Rpc::UploaderPrx&, const ::Ice::Current& = ::Ice::Current()) = 0;
+    ::Ice::DispatchStatus ___uploadContent(::IceInternal::Incoming&, const ::Ice::Current&);
+
+    virtual void cancel(const ::Ice::Current& = ::Ice::Current()) = 0;
+    ::Ice::DispatchStatus ___cancel(::IceInternal::Incoming&, const ::Ice::Current&);
+
+    virtual ::Rpc::ErrorCode finish(const ::Ice::Current& = ::Ice::Current()) = 0;
+    ::Ice::DispatchStatus ___finish(::IceInternal::Incoming&, const ::Ice::Current&);
+
+    virtual ::Ice::DispatchStatus __dispatch(::IceInternal::Incoming&, const ::Ice::Current&);
+
+protected:
+    virtual void __writeImpl(::IceInternal::BasicStream*) const;
+    virtual void __readImpl(::IceInternal::BasicStream*);
+    using ::Ice::Object::__writeImpl;
+    using ::Ice::Object::__readImpl;
+};
+
+inline bool operator==(const ContentSubmitter& l, const ContentSubmitter& r)
+{
+    return static_cast<const ::Ice::Object&>(l) == static_cast<const ::Ice::Object&>(r);
+}
+
+inline bool operator<(const ContentSubmitter& l, const ContentSubmitter& r)
+{
+    return static_cast<const ::Ice::Object&>(l) < static_cast<const ::Ice::Object&>(r);
+}
+
+class Session : virtual public ::Rpc::ManagedObject
 {
 public:
 
@@ -2563,9 +3546,6 @@ public:
     virtual ::std::vector< ::std::string> ice_ids(const ::Ice::Current& = ::Ice::Current()) const;
     virtual const ::std::string& ice_id(const ::Ice::Current& = ::Ice::Current()) const;
     static const ::std::string& ice_staticId();
-
-    virtual void destroy(const ::Ice::Current& = ::Ice::Current()) = 0;
-    ::Ice::DispatchStatus ___destroy(::IceInternal::Incoming&, const ::Ice::Current&);
 
     virtual void refresh(const ::Ice::Current& = ::Ice::Current()) = 0;
     ::Ice::DispatchStatus ___refresh(::IceInternal::Incoming&, const ::Ice::Current&);
@@ -2584,6 +3564,9 @@ public:
 
     virtual ::Rpc::ErrorCode browseContent(const ::std::string&, const ::std::string&, const ::std::string&, ::Rpc::ContentBrowserPrx&, const ::Ice::Current& = ::Ice::Current()) = 0;
     ::Ice::DispatchStatus ___browseContent(::IceInternal::Incoming&, const ::Ice::Current&);
+
+    virtual ::Rpc::ErrorCode submitContent(::Rpc::ContentSubmitterPrx&, const ::Ice::Current& = ::Ice::Current()) = 0;
+    ::Ice::DispatchStatus ___submitContent(::IceInternal::Incoming&, const ::Ice::Current&);
 
     virtual ::Rpc::ErrorCode browseEngineVersions(::Rpc::EngineVersionBrowserPrx&, const ::Ice::Current& = ::Ice::Current()) = 0;
     ::Ice::DispatchStatus ___browseEngineVersions(::IceInternal::Incoming&, const ::Ice::Current&);
@@ -2807,88 +3790,6 @@ template<class T, typename CT> Callback_EngineVersionBrowser_nextPtr
 newCallback_EngineVersionBrowser_next(T* instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::EngineVersionItemSeq&, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
 {
     return new Callback_EngineVersionBrowser_next<T, CT>(instance, cb, excb, sentcb);
-}
-
-template<class T>
-class CallbackNC_EngineVersionBrowser_finish : public Callback_EngineVersionBrowser_finish_Base, public ::IceInternal::OnewayCallbackNC<T>
-{
-public:
-
-    typedef IceUtil::Handle<T> TPtr;
-
-    typedef void (T::*Exception)(const ::Ice::Exception&);
-    typedef void (T::*Sent)(bool);
-    typedef void (T::*Response)();
-
-    CallbackNC_EngineVersionBrowser_finish(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
-        : ::IceInternal::OnewayCallbackNC<T>(obj, cb, excb, sentcb)
-    {
-    }
-};
-
-template<class T> Callback_EngineVersionBrowser_finishPtr
-newCallback_EngineVersionBrowser_finish(const IceUtil::Handle<T>& instance, void (T::*cb)(), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
-{
-    return new CallbackNC_EngineVersionBrowser_finish<T>(instance, cb, excb, sentcb);
-}
-
-template<class T> Callback_EngineVersionBrowser_finishPtr
-newCallback_EngineVersionBrowser_finish(const IceUtil::Handle<T>& instance, void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
-{
-    return new CallbackNC_EngineVersionBrowser_finish<T>(instance, 0, excb, sentcb);
-}
-
-template<class T> Callback_EngineVersionBrowser_finishPtr
-newCallback_EngineVersionBrowser_finish(T* instance, void (T::*cb)(), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
-{
-    return new CallbackNC_EngineVersionBrowser_finish<T>(instance, cb, excb, sentcb);
-}
-
-template<class T> Callback_EngineVersionBrowser_finishPtr
-newCallback_EngineVersionBrowser_finish(T* instance, void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
-{
-    return new CallbackNC_EngineVersionBrowser_finish<T>(instance, 0, excb, sentcb);
-}
-
-template<class T, typename CT>
-class Callback_EngineVersionBrowser_finish : public Callback_EngineVersionBrowser_finish_Base, public ::IceInternal::OnewayCallback<T, CT>
-{
-public:
-
-    typedef IceUtil::Handle<T> TPtr;
-
-    typedef void (T::*Exception)(const ::Ice::Exception& , const CT&);
-    typedef void (T::*Sent)(bool , const CT&);
-    typedef void (T::*Response)(const CT&);
-
-    Callback_EngineVersionBrowser_finish(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
-        : ::IceInternal::OnewayCallback<T, CT>(obj, cb, excb, sentcb)
-    {
-    }
-};
-
-template<class T, typename CT> Callback_EngineVersionBrowser_finishPtr
-newCallback_EngineVersionBrowser_finish(const IceUtil::Handle<T>& instance, void (T::*cb)(const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
-{
-    return new Callback_EngineVersionBrowser_finish<T, CT>(instance, cb, excb, sentcb);
-}
-
-template<class T, typename CT> Callback_EngineVersionBrowser_finishPtr
-newCallback_EngineVersionBrowser_finish(const IceUtil::Handle<T>& instance, void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
-{
-    return new Callback_EngineVersionBrowser_finish<T, CT>(instance, 0, excb, sentcb);
-}
-
-template<class T, typename CT> Callback_EngineVersionBrowser_finishPtr
-newCallback_EngineVersionBrowser_finish(T* instance, void (T::*cb)(const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
-{
-    return new Callback_EngineVersionBrowser_finish<T, CT>(instance, cb, excb, sentcb);
-}
-
-template<class T, typename CT> Callback_EngineVersionBrowser_finishPtr
-newCallback_EngineVersionBrowser_finish(T* instance, void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
-{
-    return new Callback_EngineVersionBrowser_finish<T, CT>(instance, 0, excb, sentcb);
 }
 
 template<class T>
@@ -3476,7 +4377,947 @@ newCallback_Downloader_finish(T* instance, void (T::*excb)(const ::Ice::Exceptio
 }
 
 template<class T>
-class CallbackNC_Session_destroy : public Callback_Session_destroy_Base, public ::IceInternal::OnewayCallbackNC<T>
+class CallbackNC_ContentSubmitter_setTitle : public Callback_ContentSubmitter_setTitle_Base, public ::IceInternal::TwowayCallbackNC<T>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception&);
+    typedef void (T::*Sent)(bool);
+    typedef void (T::*Response)(::Rpc::ErrorCode);
+
+    CallbackNC_ContentSubmitter_setTitle(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::TwowayCallbackNC<T>(obj, cb != 0, excb, sentcb), _response(cb)
+    {
+    }
+
+    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+    {
+        ::Rpc::ContentSubmitterPrx __proxy = ::Rpc::ContentSubmitterPrx::uncheckedCast(__result->getProxy());
+        ::Rpc::ErrorCode __ret;
+        try
+        {
+            __ret = __proxy->end_setTitle(__result);
+        }
+        catch(const ::Ice::Exception& ex)
+        {
+            ::IceInternal::CallbackNC<T>::exception(__result, ex);
+            return;
+        }
+        if(_response)
+        {
+            (::IceInternal::CallbackNC<T>::_callback.get()->*_response)(__ret);
+        }
+    }
+
+    private:
+
+    Response _response;
+};
+
+template<class T> Callback_ContentSubmitter_setTitlePtr
+newCallback_ContentSubmitter_setTitle(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_ContentSubmitter_setTitle<T>(instance, cb, excb, sentcb);
+}
+
+template<class T> Callback_ContentSubmitter_setTitlePtr
+newCallback_ContentSubmitter_setTitle(T* instance, void (T::*cb)(::Rpc::ErrorCode), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_ContentSubmitter_setTitle<T>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT>
+class Callback_ContentSubmitter_setTitle : public Callback_ContentSubmitter_setTitle_Base, public ::IceInternal::TwowayCallback<T, CT>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception& , const CT&);
+    typedef void (T::*Sent)(bool , const CT&);
+    typedef void (T::*Response)(::Rpc::ErrorCode, const CT&);
+
+    Callback_ContentSubmitter_setTitle(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::TwowayCallback<T, CT>(obj, cb != 0, excb, sentcb), _response(cb)
+    {
+    }
+
+    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+    {
+        ::Rpc::ContentSubmitterPrx __proxy = ::Rpc::ContentSubmitterPrx::uncheckedCast(__result->getProxy());
+        ::Rpc::ErrorCode __ret;
+        try
+        {
+            __ret = __proxy->end_setTitle(__result);
+        }
+        catch(const ::Ice::Exception& ex)
+        {
+            ::IceInternal::Callback<T, CT>::exception(__result, ex);
+            return;
+        }
+        if(_response)
+        {
+            (::IceInternal::Callback<T, CT>::_callback.get()->*_response)(__ret, CT::dynamicCast(__result->getCookie()));
+        }
+    }
+
+    private:
+
+    Response _response;
+};
+
+template<class T, typename CT> Callback_ContentSubmitter_setTitlePtr
+newCallback_ContentSubmitter_setTitle(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_ContentSubmitter_setTitle<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT> Callback_ContentSubmitter_setTitlePtr
+newCallback_ContentSubmitter_setTitle(T* instance, void (T::*cb)(::Rpc::ErrorCode, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_ContentSubmitter_setTitle<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T>
+class CallbackNC_ContentSubmitter_setPage : public Callback_ContentSubmitter_setPage_Base, public ::IceInternal::TwowayCallbackNC<T>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception&);
+    typedef void (T::*Sent)(bool);
+    typedef void (T::*Response)(::Rpc::ErrorCode);
+
+    CallbackNC_ContentSubmitter_setPage(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::TwowayCallbackNC<T>(obj, cb != 0, excb, sentcb), _response(cb)
+    {
+    }
+
+    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+    {
+        ::Rpc::ContentSubmitterPrx __proxy = ::Rpc::ContentSubmitterPrx::uncheckedCast(__result->getProxy());
+        ::Rpc::ErrorCode __ret;
+        try
+        {
+            __ret = __proxy->end_setPage(__result);
+        }
+        catch(const ::Ice::Exception& ex)
+        {
+            ::IceInternal::CallbackNC<T>::exception(__result, ex);
+            return;
+        }
+        if(_response)
+        {
+            (::IceInternal::CallbackNC<T>::_callback.get()->*_response)(__ret);
+        }
+    }
+
+    private:
+
+    Response _response;
+};
+
+template<class T> Callback_ContentSubmitter_setPagePtr
+newCallback_ContentSubmitter_setPage(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_ContentSubmitter_setPage<T>(instance, cb, excb, sentcb);
+}
+
+template<class T> Callback_ContentSubmitter_setPagePtr
+newCallback_ContentSubmitter_setPage(T* instance, void (T::*cb)(::Rpc::ErrorCode), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_ContentSubmitter_setPage<T>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT>
+class Callback_ContentSubmitter_setPage : public Callback_ContentSubmitter_setPage_Base, public ::IceInternal::TwowayCallback<T, CT>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception& , const CT&);
+    typedef void (T::*Sent)(bool , const CT&);
+    typedef void (T::*Response)(::Rpc::ErrorCode, const CT&);
+
+    Callback_ContentSubmitter_setPage(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::TwowayCallback<T, CT>(obj, cb != 0, excb, sentcb), _response(cb)
+    {
+    }
+
+    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+    {
+        ::Rpc::ContentSubmitterPrx __proxy = ::Rpc::ContentSubmitterPrx::uncheckedCast(__result->getProxy());
+        ::Rpc::ErrorCode __ret;
+        try
+        {
+            __ret = __proxy->end_setPage(__result);
+        }
+        catch(const ::Ice::Exception& ex)
+        {
+            ::IceInternal::Callback<T, CT>::exception(__result, ex);
+            return;
+        }
+        if(_response)
+        {
+            (::IceInternal::Callback<T, CT>::_callback.get()->*_response)(__ret, CT::dynamicCast(__result->getCookie()));
+        }
+    }
+
+    private:
+
+    Response _response;
+};
+
+template<class T, typename CT> Callback_ContentSubmitter_setPagePtr
+newCallback_ContentSubmitter_setPage(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_ContentSubmitter_setPage<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT> Callback_ContentSubmitter_setPagePtr
+newCallback_ContentSubmitter_setPage(T* instance, void (T::*cb)(::Rpc::ErrorCode, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_ContentSubmitter_setPage<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T>
+class CallbackNC_ContentSubmitter_setCategory : public Callback_ContentSubmitter_setCategory_Base, public ::IceInternal::TwowayCallbackNC<T>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception&);
+    typedef void (T::*Sent)(bool);
+    typedef void (T::*Response)(::Rpc::ErrorCode);
+
+    CallbackNC_ContentSubmitter_setCategory(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::TwowayCallbackNC<T>(obj, cb != 0, excb, sentcb), _response(cb)
+    {
+    }
+
+    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+    {
+        ::Rpc::ContentSubmitterPrx __proxy = ::Rpc::ContentSubmitterPrx::uncheckedCast(__result->getProxy());
+        ::Rpc::ErrorCode __ret;
+        try
+        {
+            __ret = __proxy->end_setCategory(__result);
+        }
+        catch(const ::Ice::Exception& ex)
+        {
+            ::IceInternal::CallbackNC<T>::exception(__result, ex);
+            return;
+        }
+        if(_response)
+        {
+            (::IceInternal::CallbackNC<T>::_callback.get()->*_response)(__ret);
+        }
+    }
+
+    private:
+
+    Response _response;
+};
+
+template<class T> Callback_ContentSubmitter_setCategoryPtr
+newCallback_ContentSubmitter_setCategory(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_ContentSubmitter_setCategory<T>(instance, cb, excb, sentcb);
+}
+
+template<class T> Callback_ContentSubmitter_setCategoryPtr
+newCallback_ContentSubmitter_setCategory(T* instance, void (T::*cb)(::Rpc::ErrorCode), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_ContentSubmitter_setCategory<T>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT>
+class Callback_ContentSubmitter_setCategory : public Callback_ContentSubmitter_setCategory_Base, public ::IceInternal::TwowayCallback<T, CT>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception& , const CT&);
+    typedef void (T::*Sent)(bool , const CT&);
+    typedef void (T::*Response)(::Rpc::ErrorCode, const CT&);
+
+    Callback_ContentSubmitter_setCategory(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::TwowayCallback<T, CT>(obj, cb != 0, excb, sentcb), _response(cb)
+    {
+    }
+
+    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+    {
+        ::Rpc::ContentSubmitterPrx __proxy = ::Rpc::ContentSubmitterPrx::uncheckedCast(__result->getProxy());
+        ::Rpc::ErrorCode __ret;
+        try
+        {
+            __ret = __proxy->end_setCategory(__result);
+        }
+        catch(const ::Ice::Exception& ex)
+        {
+            ::IceInternal::Callback<T, CT>::exception(__result, ex);
+            return;
+        }
+        if(_response)
+        {
+            (::IceInternal::Callback<T, CT>::_callback.get()->*_response)(__ret, CT::dynamicCast(__result->getCookie()));
+        }
+    }
+
+    private:
+
+    Response _response;
+};
+
+template<class T, typename CT> Callback_ContentSubmitter_setCategoryPtr
+newCallback_ContentSubmitter_setCategory(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_ContentSubmitter_setCategory<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT> Callback_ContentSubmitter_setCategoryPtr
+newCallback_ContentSubmitter_setCategory(T* instance, void (T::*cb)(::Rpc::ErrorCode, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_ContentSubmitter_setCategory<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T>
+class CallbackNC_ContentSubmitter_setEngine : public Callback_ContentSubmitter_setEngine_Base, public ::IceInternal::TwowayCallbackNC<T>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception&);
+    typedef void (T::*Sent)(bool);
+    typedef void (T::*Response)(::Rpc::ErrorCode);
+
+    CallbackNC_ContentSubmitter_setEngine(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::TwowayCallbackNC<T>(obj, cb != 0, excb, sentcb), _response(cb)
+    {
+    }
+
+    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+    {
+        ::Rpc::ContentSubmitterPrx __proxy = ::Rpc::ContentSubmitterPrx::uncheckedCast(__result->getProxy());
+        ::Rpc::ErrorCode __ret;
+        try
+        {
+            __ret = __proxy->end_setEngine(__result);
+        }
+        catch(const ::Ice::Exception& ex)
+        {
+            ::IceInternal::CallbackNC<T>::exception(__result, ex);
+            return;
+        }
+        if(_response)
+        {
+            (::IceInternal::CallbackNC<T>::_callback.get()->*_response)(__ret);
+        }
+    }
+
+    private:
+
+    Response _response;
+};
+
+template<class T> Callback_ContentSubmitter_setEnginePtr
+newCallback_ContentSubmitter_setEngine(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_ContentSubmitter_setEngine<T>(instance, cb, excb, sentcb);
+}
+
+template<class T> Callback_ContentSubmitter_setEnginePtr
+newCallback_ContentSubmitter_setEngine(T* instance, void (T::*cb)(::Rpc::ErrorCode), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_ContentSubmitter_setEngine<T>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT>
+class Callback_ContentSubmitter_setEngine : public Callback_ContentSubmitter_setEngine_Base, public ::IceInternal::TwowayCallback<T, CT>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception& , const CT&);
+    typedef void (T::*Sent)(bool , const CT&);
+    typedef void (T::*Response)(::Rpc::ErrorCode, const CT&);
+
+    Callback_ContentSubmitter_setEngine(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::TwowayCallback<T, CT>(obj, cb != 0, excb, sentcb), _response(cb)
+    {
+    }
+
+    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+    {
+        ::Rpc::ContentSubmitterPrx __proxy = ::Rpc::ContentSubmitterPrx::uncheckedCast(__result->getProxy());
+        ::Rpc::ErrorCode __ret;
+        try
+        {
+            __ret = __proxy->end_setEngine(__result);
+        }
+        catch(const ::Ice::Exception& ex)
+        {
+            ::IceInternal::Callback<T, CT>::exception(__result, ex);
+            return;
+        }
+        if(_response)
+        {
+            (::IceInternal::Callback<T, CT>::_callback.get()->*_response)(__ret, CT::dynamicCast(__result->getCookie()));
+        }
+    }
+
+    private:
+
+    Response _response;
+};
+
+template<class T, typename CT> Callback_ContentSubmitter_setEnginePtr
+newCallback_ContentSubmitter_setEngine(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_ContentSubmitter_setEngine<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT> Callback_ContentSubmitter_setEnginePtr
+newCallback_ContentSubmitter_setEngine(T* instance, void (T::*cb)(::Rpc::ErrorCode, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_ContentSubmitter_setEngine<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T>
+class CallbackNC_ContentSubmitter_setCommand : public Callback_ContentSubmitter_setCommand_Base, public ::IceInternal::TwowayCallbackNC<T>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception&);
+    typedef void (T::*Sent)(bool);
+    typedef void (T::*Response)(::Rpc::ErrorCode);
+
+    CallbackNC_ContentSubmitter_setCommand(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::TwowayCallbackNC<T>(obj, cb != 0, excb, sentcb), _response(cb)
+    {
+    }
+
+    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+    {
+        ::Rpc::ContentSubmitterPrx __proxy = ::Rpc::ContentSubmitterPrx::uncheckedCast(__result->getProxy());
+        ::Rpc::ErrorCode __ret;
+        try
+        {
+            __ret = __proxy->end_setCommand(__result);
+        }
+        catch(const ::Ice::Exception& ex)
+        {
+            ::IceInternal::CallbackNC<T>::exception(__result, ex);
+            return;
+        }
+        if(_response)
+        {
+            (::IceInternal::CallbackNC<T>::_callback.get()->*_response)(__ret);
+        }
+    }
+
+    private:
+
+    Response _response;
+};
+
+template<class T> Callback_ContentSubmitter_setCommandPtr
+newCallback_ContentSubmitter_setCommand(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_ContentSubmitter_setCommand<T>(instance, cb, excb, sentcb);
+}
+
+template<class T> Callback_ContentSubmitter_setCommandPtr
+newCallback_ContentSubmitter_setCommand(T* instance, void (T::*cb)(::Rpc::ErrorCode), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_ContentSubmitter_setCommand<T>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT>
+class Callback_ContentSubmitter_setCommand : public Callback_ContentSubmitter_setCommand_Base, public ::IceInternal::TwowayCallback<T, CT>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception& , const CT&);
+    typedef void (T::*Sent)(bool , const CT&);
+    typedef void (T::*Response)(::Rpc::ErrorCode, const CT&);
+
+    Callback_ContentSubmitter_setCommand(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::TwowayCallback<T, CT>(obj, cb != 0, excb, sentcb), _response(cb)
+    {
+    }
+
+    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+    {
+        ::Rpc::ContentSubmitterPrx __proxy = ::Rpc::ContentSubmitterPrx::uncheckedCast(__result->getProxy());
+        ::Rpc::ErrorCode __ret;
+        try
+        {
+            __ret = __proxy->end_setCommand(__result);
+        }
+        catch(const ::Ice::Exception& ex)
+        {
+            ::IceInternal::Callback<T, CT>::exception(__result, ex);
+            return;
+        }
+        if(_response)
+        {
+            (::IceInternal::Callback<T, CT>::_callback.get()->*_response)(__ret, CT::dynamicCast(__result->getCookie()));
+        }
+    }
+
+    private:
+
+    Response _response;
+};
+
+template<class T, typename CT> Callback_ContentSubmitter_setCommandPtr
+newCallback_ContentSubmitter_setCommand(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_ContentSubmitter_setCommand<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT> Callback_ContentSubmitter_setCommandPtr
+newCallback_ContentSubmitter_setCommand(T* instance, void (T::*cb)(::Rpc::ErrorCode, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_ContentSubmitter_setCommand<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T>
+class CallbackNC_ContentSubmitter_setParentId : public Callback_ContentSubmitter_setParentId_Base, public ::IceInternal::TwowayCallbackNC<T>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception&);
+    typedef void (T::*Sent)(bool);
+    typedef void (T::*Response)(::Rpc::ErrorCode);
+
+    CallbackNC_ContentSubmitter_setParentId(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::TwowayCallbackNC<T>(obj, cb != 0, excb, sentcb), _response(cb)
+    {
+    }
+
+    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+    {
+        ::Rpc::ContentSubmitterPrx __proxy = ::Rpc::ContentSubmitterPrx::uncheckedCast(__result->getProxy());
+        ::Rpc::ErrorCode __ret;
+        try
+        {
+            __ret = __proxy->end_setParentId(__result);
+        }
+        catch(const ::Ice::Exception& ex)
+        {
+            ::IceInternal::CallbackNC<T>::exception(__result, ex);
+            return;
+        }
+        if(_response)
+        {
+            (::IceInternal::CallbackNC<T>::_callback.get()->*_response)(__ret);
+        }
+    }
+
+    private:
+
+    Response _response;
+};
+
+template<class T> Callback_ContentSubmitter_setParentIdPtr
+newCallback_ContentSubmitter_setParentId(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_ContentSubmitter_setParentId<T>(instance, cb, excb, sentcb);
+}
+
+template<class T> Callback_ContentSubmitter_setParentIdPtr
+newCallback_ContentSubmitter_setParentId(T* instance, void (T::*cb)(::Rpc::ErrorCode), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_ContentSubmitter_setParentId<T>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT>
+class Callback_ContentSubmitter_setParentId : public Callback_ContentSubmitter_setParentId_Base, public ::IceInternal::TwowayCallback<T, CT>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception& , const CT&);
+    typedef void (T::*Sent)(bool , const CT&);
+    typedef void (T::*Response)(::Rpc::ErrorCode, const CT&);
+
+    Callback_ContentSubmitter_setParentId(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::TwowayCallback<T, CT>(obj, cb != 0, excb, sentcb), _response(cb)
+    {
+    }
+
+    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+    {
+        ::Rpc::ContentSubmitterPrx __proxy = ::Rpc::ContentSubmitterPrx::uncheckedCast(__result->getProxy());
+        ::Rpc::ErrorCode __ret;
+        try
+        {
+            __ret = __proxy->end_setParentId(__result);
+        }
+        catch(const ::Ice::Exception& ex)
+        {
+            ::IceInternal::Callback<T, CT>::exception(__result, ex);
+            return;
+        }
+        if(_response)
+        {
+            (::IceInternal::Callback<T, CT>::_callback.get()->*_response)(__ret, CT::dynamicCast(__result->getCookie()));
+        }
+    }
+
+    private:
+
+    Response _response;
+};
+
+template<class T, typename CT> Callback_ContentSubmitter_setParentIdPtr
+newCallback_ContentSubmitter_setParentId(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_ContentSubmitter_setParentId<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT> Callback_ContentSubmitter_setParentIdPtr
+newCallback_ContentSubmitter_setParentId(T* instance, void (T::*cb)(::Rpc::ErrorCode, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_ContentSubmitter_setParentId<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T>
+class CallbackNC_ContentSubmitter_setDescription : public Callback_ContentSubmitter_setDescription_Base, public ::IceInternal::TwowayCallbackNC<T>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception&);
+    typedef void (T::*Sent)(bool);
+    typedef void (T::*Response)(::Rpc::ErrorCode);
+
+    CallbackNC_ContentSubmitter_setDescription(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::TwowayCallbackNC<T>(obj, cb != 0, excb, sentcb), _response(cb)
+    {
+    }
+
+    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+    {
+        ::Rpc::ContentSubmitterPrx __proxy = ::Rpc::ContentSubmitterPrx::uncheckedCast(__result->getProxy());
+        ::Rpc::ErrorCode __ret;
+        try
+        {
+            __ret = __proxy->end_setDescription(__result);
+        }
+        catch(const ::Ice::Exception& ex)
+        {
+            ::IceInternal::CallbackNC<T>::exception(__result, ex);
+            return;
+        }
+        if(_response)
+        {
+            (::IceInternal::CallbackNC<T>::_callback.get()->*_response)(__ret);
+        }
+    }
+
+    private:
+
+    Response _response;
+};
+
+template<class T> Callback_ContentSubmitter_setDescriptionPtr
+newCallback_ContentSubmitter_setDescription(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_ContentSubmitter_setDescription<T>(instance, cb, excb, sentcb);
+}
+
+template<class T> Callback_ContentSubmitter_setDescriptionPtr
+newCallback_ContentSubmitter_setDescription(T* instance, void (T::*cb)(::Rpc::ErrorCode), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_ContentSubmitter_setDescription<T>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT>
+class Callback_ContentSubmitter_setDescription : public Callback_ContentSubmitter_setDescription_Base, public ::IceInternal::TwowayCallback<T, CT>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception& , const CT&);
+    typedef void (T::*Sent)(bool , const CT&);
+    typedef void (T::*Response)(::Rpc::ErrorCode, const CT&);
+
+    Callback_ContentSubmitter_setDescription(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::TwowayCallback<T, CT>(obj, cb != 0, excb, sentcb), _response(cb)
+    {
+    }
+
+    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+    {
+        ::Rpc::ContentSubmitterPrx __proxy = ::Rpc::ContentSubmitterPrx::uncheckedCast(__result->getProxy());
+        ::Rpc::ErrorCode __ret;
+        try
+        {
+            __ret = __proxy->end_setDescription(__result);
+        }
+        catch(const ::Ice::Exception& ex)
+        {
+            ::IceInternal::Callback<T, CT>::exception(__result, ex);
+            return;
+        }
+        if(_response)
+        {
+            (::IceInternal::Callback<T, CT>::_callback.get()->*_response)(__ret, CT::dynamicCast(__result->getCookie()));
+        }
+    }
+
+    private:
+
+    Response _response;
+};
+
+template<class T, typename CT> Callback_ContentSubmitter_setDescriptionPtr
+newCallback_ContentSubmitter_setDescription(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_ContentSubmitter_setDescription<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT> Callback_ContentSubmitter_setDescriptionPtr
+newCallback_ContentSubmitter_setDescription(T* instance, void (T::*cb)(::Rpc::ErrorCode, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_ContentSubmitter_setDescription<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T>
+class CallbackNC_ContentSubmitter_uploadImage : public Callback_ContentSubmitter_uploadImage_Base, public ::IceInternal::TwowayCallbackNC<T>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception&);
+    typedef void (T::*Sent)(bool);
+    typedef void (T::*Response)(::Rpc::ErrorCode, const ::Rpc::UploaderPrx&);
+
+    CallbackNC_ContentSubmitter_uploadImage(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::TwowayCallbackNC<T>(obj, cb != 0, excb, sentcb), _response(cb)
+    {
+    }
+
+    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+    {
+        ::Rpc::ContentSubmitterPrx __proxy = ::Rpc::ContentSubmitterPrx::uncheckedCast(__result->getProxy());
+        ::Rpc::UploaderPrx uploader;
+        ::Rpc::ErrorCode __ret;
+        try
+        {
+            __ret = __proxy->end_uploadImage(uploader, __result);
+        }
+        catch(const ::Ice::Exception& ex)
+        {
+            ::IceInternal::CallbackNC<T>::exception(__result, ex);
+            return;
+        }
+        if(_response)
+        {
+            (::IceInternal::CallbackNC<T>::_callback.get()->*_response)(__ret, uploader);
+        }
+    }
+
+    private:
+
+    Response _response;
+};
+
+template<class T> Callback_ContentSubmitter_uploadImagePtr
+newCallback_ContentSubmitter_uploadImage(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::UploaderPrx&), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_ContentSubmitter_uploadImage<T>(instance, cb, excb, sentcb);
+}
+
+template<class T> Callback_ContentSubmitter_uploadImagePtr
+newCallback_ContentSubmitter_uploadImage(T* instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::UploaderPrx&), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_ContentSubmitter_uploadImage<T>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT>
+class Callback_ContentSubmitter_uploadImage : public Callback_ContentSubmitter_uploadImage_Base, public ::IceInternal::TwowayCallback<T, CT>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception& , const CT&);
+    typedef void (T::*Sent)(bool , const CT&);
+    typedef void (T::*Response)(::Rpc::ErrorCode, const ::Rpc::UploaderPrx&, const CT&);
+
+    Callback_ContentSubmitter_uploadImage(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::TwowayCallback<T, CT>(obj, cb != 0, excb, sentcb), _response(cb)
+    {
+    }
+
+    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+    {
+        ::Rpc::ContentSubmitterPrx __proxy = ::Rpc::ContentSubmitterPrx::uncheckedCast(__result->getProxy());
+        ::Rpc::UploaderPrx uploader;
+        ::Rpc::ErrorCode __ret;
+        try
+        {
+            __ret = __proxy->end_uploadImage(uploader, __result);
+        }
+        catch(const ::Ice::Exception& ex)
+        {
+            ::IceInternal::Callback<T, CT>::exception(__result, ex);
+            return;
+        }
+        if(_response)
+        {
+            (::IceInternal::Callback<T, CT>::_callback.get()->*_response)(__ret, uploader, CT::dynamicCast(__result->getCookie()));
+        }
+    }
+
+    private:
+
+    Response _response;
+};
+
+template<class T, typename CT> Callback_ContentSubmitter_uploadImagePtr
+newCallback_ContentSubmitter_uploadImage(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::UploaderPrx&, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_ContentSubmitter_uploadImage<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT> Callback_ContentSubmitter_uploadImagePtr
+newCallback_ContentSubmitter_uploadImage(T* instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::UploaderPrx&, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_ContentSubmitter_uploadImage<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T>
+class CallbackNC_ContentSubmitter_uploadContent : public Callback_ContentSubmitter_uploadContent_Base, public ::IceInternal::TwowayCallbackNC<T>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception&);
+    typedef void (T::*Sent)(bool);
+    typedef void (T::*Response)(::Rpc::ErrorCode, const ::Rpc::UploaderPrx&);
+
+    CallbackNC_ContentSubmitter_uploadContent(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::TwowayCallbackNC<T>(obj, cb != 0, excb, sentcb), _response(cb)
+    {
+    }
+
+    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+    {
+        ::Rpc::ContentSubmitterPrx __proxy = ::Rpc::ContentSubmitterPrx::uncheckedCast(__result->getProxy());
+        ::Rpc::UploaderPrx uploader;
+        ::Rpc::ErrorCode __ret;
+        try
+        {
+            __ret = __proxy->end_uploadContent(uploader, __result);
+        }
+        catch(const ::Ice::Exception& ex)
+        {
+            ::IceInternal::CallbackNC<T>::exception(__result, ex);
+            return;
+        }
+        if(_response)
+        {
+            (::IceInternal::CallbackNC<T>::_callback.get()->*_response)(__ret, uploader);
+        }
+    }
+
+    private:
+
+    Response _response;
+};
+
+template<class T> Callback_ContentSubmitter_uploadContentPtr
+newCallback_ContentSubmitter_uploadContent(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::UploaderPrx&), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_ContentSubmitter_uploadContent<T>(instance, cb, excb, sentcb);
+}
+
+template<class T> Callback_ContentSubmitter_uploadContentPtr
+newCallback_ContentSubmitter_uploadContent(T* instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::UploaderPrx&), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_ContentSubmitter_uploadContent<T>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT>
+class Callback_ContentSubmitter_uploadContent : public Callback_ContentSubmitter_uploadContent_Base, public ::IceInternal::TwowayCallback<T, CT>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception& , const CT&);
+    typedef void (T::*Sent)(bool , const CT&);
+    typedef void (T::*Response)(::Rpc::ErrorCode, const ::Rpc::UploaderPrx&, const CT&);
+
+    Callback_ContentSubmitter_uploadContent(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::TwowayCallback<T, CT>(obj, cb != 0, excb, sentcb), _response(cb)
+    {
+    }
+
+    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+    {
+        ::Rpc::ContentSubmitterPrx __proxy = ::Rpc::ContentSubmitterPrx::uncheckedCast(__result->getProxy());
+        ::Rpc::UploaderPrx uploader;
+        ::Rpc::ErrorCode __ret;
+        try
+        {
+            __ret = __proxy->end_uploadContent(uploader, __result);
+        }
+        catch(const ::Ice::Exception& ex)
+        {
+            ::IceInternal::Callback<T, CT>::exception(__result, ex);
+            return;
+        }
+        if(_response)
+        {
+            (::IceInternal::Callback<T, CT>::_callback.get()->*_response)(__ret, uploader, CT::dynamicCast(__result->getCookie()));
+        }
+    }
+
+    private:
+
+    Response _response;
+};
+
+template<class T, typename CT> Callback_ContentSubmitter_uploadContentPtr
+newCallback_ContentSubmitter_uploadContent(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::UploaderPrx&, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_ContentSubmitter_uploadContent<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT> Callback_ContentSubmitter_uploadContentPtr
+newCallback_ContentSubmitter_uploadContent(T* instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::UploaderPrx&, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_ContentSubmitter_uploadContent<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T>
+class CallbackNC_ContentSubmitter_cancel : public Callback_ContentSubmitter_cancel_Base, public ::IceInternal::OnewayCallbackNC<T>
 {
 public:
 
@@ -3486,38 +5327,38 @@ public:
     typedef void (T::*Sent)(bool);
     typedef void (T::*Response)();
 
-    CallbackNC_Session_destroy(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+    CallbackNC_ContentSubmitter_cancel(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
         : ::IceInternal::OnewayCallbackNC<T>(obj, cb, excb, sentcb)
     {
     }
 };
 
-template<class T> Callback_Session_destroyPtr
-newCallback_Session_destroy(const IceUtil::Handle<T>& instance, void (T::*cb)(), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+template<class T> Callback_ContentSubmitter_cancelPtr
+newCallback_ContentSubmitter_cancel(const IceUtil::Handle<T>& instance, void (T::*cb)(), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
 {
-    return new CallbackNC_Session_destroy<T>(instance, cb, excb, sentcb);
+    return new CallbackNC_ContentSubmitter_cancel<T>(instance, cb, excb, sentcb);
 }
 
-template<class T> Callback_Session_destroyPtr
-newCallback_Session_destroy(const IceUtil::Handle<T>& instance, void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+template<class T> Callback_ContentSubmitter_cancelPtr
+newCallback_ContentSubmitter_cancel(const IceUtil::Handle<T>& instance, void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
 {
-    return new CallbackNC_Session_destroy<T>(instance, 0, excb, sentcb);
+    return new CallbackNC_ContentSubmitter_cancel<T>(instance, 0, excb, sentcb);
 }
 
-template<class T> Callback_Session_destroyPtr
-newCallback_Session_destroy(T* instance, void (T::*cb)(), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+template<class T> Callback_ContentSubmitter_cancelPtr
+newCallback_ContentSubmitter_cancel(T* instance, void (T::*cb)(), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
 {
-    return new CallbackNC_Session_destroy<T>(instance, cb, excb, sentcb);
+    return new CallbackNC_ContentSubmitter_cancel<T>(instance, cb, excb, sentcb);
 }
 
-template<class T> Callback_Session_destroyPtr
-newCallback_Session_destroy(T* instance, void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+template<class T> Callback_ContentSubmitter_cancelPtr
+newCallback_ContentSubmitter_cancel(T* instance, void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
 {
-    return new CallbackNC_Session_destroy<T>(instance, 0, excb, sentcb);
+    return new CallbackNC_ContentSubmitter_cancel<T>(instance, 0, excb, sentcb);
 }
 
 template<class T, typename CT>
-class Callback_Session_destroy : public Callback_Session_destroy_Base, public ::IceInternal::OnewayCallback<T, CT>
+class Callback_ContentSubmitter_cancel : public Callback_ContentSubmitter_cancel_Base, public ::IceInternal::OnewayCallback<T, CT>
 {
 public:
 
@@ -3527,34 +5368,138 @@ public:
     typedef void (T::*Sent)(bool , const CT&);
     typedef void (T::*Response)(const CT&);
 
-    Callback_Session_destroy(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+    Callback_ContentSubmitter_cancel(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
         : ::IceInternal::OnewayCallback<T, CT>(obj, cb, excb, sentcb)
     {
     }
 };
 
-template<class T, typename CT> Callback_Session_destroyPtr
-newCallback_Session_destroy(const IceUtil::Handle<T>& instance, void (T::*cb)(const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+template<class T, typename CT> Callback_ContentSubmitter_cancelPtr
+newCallback_ContentSubmitter_cancel(const IceUtil::Handle<T>& instance, void (T::*cb)(const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
 {
-    return new Callback_Session_destroy<T, CT>(instance, cb, excb, sentcb);
+    return new Callback_ContentSubmitter_cancel<T, CT>(instance, cb, excb, sentcb);
 }
 
-template<class T, typename CT> Callback_Session_destroyPtr
-newCallback_Session_destroy(const IceUtil::Handle<T>& instance, void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+template<class T, typename CT> Callback_ContentSubmitter_cancelPtr
+newCallback_ContentSubmitter_cancel(const IceUtil::Handle<T>& instance, void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
 {
-    return new Callback_Session_destroy<T, CT>(instance, 0, excb, sentcb);
+    return new Callback_ContentSubmitter_cancel<T, CT>(instance, 0, excb, sentcb);
 }
 
-template<class T, typename CT> Callback_Session_destroyPtr
-newCallback_Session_destroy(T* instance, void (T::*cb)(const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+template<class T, typename CT> Callback_ContentSubmitter_cancelPtr
+newCallback_ContentSubmitter_cancel(T* instance, void (T::*cb)(const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
 {
-    return new Callback_Session_destroy<T, CT>(instance, cb, excb, sentcb);
+    return new Callback_ContentSubmitter_cancel<T, CT>(instance, cb, excb, sentcb);
 }
 
-template<class T, typename CT> Callback_Session_destroyPtr
-newCallback_Session_destroy(T* instance, void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+template<class T, typename CT> Callback_ContentSubmitter_cancelPtr
+newCallback_ContentSubmitter_cancel(T* instance, void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
 {
-    return new Callback_Session_destroy<T, CT>(instance, 0, excb, sentcb);
+    return new Callback_ContentSubmitter_cancel<T, CT>(instance, 0, excb, sentcb);
+}
+
+template<class T>
+class CallbackNC_ContentSubmitter_finish : public Callback_ContentSubmitter_finish_Base, public ::IceInternal::TwowayCallbackNC<T>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception&);
+    typedef void (T::*Sent)(bool);
+    typedef void (T::*Response)(::Rpc::ErrorCode);
+
+    CallbackNC_ContentSubmitter_finish(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::TwowayCallbackNC<T>(obj, cb != 0, excb, sentcb), _response(cb)
+    {
+    }
+
+    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+    {
+        ::Rpc::ContentSubmitterPrx __proxy = ::Rpc::ContentSubmitterPrx::uncheckedCast(__result->getProxy());
+        ::Rpc::ErrorCode __ret;
+        try
+        {
+            __ret = __proxy->end_finish(__result);
+        }
+        catch(const ::Ice::Exception& ex)
+        {
+            ::IceInternal::CallbackNC<T>::exception(__result, ex);
+            return;
+        }
+        if(_response)
+        {
+            (::IceInternal::CallbackNC<T>::_callback.get()->*_response)(__ret);
+        }
+    }
+
+    private:
+
+    Response _response;
+};
+
+template<class T> Callback_ContentSubmitter_finishPtr
+newCallback_ContentSubmitter_finish(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_ContentSubmitter_finish<T>(instance, cb, excb, sentcb);
+}
+
+template<class T> Callback_ContentSubmitter_finishPtr
+newCallback_ContentSubmitter_finish(T* instance, void (T::*cb)(::Rpc::ErrorCode), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_ContentSubmitter_finish<T>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT>
+class Callback_ContentSubmitter_finish : public Callback_ContentSubmitter_finish_Base, public ::IceInternal::TwowayCallback<T, CT>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception& , const CT&);
+    typedef void (T::*Sent)(bool , const CT&);
+    typedef void (T::*Response)(::Rpc::ErrorCode, const CT&);
+
+    Callback_ContentSubmitter_finish(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::TwowayCallback<T, CT>(obj, cb != 0, excb, sentcb), _response(cb)
+    {
+    }
+
+    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+    {
+        ::Rpc::ContentSubmitterPrx __proxy = ::Rpc::ContentSubmitterPrx::uncheckedCast(__result->getProxy());
+        ::Rpc::ErrorCode __ret;
+        try
+        {
+            __ret = __proxy->end_finish(__result);
+        }
+        catch(const ::Ice::Exception& ex)
+        {
+            ::IceInternal::Callback<T, CT>::exception(__result, ex);
+            return;
+        }
+        if(_response)
+        {
+            (::IceInternal::Callback<T, CT>::_callback.get()->*_response)(__ret, CT::dynamicCast(__result->getCookie()));
+        }
+    }
+
+    private:
+
+    Response _response;
+};
+
+template<class T, typename CT> Callback_ContentSubmitter_finishPtr
+newCallback_ContentSubmitter_finish(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_ContentSubmitter_finish<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT> Callback_ContentSubmitter_finishPtr
+newCallback_ContentSubmitter_finish(T* instance, void (T::*cb)(::Rpc::ErrorCode, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_ContentSubmitter_finish<T, CT>(instance, cb, excb, sentcb);
 }
 
 template<class T>
@@ -4163,6 +6108,112 @@ template<class T, typename CT> Callback_Session_browseContentPtr
 newCallback_Session_browseContent(T* instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::ContentBrowserPrx&, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
 {
     return new Callback_Session_browseContent<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T>
+class CallbackNC_Session_submitContent : public Callback_Session_submitContent_Base, public ::IceInternal::TwowayCallbackNC<T>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception&);
+    typedef void (T::*Sent)(bool);
+    typedef void (T::*Response)(::Rpc::ErrorCode, const ::Rpc::ContentSubmitterPrx&);
+
+    CallbackNC_Session_submitContent(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::TwowayCallbackNC<T>(obj, cb != 0, excb, sentcb), _response(cb)
+    {
+    }
+
+    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+    {
+        ::Rpc::SessionPrx __proxy = ::Rpc::SessionPrx::uncheckedCast(__result->getProxy());
+        ::Rpc::ContentSubmitterPrx submitter;
+        ::Rpc::ErrorCode __ret;
+        try
+        {
+            __ret = __proxy->end_submitContent(submitter, __result);
+        }
+        catch(const ::Ice::Exception& ex)
+        {
+            ::IceInternal::CallbackNC<T>::exception(__result, ex);
+            return;
+        }
+        if(_response)
+        {
+            (::IceInternal::CallbackNC<T>::_callback.get()->*_response)(__ret, submitter);
+        }
+    }
+
+    private:
+
+    Response _response;
+};
+
+template<class T> Callback_Session_submitContentPtr
+newCallback_Session_submitContent(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::ContentSubmitterPrx&), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_Session_submitContent<T>(instance, cb, excb, sentcb);
+}
+
+template<class T> Callback_Session_submitContentPtr
+newCallback_Session_submitContent(T* instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::ContentSubmitterPrx&), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_Session_submitContent<T>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT>
+class Callback_Session_submitContent : public Callback_Session_submitContent_Base, public ::IceInternal::TwowayCallback<T, CT>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception& , const CT&);
+    typedef void (T::*Sent)(bool , const CT&);
+    typedef void (T::*Response)(::Rpc::ErrorCode, const ::Rpc::ContentSubmitterPrx&, const CT&);
+
+    Callback_Session_submitContent(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::TwowayCallback<T, CT>(obj, cb != 0, excb, sentcb), _response(cb)
+    {
+    }
+
+    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+    {
+        ::Rpc::SessionPrx __proxy = ::Rpc::SessionPrx::uncheckedCast(__result->getProxy());
+        ::Rpc::ContentSubmitterPrx submitter;
+        ::Rpc::ErrorCode __ret;
+        try
+        {
+            __ret = __proxy->end_submitContent(submitter, __result);
+        }
+        catch(const ::Ice::Exception& ex)
+        {
+            ::IceInternal::Callback<T, CT>::exception(__result, ex);
+            return;
+        }
+        if(_response)
+        {
+            (::IceInternal::Callback<T, CT>::_callback.get()->*_response)(__ret, submitter, CT::dynamicCast(__result->getCookie()));
+        }
+    }
+
+    private:
+
+    Response _response;
+};
+
+template<class T, typename CT> Callback_Session_submitContentPtr
+newCallback_Session_submitContent(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::ContentSubmitterPrx&, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_Session_submitContent<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT> Callback_Session_submitContentPtr
+newCallback_Session_submitContent(T* instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::ContentSubmitterPrx&, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_Session_submitContent<T, CT>(instance, cb, excb, sentcb);
 }
 
 template<class T>

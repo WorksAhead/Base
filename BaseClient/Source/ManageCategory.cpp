@@ -86,10 +86,7 @@ void ManageCategory::onAdd()
 	text = text.trimmed();
 
 	if (text.isEmpty() || text.contains(',')) {
-		QMessageBox msg;
-		msg.setWindowTitle("Base");
-		msg.setText("Invalid category name");
-		msg.exec();
+		QMessageBox::information(this, "Base", tr("Invalid category name"));
 		return;
 	}
 

@@ -55,10 +55,18 @@ enum ErrorCode
     ec_engine_version_already_exists = 4,
     ec_engine_version_does_not_exist = 5,
     ec_engine_version_is_removed = 6,
-    ec_file_io_error = 7,
-    ec_file_data_error = 8,
-    ec_out_of_range = 9,
-    ec_access_denied = 10
+    ec_page_does_not_exist = 7,
+    ec_category_does_not_exist = 8,
+    ec_file_io_error = 9,
+    ec_file_data_error = 10,
+    ec_out_of_range = 11,
+    ec_access_denied = 12,
+    ec_invalid_operation = 13,
+    ec_server_busy = 14,
+    ec_incomplete_form = 15,
+    ec_incomplete_content = 16,
+    ec_parent_does_not_exist = 17,
+    ec_content_does_not_exist = 18
 };
 
 }
@@ -70,7 +78,7 @@ struct StreamableTraits< ::Rpc::ErrorCode>
 {
     static const StreamHelperCategory helper = StreamHelperCategoryEnum;
     static const int minValue = 0;
-    static const int maxValue = 10;
+    static const int maxValue = 18;
     static const int minWireSize = 1;
     static const bool fixedLength = false;
 };

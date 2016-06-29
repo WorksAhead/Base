@@ -86,10 +86,7 @@ void ManagePage::onAdd()
 	text = text.trimmed();
 
 	if (text.isEmpty() || text.contains(',')) {
-		QMessageBox msg;
-		msg.setWindowTitle("Base");
-		msg.setText("Invalid page name");
-		msg.exec();
+		QMessageBox::information(this, "Base", tr("Invalid page name"));
 		return;
 	}
 

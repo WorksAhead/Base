@@ -63,10 +63,7 @@ int main(int argc, char* argv[])
 		return app.exec();
 	}
 	catch (const Ice::Exception& e) {
-		QMessageBox msg;
-		msg.setWindowTitle("Base");
-		msg.setText(e.what());
-		msg.exec();
+		QMessageBox::information(0, "Base", e.what());
 	}
 	catch (const char* msg) {
 		//std::cout << msg << std::endl;

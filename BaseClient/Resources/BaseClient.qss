@@ -234,6 +234,10 @@ QListView::item:selected {
     background: rgb(246, 96, 0);
 }
 
+QFrame#coverViewer, QFrame#screenshotWidget {
+    border: 1px solid rgb(80, 80, 80);
+}
+
 Page {
 	background: rgb(30, 30, 30);
 }

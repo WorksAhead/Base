@@ -1,10 +1,9 @@
 #include "Page.h"
+#include "SubmitContentDialog.h"
 
 #include <QPainter>
 
-#include <string>
-
-Page::Page(ContextPtr context, const QString& name, QWidget* parent) : QWidget(parent), context_(context)
+Page::Page(ContextPtr context, const QString& name, QWidget* parent) : QWidget(parent), context_(context), name_(name)
 {
 	ui_.setupUi(this);
 
@@ -14,6 +13,10 @@ Page::Page(ContextPtr context, const QString& name, QWidget* parent) : QWidget(p
 	for (const std::string& category : categories) {
 		ui_.categoryBox->addItem(category.c_str());
 	}
+
+	QObject::connect(ui_.submitButton, &QPushButton::clicked, this, &Page::foo);
+
+	firstShow_ = true;
 }
 
 Page::~Page()
@@ -34,3 +37,16 @@ void Page::paintEvent(QPaintEvent* e)
 	QPainter p(this);
 	style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
+
+void Page::foo()
+{
+	SubmitContentDialog d(context_, this);
+	d.setPage(name_);
+
+	int rc = d.exec();
+
+	if (rc == QDialog::Accepted)
+	{
+	}
+}
+

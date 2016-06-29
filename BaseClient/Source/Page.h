@@ -20,12 +20,14 @@ protected:
 
 	virtual void paintEvent(QPaintEvent*);
 
+	void foo();
+
 private:
+	ContextPtr context_;
+	QString name_;
+
 	Ui::Page ui_;
 	bool firstShow_;
-
-	ContextPtr context_;
-
 };
 
 #endif // PAGE_HEADER_

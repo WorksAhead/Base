@@ -47,39 +47,26 @@ void SubmitEngineDialog::submit()
 	info_ = ui_.infoEdit->toPlainText();
 
 	if (engine_.isEmpty()) {
-		QMessageBox msg;
-		msg.setWindowTitle("Base");
-		msg.setText(tr("The Engine field cannot be left empty."));
-		msg.exec();
+		QMessageBox::information(this, "Base", tr("The Engine field cannot be left empty."));
 		return;
 	}
 
 	if (version_.isEmpty()) {
-		QMessageBox msg;
-		msg.setWindowTitle("Base");
-		msg.setText(tr("The Version field cannot be left empty."));
-		msg.exec();
+		QMessageBox::information(this, "Base", tr("The Version field cannot be left empty."));
 		return;
 	}
 
 	if (path_.isEmpty()) {
-		QMessageBox msg;
-		msg.setWindowTitle("Base");
-		msg.setText(tr("The Path field cannot be left empty."));
-		msg.exec();
+		QMessageBox::information(this, "Base", tr("The Path field cannot be left empty."));
 		return;
 	}
 
 	QFileInfo fileInfo(path_);
 
 	if (!fileInfo.exists() ||!fileInfo.isDir() || fileInfo.isRoot()) {
-		QMessageBox msg;
-		msg.setWindowTitle("Base");
-		msg.setText(QString(tr("\"%1\" is not a valid path.")).arg(path_));
-		msg.exec();
+		QMessageBox::information(this, "Base", tr("\"%1\" is not a valid path."));
 		return;
 	}
 
 	done(1);
 }
-

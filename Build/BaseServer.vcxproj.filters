@@ -81,6 +81,24 @@
     <ClCompile Include="..\BaseServer\Source\RpcEngineVersionUploaderImpl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\BaseServer\Source\RpcContentSubmitterImpl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseServer\Source\RpcFileUploaderImpl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseServer\Source\RpcFileDownloaderImpl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseServer\Source\RpcObjectManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\Rpc\RpcManagedObject.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseServer\Source\Context.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Common\Rpc\RpcErrorCode.h">
@@ -119,9 +137,6 @@
     <ClInclude Include="..\Ext\SQLiteCpp\include\SQLiteCpp\Transaction.h">
       <Filter>SQLite</Filter>
     </ClInclude>
-    <ClInclude Include="..\BaseServer\Source\Common.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\BaseServer\Source\SQLiteUtil.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -155,12 +170,27 @@
     <ClInclude Include="..\BaseServer\Source\RpcEngineVersionUploaderImpl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\BaseServer\Source\RpcContentSubmitterImpl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseServer\Source\RpcFileUploaderImpl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseServer\Source\RpcFileDownloaderImpl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseServer\Source\RpcObjectManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\Rpc\RpcManagedObject.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseServer\Source\Context.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Common\Rpc\RpcErrorCode.ice">
-      <Filter>Common</Filter>
-    </None>
-    <None Include="..\Common\Rpc\RpcLogin.ice">
       <Filter>Common</Filter>
     </None>
     <None Include="..\Common\Rpc\RpcSession.ice">
@@ -170,6 +200,9 @@
       <Filter>Common</Filter>
     </None>
     <None Include="..\Common\Rpc\RpcTypedefs.ice">
+      <Filter>Common</Filter>
+    </None>
+    <None Include="..\Common\Rpc\RpcManagedObject.ice">
       <Filter>Common</Filter>
     </None>
   </ItemGroup>

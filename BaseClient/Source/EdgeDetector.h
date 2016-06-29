@@ -13,22 +13,22 @@ public:
 		xoff_ = 0;
 		yoff_ = 0;
 
-		onLeftEdge_ = (x >= 0 && x < border_);
+		onLeftEdge_ = (x >= 0 && x < border_ && y >= 0 && y < h);
 		if (onLeftEdge_) {
 			xoff_ = x;
 		}
 
-		onRightEdge_ = (x >= w - border_ && x < w);
+		onRightEdge_ = (x >= w - border_ && x < w && y >= 0 && y < h);
 		if (onRightEdge_) {
 			xoff_ = w - x - 1;
 		}
 
-		onTopEdge_ = (y >= 0 && y < border_);
+		onTopEdge_ = (y >= 0 && y < border_ && x >= 0 && x < w);
 		if (onTopEdge_) {
 			yoff_ = y;
 		}
 
-		onBottomEdge_ = (y >= h - border_ && y < h);
+		onBottomEdge_ = (y >= h - border_ && y < h && x >= 0 && x < w);
 		if (onBottomEdge_) {
 			yoff_ = h - y - 1;
 		}
