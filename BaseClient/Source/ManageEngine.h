@@ -17,7 +17,6 @@ public:
 
 protected:
 	virtual void showEvent(QShowEvent*);
-
 	virtual void paintEvent(QPaintEvent*);
 
 private Q_SLOTS:

@@ -15,6 +15,9 @@ struct Context
 	Rpc::SessionPrx session;
 	std::function<void(ASyncTask*)> addTask;
 	std::function<std::string()> uniquePath;
+	std::function<std::string()> cachePath;
+	std::function<std::string()> libraryPath;
+	std::function<std::string(const std::string&)> contentPath;
 	std::function<void(Rpc::ErrorCode)> promptRpcError;
 };
 

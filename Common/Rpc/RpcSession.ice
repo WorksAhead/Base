@@ -6,9 +6,34 @@
 
 module Rpc
 {
+	struct ContentItem
+	{
+		string id;
+		string title;
+	};
+
+	struct ContentInfo
+	{
+		string id;
+		string parentId;
+		string title;
+		string page;
+		string category;
+		string engineName;
+		string engineVersion;
+		string command;
+		int imageCount;
+		string desc;
+		string user;
+		string upTime;
+		string state;
+	};
+
+	sequence<ContentItem> ContentItemSeq;
+
 	interface ContentBrowser extends ManagedObject
 	{
-		void finish();
+		ErrorCode next(int n, out ContentItemSeq items);
 	};
 
 	struct EngineVersionItem
@@ -66,14 +91,16 @@ module Rpc
 		ErrorCode setCategories(StringSeq categories);
 		ErrorCode getCategories(out StringSeq categories);
 
-		ErrorCode browseContent(string page, string category, string orderBy, out ContentBrowser* browser);
-
+		ErrorCode browseContent(string page, string category, out ContentBrowser* browser);
+		ErrorCode getContentInfo(string id, out ContentInfo info);
+		ErrorCode downloadContentImage(string id, int index, out Downloader* downloader);
+		ErrorCode downloadContent(string id, out Downloader* downloader);
 		ErrorCode submitContent(out ContentSubmitter* submitter);
 
 		ErrorCode browseEngineVersions(out EngineVersionBrowser* browser);
-		ErrorCode uploadEngineVersion(string name, string version, string info, out Uploader* uploader);
 		ErrorCode downloadEngineVersion(string name, string version, out Downloader* downloader);
 		ErrorCode removeEngineVersion(string name, string version);
+		ErrorCode submitEngineVersion(string name, string version, string info, out Uploader* uploader);
 	};
 };
 

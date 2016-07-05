@@ -10,47 +10,14 @@
     <height>655</height>
    </rect>
   </property>
-  <property name="windowTitle">
-   <string>Form</string>
-  </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0,0,1,0,1,1,0">
+    <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0,1,0,1,1,0">
      <item>
       <widget class="QComboBox" name="categoryBox">
        <item>
         <property name="text">
          <string>Category</string>
-        </property>
-       </item>
-      </widget>
-     </item>
-     <item>
-      <widget class="QComboBox" name="orderByBox">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <item>
-        <property name="text">
-         <string>Order By</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Time</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Category</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Name</string>
         </property>
        </item>
       </widget>

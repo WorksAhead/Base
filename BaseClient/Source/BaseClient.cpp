@@ -39,10 +39,24 @@ BaseClient::BaseClient(Rpc::SessionPrx session)
 
 	taskManagerDialog_ = new ASyncTaskManagerDialog(this);
 
+	// todo
+	if (!fs::exists("Cache") && !fs::create_directories("Cache")) {
+		throw std::runtime_error("Failed to create directory");
+	}
+	if (!fs::exists("Library/Contents") && !fs::create_directories("Library/Contents")) {
+		throw std::runtime_error("Failed to create directory");
+	}
+	if (!fs::exists("Library/Engines") && !fs::create_directories("Library/Engines")) {
+		throw std::runtime_error("Failed to create directory");
+	}
+
 	context_.reset(new Context);
 	context_->session = session;
 	context_->addTask = std::bind(&ASyncTaskListWidget::addTask, taskManagerDialog_->listWidget(), std::placeholders::_1);
 	context_->uniquePath = std::bind(&BaseClient::uniquePath, this);
+	context_->cachePath = std::bind(&BaseClient::cachePath, this);
+	context_->libraryPath = std::bind(&BaseClient::libraryPath, this);
+	context_->contentPath = std::bind(&BaseClient::contentPath, this, std::placeholders::_1);
 	context_->promptRpcError = std::bind(&BaseClient::promptRpcError, this, std::placeholders::_1);
 
 	QWidget* decoratorWidget = new QWidget;
@@ -91,6 +105,25 @@ std::string BaseClient::uniquePath()
 	fs::path p = fs::temp_directory_path();
 	p = p / boost::uuids::to_string(uniquePathGen_());
 	return p.string();
+}
+
+std::string BaseClient::cachePath()
+{
+	return "Cache";
+}
+
+std::string BaseClient::libraryPath()
+{
+	// todo
+	return "Library";
+}
+
+std::string BaseClient::contentPath(const std::string& id)
+{
+	fs::path path = libraryPath();
+	path /= "Contents";
+	path /= id;
+	return path.string();
 }
 
 void BaseClient::promptRpcError(Rpc::ErrorCode ec)

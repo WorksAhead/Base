@@ -42,8 +42,7 @@ ManageEngine::~ManageEngine()
 void ManageEngine::showEvent(QShowEvent* e)
 {
 	if (firstShow_) {
-		context_->session->browseEngineVersions(browser_);
-		showMore(ITEMS_PER_REQUEST);
+		onRefresh();
 		firstShow_ = false;
 	}
 }
@@ -78,7 +77,9 @@ void ManageEngine::onRefresh()
 {
 	ui_.engineList->clear();
 	context_->session->browseEngineVersions(browser_);
-	showMore(ITEMS_PER_REQUEST);
+	if (browser_) {
+		showMore(ITEMS_PER_REQUEST);
+	}
 }
 
 void ManageEngine::onRemove()
@@ -106,7 +107,7 @@ void ManageEngine::showSubmitDialog()
 	{
 		Rpc::UploaderPrx uploader;
 
-		Rpc::ErrorCode ec = context_->session->uploadEngineVersion(d.engine().toStdString(), d.version().toStdString(), d.info().toStdString(), uploader);
+		Rpc::ErrorCode ec = context_->session->submitEngineVersion(d.engine().toStdString(), d.version().toStdString(), d.info().toStdString(), uploader);
 		if (ec != Rpc::ec_success) {
 			context_->promptRpcError(ec);
 			return;

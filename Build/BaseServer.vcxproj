@@ -159,6 +159,7 @@
     <ClCompile Include="..\BaseServer\Source\Center.cpp" />
     <ClCompile Include="..\BaseServer\Source\Context.cpp" />
     <ClCompile Include="..\BaseServer\Source\Main.cpp" />
+    <ClCompile Include="..\BaseServer\Source\RpcContentBrowserImpl.cpp" />
     <ClCompile Include="..\BaseServer\Source\RpcContentSubmitterImpl.cpp" />
     <ClCompile Include="..\BaseServer\Source\RpcEngineVersionBrowserImpl.cpp" />
     <ClCompile Include="..\BaseServer\Source\RpcEngineVersionDownloaderImpl.cpp" />
@@ -187,6 +188,7 @@
     <ClInclude Include="..\BaseServer\Source\Center.h" />
     <ClInclude Include="..\BaseServer\Source\Context.h" />
     <ClInclude Include="..\BaseServer\Source\Datetime.h" />
+    <ClInclude Include="..\BaseServer\Source\RpcContentBrowserImpl.h" />
     <ClInclude Include="..\BaseServer\Source\RpcContentSubmitterImpl.h" />
     <ClInclude Include="..\BaseServer\Source\RpcEngineVersionBrowserImpl.h" />
     <ClInclude Include="..\BaseServer\Source\RpcEngineVersionDownloaderImpl.h" />

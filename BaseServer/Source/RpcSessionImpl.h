@@ -26,19 +26,22 @@ public:
 	virtual Rpc::ErrorCode setCategories(const Rpc::StringSeq&, const Ice::Current&);
 	virtual Rpc::ErrorCode getCategories(Rpc::StringSeq&, const Ice::Current&);
 
-	virtual Rpc::ErrorCode browseContent(const ::std::string&, const ::std::string&, const ::std::string&, Rpc::ContentBrowserPrx&, const Ice::Current&);
-
+	virtual Rpc::ErrorCode browseContent(const std::string&, const std::string&, Rpc::ContentBrowserPrx&, const Ice::Current&);
+	virtual Rpc::ErrorCode getContentInfo(const std::string&, Rpc::ContentInfo&, const Ice::Current&);
+	virtual Rpc::ErrorCode downloadContentImage(const std::string&, Ice::Int, Rpc::DownloaderPrx&, const Ice::Current&);
+	virtual Rpc::ErrorCode downloadContent(const std::string&, Rpc::DownloaderPrx&, const Ice::Current&);
 	virtual Rpc::ErrorCode submitContent(Rpc::ContentSubmitterPrx&, const Ice::Current&);
 
 	virtual Rpc::ErrorCode browseEngineVersions(Rpc::EngineVersionBrowserPrx&, const Ice::Current&);
-	virtual Rpc::ErrorCode uploadEngineVersion(const std::string&, const std::string&, const std::string&, Rpc::UploaderPrx&, const Ice::Current&);
 	virtual Rpc::ErrorCode downloadEngineVersion(const std::string&, const std::string&, Rpc::DownloaderPrx&, const Ice::Current&);
 	virtual Rpc::ErrorCode removeEngineVersion(const std::string&, const std::string&, const Ice::Current&);
+	virtual Rpc::ErrorCode submitEngineVersion(const std::string&, const std::string&, const std::string&, Rpc::UploaderPrx&, const Ice::Current&);
 
 	IceUtil::Time timestamp();
 
 private:
 	void checkIsDestroyed();
+	Rpc::ErrorCode downloadContentFile(const std::string& id, const std::string& path, Rpc::DownloaderPrx&, const Ice::Current&);
 
 private:
 	bool destroyed_;

@@ -27,6 +27,9 @@ public:
 
 private:
 	std::string uniquePath();
+	std::string cachePath();
+	std::string libraryPath();
+	std::string contentPath(const std::string& id);
 	void promptRpcError(Rpc::ErrorCode);
 
 private:

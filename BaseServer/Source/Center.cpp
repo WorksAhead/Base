@@ -220,7 +220,9 @@ bool Center::getContent(std::map<std::string, std::string>& form, const std::str
 	if (!s.executeStep()) {
 		return false;
 	}
-
+	
+	form["Id"] = s.getColumn("Id").getText();
+	form["ParentId"] = s.getColumn("ParentId").getText();
 	form["Title"] = s.getColumn("Title").getText();
 	form["Page"] = s.getColumn("Page").getText();
 	form["Category"] = s.getColumn("Category").getText();

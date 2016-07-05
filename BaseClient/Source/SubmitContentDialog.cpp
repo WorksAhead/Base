@@ -238,7 +238,8 @@ void SubmitContentDialog::onSubmit()
 	std::string imageFilename;
 
 	imageFilename = context_->uniquePath() + ".jpg";
-	if (!ui_.coverViewer->pixmap().save(imageFilename.c_str(), "JPG")) {
+
+	if (!ui_.coverViewer->pixmap().scaled(QSize(300, 300), Qt::KeepAspectRatio, Qt::SmoothTransformation).save(imageFilename.c_str(), "JPG")) {
 		QMessageBox::information(this, "Base", tr("Failed to save image"));
 		return;
 	}
