@@ -9,27 +9,27 @@ ImageCropperWidget::ImageCropperWidget(QWidget* parent) : QWidget(parent)
 {
 	box_ = new CroppingBoxWidget(this);
 
-	ratio_ = 0.0f;
+	imageAspectRatio_ = 0.0f;
 }
 
 ImageCropperWidget::~ImageCropperWidget()
 {
 }
 
-void ImageCropperWidget::setRatio(const QSize& size)
+void ImageCropperWidget::setImageAspectRatio(const QSize& size)
 {
 	if (size.isEmpty()) {
-		ratio_ = 0.0f;
+		imageAspectRatio_ = 0.0f;
 		return;
 	}
 
-	ratio_ = (float)((double)size.width() / (double)size.height());
+	imageAspectRatio_ = (float)((double)size.width() / (double)size.height());
 
-	if (ratio_ >= 1.0f) {
-		box_->setMinimumSize(QSize(10 * ratio_, 10));
+	if (imageAspectRatio_ >= 1.0f) {
+		box_->setMinimumSize(QSize(10 * imageAspectRatio_, 10));
 	}
 	else {
-		box_->setMinimumSize(QSize(10, 10 / ratio_));
+		box_->setMinimumSize(QSize(10, 10 / imageAspectRatio_));
 	}
 
 	box_->setRatio(size);
@@ -43,17 +43,17 @@ void ImageCropperWidget::setImage(const QPixmap& image)
 
 	box_->setArea(imageRect_);
 
-	if (ratio_ != 0.0f)
+	if (imageAspectRatio_ != 0.0f)
 	{
 		int x = imageRect_.x();
 		int y = imageRect_.y();
 		int w = imageRect_.width();
 		int h = imageRect_.height();
 		if (w >= h) {
-			w = h * ratio_;
+			w = h * imageAspectRatio_;
 		}
 		else {
-			h = w / ratio_;
+			h = w / imageAspectRatio_;
 		}
 		box_->setGeometry(x, y, w, h);
 	}
@@ -79,13 +79,13 @@ QPixmap ImageCropperWidget::cropImage()
 
 	int x, y, w, h;
 
-	if (ratio_ >= 1.0f) {
+	if (imageAspectRatio_ >= 1.0f) {
 		w = (image_.width() * s);
-		h = w / ratio_;
+		h = w / imageAspectRatio_;
 	}
-	else if (ratio_ > 0.0f) {
+	else if (imageAspectRatio_ > 0.0f) {
 		h = (image_.height() * t);
-		w = h * ratio_;
+		w = h * imageAspectRatio_;
 	}
 	else {
 		w = (image_.width() * s);
@@ -133,13 +133,13 @@ void ImageCropperWidget::resizeEvent(QResizeEvent* e)
 
 		int x, y, w, h;
 
-		if (ratio_ >= 1.0f) {
+		if (imageAspectRatio_ >= 1.0f) {
 			w = (imageRect_.width() * s);
-			h = w / ratio_;
+			h = w / imageAspectRatio_;
 		}
-		else if (ratio_ > 0.0f) {
+		else if (imageAspectRatio_ > 0.0f) {
 			h = (imageRect_.height() * t);
-			w = h * ratio_;
+			w = h * imageAspectRatio_;
 		}
 		else {
 			w = (imageRect_.width() * s);

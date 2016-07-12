@@ -279,7 +279,7 @@ QPixmap SubmitContentDialog::getImage(const QSize& ratio)
 
 	ImageCropperDialog d(this);
 
-	d.imageCropperWidget()->setRatio(ratio);
+	d.imageCropperWidget()->setImageAspectRatio(ratio);
 	d.imageCropperWidget()->setImage(QPixmap(path));
 
 	int rc = d.exec();

@@ -15,7 +15,7 @@ public:
 	explicit ImageCropperWidget(QWidget* parent = 0);
 	~ImageCropperWidget();
 
-	void setRatio(const QSize& size);
+	void setImageAspectRatio(const QSize& size);
 	void setImage(const QPixmap& image);
 
 	QPixmap cropImage();
@@ -34,7 +34,7 @@ private:
 	QPixmap image_;
 	QPixmap scaledImage_;
 	QRect imageRect_;
-	float ratio_;
+	float imageAspectRatio_;
 };
 
 

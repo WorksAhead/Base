@@ -108,7 +108,7 @@
          <item>
           <widget class="QLineEdit" name="engineVersionEdit">
            <property name="placeholderText">
-            <string>Engine Version</string>
+            <string>Engine Version(Seperate versions with '|')</string>
            </property>
           </widget>
          </item>
