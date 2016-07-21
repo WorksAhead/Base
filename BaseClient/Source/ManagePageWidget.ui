@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>ManageCategory</class>
- <widget class="QWidget" name="ManageCategory">
+ <class>ManagePageWidget</class>
+ <widget class="QWidget" name="ManagePageWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -27,7 +27,7 @@
     <number>9</number>
    </property>
    <item>
-    <widget class="QListWidget" name="categoryList">
+    <widget class="QListWidget" name="pageList">
      <property name="font">
       <font>
        <pointsize>16</pointsize>

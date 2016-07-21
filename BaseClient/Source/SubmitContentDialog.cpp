@@ -1,6 +1,6 @@
 #include "SubmitContentDialog.h"
 #include "ImageCropperDialog.h"
-#include "ImageViewer.h"
+#include "ImageViewerWidget.h"
 #include "ASyncSubmitContentTask.h"
 
 #include <ErrorMessage.h>
@@ -97,7 +97,7 @@ void SubmitContentDialog::onAddScreenshot()
 		return;
 	}
 
-	ImageViewer* imageViewer = new ImageViewer;
+	ImageViewerWidget* imageViewer = new ImageViewerWidget;
 	imageViewer->setPixmap(pixmap);
 
 	const int index = ui_.screenshotWidget->addWidget(imageViewer);
@@ -247,7 +247,7 @@ void SubmitContentDialog::onSubmit()
 	task->addImageFile(imageFilename);
 
 	for (int i = 0; i < ui_.screenshotWidget->count(); ++i) {
-		ImageViewer* imageViewer = static_cast<ImageViewer*>(ui_.screenshotWidget->widget(i));
+		ImageViewerWidget* imageViewer = static_cast<ImageViewerWidget*>(ui_.screenshotWidget->widget(i));
 		imageFilename = context_->uniquePath() + ".jpg";
 		if (!imageViewer->pixmap().save(imageFilename.c_str(), "JPG")) {
 			QMessageBox::information(this, "Base", tr("Failed to save image"));

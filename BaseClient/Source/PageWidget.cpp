@@ -1,5 +1,5 @@
-#include "Page.h"
-#include "PageItem.h"
+#include "PageWidget.h"
+#include "PageItemWidget.h"
 #include "FlowLayout.h"
 #include "SubmitContentDialog.h"
 #include "ASyncDownloadTask.h"
@@ -13,13 +13,14 @@
 #include <boost/filesystem.hpp>
 
 #include <sstream>
-#include <list>
+#include <string>
+#include <vector>
 
 namespace fs = boost::filesystem;
 
 #define ITEMS_PER_REQUEST 20
 
-Page::Page(ContextPtr context, const QString& name, QWidget* parent) : QWidget(parent), context_(context), name_(name)
+PageWidget::PageWidget(ContextPtr context, const QString& name, QWidget* parent) : QWidget(parent), context_(context), name_(name)
 {
 	ui_.setupUi(this);
 
@@ -32,35 +33,37 @@ Page::Page(ContextPtr context, const QString& name, QWidget* parent) : QWidget(p
 		ui_.categoryBox->addItem(category.c_str());
 	}
 
-	flowLayout_ = new FlowLayout;
+	flowLayout_ = new FlowLayout(0);
 
-	content_ = new ContentWidget;
+	content_ = new ContentWidget(context_);
 
-	QWidget* w = new QWidget;
-	w->setLayout(flowLayout_);
-	ui_.scrollArea1->setWidget(w);
+	QWidget* flowWidget = new QWidget;
+	flowWidget->setObjectName("FlowWidget");
+	flowWidget->setLayout(flowLayout_);
+
+	ui_.scrollArea1->setWidget(flowWidget);
 	ui_.scrollArea2->setWidget(content_);
 
 	timer_ = new QTimer(this);
 
-	QObject::connect(timer_, &QTimer::timeout, this, &Page::onTick);
+	QObject::connect(timer_, &QTimer::timeout, this, &PageWidget::onTick);
 
-	QObject::connect(ui_.scrollArea1->verticalScrollBar(), &QScrollBar::valueChanged, this, &Page::onScroll);
-	QObject::connect(ui_.backButton, &QPushButton::clicked, this, &Page::onBack);
-	QObject::connect(ui_.categoryBox, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &Page::onRefresh);
-	QObject::connect(ui_.refreshButton, &QPushButton::clicked, this, &Page::onRefresh);
+	QObject::connect(ui_.scrollArea1->verticalScrollBar(), &QScrollBar::valueChanged, this, &PageWidget::onScroll);
+	QObject::connect(ui_.backButton, &QPushButton::clicked, this, &PageWidget::onBack);
+	QObject::connect(ui_.categoryBox, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &PageWidget::onRefresh);
+	QObject::connect(ui_.refreshButton, &QPushButton::clicked, this, &PageWidget::onRefresh);
 
-	QObject::connect(ui_.submitButton, &QPushButton::clicked, this, &Page::submit);
+	QObject::connect(ui_.submitButton, &QPushButton::clicked, this, &PageWidget::submit);
 
 	firstShow_ = true;
 }
 
-Page::~Page()
+PageWidget::~PageWidget()
 {
 	cancelAllImageLoadTasks();
 }
 
-void Page::mousePressEvent(QMouseEvent* e)
+void PageWidget::mousePressEvent(QMouseEvent* e)
 {
 	if (e->button() == Qt::LeftButton)
 	{
@@ -72,7 +75,7 @@ void Page::mousePressEvent(QMouseEvent* e)
 		if (ui_.scrollArea1->rect().contains(pos))
 		{
 			QWidget* w = ui_.scrollArea1->childAt(pos);
-			PageItem* pi = qobject_cast<PageItem*>(w);
+			PageItemWidget* pi = qobject_cast<PageItemWidget*>(w);
 			if (pi)
 			{
 				Rpc::ContentInfo ci;
@@ -90,10 +93,19 @@ void Page::mousePressEvent(QMouseEvent* e)
 					summary << "\nParent Id:\n" << ci.parentId << "\n";
 				}
 
+				std::vector<std::string> versions;
+				boost::split(versions, ci.engineVersion, boost::is_any_of("|"));
+
 				content_->setId(ci.id.c_str());
 				content_->setTitle(ci.title.c_str());
 				content_->setSummary(summary.str().c_str());
 				content_->setDescription(ci.desc.c_str());
+
+				content_->setEngineVersionCount(versions.size());
+
+				for (int i = 0; i < versions.size(); ++i) {
+					content_->setEngineVersion(i, ci.engineName.c_str(), versions[i].c_str());
+				}
 
 				content_->setImageCount(ci.imageCount - 1);
 
@@ -113,7 +125,7 @@ void Page::mousePressEvent(QMouseEvent* e)
 	}
 }
 
-void Page::showEvent(QShowEvent* e)
+void PageWidget::showEvent(QShowEvent* e)
 {
 	if (firstShow_) {
 		onRefresh();
@@ -122,7 +134,7 @@ void Page::showEvent(QShowEvent* e)
 	}
 }
 
-void Page::paintEvent(QPaintEvent* e)
+void PageWidget::paintEvent(QPaintEvent* e)
 {
 	QStyleOption opt;
 	opt.init(this);
@@ -130,7 +142,7 @@ void Page::paintEvent(QPaintEvent* e)
 	style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
-void Page::onScroll(int position)
+void PageWidget::onScroll(int position)
 {
 	if (position == ui_.scrollArea1->verticalScrollBar()->maximum()) {
 		if (browser_) {
@@ -139,7 +151,7 @@ void Page::onScroll(int position)
 	}
 }
 
-void Page::onBack()
+void PageWidget::onBack()
 {
 	ui_.backButton->setVisible(false);
 	ui_.categoryBox->setVisible(true);
@@ -149,7 +161,7 @@ void Page::onBack()
 	ui_.stackedWidget->setCurrentIndex(0);
 }
 
-void Page::onRefresh()
+void PageWidget::onRefresh()
 {
 	clear();
 	cancelAllImageLoadTasks();
@@ -167,7 +179,7 @@ void Page::onRefresh()
 	}
 }
 
-void Page::onTick()
+void PageWidget::onTick()
 {
 	const int maxTasks = 5;
 
@@ -228,7 +240,7 @@ void Page::onTick()
 	}
 }
 
-void Page::showMore(int count)
+void PageWidget::showMore(int count)
 {
 	while (count > 0)
 	{
@@ -241,7 +253,7 @@ void Page::showMore(int count)
 		{
 			const Rpc::ContentItem& item = items.at(i);
 
-			PageItem* pi = new PageItem(this);
+			PageItemWidget* pi = new PageItemWidget(this);
 			pi->setFixedSize(QSize(300, 300));
 			pi->setId(item.id.c_str());
 			pi->setText(item.title.c_str());
@@ -259,14 +271,14 @@ void Page::showMore(int count)
 	}
 }
 
-void Page::submit()
+void PageWidget::submit()
 {
 	SubmitContentDialog d(context_, this);
 	d.setPage(name_);
 	d.exec();
 }
 
-void Page::clear()
+void PageWidget::clear()
 {
 	pageItems_.clear();
 
@@ -280,7 +292,7 @@ void Page::clear()
 	}
 }
 
-QString Page::makeImageFilename(const ImageIndex& imageIndex)
+QString PageWidget::makeImageFilename(const ImageIndex& imageIndex)
 {
 	fs::path path = context_->cachePath();
 	if (imageIndex.second == 0) {
@@ -292,7 +304,7 @@ QString Page::makeImageFilename(const ImageIndex& imageIndex)
 	return QString(path.string().c_str());
 }
 
-void Page::cancelAllImageLoadTasks()
+void PageWidget::cancelAllImageLoadTasks()
 {
 	QMapIterator<ImageIndex, ASyncDownloadTask*> it(imageLoadTasks_);
 	while (it.hasNext()) {
@@ -306,7 +318,7 @@ void Page::cancelAllImageLoadTasks()
 	pendingImages_.clear();
 }
 
-void Page::loadImage(const ImageIndex& imageIndex, bool highPriority)
+void PageWidget::loadImage(const ImageIndex& imageIndex, bool highPriority)
 {
 	if (loadedImages_.contains(imageIndex)) {
 		setImage(imageIndex);
@@ -321,10 +333,10 @@ void Page::loadImage(const ImageIndex& imageIndex, bool highPriority)
 	}
 }
 
-void Page::setImage(const ImageIndex& imageIndex)
+void PageWidget::setImage(const ImageIndex& imageIndex)
 {
 	if (imageIndex.second == 0) {
-		PageItem* pi = pageItems_.value(imageIndex.first, 0);
+		PageItemWidget* pi = pageItems_.value(imageIndex.first, 0);
 		if (pi) {
 			pi->setBackground(QPixmap(makeImageFilename(imageIndex), "JPG"));
 		}

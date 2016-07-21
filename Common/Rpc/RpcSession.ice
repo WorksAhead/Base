@@ -64,6 +64,7 @@ module Rpc
 		ErrorCode getSize(out long size);
 		ErrorCode read(long offset, int size, out ByteSeq bytes);
 		void finish();
+		void cancel();
 	};
 
 	interface ContentSubmitter extends ManagedObject

@@ -1,39 +1,39 @@
-#include "PageItem.h"
+#include "PageItemWidget.h"
 
 #include <QResizeEvent>
 #include <QPainter>
 #include <QFontMetrics>
 
-PageItem::PageItem(QWidget* parent) : QWidget(parent)
+PageItemWidget::PageItemWidget(QWidget* parent) : QWidget(parent)
 {
 }
 
-PageItem::~PageItem()
+PageItemWidget::~PageItemWidget()
 {
 }
 
-void PageItem::setId(const QString& id)
+void PageItemWidget::setId(const QString& id)
 {
 	id_ = id;
 }
 
-QString PageItem::id() const
+QString PageItemWidget::id() const
 {
 	return id_;
 }
 
-void PageItem::setText(const QString& text)
+void PageItemWidget::setText(const QString& text)
 {
 	text_ = text;
 }
 
-void PageItem::setBackground(const QPixmap& bg)
+void PageItemWidget::setBackground(const QPixmap& bg)
 {
 	bg_ = bg;
 	updateBackground(size());
 }
 
-void PageItem::paintEvent(QPaintEvent* e)
+void PageItemWidget::paintEvent(QPaintEvent* e)
 {
 	QPainter painter(this);
 	painter.drawPixmap(QPoint(0, 0), scaledBg_);
@@ -52,12 +52,12 @@ void PageItem::paintEvent(QPaintEvent* e)
 	painter.drawText(textRect, text_);
 }
 
-void PageItem::resizeEvent(QResizeEvent* e)
+void PageItemWidget::resizeEvent(QResizeEvent* e)
 {
 	updateBackground(e->size());
 }
 
-void PageItem::updateBackground(const QSize& s)
+void PageItemWidget::updateBackground(const QSize& s)
 {
 	if (!bg_.isNull()) {
 		scaledBg_ = bg_.scaled(s, Qt::KeepAspectRatio, Qt::SmoothTransformation);

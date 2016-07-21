@@ -126,8 +126,9 @@ void Center::getCategories(std::vector<std::string>& categories)
 
 bool Center::lockEngineVersion(const std::string& name, const std::string& version, LockMode mode)
 {
+	const std::string& key = boost::to_lower_copy(name + "\n" + version);
 	boost::mutex::scoped_lock lock(lockedEngineVersionSetSync_);
-	int& n = lockedEngineVersionSet_[name + "\n" + version];
+	int& n = lockedEngineVersionSet_[key];
 	if (mode == lock_write && n == 0) {
 		n = -1;
 		return true;
@@ -143,9 +144,10 @@ bool Center::lockEngineVersion(const std::string& name, const std::string& versi
 
 void Center::unlockEngineVersion(const std::string& name, const std::string& version, LockMode mode)
 {
+	const std::string& key = boost::to_lower_copy(name + "\n" + version);
 	boost::mutex::scoped_lock lock(lockedEngineVersionSetSync_);
-	assert(lockedEngineVersionSet_.count(name + "\n" + version) == 1);
-	int& n = lockedEngineVersionSet_[name + "\n" + version];
+	assert(lockedEngineVersionSet_.count(key) == 1);
+	int& n = lockedEngineVersionSet_[key];
 	if (mode == lock_write) {
 		assert(n == -1);
 		n = 0;

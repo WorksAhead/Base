@@ -25,6 +25,12 @@ RpcFileUploaderImpl::~RpcFileUploaderImpl()
 
 Rpc::ErrorCode RpcFileUploaderImpl::init(const std::string& filename)
 {
+	if (!fs::exists(fs::path(filename).parent_path())) {
+		if (!fs::create_directories(fs::path(filename).parent_path())) {
+			return Rpc::ec_file_io_error;
+		}
+	}
+
 	stream_.reset(new std::fstream(filename.c_str(), std::ios::out|std::ios::binary));
 	if (!stream_->is_open()) {
 		return Rpc::ec_file_io_error;

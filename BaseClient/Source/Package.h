@@ -46,5 +46,42 @@ private:
 	std::string errorMessage_;
 };
 
+class Unpacker {
+private:
+	enum {
+		state_open_package,
+		state_next_file,
+		state_unpacking,
+		state_failed,
+		state_finished,
+	};
+
+public:
+	typedef boost::filesystem::path Path;
+
+public:
+	Unpacker(const Path& packFile, const Path& outPath);
+	~Unpacker();
+
+	size_t count() const;
+	size_t currentIndex() const;
+	Path currentFile() const;
+	std::string errorMessage() const;
+
+	int executeStep();
+
+private:
+	Path packFile_;
+	Path outPath_;
+	void* handle_;
+	int state_;
+	size_t count_;
+	size_t currentIdx_;
+	Path currentFile_;
+	std::shared_ptr<std::fstream> stream_;
+	std::vector<char> buf_;
+	std::string errorMessage_;
+};
+
 #endif // PACKAGE_HEADER_
 

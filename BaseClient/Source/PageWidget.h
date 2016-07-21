@@ -1,7 +1,7 @@
-#ifndef PAGE_HEADER_
-#define PAGE_HEADER_
+#ifndef PAGEWIDGET_HEADER_
+#define PAGEWIDGET_HEADER_
 
-#include "ui_Page.h"
+#include "ui_PageWidget.h"
 
 #include <RpcSession.h>
 
@@ -16,10 +16,10 @@
 // forward declaration
 class ASyncDownloadTask;
 class FlowLayout;
-class PageItem;
+class PageItemWidget;
 class ContentWidget;
 
-class Page : public QWidget {
+class PageWidget : public QWidget {
 private:
 	Q_OBJECT
 
@@ -27,8 +27,8 @@ private:
 	typedef QPair<QString, int> ImageIndex;
 
 public:
-	Page(ContextPtr context, const QString& name, QWidget* parent = 0);
-	~Page();
+	PageWidget(ContextPtr context, const QString& name, QWidget* parent = 0);
+	~PageWidget();
 
 protected:
 	virtual void mousePressEvent(QMouseEvent*);
@@ -62,15 +62,15 @@ private:
 
 	Rpc::ContentBrowserPrx browser_;
 
-	QMap<QString, PageItem*> pageItems_;
+	QMap<QString, PageItemWidget*> pageItems_;
 
 	QSet<ImageIndex> loadedImages_;
 	QMap<ImageIndex, ASyncDownloadTask*> imageLoadTasks_;
 	QList<ImageIndex> pendingImages_;
 
-	Ui::Page ui_;
+	Ui::PageWidget ui_;
 	bool firstShow_;
 };
 
-#endif // PAGE_HEADER_
+#endif // PAGEWIDGET_HEADER_
 

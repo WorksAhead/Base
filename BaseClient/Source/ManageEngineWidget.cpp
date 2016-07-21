@@ -1,4 +1,4 @@
-#include "ManageEngine.h"
+#include "ManageEngineWidget.h"
 #include "SubmitEngineDialog.h"
 #include "ASyncSubmitEngineTask.h"
 #include "ErrorMessage.h"
@@ -19,27 +19,27 @@
 
 namespace fs = boost::filesystem;
 
-ManageEngine::ManageEngine(ContextPtr context, QWidget* parent) : QWidget(parent), context_(context)
+ManageEngineWidget::ManageEngineWidget(ContextPtr context, QWidget* parent) : QWidget(parent), context_(context)
 {
 	ui_.setupUi(this);
 	ui_.engineList->header()->setSortIndicator(2, Qt::DescendingOrder);
 
-	QObject::connect(ui_.showMoreButton, &QPushButton::clicked, this, &ManageEngine::onShowMore);
-	QObject::connect(ui_.showAllButton, &QPushButton::clicked, this, &ManageEngine::onShowAll);
-	QObject::connect(ui_.refreshButton, &QPushButton::clicked, this, &ManageEngine::onRefresh);
+	QObject::connect(ui_.showMoreButton, &QPushButton::clicked, this, &ManageEngineWidget::onShowMore);
+	QObject::connect(ui_.showAllButton, &QPushButton::clicked, this, &ManageEngineWidget::onShowAll);
+	QObject::connect(ui_.refreshButton, &QPushButton::clicked, this, &ManageEngineWidget::onRefresh);
 
-	QObject::connect(ui_.removeButton, &QPushButton::clicked, this, &ManageEngine::onRemove);
+	QObject::connect(ui_.removeButton, &QPushButton::clicked, this, &ManageEngineWidget::onRemove);
 
-	QObject::connect(ui_.submitButton, &QPushButton::clicked, this, &ManageEngine::showSubmitDialog);
+	QObject::connect(ui_.submitButton, &QPushButton::clicked, this, &ManageEngineWidget::showSubmitDialog);
 
 	firstShow_ = true;
 }
 
-ManageEngine::~ManageEngine()
+ManageEngineWidget::~ManageEngineWidget()
 {
 }
 
-void ManageEngine::showEvent(QShowEvent* e)
+void ManageEngineWidget::showEvent(QShowEvent* e)
 {
 	if (firstShow_) {
 		onRefresh();
@@ -47,7 +47,7 @@ void ManageEngine::showEvent(QShowEvent* e)
 	}
 }
 
-void ManageEngine::paintEvent(QPaintEvent* e)
+void ManageEngineWidget::paintEvent(QPaintEvent* e)
 {
 	QStyleOption opt;
 	opt.init(this);
@@ -55,7 +55,7 @@ void ManageEngine::paintEvent(QPaintEvent* e)
 	style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
-void ManageEngine::onShowMore()
+void ManageEngineWidget::onShowMore()
 {
 	if (!browser_) {
 		return;
@@ -64,7 +64,7 @@ void ManageEngine::onShowMore()
 	showMore(ITEMS_PER_REQUEST);
 }
 
-void ManageEngine::onShowAll()
+void ManageEngineWidget::onShowAll()
 {
 	if (!browser_) {
 		return;
@@ -73,7 +73,7 @@ void ManageEngine::onShowAll()
 	showMore(std::numeric_limits<int>::max());
 }
 
-void ManageEngine::onRefresh()
+void ManageEngineWidget::onRefresh()
 {
 	ui_.engineList->clear();
 	context_->session->browseEngineVersions(browser_);
@@ -82,7 +82,7 @@ void ManageEngine::onRefresh()
 	}
 }
 
-void ManageEngine::onRemove()
+void ManageEngineWidget::onRemove()
 {
 	const int rc = QMessageBox::question(
 		0, "Base",
@@ -99,7 +99,7 @@ void ManageEngine::onRemove()
 	}
 }
 
-void ManageEngine::showSubmitDialog()
+void ManageEngineWidget::showSubmitDialog()
 {
 	SubmitEngineDialog d;
 
@@ -121,7 +121,7 @@ void ManageEngine::showSubmitDialog()
 	}
 }
 
-void ManageEngine::showMore(int count)
+void ManageEngineWidget::showMore(int count)
 {
 	while (count > 0)
 	{

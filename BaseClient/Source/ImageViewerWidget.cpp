@@ -1,9 +1,9 @@
-#include "ImageViewer.h"
+#include "ImageViewerWidget.h"
 
 #include <QGridLayout>
 #include <QResizeEvent>
 
-ImageViewer::ImageViewer(QWidget* parent) : QFrame(parent)
+ImageViewerWidget::ImageViewerWidget(QWidget* parent) : QFrame(parent)
 {
 	label_ = new QLabel;
 	label_->setAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
@@ -15,22 +15,22 @@ ImageViewer::ImageViewer(QWidget* parent) : QFrame(parent)
 	setLayout(layout);
 }
 
-ImageViewer::~ImageViewer()
+ImageViewerWidget::~ImageViewerWidget()
 {
 }
 
-void ImageViewer::setPixmap(const QPixmap& pixmap)
+void ImageViewerWidget::setPixmap(const QPixmap& pixmap)
 {
 	pixmap_ = pixmap;
 	label_->setPixmap(pixmap_.scaled(size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
 }
 
-QPixmap ImageViewer::pixmap() const
+QPixmap ImageViewerWidget::pixmap() const
 {
 	return pixmap_;
 }
 
-void ImageViewer::resizeEvent(QResizeEvent* e)
+void ImageViewerWidget::resizeEvent(QResizeEvent* e)
 {
 	label_->setPixmap(pixmap_.scaled(e->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
 }

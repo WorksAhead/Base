@@ -1,19 +1,19 @@
-#ifndef MANAGEPAGE_HEADER_
-#define MANAGEPAGE_HEADER_
+#ifndef MANAGEPAGEWIDGET_HEADER_
+#define MANAGEPAGEWIDGET_HEADER_
 
 #include "Context.h"
 
 #include <RpcSession.h>
 
-#include "ui_ManagePage.h"
+#include "ui_ManagePageWidget.h"
 
-class ManagePage : public QWidget {
+class ManagePageWidget : public QWidget {
 private:
 	Q_OBJECT
 
 public:
-	ManagePage(ContextPtr context, QWidget* parent = 0);
-	~ManagePage();
+	ManagePageWidget(ContextPtr context, QWidget* parent = 0);
+	~ManagePageWidget();
 
 protected:
 	virtual void showEvent(QShowEvent*);
@@ -29,11 +29,11 @@ private Q_SLOTS:
 	void onSave();
 
 private:
-	Ui::ManagePage ui_;
+	Ui::ManagePageWidget ui_;
 	bool firstShow_;
 
 	ContextPtr context_;
 };
 
-#endif // MANAGEPAGE_HEADER_
+#endif // MANAGEPAGEWIDGET_HEADER_
 

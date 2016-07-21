@@ -1,19 +1,19 @@
-#ifndef MANAGEENGINE_HEADER_
-#define MANAGEENGINE_HEADER_
+#ifndef MANAGEENGINEWIDGET_HEADER_
+#define MANAGEENGINEWIDGET_HEADER_
 
 #include "Context.h"
 
 #include <RpcSession.h>
 
-#include "ui_ManageEngine.h"
+#include "ui_ManageEngineWidget.h"
 
-class ManageEngine : public QWidget {
+class ManageEngineWidget : public QWidget {
 private:
 	Q_OBJECT
 
 public:
-	explicit ManageEngine(ContextPtr, QWidget* parent = 0);
-	~ManageEngine();
+	explicit ManageEngineWidget(ContextPtr, QWidget* parent = 0);
+	~ManageEngineWidget();
 
 protected:
 	virtual void showEvent(QShowEvent*);
@@ -30,7 +30,7 @@ private:
 	void showMore(int);
 
 private:
-	Ui::ManageEngine ui_;
+	Ui::ManageEngineWidget ui_;
 	bool firstShow_;
 
 	ContextPtr context_;
@@ -38,5 +38,5 @@ private:
 	Rpc::EngineVersionBrowserPrx browser_;
 };
 
-#endif // MANAGEENGINE_HEADER_
+#endif // MANAGEENGINEWIDGET_HEADER_
 

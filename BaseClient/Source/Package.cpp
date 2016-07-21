@@ -137,13 +137,13 @@ int Packer::executeStep()
 
 			std::streamsize n = std::min<std::streamsize>(buf_.size(), remain_);
 
-			if (!stream_->read(&buf_[0], n)) {
+			if (!stream_->read(buf_.data(), n)) {
 				errorMessage_ = "Read error";
 				state_ = state_failed;
 				return -1;
 			}
 
-			if (zipWriteInFileInZip(handle_, &buf_[0], n) < 0) {
+			if (zipWriteInFileInZip(handle_, buf_.data(), n) < 0) {
 				errorMessage_ = "Write error";
 				state_ = state_failed;
 				return -1;
@@ -163,6 +163,193 @@ int Packer::executeStep()
 			stream_.reset();
 			++currentIdx_;
 			state_ = state_next_file;
+		}
+	}
+
+	return 1;
+}
+
+Unpacker::Unpacker(const Path& packFile, const Path& outPath) : packFile_(packFile), outPath_(outPath)
+{
+	state_ = state_open_package;
+	count_ = 0;
+	currentIdx_ = 0;
+}
+
+Unpacker::~Unpacker()
+{
+	if (handle_) {
+		if (state_ == state_unpacking) {
+			// todo
+		}
+		unzClose(handle_);
+	}
+}
+
+size_t Unpacker::count() const
+{
+	return count_;
+}
+
+size_t Unpacker::currentIndex() const
+{
+	return currentIdx_;
+}
+
+Unpacker::Path Unpacker::currentFile() const
+{
+	return currentFile_;
+}
+
+std::string Unpacker::errorMessage() const
+{
+	return errorMessage_;
+}
+
+int Unpacker::executeStep()
+{
+	if (state_ == state_finished) {
+		return 0;
+	}
+	else if (state_ == state_failed) {
+		return -1;
+	}
+
+	if (state_ == state_open_package)
+	{
+		handle_ = unzOpen(packFile_.string().c_str());
+		if (!handle_) {
+			errorMessage_ = "Failed to open package file \"" + packFile_.string() + "\"";
+			state_ = state_failed;
+			return -1;
+		}
+
+		if (unzGoToFirstFile(handle_) != UNZ_OK) {
+			errorMessage_ = "Bad package file \"" + packFile_.string() + "\"";
+			state_ = state_failed;
+			return -1;
+		}
+
+		for (;;)
+		{
+			++count_;
+			const int ret = unzGoToNextFile(handle_);
+			if (ret == UNZ_OK) {
+				continue;
+			}
+			else if (ret == UNZ_END_OF_LIST_OF_FILE) {
+				break;
+			}
+			else {
+				errorMessage_ = "Bad package file \"" + packFile_.string() + "\"";
+				state_ = state_failed;
+				return -1;
+			}
+		}
+
+		if (unzGoToFirstFile(handle_) != UNZ_OK) {
+			errorMessage_ = "Bad package file \"" + packFile_.string() + "\"";
+			state_ = state_failed;
+			return -1;
+		}
+
+		state_ = state_next_file;
+	}
+	else if (state_ == state_next_file)
+	{
+		unz_file_info fileInfo;
+
+		if (unzGetCurrentFileInfo(handle_, &fileInfo, 0, 0, 0, 0, 0, 0) != UNZ_OK) {
+			errorMessage_ = "Bad package file \"" + packFile_.string() + "\"";
+			state_ = state_failed;
+			return -1;
+		}
+
+		if (buf_.size() < fileInfo.size_filename) {
+			buf_.resize(fileInfo.size_filename);
+		}
+
+		if (unzGetCurrentFileInfo(handle_, 0, buf_.data(), fileInfo.size_filename, 0, 0, 0, 0) != UNZ_OK) {
+			errorMessage_ = "Bad package file \"" + packFile_.string() + "\"";
+			state_ = state_failed;
+			return -1;
+		}
+
+		Path path(buf_.data(), buf_.data() + fileInfo.size_filename);
+		Path fullPath = outPath_ / path;
+
+		if (!fs::exists(fullPath.parent_path())) {
+			if (!fs::create_directories(fullPath.parent_path())) {
+				errorMessage_ = "Failed to create directory \"" + fullPath.parent_path().string() + "\"";
+				state_ = state_failed;
+				return -1;
+			}
+		}
+
+		stream_.reset(new std::fstream(fullPath.string().c_str(), std::ios::out|std::ios::binary));
+		if (!stream_->is_open()) {
+			errorMessage_ = "Failed to open \"" + fullPath.string() + "\"";
+			state_ = state_failed;
+			return -1;
+		}
+
+		if (unzOpenCurrentFile(handle_) != UNZ_OK) {
+			errorMessage_ = "Bad package file \"" + packFile_.string() + "\"";
+			state_ = state_failed;
+			return -1;
+		}
+
+		currentFile_ = path;
+		state_ = state_unpacking;
+	}
+	else if (state_ == state_unpacking)
+	{
+		if (buf_.size() < 1024*1024) {
+			buf_.resize(1024*1024);
+		}
+
+		const int n = unzReadCurrentFile(handle_, buf_.data(), buf_.size());
+
+		if (n > 0)
+		{
+			if (!stream_->write(buf_.data(), n)) {
+				errorMessage_ = "Write error";
+				state_ = state_failed;
+				return -1;
+			}
+		}
+		else if (n == 0)
+		{
+			stream_.reset();
+
+			if (unzCloseCurrentFile(handle_) != UNZ_OK) {
+				errorMessage_ = "Bad package file \"" + packFile_.string() + "\"";
+				state_ = state_failed;
+				return -1;
+			}
+
+			const int ret = unzGoToNextFile(handle_);
+
+			if (ret == UNZ_OK) {
+				++currentIdx_;
+				state_ = state_next_file;
+			}
+			if (ret == UNZ_END_OF_LIST_OF_FILE) {
+				unzClose(handle_);
+				handle_ = 0;
+				state_ = state_finished;
+				return 0;
+			}
+			else if (ret != UNZ_OK) {
+				errorMessage_ = "Bad package file \"" + packFile_.string() + "\"";
+				state_ = state_failed;
+				return -1;
+			}
+		}
+		else {
+			errorMessage_ = "Bad package file \"" + packFile_.string() + "\"";
+			state_ = state_failed;
+			return -1;
 		}
 	}
 

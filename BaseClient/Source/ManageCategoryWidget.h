@@ -1,19 +1,19 @@
-#ifndef MANAGECATEGORY_HEADER_
-#define MANAGECATEGORY_HEADER_
+#ifndef MANAGECATEGORYWIDGET_HEADER_
+#define MANAGECATEGORYWIDGET_HEADER_
 
 #include "Context.h"
 
 #include <RpcSession.h>
 
-#include "ui_ManageCategory.h"
+#include "ui_ManageCategoryWidget.h"
 
-class ManageCategory : public QWidget {
+class ManageCategoryWidget : public QWidget {
 private:
 	Q_OBJECT
 
 public:
-	ManageCategory(ContextPtr context, QWidget* parent = 0);
-	~ManageCategory();
+	ManageCategoryWidget(ContextPtr context, QWidget* parent = 0);
+	~ManageCategoryWidget();
 
 protected:
 	virtual void showEvent(QShowEvent*);
@@ -29,11 +29,11 @@ private Q_SLOTS:
 	void onSave();
 
 private:
-	Ui::ManageCategory ui_;
+	Ui::ManageCategoryWidget ui_;
 	bool firstShow_;
 
 	ContextPtr context_;
 };
 
-#endif // MANAGECATEGORY_HEADER_
+#endif // MANAGECATEGORYWIDGET_HEADER_
 

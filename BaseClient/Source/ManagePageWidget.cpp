@@ -1,29 +1,29 @@
-#include "ManagePage.h"
+#include "ManagePageWidget.h"
 #include "ErrorMessage.h"
 
 #include <QInputDialog>
 #include <QMessageBox>
 #include <QPainter>
 
-ManagePage::ManagePage(ContextPtr context, QWidget* parent) : QWidget(parent), context_(context)
+ManagePageWidget::ManagePageWidget(ContextPtr context, QWidget* parent) : QWidget(parent), context_(context)
 {
 	ui_.setupUi(this);
 
 	firstShow_ = true;
 
-	QObject::connect(ui_.refreshButton, &QPushButton::clicked, this, &ManagePage::onRefresh);
-	QObject::connect(ui_.moveUpButton, &QPushButton::clicked, this, &ManagePage::onMoveUp);
-	QObject::connect(ui_.moveDownButton, &QPushButton::clicked, this, &ManagePage::onMoveDown);
-	QObject::connect(ui_.addButton, &QPushButton::clicked, this, &ManagePage::onAdd);
-	QObject::connect(ui_.removeButton, &QPushButton::clicked, this, &ManagePage::onRemove);
-	QObject::connect(ui_.saveButton, &QPushButton::clicked, this, &ManagePage::onSave);
+	QObject::connect(ui_.refreshButton, &QPushButton::clicked, this, &ManagePageWidget::onRefresh);
+	QObject::connect(ui_.moveUpButton, &QPushButton::clicked, this, &ManagePageWidget::onMoveUp);
+	QObject::connect(ui_.moveDownButton, &QPushButton::clicked, this, &ManagePageWidget::onMoveDown);
+	QObject::connect(ui_.addButton, &QPushButton::clicked, this, &ManagePageWidget::onAdd);
+	QObject::connect(ui_.removeButton, &QPushButton::clicked, this, &ManagePageWidget::onRemove);
+	QObject::connect(ui_.saveButton, &QPushButton::clicked, this, &ManagePageWidget::onSave);
 }
 
-ManagePage::~ManagePage()
+ManagePageWidget::~ManagePageWidget()
 {
 }
 
-void ManagePage::showEvent(QShowEvent* e)
+void ManagePageWidget::showEvent(QShowEvent* e)
 {
 	if (firstShow_) {
 		onRefresh();
@@ -31,7 +31,7 @@ void ManagePage::showEvent(QShowEvent* e)
 	}
 }
 
-void ManagePage::paintEvent(QPaintEvent* e)
+void ManagePageWidget::paintEvent(QPaintEvent* e)
 {
 	QStyleOption opt;
 	opt.init(this);
@@ -39,7 +39,7 @@ void ManagePage::paintEvent(QPaintEvent* e)
 	style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
-void ManagePage::onRefresh()
+void ManagePageWidget::onRefresh()
 {
 	Rpc::StringSeq pages;
 	Rpc::ErrorCode ec = context_->session->getPages(pages);
@@ -55,7 +55,7 @@ void ManagePage::onRefresh()
 	}
 }
 
-void ManagePage::onMoveUp()
+void ManagePageWidget::onMoveUp()
 {
 	int row = ui_.pageList->currentRow();
 	if (row > 0) {
@@ -65,7 +65,7 @@ void ManagePage::onMoveUp()
 	}
 }
 
-void ManagePage::onMoveDown()
+void ManagePageWidget::onMoveDown()
 {
 	int row = ui_.pageList->currentRow();
 	if (row < ui_.pageList->count() - 1) {
@@ -75,7 +75,7 @@ void ManagePage::onMoveDown()
 	}
 }
 
-void ManagePage::onAdd()
+void ManagePageWidget::onAdd()
 {
 	bool ok;
 	QString text = QInputDialog::getText(this, "Add Page", "Page:", QLineEdit::Normal, QString(), &ok);
@@ -93,13 +93,13 @@ void ManagePage::onAdd()
 	ui_.pageList->addItem(text);
 }
 
-void ManagePage::onRemove()
+void ManagePageWidget::onRemove()
 {
 	delete ui_.pageList->currentItem();
 }
 
 
-void ManagePage::onSave()
+void ManagePageWidget::onSave()
 {
 	Rpc::StringSeq pages;
 

@@ -59,6 +59,8 @@ const ::std::string __Rpc__Downloader__read_name = "read";
 
 const ::std::string __Rpc__Downloader__finish_name = "finish";
 
+const ::std::string __Rpc__Downloader__cancel_name = "cancel";
+
 const ::std::string __Rpc__ContentSubmitter__setTitle_name = "setTitle";
 
 const ::std::string __Rpc__ContentSubmitter__setPage_name = "setPage";
@@ -998,6 +1000,37 @@ void
 IceProxy::Rpc::Downloader::end_finish(const ::Ice::AsyncResultPtr& __result)
 {
     __end(__result, __Rpc__Downloader__finish_name);
+}
+
+void
+IceProxy::Rpc::Downloader::cancel(const ::Ice::Context* __ctx)
+{
+    ::IceInternal::Outgoing __og(this, __Rpc__Downloader__cancel_name, ::Ice::Normal, __ctx);
+    __og.writeEmptyParams();
+    __invoke(__og);
+}
+
+::Ice::AsyncResultPtr
+IceProxy::Rpc::Downloader::begin_cancel(const ::Ice::Context* __ctx, const ::IceInternal::CallbackBasePtr& __del, const ::Ice::LocalObjectPtr& __cookie)
+{
+    ::IceInternal::OutgoingAsyncPtr __result = new ::IceInternal::OutgoingAsync(this, __Rpc__Downloader__cancel_name, __del, __cookie);
+    try
+    {
+        __result->prepare(__Rpc__Downloader__cancel_name, ::Ice::Normal, __ctx);
+        __result->writeEmptyParams();
+        __result->invoke();
+    }
+    catch(const ::Ice::Exception& __ex)
+    {
+        __result->abort(__ex);
+    }
+    return __result;
+}
+
+void
+IceProxy::Rpc::Downloader::end_cancel(const ::Ice::AsyncResultPtr& __result)
+{
+    __end(__result, __Rpc__Downloader__cancel_name);
 }
 
 const ::std::string&
@@ -4387,10 +4420,21 @@ Rpc::Downloader::___finish(::IceInternal::Incoming& __inS, const ::Ice::Current&
     return ::Ice::DispatchOK;
 }
 
+::Ice::DispatchStatus
+Rpc::Downloader::___cancel(::IceInternal::Incoming& __inS, const ::Ice::Current& __current)
+{
+    __checkMode(::Ice::Normal, __current.mode);
+    __inS.readEmptyParams();
+    cancel(__current);
+    __inS.__writeEmptyParams();
+    return ::Ice::DispatchOK;
+}
+
 namespace
 {
 const ::std::string __Rpc__Downloader_all[] =
 {
+    "cancel",
     "destroy",
     "finish",
     "getSize",
@@ -4406,7 +4450,7 @@ const ::std::string __Rpc__Downloader_all[] =
 ::Ice::DispatchStatus
 Rpc::Downloader::__dispatch(::IceInternal::Incoming& in, const ::Ice::Current& current)
 {
-    ::std::pair< const ::std::string*, const ::std::string*> r = ::std::equal_range(__Rpc__Downloader_all, __Rpc__Downloader_all + 8, current.operation);
+    ::std::pair< const ::std::string*, const ::std::string*> r = ::std::equal_range(__Rpc__Downloader_all, __Rpc__Downloader_all + 9, current.operation);
     if(r.first == r.second)
     {
         throw ::Ice::OperationNotExistException(__FILE__, __LINE__, current.id, current.facet, current.operation);
@@ -4416,33 +4460,37 @@ Rpc::Downloader::__dispatch(::IceInternal::Incoming& in, const ::Ice::Current& c
     {
         case 0:
         {
-            return ___destroy(in, current);
+            return ___cancel(in, current);
         }
         case 1:
         {
-            return ___finish(in, current);
+            return ___destroy(in, current);
         }
         case 2:
         {
-            return ___getSize(in, current);
+            return ___finish(in, current);
         }
         case 3:
         {
-            return ___ice_id(in, current);
+            return ___getSize(in, current);
         }
         case 4:
         {
-            return ___ice_ids(in, current);
+            return ___ice_id(in, current);
         }
         case 5:
         {
-            return ___ice_isA(in, current);
+            return ___ice_ids(in, current);
         }
         case 6:
         {
-            return ___ice_ping(in, current);
+            return ___ice_isA(in, current);
         }
         case 7:
+        {
+            return ___ice_ping(in, current);
+        }
+        case 8:
         {
             return ___read(in, current);
         }

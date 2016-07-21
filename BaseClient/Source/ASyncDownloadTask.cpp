@@ -105,6 +105,17 @@ void ASyncDownloadTask::run()
 	state_ = ASyncTask::state_running;
 	sync_.unlock();
 
+	const fs::path& parentPath = fs::path(filename_).parent_path();
+
+	if (!fs::exists(parentPath)) {
+		if (!fs::create_directories(parentPath)) {
+			boost::mutex::scoped_lock lock(sync_);
+			infoBody_ = "Failed to create directory \"" + parentPath.string() + "\"";
+			state_ = ASyncTask::state_failed;
+			return;
+		}
+	}
+
 	std::fstream os(filename_.c_str(), std::ios::out|std::ios::binary);
 	if (!os.is_open()) {
 		boost::mutex::scoped_lock lock(sync_);

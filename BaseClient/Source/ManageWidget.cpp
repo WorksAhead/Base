@@ -1,19 +1,19 @@
-#include "Manage.h"
+#include "ManageWidget.h"
 #include "VTabWidget.h"
-#include "ManageEngine.h"
-#include "ManagePage.h"
-#include "ManageCategory.h"
+#include "ManageEngineWidget.h"
+#include "ManagePageWidget.h"
+#include "ManageCategoryWidget.h"
 
 #include <QBoxLayout>
 #include <QTextEdit>
 
-Manage::Manage(ContextPtr context, QWidget* parent) : QWidget(parent), context_(context)
+ManageWidget::ManageWidget(ContextPtr context, QWidget* parent) : QWidget(parent), context_(context)
 {
 	VTabWidget* p = new VTabWidget;
 
-	manageEngine_ = new ManageEngine(context_);
-	managePage_ = new ManagePage(context_);
-	manageCategory_ = new ManageCategory(context_);
+	manageEngine_ = new ManageEngineWidget(context_);
+	managePage_ = new ManagePageWidget(context_);
+	manageCategory_ = new ManageCategoryWidget(context_);
 
 	p->addTab("Engines", manageEngine_);
 	p->addTab("Users", new QTextEdit);
@@ -29,7 +29,7 @@ Manage::Manage(ContextPtr context, QWidget* parent) : QWidget(parent), context_(
 	setLayout(layout);
 }
 
-Manage::~Manage()
+ManageWidget::~ManageWidget()
 {
 }
 

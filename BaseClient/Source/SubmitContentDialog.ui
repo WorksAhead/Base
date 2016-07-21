@@ -97,7 +97,7 @@
         </layout>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="1,1">
+        <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="1,3">
          <item>
           <widget class="QLineEdit" name="engineNameEdit">
            <property name="placeholderText">
@@ -108,7 +108,7 @@
          <item>
           <widget class="QLineEdit" name="engineVersionEdit">
            <property name="placeholderText">
-            <string>Engine Version(Seperate versions with '|')</string>
+            <string>Engine Version(Seperate versions with '|', priority order)</string>
            </property>
           </widget>
          </item>

@@ -655,6 +655,9 @@ typedef ::IceUtil::Handle< Callback_Downloader_read_Base> Callback_Downloader_re
 class Callback_Downloader_finish_Base : virtual public ::IceInternal::CallbackBase { };
 typedef ::IceUtil::Handle< Callback_Downloader_finish_Base> Callback_Downloader_finishPtr;
 
+class Callback_Downloader_cancel_Base : virtual public ::IceInternal::CallbackBase { };
+typedef ::IceUtil::Handle< Callback_Downloader_cancel_Base> Callback_Downloader_cancelPtr;
+
 class Callback_ContentSubmitter_setTitle_Base : virtual public ::IceInternal::CallbackBase { };
 typedef ::IceUtil::Handle< Callback_ContentSubmitter_setTitle_Base> Callback_ContentSubmitter_setTitlePtr;
 
@@ -1680,6 +1683,76 @@ private:
 
     void finish(const ::Ice::Context*);
     ::Ice::AsyncResultPtr begin_finish(const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
+    
+public:
+
+    void cancel()
+    {
+        cancel(0);
+    }
+    void cancel(const ::Ice::Context& __ctx)
+    {
+        cancel(&__ctx);
+    }
+#ifdef ICE_CPP11
+    ::Ice::AsyncResultPtr
+    begin_cancel(const ::IceInternal::Function<void ()>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return begin_cancel(0, new ::IceInternal::Cpp11FnOnewayCallbackNC(__response, __exception, __sent));
+    }
+    ::Ice::AsyncResultPtr
+    begin_cancel(const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_cancel(0, ::Ice::newCallback(__completed, __sent), 0);
+    }
+    ::Ice::AsyncResultPtr
+    begin_cancel(const ::Ice::Context& __ctx, const ::IceInternal::Function<void ()>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return begin_cancel(&__ctx, new ::IceInternal::Cpp11FnOnewayCallbackNC(__response, __exception, __sent), 0);
+    }
+    ::Ice::AsyncResultPtr
+    begin_cancel(const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_cancel(&__ctx, ::Ice::newCallback(__completed, __sent));
+    }
+#endif
+
+    ::Ice::AsyncResultPtr begin_cancel()
+    {
+        return begin_cancel(0, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_cancel(const ::Ice::Context& __ctx)
+    {
+        return begin_cancel(&__ctx, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_cancel(const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_cancel(0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_cancel(const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_cancel(&__ctx, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_cancel(const ::Rpc::Callback_Downloader_cancelPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_cancel(0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_cancel(const ::Ice::Context& __ctx, const ::Rpc::Callback_Downloader_cancelPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_cancel(&__ctx, __del, __cookie);
+    }
+
+    void end_cancel(const ::Ice::AsyncResultPtr&);
+    
+private:
+
+    void cancel(const ::Ice::Context*);
+    ::Ice::AsyncResultPtr begin_cancel(const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
     
 public:
     
@@ -4048,6 +4121,9 @@ public:
     virtual void finish(const ::Ice::Current& = ::Ice::Current()) = 0;
     ::Ice::DispatchStatus ___finish(::IceInternal::Incoming&, const ::Ice::Current&);
 
+    virtual void cancel(const ::Ice::Current& = ::Ice::Current()) = 0;
+    ::Ice::DispatchStatus ___cancel(::IceInternal::Incoming&, const ::Ice::Current&);
+
     virtual ::Ice::DispatchStatus __dispatch(::IceInternal::Incoming&, const ::Ice::Current&);
 
 protected:
@@ -5003,6 +5079,88 @@ template<class T, typename CT> Callback_Downloader_finishPtr
 newCallback_Downloader_finish(T* instance, void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
 {
     return new Callback_Downloader_finish<T, CT>(instance, 0, excb, sentcb);
+}
+
+template<class T>
+class CallbackNC_Downloader_cancel : public Callback_Downloader_cancel_Base, public ::IceInternal::OnewayCallbackNC<T>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception&);
+    typedef void (T::*Sent)(bool);
+    typedef void (T::*Response)();
+
+    CallbackNC_Downloader_cancel(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::OnewayCallbackNC<T>(obj, cb, excb, sentcb)
+    {
+    }
+};
+
+template<class T> Callback_Downloader_cancelPtr
+newCallback_Downloader_cancel(const IceUtil::Handle<T>& instance, void (T::*cb)(), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_Downloader_cancel<T>(instance, cb, excb, sentcb);
+}
+
+template<class T> Callback_Downloader_cancelPtr
+newCallback_Downloader_cancel(const IceUtil::Handle<T>& instance, void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_Downloader_cancel<T>(instance, 0, excb, sentcb);
+}
+
+template<class T> Callback_Downloader_cancelPtr
+newCallback_Downloader_cancel(T* instance, void (T::*cb)(), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_Downloader_cancel<T>(instance, cb, excb, sentcb);
+}
+
+template<class T> Callback_Downloader_cancelPtr
+newCallback_Downloader_cancel(T* instance, void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_Downloader_cancel<T>(instance, 0, excb, sentcb);
+}
+
+template<class T, typename CT>
+class Callback_Downloader_cancel : public Callback_Downloader_cancel_Base, public ::IceInternal::OnewayCallback<T, CT>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception& , const CT&);
+    typedef void (T::*Sent)(bool , const CT&);
+    typedef void (T::*Response)(const CT&);
+
+    Callback_Downloader_cancel(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::OnewayCallback<T, CT>(obj, cb, excb, sentcb)
+    {
+    }
+};
+
+template<class T, typename CT> Callback_Downloader_cancelPtr
+newCallback_Downloader_cancel(const IceUtil::Handle<T>& instance, void (T::*cb)(const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_Downloader_cancel<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT> Callback_Downloader_cancelPtr
+newCallback_Downloader_cancel(const IceUtil::Handle<T>& instance, void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_Downloader_cancel<T, CT>(instance, 0, excb, sentcb);
+}
+
+template<class T, typename CT> Callback_Downloader_cancelPtr
+newCallback_Downloader_cancel(T* instance, void (T::*cb)(const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_Downloader_cancel<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT> Callback_Downloader_cancelPtr
+newCallback_Downloader_cancel(T* instance, void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_Downloader_cancel<T, CT>(instance, 0, excb, sentcb);
 }
 
 template<class T>

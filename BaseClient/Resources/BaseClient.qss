@@ -238,21 +238,33 @@ QFrame#coverViewer, QFrame#screenshotWidget {
     border: 1px solid rgb(80, 80, 80);
 }
 
-Page {
+QWidget#ContentWidget {
 	background: rgb(30, 30, 30);
 }
 
-ManageEngine {
+QWidget#LowerPaneWidget {
+	background: rgb(30, 30, 30);
+}
+
+QWidget#FlowWidget {
+	background: rgb(30, 30, 30);
+}
+
+PageWidget {
+	background: rgb(30, 30, 30);
+}
+
+ManageEngineWidget {
 	background: rgb(30, 30, 30);
 	/*border: 2px solid rgb(20, 20, 20);*/
 }
 
-ManagePage {
+ManagePageWidget {
 	background: rgb(30, 30, 30);
 	/*border: 2px solid rgb(20, 20, 20);*/
 }
 
-ManageCategory {
+ManageCategoryWidget {
 	background: rgb(30, 30, 30);
 	/*border: 2px solid rgb(20, 20, 20);*/
 }
