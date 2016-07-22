@@ -113,11 +113,11 @@ void ManageEngineWidget::showSubmitDialog()
 			return;
 		}
 
-		std::unique_ptr<ASyncSubmitEngineTask> task(new ASyncSubmitEngineTask(context_, uploader));
+		boost::shared_ptr<ASyncSubmitEngineTask> task(new ASyncSubmitEngineTask(context_, uploader));
 		task->setInfoHead(QString("Submit %1 %2").arg(d.engine(), d.version()).toStdString());
 		task->setPath(d.path().toStdString());
 
-		context_->addTask(task.release());
+		context_->addTask(task);
 	}
 }
 

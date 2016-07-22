@@ -11,6 +11,7 @@
 #include <QMessageBox>
 
 #include <boost/filesystem.hpp>
+#include <boost/scope_exit.hpp>
 
 namespace fs = boost::filesystem;
 
@@ -36,14 +37,21 @@ ContentWidget::~ContentWidget()
 {
 }
 
-void ContentWidget::setId(const QString& id)
+void ContentWidget::setContentId(const QString& id)
 {
-	id_ = id;
+	const int state = context_->getContentState(id.toStdString());
+	//if (state == ContentState::not_downloaded) {
+	//	ui_.downloadButton->setEnabled(true);
+	//}
+	//else {
+	//	ui_.downloadButton->setEnabled(false);
+	//}
+	contentId_ = id;
 }
 
-const QString& ContentWidget::id() const
+const QString& ContentWidget::contentId() const
 {
-	return id_;
+	return contentId_;
 }
 
 void ContentWidget::setTitle(const QString& text)
@@ -165,32 +173,10 @@ void ContentWidget::paintEvent(QPaintEvent* e)
 
 void ContentWidget::onDownload()
 {
-	QString engineName = engineVersions_[0].first;
-	QString engineVersion = engineVersions_[0].second;
-
-	bool installEngine = false;
-
-	const int engineState = context_->getEngineState(engineName.toStdString(), engineVersion.toStdString());
-
-	if (engineState == EngineState::not_installed)
-	{
-		ContentDownloadDialog d;
-		d.setEngineVersionAboutToBeDownloaded(engineName, engineVersion);
-		int ret = d.exec();
-		if (ret != 1) {
-			return;
-		}
-
-		installEngine = d.isInstallEngineChecked();
-	}
-
-	if (installEngine)
-	{
-	}
-
 	int state = ContentState::not_downloaded;
 
-	if (!context_->changeContentState(id_.toStdString(), state, ContentState::downloading)) {
+	if (!context_->changeContentState(contentId_.toStdString(), state, ContentState::downloading))
+	{
 		if (state == ContentState::downloading) {
 			QMessageBox::information(this, "Base", "This content is now downloading");
 		}
@@ -203,70 +189,63 @@ void ContentWidget::onDownload()
 		return;
 	}
 
+	QString engineName = engineVersions_[0].first;
+	QString engineVersion = engineVersions_[0].second;
+
+	bool installEngine = false;
+
+	int engineState = context_->getEngineState(engineName.toStdString(), engineVersion.toStdString());
+
+	if (engineState == EngineState::not_installed)
+	{
+		ContentDownloadDialog d;
+		d.setEngineVersionAboutToBeDownloaded(engineName, engineVersion);
+		int ret = d.exec();
+		if (ret != 1) {
+			state = ContentState::downloading;
+			context_->changeContentState(contentId_.toStdString(), state, ContentState::not_downloaded);
+			return;
+		}
+
+		installEngine = d.isInstallEngineChecked();
+	}
+
 	Rpc::DownloaderPrx downloader;
-	Rpc::ErrorCode ec = context_->session->downloadContent(id_.toStdString(), downloader);
+	Rpc::ErrorCode ec = context_->session->downloadContent(contentId_.toStdString(), downloader);
 	if (ec != Rpc::ec_success) {
 		state = ContentState::downloading;
-		context_->changeContentState(id_.toStdString(), state, ContentState::not_downloaded);
+		context_->changeContentState(contentId_.toStdString(), state, ContentState::not_downloaded);
 		QMessageBox::information(this, "Base", "Unable to download this content");
 		return;
 	}
 
-	fs::path fullPath(context_->contentPath(id_.toStdString()));
+	fs::path fullPath(context_->contentPath(contentId_.toStdString()));
 	fullPath /= "content";
 
-	std::unique_ptr<ASyncDownloadContentTask> task(new ASyncDownloadContentTask(context_, downloader));
+	boost::shared_ptr<ASyncDownloadContentTask> task(new ASyncDownloadContentTask(context_, downloader));
 	task->setInfoHead(QString("Download %1").arg(ui_.titleLabel->text()).toStdString());
-	task->setContentId(id_.toStdString());
+	task->setContentId(contentId_.toStdString());
 	task->setFilename(fullPath.string());
-	context_->addTask(task.release());
+	context_->addTask(task);
+
+	if (installEngine) {
+		context_->installEngine(engineName.toStdString(), engineVersion.toStdString());
+	}
 }
 
 void ContentWidget::onInstallEngine()
 {
 	const int index = ui_.engineVersionsBox->currentIndex();
-	QString engineName = engineVersions_[index].first;
-	QString engineVersion = engineVersions_[index].second;
+	QString name = engineVersions_[index].first;
+	QString version = engineVersions_[index].second;
 
-	int state = EngineState::not_installed;
-
-	if (!context_->changeEngineState(engineName.toStdString(), engineVersion.toStdString(), state, EngineState::installing)) {
-		if (state == EngineState::installing) {
-			QMessageBox::information(this, "Base",
-				QString("%1 %2 is now installing").arg(engineName).arg(engineVersion));
-		}
-		else if (state == EngineState::installed) {
-			QMessageBox::information(this, "Base",
-				QString("%1 %2 is already installed").arg(engineName).arg(engineVersion));
-		}
-		else if (state == EngineState::removing) {
-			QMessageBox::information(this, "Base",
-				QString("%1 %2 is now removing").arg(engineName).arg(engineVersion));
-		}
-		return;
-	}
-
-	Rpc::DownloaderPrx downloader;
-	Rpc::ErrorCode ec = context_->session->downloadEngineVersion(engineName.toStdString(), engineVersion.toStdString(), downloader);
-	if (ec != Rpc::ec_success) {
-		state = EngineState::installing;
-		context_->changeEngineState(engineName.toStdString(), engineVersion.toStdString(), state, EngineState::not_installed);
-		QMessageBox::information(this, "Base",
-			QString("Unable to download %1 %2").arg(engineName).arg(engineVersion));
-		return;
-	}
-
-	std::unique_ptr<ASyncInstallEngineTask> task(new ASyncInstallEngineTask(context_, downloader));
-	task->setInfoHead(QString("Install %1 %2").arg(engineName).arg(engineVersion).toStdString());
-	task->setEngineVersion(engineName.toStdString(), engineVersion.toStdString());
-	task->setPath(context_->enginePath(engineName.toStdString(), engineVersion.toStdString()));
-	context_->addTask(task.release());
+	context_->installEngine(name.toStdString(), version.toStdString());
 }
 
 void ContentWidget::onCopyId()
 {
 	QClipboard* clipboard = QApplication::clipboard();
-	clipboard->setText(id_);
+	clipboard->setText(contentId_);
 }
 
 void ContentWidget::onCopySummary()

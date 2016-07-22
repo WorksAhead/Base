@@ -230,7 +230,7 @@ void SubmitContentDialog::onSubmit()
 	ec = submitter->setDescription(ui_.descriptionEdit->toPlainText().toStdString());
 	CHECK_ERROR_CODE(ec);
 
-	std::unique_ptr<ASyncSubmitContentTask> task(new ASyncSubmitContentTask(context_, submitter));
+	boost::shared_ptr<ASyncSubmitContentTask> task(new ASyncSubmitContentTask(context_, submitter));
 
 	task->setInfoHead(QString("Submit %1").arg(ui_.titleEdit->text()).toStdString());
 	task->setContentPath(ui_.pathEdit->text().toStdString());
@@ -256,7 +256,7 @@ void SubmitContentDialog::onSubmit()
 		task->addImageFile(imageFilename);
 	}
 
-	context_->addTask(task.release());
+	context_->addTask(task);
 
 	done(1);
 

@@ -16,9 +16,9 @@ public:
 	explicit ASyncTaskListWidget(QWidget* parent = 0);
 	~ASyncTaskListWidget();
 
-	void addTask(ASyncTask*);
+	void addTask(ASyncTaskPtr);
 
-	ASyncTask* selectedTask() const;
+	ASyncTaskPtr selectedTask() const;
 
 public Q_SLOTS:
 	void clear();
@@ -38,7 +38,7 @@ private:
 	QWidget* listWidget_;
 	QBoxLayout* listLayout_;
 	QScrollArea* scrollArea_;
-	ASyncTask* selectedTask_;
+	ASyncTaskPtr selectedTask_;
 };
 
 #endif // ASYNCTASKLISTWIDGET_HEADER_

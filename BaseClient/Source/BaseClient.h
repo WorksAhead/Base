@@ -32,17 +32,26 @@ public:
 	~BaseClient();
 
 private:
-	void addTask(ASyncTask*);
+	void addTask(ASyncTaskPtr);
+	
 	std::string uniquePath();
 	std::string cachePath();
 	std::string libraryPath();
+
 	std::string enginePath(const std::string& name, const std::string& version);
 	std::string contentPath(const std::string& id);
+
+	void installEngine(const std::string& name, const std::string& version);
 	int getEngineState(const std::string& name, const std::string& version);
 	bool changeEngineState(const std::string& name, const std::string& version, int& oldState, int newState);
+	
 	int getContentState(const std::string& id);
 	bool changeContentState(const std::string id, int& oldState, int newState);
+	
 	void promptRpcError(Rpc::ErrorCode);
+
+private Q_SLOTS:
+	void onShowTaskManager();
 
 private:
 	Ui::DecoratorWidget decoratorWidgetUi_;
@@ -57,6 +66,7 @@ private:
 	ManageWidget* manage_;
 
 	ContextPtr context_;
+
 	IceUtil::TimerPtr timer_;
 
 	boost::uuids::random_generator uniquePathGen_;

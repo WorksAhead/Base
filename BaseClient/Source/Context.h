@@ -1,14 +1,13 @@
 #ifndef CONTEXT_HEADER_
 #define CONTEXT_HEADER_
 
+#include "ASyncTask.h"
+
 #include <RpcSession.h>
 
 #include <functional>
 #include <memory>
 #include <string>
-
-// forward declaration
-class ASyncTask;
 
 namespace EngineState {
 	enum State {
@@ -32,7 +31,9 @@ struct Context
 {
 	Rpc::SessionPrx session;
 
-	std::function<void(ASyncTask*)> addTask;
+	std::function<void(ASyncTaskPtr)> addTask;
+
+	std::function<void()> showTaskManager;
 
 	std::function<std::string()> uniquePath;
 	std::function<std::string()> cachePath;
@@ -41,6 +42,7 @@ struct Context
 	std::function<std::string(const std::string&, const std::string&)> enginePath;
 	std::function<std::string(const std::string&)> contentPath;
 
+	std::function<void(const std::string&, const std::string&)> installEngine;
 	std::function<int(const std::string&, const std::string&)> getEngineState;
 	std::function<bool(const std::string&, const std::string&, int&, int)> changeEngineState;
 

@@ -12,10 +12,10 @@ private:
 	Q_OBJECT
 
 public:
-	explicit ASyncTaskWidget(ASyncTask*, QWidget* parent = 0);
+	explicit ASyncTaskWidget(ASyncTaskPtr, QWidget* parent = 0);
 	~ASyncTaskWidget();
 
-	ASyncTask* task() const;
+	ASyncTaskPtr task() const;
 
 public Q_SLOTS:
 	void refresh();
@@ -25,7 +25,7 @@ protected:
 
 private:
 	Ui::AsyncTaskWidget ui_;
-	QSharedPointer<ASyncTask> task_;
+	ASyncTaskPtr task_;
 };
 
 #endif // ASYNCTASKWIDGET_HEADER_

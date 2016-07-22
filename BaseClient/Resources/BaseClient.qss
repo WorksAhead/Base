@@ -99,6 +99,9 @@ QPushButton:!flat:pressed {
 	background: rgb(246, 96, 0);
 	border: 1px solid rgb(246, 96, 0);
 }
+QPushButton:!flat:disabled {
+	color: rgb(127, 127, 127);
+}
 
 QComboBox {
 	color: rgb(250, 250, 250);
@@ -270,7 +273,7 @@ ManageCategoryWidget {
 }
 
 ASyncTaskWidget, ASyncTaskWidget[selected="false"] {	
-	background: rgb(40, 40, 40);
+	background: rgb(30, 30, 30);
 }
 
 ASyncTaskWidget[selected="true"] {

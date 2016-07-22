@@ -37,24 +37,21 @@ ASyncTaskListWidget::ASyncTaskListWidget(QWidget* parent) : QWidget(parent)
 	layout->addWidget(scrollArea_);
 
 	setLayout(layout);
-
-	selectedTask_ = 0;
 }
 
 ASyncTaskListWidget::~ASyncTaskListWidget()
 {
 }
 
-void ASyncTaskListWidget::addTask(ASyncTask* task)
+void ASyncTaskListWidget::addTask(ASyncTaskPtr task)
 {
-	ASyncTaskWidget* taskWidget = new ASyncTaskWidget(task);
-	listLayout_->insertWidget(0, taskWidget);
-	QObject::connect(timer_, &QTimer::timeout, taskWidget, &ASyncTaskWidget::refresh);
-	task->start();
-	taskWidget->refresh();
+	ASyncTaskWidget* w = new ASyncTaskWidget(task);
+	listLayout_->insertWidget(0, w);
+	QObject::connect(timer_, &QTimer::timeout, w, &ASyncTaskWidget::refresh);
+	w->refresh();
 }
 
-ASyncTask* ASyncTaskListWidget::selectedTask() const
+ASyncTaskPtr ASyncTaskListWidget::selectedTask() const
 {
 	return selectedTask_;
 }
@@ -76,7 +73,7 @@ void ASyncTaskListWidget::clear()
 		ASyncTaskWidget* taskWidget = widgetsToBeRemoved.front();
 		listLayout_->removeWidget(taskWidget);
 		if (selectedTask_ == taskWidget->task()) {
-			selectedTask_ = 0;
+			selectedTask_.reset();
 		}
 		taskWidget->deleteLater();
 		widgetsToBeRemoved.pop_front();

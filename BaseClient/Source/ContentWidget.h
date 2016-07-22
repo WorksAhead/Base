@@ -19,8 +19,8 @@ public:
 	ContentWidget(ContextPtr context, QWidget* parent = 0);
 	~ContentWidget();
 
-	void setId(const QString& id);
-	const QString& id() const;
+	void setContentId(const QString& id);
+	const QString& contentId() const;
 
 	void setTitle(const QString& text);
 	void setSummary(const QString& text);
@@ -48,7 +48,7 @@ private:
 	Ui::ContentWidget ui_;
 	QBoxLayout* thumbnailLayout_;
 	QWidget* thumbnailWidget_;
-	QString id_;
+	QString contentId_;
 	QVector<QPair<QString, QString>> engineVersions_;
 	QVector<QPixmap> screenshots_;
 };

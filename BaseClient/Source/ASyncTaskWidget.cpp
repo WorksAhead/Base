@@ -3,7 +3,7 @@
 #include <QPainter>
 #include <QStyleOption>
 
-ASyncTaskWidget::ASyncTaskWidget(ASyncTask* task, QWidget* parent) : QWidget(parent), task_(task)
+ASyncTaskWidget::ASyncTaskWidget(ASyncTaskPtr task, QWidget* parent) : QWidget(parent), task_(task)
 {
 	ui_.setupUi(this);
 }
@@ -12,9 +12,9 @@ ASyncTaskWidget::~ASyncTaskWidget()
 {
 }
 
-ASyncTask* ASyncTaskWidget::task() const
+ASyncTaskPtr ASyncTaskWidget::task() const
 {
-	return task_.data();
+	return task_;
 }
 
 void ASyncTaskWidget::refresh()

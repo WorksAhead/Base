@@ -3,6 +3,7 @@
 #include "LibraryWidget.h"
 #include "ManageWidget.h"
 #include "ErrorMessage.h"
+#include "ASyncInstallEngineTask.h"
 
 #include <SQLiteCpp/Database.h>
 #include <SQLiteCpp/Transaction.h>
@@ -16,6 +17,8 @@
 #include <boost/filesystem.hpp>
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_io.hpp>
+
+#include <memory>
 
 namespace fs = boost::filesystem;
 
@@ -61,14 +64,30 @@ BaseClient::BaseClient(Rpc::SessionPrx session)
 	db_->exec("CREATE TABLE IF NOT EXISTS DownloadedContents ("
 		"Id TEXT)");
 
-	taskManagerDialog_ = new ASyncTaskManagerDialog(this);
+	context_.reset(new Context);
+	context_->session = session;
+	context_->addTask = std::bind(&BaseClient::addTask, this, std::placeholders::_1);
+	context_->showTaskManager = std::bind(&BaseClient::onShowTaskManager, this);
+	context_->uniquePath = std::bind(&BaseClient::uniquePath, this);
+	context_->cachePath = std::bind(&BaseClient::cachePath, this);
+	context_->libraryPath = std::bind(&BaseClient::libraryPath, this);
+	context_->enginePath = std::bind(&BaseClient::enginePath, this, std::placeholders::_1, std::placeholders::_2);
+	context_->contentPath = std::bind(&BaseClient::contentPath, this, std::placeholders::_1);
+	context_->installEngine = std::bind(&BaseClient::installEngine, this, std::placeholders::_1, std::placeholders::_2);
+	context_->getEngineState = std::bind(&BaseClient::getEngineState, this, std::placeholders::_1, std::placeholders::_2);
+	context_->changeEngineState = std::bind(&BaseClient::changeEngineState, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4);
+	context_->getContentState = std::bind(&BaseClient::getContentState, this, std::placeholders::_1);
+	context_->changeContentState = std::bind(&BaseClient::changeContentState, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+	context_->promptRpcError = std::bind(&BaseClient::promptRpcError, this, std::placeholders::_1);
+
+	taskManagerDialog_ = new ASyncTaskManagerDialog;
 
 	QWidget* decoratorWidget = new QWidget;
 	decoratorWidgetUi_.setupUi(decoratorWidget);
 
 	setDecoratorWidget(decoratorWidget);
 
-	lowerPane_ = new LowerPaneWidget;
+	lowerPane_ = new LowerPaneWidget(context_);
 
 	tabWidget_ = new QTabWidget;
 	tabWidget_->setAutoFillBackground(true);
@@ -85,20 +104,6 @@ BaseClient::BaseClient(Rpc::SessionPrx session)
 		promptRpcError(ec);
 		throw int(0);
 	}
-
-	context_.reset(new Context);
-	context_->session = session;
-	context_->addTask = std::bind(&BaseClient::addTask, this, std::placeholders::_1);
-	context_->uniquePath = std::bind(&BaseClient::uniquePath, this);
-	context_->cachePath = std::bind(&BaseClient::cachePath, this);
-	context_->libraryPath = std::bind(&BaseClient::libraryPath, this);
-	context_->enginePath = std::bind(&BaseClient::enginePath, this, std::placeholders::_1, std::placeholders::_2);
-	context_->contentPath = std::bind(&BaseClient::contentPath, this, std::placeholders::_1);
-	context_->getEngineState = std::bind(&BaseClient::getEngineState, this, std::placeholders::_1, std::placeholders::_2);
-	context_->changeEngineState = std::bind(&BaseClient::changeEngineState, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4);
-	context_->getContentState = std::bind(&BaseClient::getContentState, this, std::placeholders::_1);
-	context_->changeContentState = std::bind(&BaseClient::changeContentState, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
-	context_->promptRpcError = std::bind(&BaseClient::promptRpcError, this, std::placeholders::_1);
 
 	for (const std::string& page : pages) {
 		tabWidget_->addTab(new PageWidget(context_, page.c_str()), page.c_str());
@@ -119,7 +124,7 @@ BaseClient::BaseClient(Rpc::SessionPrx session)
 	w->setLayout(layout);
 	setCentralWidget(w);
 
-	QObject::connect(decoratorWidgetUi_.taskButton, &QPushButton::clicked, taskManagerDialog_, &QDialog::show);
+	QObject::connect(decoratorWidgetUi_.taskButton, &QPushButton::clicked, this, &BaseClient::onShowTaskManager);
 
 	timer_ = new IceUtil::Timer;
 	timer_->scheduleRepeated(new RefreshTask(session), IceUtil::Time::seconds(5));
@@ -129,8 +134,11 @@ BaseClient::~BaseClient()
 {
 }
 
-void BaseClient::addTask(ASyncTask* task)
+void BaseClient::addTask(ASyncTaskPtr task)
 {
+	task->start();
+
+	lowerPane_->addTask(task);
 	taskManagerDialog_->listWidget()->addTask(task);
 }
 
@@ -169,6 +177,44 @@ std::string BaseClient::contentPath(const std::string& id)
 	path /= "Contents";
 	path /= id;
 	return path.string();
+}
+
+void BaseClient::installEngine(const std::string& name, const std::string& version)
+{
+	int state = EngineState::not_installed;
+
+	if (!context_->changeEngineState(name, version, state, EngineState::installing))
+	{
+		if (state == EngineState::installing) {
+			QMessageBox::information(this, "Base",
+				QString("%1 %2 is now installing").arg(name.c_str()).arg(version.c_str()));
+		}
+		else if (state == EngineState::installed) {
+			QMessageBox::information(this, "Base",
+				QString("%1 %2 is already installed").arg(name.c_str()).arg(version.c_str()));
+		}
+		else if (state == EngineState::removing) {
+			QMessageBox::information(this, "Base",
+				QString("%1 %2 is now removing").arg(name.c_str()).arg(version.c_str()));
+		}
+		return;
+	}
+
+	Rpc::DownloaderPrx downloader;
+	Rpc::ErrorCode ec = context_->session->downloadEngineVersion(name, version, downloader);
+	if (ec != Rpc::ec_success) {
+		state = EngineState::installing;
+		context_->changeEngineState(name, version, state, EngineState::not_installed);
+		QMessageBox::information(this, "Base", QString("Unable to download %1 %2").arg(name.c_str()).arg(version.c_str()));
+		return;
+	}
+
+	boost::shared_ptr<ASyncInstallEngineTask> task(new ASyncInstallEngineTask(context_, downloader));
+	task->setInfoHead("Install " + name + " " + version);
+	task->setEngineVersion(name, version);
+	task->setPath(context_->enginePath(name, version));
+
+	addTask(task);
 }
 
 int BaseClient::getEngineState(const std::string& name, const std::string& version)
@@ -312,5 +358,15 @@ void BaseClient::promptRpcError(Rpc::ErrorCode ec)
 {
 	QMessageBox::critical(this, "Base", errorMessage(ec));
 	return;
+}
+
+void BaseClient::onShowTaskManager()
+{
+	if (taskManagerDialog_->isHidden()) {
+		taskManagerDialog_->show();
+	}
+	else if (!taskManagerDialog_->isActiveWindow()) {
+		QApplication::setActiveWindow(taskManagerDialog_);
+	}
 }
 

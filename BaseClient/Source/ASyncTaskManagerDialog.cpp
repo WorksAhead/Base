@@ -21,7 +21,7 @@ ASyncTaskListWidget* ASyncTaskManagerDialog::listWidget() const
 
 void ASyncTaskManagerDialog::onCancel()
 {
-	ASyncTask* task = ui_.taskList->selectedTask();
+	ASyncTaskPtr task = ui_.taskList->selectedTask();
 	if (task) {
 		task->cancel();
 	}

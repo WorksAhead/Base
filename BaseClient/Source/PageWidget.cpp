@@ -96,7 +96,7 @@ void PageWidget::mousePressEvent(QMouseEvent* e)
 				std::vector<std::string> versions;
 				boost::split(versions, ci.engineVersion, boost::is_any_of("|"));
 
-				content_->setId(ci.id.c_str());
+				content_->setContentId(ci.id.c_str());
 				content_->setTitle(ci.title.c_str());
 				content_->setSummary(summary.str().c_str());
 				content_->setDescription(ci.desc.c_str());
@@ -342,7 +342,7 @@ void PageWidget::setImage(const ImageIndex& imageIndex)
 		}
 	}
 	else if (imageIndex.second > 0) {
-		if (imageIndex.first == content_->id()) {
+		if (imageIndex.first == content_->contentId()) {
 			content_->setImage(imageIndex.second - 1, QPixmap(makeImageFilename(imageIndex), "JPG"));
 		}
 	}

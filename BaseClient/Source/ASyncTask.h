@@ -1,6 +1,8 @@
 #ifndef ASYNCTASK_HEADER_
 #define ASYNCTASK_HEADER_
 
+#include <boost/shared_ptr.hpp>
+
 #include <string>
 
 class ASyncTask {
@@ -26,6 +28,8 @@ public:
 	virtual int progress() = 0;
 	virtual std::string information() = 0;
 };
+
+typedef boost::shared_ptr<ASyncTask> ASyncTaskPtr;
 
 #endif // ASYNCTASK_HEADER_
 
