@@ -1,4 +1,6 @@
 #include "ASyncSubmitEngineTask.h"
+#include "AsyncPackTask.h"
+#include "ASyncUploadTask.h"
 
 #include <boost/filesystem.hpp>
 #include <boost/scope_exit.hpp>

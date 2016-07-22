@@ -641,6 +641,9 @@
     <ClCompile Include="..\BaseClient\Source\ASyncDownloadContentTask.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\BaseClient\Source\ASyncRemoveTask.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\BaseClient\Resources\BaseClient.rc">
@@ -820,6 +823,9 @@
       <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="..\BaseClient\Source\ASyncDownloadContentTask.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\Source\ASyncRemoveTask.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

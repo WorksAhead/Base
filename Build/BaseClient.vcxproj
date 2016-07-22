@@ -638,6 +638,7 @@
     <ClCompile Include="..\BaseClient\Source\ASyncDownloadTask.cpp" />
     <ClCompile Include="..\BaseClient\Source\ASyncInstallEngineTask.cpp" />
     <ClCompile Include="..\BaseClient\Source\ASyncPackTask.cpp" />
+    <ClCompile Include="..\BaseClient\Source\ASyncRemoveTask.cpp" />
     <ClCompile Include="..\BaseClient\Source\ASyncSubmitEngineTask.cpp" />
     <ClCompile Include="..\BaseClient\Source\ASyncTaskListWidget.cpp" />
     <ClCompile Include="..\BaseClient\Source\ASyncTaskManagerDialog.cpp" />
@@ -741,6 +742,7 @@
     <ClInclude Include="..\BaseClient\Source\ASyncDownloadTask.h" />
     <ClInclude Include="..\BaseClient\Source\ASyncInstallEngineTask.h" />
     <ClInclude Include="..\BaseClient\Source\AsyncPackTask.h" />
+    <ClInclude Include="..\BaseClient\Source\ASyncRemoveTask.h" />
     <ClInclude Include="..\BaseClient\Source\ASyncSubmitEngineTask.h" />
     <ClInclude Include="..\BaseClient\Source\ASyncTask.h" />
     <CustomBuild Include="..\BaseClient\Source\ASyncTaskWidget.h">

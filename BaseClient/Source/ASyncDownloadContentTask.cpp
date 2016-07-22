@@ -1,4 +1,6 @@
 #include "ASyncDownloadContentTask.h"
+#include "ASyncDownloadTask.h"
+#include "AsyncUnpackTask.h"
 
 #include <boost/filesystem.hpp>
 #include <boost/scope_exit.hpp>

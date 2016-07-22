@@ -2,8 +2,6 @@
 #define ASYNCDOWNLOADCONTENTTASK_HEADER_
 
 #include "ASyncTask.h"
-#include "ASyncDownloadTask.h"
-#include "AsyncUnpackTask.h"
 #include "Context.h"
 
 #include <RpcSession.h>

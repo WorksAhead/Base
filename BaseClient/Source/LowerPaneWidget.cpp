@@ -47,7 +47,7 @@ void LowerPaneWidget::onTurn()
 
 	const int state = w->task()->state();
 
-	if (state == ASyncTask::state_cancelled || state == ASyncTask::state_failed || state == ASyncTask::state_finished) {
+	if (state == ASyncTask::state_cancelled || state == ASyncTask::state_finished) {
 		w->deleteLater();
 		ui_.taskStackedWidget->removeWidget(w);
 		if (ui_.taskStackedWidget->count() == 0) {

@@ -1,4 +1,7 @@
 #include "ASyncInstallEngineTask.h"
+#include "ASyncRemoveTask.h"
+#include "ASyncDownloadTask.h"
+#include "AsyncUnpackTask.h"
 
 #include <boost/filesystem.hpp>
 #include <boost/scope_exit.hpp>
@@ -112,6 +115,23 @@ void ASyncInstallEngineTask::run()
 			if (downloadTask->state() == ASyncTask::state_cancelled) {
 				downloader_->cancel();
 			}
+			return;
+		}
+		else if (ret > 0) {
+			break;
+		}
+		std::this_thread::sleep_for(std::chrono::milliseconds(100));
+	}
+
+	std::unique_ptr<ASyncRemoveTask> removeTask(new ASyncRemoveTask);
+	removeTask->setInfoHead(infoHead_);
+	removeTask->setPath(path_);
+	removeTask->start();
+
+	for (;;)
+	{
+		const int ret = update(removeTask.get(), 50, 0.0);
+		if (ret < 0) {
 			return;
 		}
 		else if (ret > 0) {
