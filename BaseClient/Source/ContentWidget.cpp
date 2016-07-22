@@ -8,6 +8,7 @@
 #include <QMouseEvent>
 #include <QScrollBar>
 #include <QLabel>
+#include <QMenu>
 #include <QMessageBox>
 
 #include <boost/filesystem.hpp>
@@ -28,7 +29,6 @@ ContentWidget::ContentWidget(ContextPtr context, QWidget* parent) : QWidget(pare
 	ui_.thumbnailScrollArea->setWidget(thumbnailWidget_);
 
 	QObject::connect(ui_.downloadButton, &QPushButton::clicked, this, &ContentWidget::onDownload);
-	QObject::connect(ui_.installEngineButton, &QPushButton::clicked, this, &ContentWidget::onInstallEngine);
 	QObject::connect(ui_.copySummaryButton, &QPushButton::clicked, this, &ContentWidget::onCopySummary);
 	QObject::connect(ui_.copyIdButton, &QPushButton::clicked, this, &ContentWidget::onCopyId);
 }
@@ -71,16 +71,37 @@ void ContentWidget::setDescription(const QString& text)
 
 void ContentWidget::setEngineVersion(int index, const QString& name, const QString& version)
 {
-	ui_.engineVersionsBox->insertItem(index, name + " " + version);
-	engineVersions_[index].first = name;
-	engineVersions_[index].second = version;
+	if (index == 0) {
+		ui_.installEngineButton->setText(QString("Install %1 %2").arg(name).arg(version));
+		QObject::connect(ui_.installEngineButton, &QToolButton::clicked, [this, name, version](){
+			context_->installEngine(name.toStdString(), version.toStdString());
+		});
+		firstEngineVersion_.first = name;
+		firstEngineVersion_.second = version;
+	}
+	else {
+		QMenu* menu = ui_.installEngineButton->menu();
+		QAction* action = menu->addAction(QString("Install %1 %2").arg(name).arg(version));
+		QObject::connect(action, &QAction::triggered, [this, name, version](){
+			context_->installEngine(name.toStdString(), version.toStdString());
+		});
+	}
 }
 
 void ContentWidget::setEngineVersionCount(int count)
 {
-	ui_.engineVersionsBox->clear();
-	engineVersions_.clear();
-	engineVersions_.resize(count);
+	ui_.installEngineButton->disconnect();
+
+	QMenu* menu = ui_.installEngineButton->menu();
+	if (menu) {
+		menu->deleteLater();
+		menu = 0;
+	}
+
+	if (count > 1) {
+		menu = new QMenu;
+		ui_.installEngineButton->setMenu(menu);
+	}
 }
 
 void ContentWidget::setImage(int index, const QPixmap& pixmap)
@@ -189,8 +210,8 @@ void ContentWidget::onDownload()
 		return;
 	}
 
-	QString engineName = engineVersions_[0].first;
-	QString engineVersion = engineVersions_[0].second;
+	QString engineName = firstEngineVersion_.first;
+	QString engineVersion = firstEngineVersion_.second;
 
 	bool installEngine = false;
 
@@ -231,15 +252,6 @@ void ContentWidget::onDownload()
 	if (installEngine) {
 		context_->installEngine(engineName.toStdString(), engineVersion.toStdString());
 	}
-}
-
-void ContentWidget::onInstallEngine()
-{
-	const int index = ui_.engineVersionsBox->currentIndex();
-	QString name = engineVersions_[index].first;
-	QString version = engineVersions_[index].second;
-
-	context_->installEngine(name.toStdString(), version.toStdString());
 }
 
 void ContentWidget::onCopyId()

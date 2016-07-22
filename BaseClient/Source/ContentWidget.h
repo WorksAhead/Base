@@ -39,7 +39,6 @@ protected:
 
 private Q_SLOTS:
 	void onDownload();
-	void onInstallEngine();
 	void onCopyId();
 	void onCopySummary();
 
@@ -49,7 +48,7 @@ private:
 	QBoxLayout* thumbnailLayout_;
 	QWidget* thumbnailWidget_;
 	QString contentId_;
-	QVector<QPair<QString, QString>> engineVersions_;
+	QPair<QString, QString> firstEngineVersion_;
 	QVector<QPixmap> screenshots_;
 };
 

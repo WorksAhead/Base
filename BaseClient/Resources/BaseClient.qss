@@ -103,6 +103,27 @@ QPushButton:!flat:disabled {
 	color: rgb(127, 127, 127);
 }
 
+QToolButton {
+	color: rgb(250, 250, 250);
+	background: rgb(60, 60, 60);
+    border: 1px solid rgb(80, 80, 80);
+    border-radius: 2px;
+}
+QToolButton[popupMode="1"] {
+    padding-right: 20px;
+}
+QToolButton:pressed {
+    background: rgb(246, 96, 0);
+	border: 1px solid rgb(246, 96, 0);
+}
+QToolButton::menu-button {
+	border-left: 1px solid rgb(40, 40, 40);
+    width: 16px;
+}
+QToolButton::menu-arrow {
+    image: url(:/Icons/IndicatorArrowDown.png);
+}
+
 QComboBox {
 	color: rgb(250, 250, 250);
 	background: rgb(60, 60, 60);

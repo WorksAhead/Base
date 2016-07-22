@@ -21,7 +21,7 @@
     <number>0</number>
    </property>
    <item>
-    <widget class="ImageViewer" name="screenshotViewer" native="true">
+    <widget class="ImageViewerWidget" name="screenshotViewer" native="true">
      <property name="minimumSize">
       <size>
        <width>540</width>
@@ -202,16 +202,33 @@
           </spacer>
          </item>
          <item>
-          <widget class="QComboBox" name="engineVersionsBox">
-           <property name="sizeAdjustPolicy">
-            <enum>QComboBox::AdjustToContents</enum>
+          <widget class="QToolButton" name="installEngineButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
            </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="installEngineButton">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>23</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>23</height>
+            </size>
+           </property>
            <property name="text">
             <string>Install Engine</string>
+           </property>
+           <property name="popupMode">
+            <enum>QToolButton::MenuButtonPopup</enum>
+           </property>
+           <property name="toolButtonStyle">
+            <enum>Qt::ToolButtonTextOnly</enum>
            </property>
           </widget>
          </item>
@@ -337,9 +354,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>ImageViewer</class>
+   <class>ImageViewerWidget</class>
    <extends>QWidget</extends>
-   <header>ImageViewer.h</header>
+   <header>ImageViewerWidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
