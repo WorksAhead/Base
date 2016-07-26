@@ -4,6 +4,7 @@
 #include "SubmitContentDialog.h"
 #include "ASyncDownloadTask.h"
 #include "ContentWidget.h"
+#include "ContentImageLoader.h"
 
 #include <QPainter>
 #include <QScrollBar>
@@ -44,10 +45,6 @@ PageWidget::PageWidget(ContextPtr context, const QString& name, QWidget* parent)
 	ui_.scrollArea1->setWidget(flowWidget);
 	ui_.scrollArea2->setWidget(content_);
 
-	timer_ = new QTimer(this);
-
-	QObject::connect(timer_, &QTimer::timeout, this, &PageWidget::onTick);
-
 	QObject::connect(ui_.scrollArea1->verticalScrollBar(), &QScrollBar::valueChanged, this, &PageWidget::onScroll);
 	QObject::connect(ui_.backButton, &QPushButton::clicked, this, &PageWidget::onBack);
 	QObject::connect(ui_.categoryBox, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &PageWidget::onRefresh);
@@ -55,12 +52,13 @@ PageWidget::PageWidget(ContextPtr context, const QString& name, QWidget* parent)
 
 	QObject::connect(ui_.submitButton, &QPushButton::clicked, this, &PageWidget::submit);
 
+	QObject::connect(context_->contentImageLoader, &ContentImageLoader::loaded, this, &PageWidget::onImageLoaded);
+
 	firstShow_ = true;
 }
 
 PageWidget::~PageWidget()
 {
-	cancelAllImageLoadTasks();
 }
 
 void PageWidget::mousePressEvent(QMouseEvent* e)
@@ -110,7 +108,7 @@ void PageWidget::mousePressEvent(QMouseEvent* e)
 				content_->setImageCount(ci.imageCount - 1);
 
 				for (int i = 1; i < ci.imageCount; ++i) {
-					loadImage(ImageIndex(ci.id.c_str(), i), true);
+					context_->contentImageLoader->load(ci.id.c_str(), i, true);
 				}
 
 				ui_.scrollArea2->verticalScrollBar()->setValue(0);
@@ -129,7 +127,6 @@ void PageWidget::showEvent(QShowEvent* e)
 {
 	if (firstShow_) {
 		onRefresh();
-		timer_->start(50);
 		firstShow_ = false;
 	}
 }
@@ -164,7 +161,6 @@ void PageWidget::onBack()
 void PageWidget::onRefresh()
 {
 	clear();
-	cancelAllImageLoadTasks();
 
 	ui_.scrollArea1->verticalScrollBar()->setValue(0);
 
@@ -179,64 +175,18 @@ void PageWidget::onRefresh()
 	}
 }
 
-void PageWidget::onTick()
+void PageWidget::onImageLoaded(const QString& id, int index, const QPixmap& image)
 {
-	const int maxTasks = 5;
-
-	QTime t;
-	t.start();
-
-	int index = 0;
-
-	while (index < qMin(maxTasks, pendingImages_.count()))
-	{
-		const ImageIndex& imageIndex = pendingImages_.at(index);
-
-		if (loadedImages_.contains(imageIndex)) {
-			setImage(imageIndex);
-			pendingImages_.removeAt(index);
-			continue;
+	if (index == 0) {
+		PageItemWidget* pi = pageItems_.value(id, 0);
+		if (pi) {
+			pi->setBackground(image);
 		}
-
-		ASyncDownloadTask* task = imageLoadTasks_.value(imageIndex, 0);
-
-		if (task)
-		{
-			const int state = task->state();
-
-			if (state == ASyncTask::state_finished) {
-				setImage(imageIndex);
-				loadedImages_.insert(imageIndex);
-			}
-
-			if (state == ASyncTask::state_finished || state == ASyncTask::state_failed) {
-				delete task;
-				imageLoadTasks_.remove(imageIndex);
-				pendingImages_.removeAt(index);
-				continue;
-			}
+	}
+	else if (index > 0) {
+		if (id == content_->contentId()) {
+			content_->setImage(index - 1, image);
 		}
-		else
-		{
-			Rpc::DownloaderPrx downloader;
-
-			Rpc::ErrorCode ec = context_->session->downloadContentImage(imageIndex.first.toStdString(), imageIndex.second, downloader);
-			if (ec != Rpc::ec_success) {
-				pendingImages_.removeAt(index);
-				continue;
-			}
-
-			task = new ASyncDownloadTask(context_, downloader);
-			task->setFilename(makeImageFilename(imageIndex).toStdString());
-			task->start();
-			imageLoadTasks_.insert(imageIndex, task);
-		}
-
-		if (t.elapsed() > 10) {
-			break;
-		}
-
-		++index;
 	}
 }
 
@@ -259,7 +209,7 @@ void PageWidget::showMore(int count)
 			pi->setText(item.title.c_str());
 			pageItems_.insert(item.id.c_str(), pi);
 			flowLayout_->addWidget(pi);
-			loadImage(ImageIndex(item.id.c_str(), 0));
+			context_->contentImageLoader->load(item.id.c_str(), 0);
 		}
 
 		count -= n;
@@ -291,60 +241,3 @@ void PageWidget::clear()
 		delete li;
 	}
 }
-
-QString PageWidget::makeImageFilename(const ImageIndex& imageIndex)
-{
-	fs::path path = context_->cachePath();
-	if (imageIndex.second == 0) {
-		path /= imageIndex.first.toStdString() + "_cover.jpg";
-	}
-	else {
-		path /= imageIndex.first.toStdString() + "_image_" + std::to_string(imageIndex.second) + ".jpg";
-	}
-	return QString(path.string().c_str());
-}
-
-void PageWidget::cancelAllImageLoadTasks()
-{
-	QMapIterator<ImageIndex, ASyncDownloadTask*> it(imageLoadTasks_);
-	while (it.hasNext()) {
-		it.next();
-		ASyncDownloadTask* task = it.value();
-		task->cancel();
-		delete task;
-	}
-
-	imageLoadTasks_.clear();
-	pendingImages_.clear();
-}
-
-void PageWidget::loadImage(const ImageIndex& imageIndex, bool highPriority)
-{
-	if (loadedImages_.contains(imageIndex)) {
-		setImage(imageIndex);
-		return;
-	}
-
-	if (highPriority) {
-		pendingImages_.push_front(imageIndex);
-	}
-	else {
-		pendingImages_.append(imageIndex);
-	}
-}
-
-void PageWidget::setImage(const ImageIndex& imageIndex)
-{
-	if (imageIndex.second == 0) {
-		PageItemWidget* pi = pageItems_.value(imageIndex.first, 0);
-		if (pi) {
-			pi->setBackground(QPixmap(makeImageFilename(imageIndex), "JPG"));
-		}
-	}
-	else if (imageIndex.second > 0) {
-		if (imageIndex.first == content_->contentId()) {
-			content_->setImage(imageIndex.second - 1, QPixmap(makeImageFilename(imageIndex), "JPG"));
-		}
-	}
-}
-

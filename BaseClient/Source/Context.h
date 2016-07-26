@@ -9,6 +9,9 @@
 #include <memory>
 #include <string>
 
+// forward declaration
+class ContentImageLoader;
+
 namespace EngineState {
 	enum State {
 		not_installed = 0,
@@ -31,6 +34,8 @@ struct Context
 {
 	Rpc::SessionPrx session;
 
+	ContentImageLoader* contentImageLoader;
+
 	std::function<void(ASyncTaskPtr)> addTask;
 
 	std::function<void()> showTaskManager;
@@ -46,8 +51,10 @@ struct Context
 	std::function<int(const std::string&, const std::string&)> getEngineState;
 	std::function<bool(const std::string&, const std::string&, int&, int)> changeEngineState;
 
-	std::function<int(const std::string)> getContentState;
-	std::function<bool(const std::string, int&, int)> changeContentState;
+	std::function<void(std::vector<std::string>&)> getDownloadedContentList;
+
+	std::function<int(const std::string&)> getContentState;
+	std::function<bool(const std::string&, int&, int)> changeContentState;
 
 	std::function<void(Rpc::ErrorCode)> promptRpcError;
 };

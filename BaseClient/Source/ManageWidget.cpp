@@ -15,10 +15,10 @@ ManageWidget::ManageWidget(ContextPtr context, QWidget* parent) : QWidget(parent
 	managePage_ = new ManagePageWidget(context_);
 	manageCategory_ = new ManageCategoryWidget(context_);
 
-	p->addTab("Engines", manageEngine_);
-	p->addTab("Users", new QTextEdit);
-	p->addTab("Pages", managePage_);
-	p->addTab("Categories", manageCategory_);
+	p->addTab("Engine", manageEngine_);
+	p->addTab("User", new QTextEdit);
+	p->addTab("Page", managePage_);
+	p->addTab("Category", manageCategory_);
 
 	p->setCurrentIndex(0);
 

@@ -2,8 +2,9 @@
 #include "PageWidget.h"
 #include "LibraryWidget.h"
 #include "ManageWidget.h"
-#include "ErrorMessage.h"
 #include "ASyncInstallEngineTask.h"
+#include "ContentImageLoader.h"
+#include "ErrorMessage.h"
 
 #include <SQLiteCpp/Database.h>
 #include <SQLiteCpp/Transaction.h>
@@ -56,16 +57,13 @@ BaseClient::BaseClient(Rpc::SessionPrx session)
 		throw std::runtime_error("Failed to create directory");
 	}
 
-	db_.reset(new SQLite::Database("BaseClient.db", SQLITE_OPEN_READWRITE|SQLITE_OPEN_CREATE));
-
-	db_->exec("CREATE TABLE IF NOT EXISTS InstalledEngines ("
-		"Name TEXT COLLATE NOCASE, Version TEXT COLLATE NOCASE)");
-
-	db_->exec("CREATE TABLE IF NOT EXISTS DownloadedContents ("
-		"Id TEXT)");
+	initDb();
+	loadDownloadedContentsFromDb();
+	loadInstalledEnginesFromDb();
 
 	context_.reset(new Context);
 	context_->session = session;
+	context_->contentImageLoader = new ContentImageLoader(context_, this);
 	context_->addTask = std::bind(&BaseClient::addTask, this, std::placeholders::_1);
 	context_->showTaskManager = std::bind(&BaseClient::onShowTaskManager, this);
 	context_->uniquePath = std::bind(&BaseClient::uniquePath, this);
@@ -76,6 +74,7 @@ BaseClient::BaseClient(Rpc::SessionPrx session)
 	context_->installEngine = std::bind(&BaseClient::installEngine, this, std::placeholders::_1, std::placeholders::_2);
 	context_->getEngineState = std::bind(&BaseClient::getEngineState, this, std::placeholders::_1, std::placeholders::_2);
 	context_->changeEngineState = std::bind(&BaseClient::changeEngineState, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4);
+	context_->getDownloadedContentList = std::bind(&BaseClient::getDownloadedContentList, this, std::placeholders::_1);
 	context_->getContentState = std::bind(&BaseClient::getContentState, this, std::placeholders::_1);
 	context_->changeContentState = std::bind(&BaseClient::changeContentState, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
 	context_->promptRpcError = std::bind(&BaseClient::promptRpcError, this, std::placeholders::_1);
@@ -223,22 +222,8 @@ int BaseClient::getEngineState(const std::string& name, const std::string& versi
 
 	boost::recursive_mutex::scoped_lock lock(engineStateTabelSync_);
 
-	if (engineStateTabel_.count(key) == 0)
-	{
-		std::ostringstream oss;
-		oss << "SELECT * FROM InstalledEngines";
-		oss << " WHERE ";
-		oss << "Name=" << sqlText(name);
-		oss << " AND ";
-		oss << "Version=" << sqlText(version);
-
-		SQLite::Statement s(*db_, oss.str());
-		if (s.executeStep()) {
-			engineStateTabel_.insert(std::make_pair(key, EngineState::installed));
-		}
-		else {
-			engineStateTabel_.insert(std::make_pair(key, EngineState::not_installed));
-		}
+	if (engineStateTabel_.count(key) == 0) {
+		engineStateTabel_.insert(std::make_pair(key, EngineState::not_installed));
 	}
 
 	return engineStateTabel_[key];
@@ -270,6 +255,9 @@ bool BaseClient::changeEngineState(const std::string& name, const std::string& v
 		SQLite::Transaction t(*db_);
 		db_->exec(oss.str());
 		t.commit();
+
+		boost::recursive_mutex::scoped_lock lock(installedEngineTabelSync_);
+		installedEngineTabel_.insert(key);
 	}
 	else if (newState == EngineState::removing)
 	{
@@ -283,6 +271,9 @@ bool BaseClient::changeEngineState(const std::string& name, const std::string& v
 		SQLite::Transaction t(*db_);
 		db_->exec(oss.str());
 		t.commit();
+
+		boost::recursive_mutex::scoped_lock lock(installedEngineTabelSync_);
+		installedEngineTabel_.erase(key);
 	}
 
 	engineStateTabel_[key] = newState;
@@ -290,30 +281,27 @@ bool BaseClient::changeEngineState(const std::string& name, const std::string& v
 	return true;
 }
 
+void BaseClient::getDownloadedContentList(std::vector<std::string>& outList)
+{
+	outList.clear();
+	boost::recursive_mutex::scoped_lock lock(downloadedContentTabelSync_);
+	for (const std::string& id : downloadedContentTabel_) {
+		outList.push_back(id);
+	}
+}
+
 int BaseClient::getContentState(const std::string& id)
 {
 	boost::recursive_mutex::scoped_lock lock(contentStateTabelSync_);
 
-	if (contentStateTabel_.count(id) == 0)
-	{
-		std::ostringstream oss;
-		oss << "SELECT * FROM DownloadedContents";
-		oss << " WHERE ";
-		oss << "Id=" << sqlText(id);
-
-		SQLite::Statement s(*db_, oss.str());
-		if (s.executeStep()) {
-			contentStateTabel_.insert(std::make_pair(id, ContentState::downloaded));
-		}
-		else {
-			contentStateTabel_.insert(std::make_pair(id, ContentState::not_downloaded));
-		}
+	if (contentStateTabel_.count(id) == 0) {
+		contentStateTabel_.insert(std::make_pair(id, ContentState::not_downloaded));
 	}
 
 	return contentStateTabel_[id];
 }
 
-bool BaseClient::changeContentState(const std::string id, int& oldState, int newState)
+bool BaseClient::changeContentState(const std::string& id, int& oldState, int newState)
 {
 	boost::recursive_mutex::scoped_lock lock(engineStateTabelSync_);
 
@@ -336,8 +324,11 @@ bool BaseClient::changeContentState(const std::string id, int& oldState, int new
 		SQLite::Transaction t(*db_);
 		db_->exec(oss.str());
 		t.commit();
+
+		boost::recursive_mutex::scoped_lock lock(downloadedContentTabelSync_);
+		downloadedContentTabel_.insert(id);
 	}
-	else if (newState == EngineState::removing)
+	else if (newState == ContentState::removing)
 	{
 		std::ostringstream oss;
 		oss << "DELETE FROM DownloadedContents";
@@ -347,6 +338,9 @@ bool BaseClient::changeContentState(const std::string id, int& oldState, int new
 		SQLite::Transaction t(*db_);
 		db_->exec(oss.str());
 		t.commit();
+
+		boost::recursive_mutex::scoped_lock lock(downloadedContentTabelSync_);
+		downloadedContentTabel_.erase(id);
 	}
 
 	contentStateTabel_[id] = newState;
@@ -370,3 +364,54 @@ void BaseClient::onShowTaskManager()
 	}
 }
 
+void BaseClient::initDb()
+{
+	db_.reset(new SQLite::Database("BaseClient.db", SQLITE_OPEN_READWRITE|SQLITE_OPEN_CREATE));
+
+	db_->exec("CREATE TABLE IF NOT EXISTS InstalledEngines ("
+		"Name TEXT COLLATE NOCASE, Version TEXT COLLATE NOCASE)");
+
+	db_->exec("CREATE TABLE IF NOT EXISTS DownloadedContents ("
+		"Id TEXT)");
+}
+
+void BaseClient::loadDownloadedContentsFromDb()
+{
+	std::ostringstream oss;
+	oss << "SELECT * FROM DownloadedContents";
+
+	boost::recursive_mutex::scoped_lock lock(downloadedContentTabelSync_);
+
+	SQLite::Statement s(*db_, oss.str());
+	while (s.executeStep()) {
+		downloadedContentTabel_.insert(s.getColumn("Id").getText());
+	}
+
+	boost::recursive_mutex::scoped_lock lock2(contentStateTabelSync_);
+
+	for (const std::string& id : downloadedContentTabel_) {
+		contentStateTabel_[id] = ContentState::downloaded;
+	}
+}
+
+void BaseClient::loadInstalledEnginesFromDb()
+{
+	std::ostringstream oss;
+	oss << "SELECT * FROM InstalledEngines";
+
+	boost::recursive_mutex::scoped_lock lock(installedEngineTabelSync_);
+
+	SQLite::Statement s(*db_, oss.str());
+	while (s.executeStep()) {
+		const std::string& name = s.getColumn("Name").getText();
+		const std::string& version = s.getColumn("Version").getText();
+		const std::string& key = boost::to_lower_copy(name + "\n" + version);
+		installedEngineTabel_.insert(key);
+	}
+
+	boost::recursive_mutex::scoped_lock lock2(engineStateTabelSync_);
+
+	for (const std::string& key : installedEngineTabel_) {
+		engineStateTabel_[key] = EngineState::installed;
+	}
+}

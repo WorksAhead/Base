@@ -293,6 +293,10 @@ ManageCategoryWidget {
 	/*border: 2px solid rgb(20, 20, 20);*/
 }
 
+QWidget#LibraryContentWidget {
+	background: rgb(20, 20, 20);
+}
+
 ASyncTaskWidget, ASyncTaskWidget[selected="false"] {	
 	background: rgb(30, 30, 30);
 }

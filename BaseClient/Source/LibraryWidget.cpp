@@ -1,5 +1,6 @@
 #include "LibraryWidget.h"
 #include "VTabWidget.h"
+#include "LibraryContentWidget.h"
 
 #include <QBoxLayout>
 #include <QTextEdit>
@@ -8,7 +9,7 @@ LibraryWidget::LibraryWidget(ContextPtr context, QWidget* parent) : QWidget(pare
 {
 	VTabWidget* p = new VTabWidget;
 
-	p->addTab("Hello World", new QTextEdit);
+	p->addTab("Content", new LibraryContentWidget(context_));
 
 	p->setCurrentIndex(0);
 

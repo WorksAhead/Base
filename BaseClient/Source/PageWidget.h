@@ -39,17 +39,12 @@ private Q_SLOTS:
 	void onScroll(int);
 	void onBack();
 	void onRefresh();
-	void onTick();
+	void onImageLoaded(const QString& id, int index, const QPixmap&);
 
 private:
 	void showMore(int);
 	void submit();
 	void clear();
-
-	QString makeImageFilename(const ImageIndex&);
-	void cancelAllImageLoadTasks();
-	void loadImage(const ImageIndex&, bool highPriority = false);
-	void setImage(const ImageIndex&);
 
 private:
 	ContextPtr context_;
@@ -58,15 +53,9 @@ private:
 
 	ContentWidget* content_;
 
-	QTimer* timer_;
-
 	Rpc::ContentBrowserPrx browser_;
 
 	QMap<QString, PageItemWidget*> pageItems_;
-
-	QSet<ImageIndex> loadedImages_;
-	QMap<ImageIndex, ASyncDownloadTask*> imageLoadTasks_;
-	QList<ImageIndex> pendingImages_;
 
 	Ui::PageWidget ui_;
 	bool firstShow_;
