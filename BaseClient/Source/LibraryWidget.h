@@ -6,6 +6,7 @@
 #include <QWidget>
 
 // forward declaration
+class LibraryContentWidget;
 
 class LibraryWidget : public QWidget {
 private:
@@ -15,10 +16,13 @@ public:
 	explicit LibraryWidget(ContextPtr, QWidget* parent = 0);
 	~LibraryWidget();
 
-private:
-	
+public Q_SLOTS:
+	void addDownloadedContent(const QString& id);
 
+private:
 	ContextPtr context_;
+
+	LibraryContentWidget* libraryContent_;
 };
 
 #endif // LIBRARYWIDGET_HEADER_

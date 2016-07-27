@@ -7,10 +7,10 @@
 
 LibraryWidget::LibraryWidget(ContextPtr context, QWidget* parent) : QWidget(parent), context_(context)
 {
+	libraryContent_ = new LibraryContentWidget(context_);
+
 	VTabWidget* p = new VTabWidget;
-
-	p->addTab("Content", new LibraryContentWidget(context_));
-
+	p->addTab("Content", libraryContent_);
 	p->setCurrentIndex(0);
 
 	QBoxLayout* layout = new QBoxLayout(QBoxLayout::TopToBottom);
@@ -22,5 +22,10 @@ LibraryWidget::LibraryWidget(ContextPtr context, QWidget* parent) : QWidget(pare
 
 LibraryWidget::~LibraryWidget()
 {
+}
+
+void LibraryWidget::addDownloadedContent(const QString& id)
+{
+	libraryContent_->addContent(id);
 }
 

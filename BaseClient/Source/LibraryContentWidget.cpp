@@ -44,10 +44,33 @@ LibraryContentWidget::~LibraryContentWidget()
 {
 }
 
+void LibraryContentWidget::addContent(const QString& id)
+{
+	Rpc::ContentInfo ci;
+	Rpc::ErrorCode ec = context_->session->getContentInfo(id.toStdString(), ci);
+
+	int i = 0;
+
+	while (i < contentsLayout_->count()) {
+		ContentItemWidget* w = (ContentItemWidget*)contentsLayout_->itemAt(i)->widget();
+		if (ci.title < w->title().toStdString()) {
+			break;
+		}
+		++i;
+	}
+
+	ContentItemWidget* w = new ContentItemWidget(context_);
+	w->setContentId(id);
+	w->setTitle(ci.title.c_str());
+	contentsLayout_->insertWidget(i, w);
+	contentItemWidgets_.insert(id, w);
+	context_->contentImageLoader->load(id, 0);
+}
+
 void LibraryContentWidget::showEvent(QShowEvent*)
 {
 	if (firstShow_) {
-		onRefresh();
+		refresh();
 		firstShow_ = false;
 	}
 }
@@ -60,7 +83,7 @@ void LibraryContentWidget::paintEvent(QPaintEvent*)
 	style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
-void LibraryContentWidget::onRefresh()
+void LibraryContentWidget::refresh()
 {
 	for (;;) {
 		QLayoutItem* li = contentsLayout_->takeAt(0);
@@ -91,7 +114,8 @@ void LibraryContentWidget::onRefresh()
 		return lhs.first < rhs.first;
 	});
 
-	for (const TitleIdPair& p : contentList) {
+	for (const TitleIdPair& p : contentList)
+	{
 		ContentItemWidget* w = new ContentItemWidget(context_);
 		w->setContentId(p.second.c_str());
 		w->setTitle(p.first.c_str());

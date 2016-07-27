@@ -19,13 +19,18 @@ public:
 	LibraryContentWidget(ContextPtr context, QWidget* parent = 0);
 	~LibraryContentWidget();
 
+public Q_SLOTS:
+	void addContent(const QString& id);
+
 protected:
 	virtual void showEvent(QShowEvent*);
 	virtual void paintEvent(QPaintEvent*);
 
 private Q_SLOTS:
-	void onRefresh();
 	void onImageLoaded(const QString& id, int index, const QPixmap&);
+
+private:
+	void refresh();
 
 private:
 	ContextPtr context_;

@@ -17,6 +17,7 @@ public:
 	const QString& contentId() const;
 
 	void setTitle(const QString& text);
+	QString title() const;
 
 	void setImage(const QPixmap&);
 

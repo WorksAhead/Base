@@ -33,6 +33,11 @@ void ContentItemWidget::setTitle(const QString& text)
 	ui_.titleLabel->setText(text);
 }
 
+QString ContentItemWidget::title() const
+{
+	return ui_.titleLabel->text();
+}
+
 void ContentItemWidget::setImage(const QPixmap& pixmap)
 {
 	ui_.thumbnailViewer->setPixmap(pixmap);

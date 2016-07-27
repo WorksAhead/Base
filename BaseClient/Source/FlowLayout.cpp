@@ -1,6 +1,7 @@
 #include "FlowLayout.h"
 
 #include <QtWidgets>
+#include <QWidgetItemV2>
 
 FlowLayout::FlowLayout(QWidget* parent, int margin, int hSpacing, int vSpacing)
 	: QLayout(parent), m_hSpace(hSpacing), m_vSpace(vSpacing)
@@ -25,6 +26,18 @@ FlowLayout::~FlowLayout()
 void FlowLayout::addItem(QLayoutItem* item)
 {
 	itemList.append(item);
+}
+
+void FlowLayout::addWidget(QWidget* w)
+{
+	insertWidget(count(), w);
+}
+
+void FlowLayout::insertWidget(int index, QWidget* w)
+{
+	addChildWidget(w);
+	itemList.insert(index, new QWidgetItemV2(w));
+	invalidate();
 }
 
 int FlowLayout::horizontalSpacing() const

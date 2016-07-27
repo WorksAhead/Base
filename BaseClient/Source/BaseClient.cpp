@@ -327,6 +327,8 @@ bool BaseClient::changeContentState(const std::string& id, int& oldState, int ne
 
 		boost::recursive_mutex::scoped_lock lock(downloadedContentTabelSync_);
 		downloadedContentTabel_.insert(id);
+
+		QMetaObject::invokeMethod(library_, "addDownloadedContent", Qt::QueuedConnection, Q_ARG(QString, id.c_str()));
 	}
 	else if (newState == ContentState::removing)
 	{
