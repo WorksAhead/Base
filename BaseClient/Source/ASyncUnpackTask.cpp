@@ -102,8 +102,6 @@ void ASyncUnpackTask::run()
 		sync_.lock();
 		if (cancelled_) {
 			unpacker.reset();
-			boost::system::error_code ec;
-			fs::remove(package_, ec);
 			infoBody_.clear();
 			state_ = ASyncTask::state_cancelled;
 			sync_.unlock();

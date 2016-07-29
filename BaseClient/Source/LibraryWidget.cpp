@@ -24,8 +24,23 @@ LibraryWidget::~LibraryWidget()
 {
 }
 
-void LibraryWidget::addDownloadedContent(const QString& id)
+void LibraryWidget::addContent(const QString& id)
 {
 	libraryContent_->addContent(id);
+}
+
+void LibraryWidget::removeContent(const QString& id)
+{
+	libraryContent_->removeContent(id);
+}
+
+void LibraryWidget::addProject(const QString& id)
+{
+	libraryContent_->addProject(id);
+}
+
+void LibraryWidget::removeProject(const QString& id)
+{
+	libraryContent_->removeProject(id);
 }
 

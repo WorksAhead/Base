@@ -51,6 +51,12 @@ private:
 	int getContentState(const std::string& id);
 	bool changeContentState(const std::string& id, int& oldState, int newState);
 
+	void createProject(const std::string& id, const std::string& title, const std::string& location);
+	void addProject(const std::string& id, const std::string& contentId, const std::string& location, const std::string& name);
+	void removeProject(const std::string& id, bool removeDir);
+	bool getProject(ProjectInfo&, const std::string& id);
+	void getProjectList(std::vector<ProjectInfo>&);
+
 	void promptRpcError(Rpc::ErrorCode);
 
 private Q_SLOTS:
@@ -60,11 +66,16 @@ private:
 	void initDb();
 	void loadDownloadedContentsFromDb();
 	void loadInstalledEnginesFromDb();
+	void loadProjectsFromDb();
 
 private:
 	Ui::DecoratorWidget decoratorWidgetUi_;
 
+	IceUtil::TimerPtr timer_;
+
 	DatabasePtr db_;
+
+	ContextPtr context_;
 
 	ASyncTaskManagerDialog* taskManagerDialog_;
 
@@ -73,11 +84,7 @@ private:
 	LibraryWidget* library_;
 	ManageWidget* manage_;
 
-	ContextPtr context_;
-
-	IceUtil::TimerPtr timer_;
-
-	boost::uuids::random_generator uniquePathGen_;
+	boost::uuids::random_generator rand_;
 
 	std::unordered_set<std::string> downloadedContentTabel_;
 	boost::recursive_mutex downloadedContentTabelSync_;
@@ -90,6 +97,9 @@ private:
 
 	std::unordered_map<std::string, int> engineStateTabel_;
 	boost::recursive_mutex engineStateTabelSync_;
+
+	std::unordered_map<std::string, ProjectInfo> projectTabel_;
+	boost::recursive_mutex projectTabelSync_;
 };
 
 #endif // BASECLIENT_HEADER_

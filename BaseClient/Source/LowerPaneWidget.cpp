@@ -35,6 +35,18 @@ void LowerPaneWidget::addTask(ASyncTaskPtr task)
 	turnTimer_->start(2000);
 }
 
+void LowerPaneWidget::clear()
+{
+	while (ui_.taskStackedWidget->count())
+	{
+		QWidget* w = ui_.taskStackedWidget->widget(0);
+		w->deleteLater();
+		ui_.taskStackedWidget->removeWidget(w);
+	}
+
+	turnTimer_->stop();
+}
+
 void LowerPaneWidget::onTurn()
 {
 	const int count = ui_.taskStackedWidget->count();

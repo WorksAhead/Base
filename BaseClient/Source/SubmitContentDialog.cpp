@@ -58,9 +58,9 @@ void SubmitContentDialog::onSelectPath()
 {
 	QString path = QFileDialog::getExistingDirectory(this, "Select Path");
 	if (!path.isEmpty()) {
-		fs::path p = path.toStdString();
+		fs::path p = path.toLocal8Bit().data();
 		p.make_preferred();
-		ui_.pathEdit->setText(p.string().c_str());
+		ui_.pathEdit->setText(QString::fromLocal8Bit(p.string().c_str()));
 	}
 }
 
@@ -233,7 +233,7 @@ void SubmitContentDialog::onSubmit()
 	boost::shared_ptr<ASyncSubmitContentTask> task(new ASyncSubmitContentTask(context_, submitter));
 
 	task->setInfoHead(QString("Submit %1").arg(ui_.titleEdit->text()).toStdString());
-	task->setContentPath(ui_.pathEdit->text().toStdString());
+	task->setContentPath(ui_.pathEdit->text().toLocal8Bit().data());
 
 	std::string imageFilename;
 

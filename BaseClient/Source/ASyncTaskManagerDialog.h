@@ -13,7 +13,11 @@ public:
 
 	ASyncTaskListWidget* listWidget() const;
 
+Q_SIGNALS:
+	void cleared();
+
 private Q_SLOTS:
+	void onClear();
 	void onCancel();
 
 private:

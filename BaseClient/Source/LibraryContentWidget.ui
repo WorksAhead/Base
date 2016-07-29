@@ -57,19 +57,15 @@
     </layout>
    </item>
    <item>
-    <widget class="QWidget" name="projestsWidget" native="true">
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>40</height>
-      </size>
-     </property>
-    </widget>
+    <widget class="QWidget" name="projestsWidget" native="true"/>
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,1,0">
      <property name="spacing">
       <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>40</number>
      </property>
      <property name="bottomMargin">
       <number>20</number>
@@ -112,14 +108,7 @@
     </layout>
    </item>
    <item>
-    <widget class="QWidget" name="contentsWidget" native="true">
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>40</height>
-      </size>
-     </property>
-    </widget>
+    <widget class="QWidget" name="contentsWidget" native="true"/>
    </item>
    <item>
     <spacer name="verticalSpacer">

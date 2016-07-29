@@ -26,9 +26,15 @@ namespace ContentState {
 		not_downloaded = 0,
 		downloading,
 		downloaded,
-		removing,
 	};
 }
+
+struct ProjectInfo {
+	std::string id;
+	std::string contentId;
+	std::string location;
+	std::string name;
+};
 
 struct Context
 {
@@ -55,6 +61,12 @@ struct Context
 
 	std::function<int(const std::string&)> getContentState;
 	std::function<bool(const std::string&, int&, int)> changeContentState;
+
+	std::function<void(const std::string&, const std::string&, const std::string&)> createProject;
+	std::function<void(const std::string&, const std::string&, const std::string&, const std::string&)> addProject;
+	std::function<void(const std::string&, bool)> removeProject;
+	std::function<bool(ProjectInfo&, const std::string& id)> getProject;
+	std::function<void(std::vector<ProjectInfo>&)> getProjectList;
 
 	std::function<void(Rpc::ErrorCode)> promptRpcError;
 };

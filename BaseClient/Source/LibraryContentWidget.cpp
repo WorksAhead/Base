@@ -1,4 +1,5 @@
 #include "LibraryContentWidget.h"
+#include "ProjectItemWidget.h"
 #include "ContentItemWidget.h"
 #include "ContentImageLoader.h"
 
@@ -18,7 +19,7 @@ LibraryContentWidget::LibraryContentWidget(ContextPtr context, QWidget* parent) 
 
 	ui_.setupUi(w);
 
-	projectsLayout_ = new FlowLayout(0);
+	projectsLayout_ = new FlowLayout(0, 20, 20);
 	contentsLayout_ = new FlowLayout(0, 20, 20);
 
 	ui_.projestsWidget->setLayout(projectsLayout_);
@@ -67,6 +68,43 @@ void LibraryContentWidget::addContent(const QString& id)
 	context_->contentImageLoader->load(id, 0);
 }
 
+void LibraryContentWidget::removeContent(const QString& id)
+{
+	ContentItemWidget* w = contentItemWidgets_.value(id, 0);
+	if (w) {
+		w->deleteLater();
+		contentsLayout_->removeWidget(w);
+		contentItemWidgets_.remove(id);
+	}
+}
+
+void LibraryContentWidget::addProject(const QString& id)
+{
+	ProjectInfo pi;
+	if (context_->getProject(pi, id.toStdString()))
+	{
+		ProjectItemWidget* w = new ProjectItemWidget(context_);
+		w->setContentId(pi.contentId.c_str());
+		w->setProjectId(pi.id.c_str());
+		w->setName(QString::fromLocal8Bit(pi.name.c_str()));
+		projectsLayout_->addWidget(w);
+		projectItemWidgets_.insert(pi.id.c_str(), w);
+		projectItemsOfContentItem_[pi.contentId.c_str()].append(w);
+		context_->contentImageLoader->load(pi.contentId.c_str(), false);
+	}
+}
+
+void LibraryContentWidget::removeProject(const QString& id)
+{
+	ProjectItemWidget* w = projectItemWidgets_.value(id, 0);
+	if (w) {
+		w->deleteLater();
+		projectsLayout_->removeWidget(w);
+		projectItemWidgets_.remove(id);
+		projectItemsOfContentItem_.find(w->contentId())->removeOne(w);
+	}
+}
+
 void LibraryContentWidget::showEvent(QShowEvent*)
 {
 	if (firstShow_) {
@@ -94,7 +132,18 @@ void LibraryContentWidget::refresh()
 		delete li;
 	}
 
+	for (;;) {
+		QLayoutItem* li = projectsLayout_->takeAt(0);
+		if (!li) {
+			break;
+		}
+		li->widget()->deleteLater();
+		delete li;
+	}
+
 	contentItemWidgets_.clear();
+	projectItemWidgets_.clear();
+	projectItemsOfContentItem_.clear();
 
 	std::vector<std::string> downloadedContentList;
 	context_->getDownloadedContentList(downloadedContentList);
@@ -123,6 +172,21 @@ void LibraryContentWidget::refresh()
 		contentItemWidgets_.insert(p.second.c_str(), w);
 		context_->contentImageLoader->load(p.second.c_str(), 0);
 	}
+
+	std::vector<ProjectInfo> projectList;
+	context_->getProjectList(projectList);
+
+	for (ProjectInfo& pi : projectList)
+	{
+		ProjectItemWidget* w = new ProjectItemWidget(context_);
+		w->setContentId(pi.contentId.c_str());
+		w->setProjectId(pi.id.c_str());
+		w->setName(QString::fromLocal8Bit(pi.name.c_str()));
+		projectsLayout_->addWidget(w);
+		projectItemWidgets_.insert(pi.id.c_str(), w);
+		projectItemsOfContentItem_[pi.contentId.c_str()].append(w);
+		context_->contentImageLoader->load(pi.contentId.c_str(), 0);
+	}
 }
 
 void LibraryContentWidget::onImageLoaded(const QString& id, int index, const QPixmap& image)
@@ -130,6 +194,14 @@ void LibraryContentWidget::onImageLoaded(const QString& id, int index, const QPi
 	ContentItemWidget* w = contentItemWidgets_.value(id, 0);
 	if (w && index == 0) {
 		w->setImage(image);
+	}
+
+	auto it = projectItemsOfContentItem_.find(id);
+	if (it != projectItemsOfContentItem_.end()) {
+		QList<ProjectItemWidget*>& list = *it;
+		for (ProjectItemWidget* p : list) {
+			p->setImage(image);
+		}
 	}
 }
 

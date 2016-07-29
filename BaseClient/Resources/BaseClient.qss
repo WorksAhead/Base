@@ -211,6 +211,13 @@ QLineEdit:focus, QTextEdit:focus, QPlainTextEdit:focus {
 	border-radius: 2px;
 }
 
+QLineEdit:disabled, QTextEdit:disabled, QPlainTextEdit:disabled {
+	color: rgb(50, 50, 50);
+	background: rgb(40, 40, 40);
+	border: 1px solid rgb(50, 50, 50);
+	border-radius: 2px;
+}
+
 QListWidget#VTabList {
 	padding-top: 100px;
 	border-top: 0;

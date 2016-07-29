@@ -7,8 +7,10 @@
 #include "ui_LibraryContentWidget.h"
 
 #include <QMap>
+#include <QList>
 
 // forward declaration
+class ProjectItemWidget;
 class ContentItemWidget;
 
 class LibraryContentWidget : public QWidget {
@@ -21,6 +23,9 @@ public:
 
 public Q_SLOTS:
 	void addContent(const QString& id);
+	void removeContent(const QString& id);
+	void addProject(const QString& id);
+	void removeProject(const QString& id);
 
 protected:
 	virtual void showEvent(QShowEvent*);
@@ -41,6 +46,8 @@ private:
 	bool firstShow_;
 
 	QMap<QString, ContentItemWidget*> contentItemWidgets_;
+	QMap<QString, ProjectItemWidget*> projectItemWidgets_;
+	QMap<QString, QList<ProjectItemWidget*>> projectItemsOfContentItem_;
 };
 
 #endif // LIBRARYCONTENTWIDGET_HEADER_

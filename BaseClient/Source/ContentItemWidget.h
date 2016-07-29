@@ -27,6 +27,8 @@ protected:
 	virtual void paintEvent(QPaintEvent*);
 
 private Q_SLOTS:
+	void onCreate();
+	void onRemove();
 
 private:
 	ContextPtr context_;

@@ -17,7 +17,10 @@ public:
 	~LibraryWidget();
 
 public Q_SLOTS:
-	void addDownloadedContent(const QString& id);
+	void addContent(const QString& id);
+	void removeContent(const QString& id);
+	void addProject(const QString& id);
+	void removeProject(const QString& id);
 
 private:
 	ContextPtr context_;

@@ -56,7 +56,7 @@ ASyncTaskPtr ASyncTaskListWidget::selectedTask() const
 	return selectedTask_;
 }
 
-void ASyncTaskListWidget::clear()
+int ASyncTaskListWidget::clear()
 {
 	QList<ASyncTaskWidget*> widgetsToBeRemoved;
 
@@ -78,6 +78,8 @@ void ASyncTaskListWidget::clear()
 		taskWidget->deleteLater();
 		widgetsToBeRemoved.pop_front();
 	}
+
+	return listLayout_->count();
 }
 
 void ASyncTaskListWidget::mousePressEvent(QMouseEvent* e)

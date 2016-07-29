@@ -1,46 +1,56 @@
-#include "ASyncDownloadContentTask.h"
-#include "ASyncDownloadTask.h"
+#include "ASyncCreateProjectTask.h"
+#include "AsyncUnpackTask.h"
 
 #include <boost/filesystem.hpp>
 #include <boost/scope_exit.hpp>
 
 namespace fs = boost::filesystem;
 
-ASyncDownloadContentTask::ASyncDownloadContentTask(ContextPtr context, Rpc::DownloaderPrx downloader) : context_(context), downloader_(downloader)
+ASyncCreateProjectTask::ASyncCreateProjectTask(ContextPtr context) : context_(context)
 {
 	state_ = ASyncTask::state_idle;
 	progress_ = 0;
 	cancelled_ = false;
 }
 
-ASyncDownloadContentTask::~ASyncDownloadContentTask()
+ASyncCreateProjectTask::~ASyncCreateProjectTask()
 {
 	if (t_.get() && t_->joinable()) {
 		t_->join();
 	}
 }
 
-void ASyncDownloadContentTask::setInfoHead(const std::string& infoHead)
+void ASyncCreateProjectTask::setInfoHead(const std::string& infoHead)
 {
 	infoHead_ = infoHead;
 }
 
-void ASyncDownloadContentTask::setFilename(const std::string& filename)
-{
-	filename_ = filename;
-}
-
-void ASyncDownloadContentTask::setContentId(const std::string& id)
+void ASyncCreateProjectTask::setContentId(const std::string& id)
 {
 	contentId_ = id;
 }
 
-void ASyncDownloadContentTask::start()
+void ASyncCreateProjectTask::setProjectId(const std::string& id)
 {
-	t_.reset(new std::thread(std::bind(&ASyncDownloadContentTask::run, this)));
+	projectId_ = id;
 }
 
-void ASyncDownloadContentTask::cancel()
+void ASyncCreateProjectTask::setProjectName(const std::string& name)
+{
+	projectName_ = name;
+}
+
+void ASyncCreateProjectTask::setLocation(const std::string& location)
+{
+	location_ = location;
+}
+
+void ASyncCreateProjectTask::start()
+{
+	t_.reset(new std::thread(std::bind(&ASyncCreateProjectTask::run, this)));
+}
+
+void ASyncCreateProjectTask::cancel()
 {
 	boost::unique_lock<boost::mutex> lock(sync_);
 	if (cancelled_ || state_ != ASyncTask::state_running) {
@@ -52,56 +62,61 @@ void ASyncDownloadContentTask::cancel()
 	t_->join();
 }
 
-int ASyncDownloadContentTask::state()
+int ASyncCreateProjectTask::state()
 {
 	boost::mutex::scoped_lock lock(sync_);
 	return state_;
 }
 
-int ASyncDownloadContentTask::progress()
+int ASyncCreateProjectTask::progress()
 {
 	boost::mutex::scoped_lock lock(sync_);
 	return progress_;
 }
 
-std::string ASyncDownloadContentTask::information()
+std::string ASyncCreateProjectTask::information()
 {
 	boost::mutex::scoped_lock lock(sync_);
 	return info_;
 }
 
-void ASyncDownloadContentTask::run()
+void ASyncCreateProjectTask::run()
 {
 	sync_.lock();
 	state_ = ASyncTask::state_running;
 	info_ = infoHead_;
 	sync_.unlock();
 
+	const std::string& package = (fs::path(context_->contentPath(contentId_)) / "content").string();
+
+	if (!fs::exists(package)) {
+		boost::mutex::scoped_lock lock(sync_);
+		info_ = infoHead_ + " - " + "The content file is missing";
+		state_ = ASyncTask::state_failed;
+		return;
+	}
+
 	bool commit = false;
 
 	BOOST_SCOPE_EXIT_ALL(this, &commit)
 	{
-		int state = ContentState::downloading;
-		if (commit) {
-			context_->changeContentState(contentId_, state, ContentState::downloaded);
-		}
-		else {
-			context_->changeContentState(contentId_, state, ContentState::not_downloaded);
+		if (!commit) {
+			if (fs::exists(location_)) {
+				fs::remove_all(location_);
+			}
 		}
 	};
 
-	std::unique_ptr<ASyncDownloadTask> downloadTask(new ASyncDownloadTask(context_, downloader_));
-	downloadTask->setInfoHead(infoHead_);
-	downloadTask->setFilename(filename_);
-	downloadTask->start();
+	std::unique_ptr<ASyncUnpackTask> unpackTask(new ASyncUnpackTask(context_));
+	unpackTask->setInfoHead(infoHead_);
+	unpackTask->setPackage(package);
+	unpackTask->setPath(location_);
+	unpackTask->start();
 
 	for (;;)
 	{
-		const int ret = update(downloadTask.get(), 0, 1.0);
+		const int ret = update(unpackTask.get(), 50, 0.5);
 		if (ret < 0) {
-			if (downloadTask->state() == ASyncTask::state_cancelled) {
-				downloader_->cancel();
-			}
 			return;
 		}
 		else if (ret > 0) {
@@ -109,6 +124,8 @@ void ASyncDownloadContentTask::run()
 		}
 		std::this_thread::sleep_for(std::chrono::milliseconds(100));
 	}
+
+	context_->addProject(projectId_, contentId_, location_, projectName_);
 
 	commit = true;
 
@@ -118,7 +135,7 @@ void ASyncDownloadContentTask::run()
 	sync_.unlock();
 }
 
-int ASyncDownloadContentTask::update(ASyncTask* task, int a, double b)
+int ASyncCreateProjectTask::update(ASyncTask* task, int a, double b)
 {
 	boost::mutex::scoped_lock lock(sync_);
 

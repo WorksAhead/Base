@@ -16,12 +16,11 @@ public:
 	explicit ASyncTaskListWidget(QWidget* parent = 0);
 	~ASyncTaskListWidget();
 
+	int clear();
+
 	void addTask(ASyncTaskPtr);
 
 	ASyncTaskPtr selectedTask() const;
-
-public Q_SLOTS:
-	void clear();
 
 protected:
 	virtual void mousePressEvent(QMouseEvent*);

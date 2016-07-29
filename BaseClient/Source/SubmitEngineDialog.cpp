@@ -33,9 +33,9 @@ void SubmitEngineDialog::selectPath()
 {
 	QString path = QFileDialog::getExistingDirectory(this, "Select Path");
 	if (!path.isEmpty()) {
-		fs::path p = path.toStdString();
+		fs::path p = path.toLocal8Bit().data();
 		p.make_preferred();
-		ui_.pathEdit->setText(p.string().c_str());
+		ui_.pathEdit->setText(QString::fromLocal8Bit(p.string().c_str()));
 	}
 }
 

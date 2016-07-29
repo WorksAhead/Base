@@ -12,6 +12,7 @@ void RpcSessionMaintainer::add(const Session& session)
 {
 	 Lock sync(*this);
 	 sessions_.push_back(session);
+	 session.first->refresh();
 }
 
 void RpcSessionMaintainer::runTimerTask()

@@ -115,7 +115,7 @@ void ManageEngineWidget::showSubmitDialog()
 
 		boost::shared_ptr<ASyncSubmitEngineTask> task(new ASyncSubmitEngineTask(context_, uploader));
 		task->setInfoHead(QString("Submit %1 %2").arg(d.engine(), d.version()).toStdString());
-		task->setPath(d.path().toStdString());
+		task->setPath(d.path().toLocal8Bit().data());
 
 		context_->addTask(task);
 	}

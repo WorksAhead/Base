@@ -1,17 +1,31 @@
 #include "ContentItemWidget.h"
+#include "CreateProjectDialog.h"
 
 #include <QPainter>
 #include <QMouseEvent>
 #include <QLabel>
 #include <QMenu>
+#include <QPushButton>
+#include <QFileDialog>
+#include <QMessageBox>
+
+#include <boost/algorithm/string.hpp>
+#include <boost/filesystem.hpp>
+
+namespace fs = boost::filesystem;
 
 ContentItemWidget::ContentItemWidget(ContextPtr context, QWidget* parent) : QWidget(parent), context_(context)
 {
 	setAutoFillBackground(true);
 	ui_.setupUi(this);
+
 	QMenu* menu = new QMenu;
-	menu->addAction("Remove");
 	ui_.createButton->setMenu(menu);
+
+	QAction* removeAction = menu->addAction("Remove");
+
+	QObject::connect(ui_.createButton, &QPushButton::clicked, this, &ContentItemWidget::onCreate);
+	QObject::connect(removeAction, &QAction::triggered, this, &ContentItemWidget::onRemove);
 }
 
 ContentItemWidget::~ContentItemWidget()
@@ -57,5 +71,40 @@ void ContentItemWidget::paintEvent(QPaintEvent*)
 	opt.init(this);
 	QPainter p(this);
 	style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+}
+
+void ContentItemWidget::onCreate()
+{
+	CreateProjectDialog d;
+
+	d.setDirectory(boost::erase_all_copy(title().toStdString(), R"(\/:*?"<>|)").c_str());
+
+	int ret = d.exec();
+	if (ret == 0) {
+		return;
+	}
+
+	context_->createProject(contentId_.toStdString(), title().toLocal8Bit().data(), d.location().toLocal8Bit().data());
+}
+
+void ContentItemWidget::onRemove()
+{
+	const int rc = QMessageBox::question(
+		0, "Base",
+		tr("Are you sure you want to remove this content ?\nWarning: This operation cannot be undone."),
+		QMessageBox::Yes, QMessageBox::No|QMessageBox::Default);
+
+	if (rc != QMessageBox::Yes) {
+		return;
+	}
+
+	int state = ContentState::downloaded;
+	if (context_->changeContentState(contentId_.toStdString(), state, ContentState::not_downloaded))
+	{
+		fs::path p = context_->contentPath(contentId_.toStdString());
+		if (fs::exists(p)) {
+			fs::remove_all(p);
+		}
+	}
 }
 

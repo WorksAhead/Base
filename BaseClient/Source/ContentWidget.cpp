@@ -204,9 +204,6 @@ void ContentWidget::onDownload()
 		else if (state == ContentState::downloaded) {
 			QMessageBox::information(this, "Base", "This content is already downloaded");
 		}
-		else if (state == ContentState::removing) {
-			QMessageBox::information(this, "Base", "This content is now removing");
-		}
 		return;
 	}
 

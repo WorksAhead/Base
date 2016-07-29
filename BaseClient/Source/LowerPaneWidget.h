@@ -18,6 +18,9 @@ public:
 
 	void addTask(ASyncTaskPtr);
 
+public Q_SLOTS:
+	void clear();
+
 protected Q_SLOTS:
 	void onTurn();
 
