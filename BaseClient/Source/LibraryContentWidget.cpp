@@ -87,7 +87,15 @@ void LibraryContentWidget::addProject(const QString& id)
 		w->setContentId(pi.contentId.c_str());
 		w->setProjectId(pi.id.c_str());
 		w->setName(QString::fromLocal8Bit(pi.name.c_str()));
-		projectsLayout_->addWidget(w);
+		int idx = 0;
+		while (idx < projectsLayout_->count()) {
+			ProjectItemWidget* w = (ProjectItemWidget*)projectsLayout_->itemAt(idx)->widget();
+			if (pi.name < w->name().toLocal8Bit().data()) {
+				break;
+			}
+			++idx;
+		}
+		projectsLayout_->insertWidget(idx, w);
 		projectItemWidgets_.insert(pi.id.c_str(), w);
 		projectItemsOfContentItem_[pi.contentId.c_str()].append(w);
 		context_->contentImageLoader->load(pi.contentId.c_str(), false);

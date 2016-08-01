@@ -124,6 +124,12 @@ QToolButton::menu-arrow {
     image: url(:/Icons/IndicatorArrowDown.png);
 }
 
+QToolTip {
+	color: rgb(250, 250, 250);
+	background: rgb(30, 30, 30);
+	border: 2px solid rgb(127, 127, 127);
+}
+
 QComboBox {
 	color: rgb(250, 250, 250);
 	background: rgb(60, 60, 60);

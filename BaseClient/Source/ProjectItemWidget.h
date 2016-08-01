@@ -26,12 +26,16 @@ public:
 
 protected:
 	virtual void mousePressEvent(QMouseEvent*);
+	virtual void mouseDoubleClickEvent(QMouseEvent*);
 	virtual void resizeEvent(QResizeEvent*);
 	virtual void paintEvent(QPaintEvent*);
 
 private Q_SLOTS:
 	void onOpen();
 	void onRemove();
+
+private:
+	void updateTips();
 
 private:
 	ContextPtr context_;

@@ -5,6 +5,7 @@
 #include <QMouseEvent>
 #include <QLabel>
 #include <QMenu>
+#include <QLineEdit>
 #include <QCheckBox>
 #include <QPushButton>
 #include <QFileDialog>
@@ -27,6 +28,8 @@ ProjectItemWidget::ProjectItemWidget(ContextPtr context, QWidget* parent) : QWid
 
 	QObject::connect(ui_.openButton, &QPushButton::clicked, this, &ProjectItemWidget::onOpen);
 	QObject::connect(removeAction, &QAction::triggered, this, &ProjectItemWidget::onRemove);
+
+	updateTips();
 }
 
 ProjectItemWidget::~ProjectItemWidget()
@@ -56,6 +59,7 @@ const QString& ProjectItemWidget::projectId() const
 void ProjectItemWidget::setName(const QString& text)
 {
 	ui_.nameLabel->setText(text);
+	updateTips();
 }
 
 QString ProjectItemWidget::name() const
@@ -70,6 +74,30 @@ void ProjectItemWidget::setImage(const QPixmap& pixmap)
 
 void ProjectItemWidget::mousePressEvent(QMouseEvent*)
 {
+}
+
+void ProjectItemWidget::mouseDoubleClickEvent(QMouseEvent* e)
+{
+	if (e->button() == Qt::LeftButton)
+	{
+		QPoint pos = ui_.nameLabel->mapFrom(this, e->pos());
+		if (ui_.nameLabel->rect().contains(pos))
+		{
+			ui_.nameLabel->setVisible(false);
+			QLineEdit* edit = new QLineEdit;
+			edit->setFont(ui_.nameLabel->font());
+			edit->setText(ui_.nameLabel->text());
+			ui_.verticalLayout->insertWidget(0, edit);
+			QObject::connect(edit, &QLineEdit::editingFinished, [this, edit](){
+				context_->renameProject(projectId_.toStdString(), edit->text().toLocal8Bit().data());
+				ui_.nameLabel->setText(edit->text());
+				ui_.nameLabel->setVisible(true);
+				edit->deleteLater();
+				updateTips();
+			});
+			edit->setFocus();
+		}
+	}
 }
 
 void ProjectItemWidget::resizeEvent(QResizeEvent*)
@@ -103,5 +131,19 @@ void ProjectItemWidget::onRemove()
 	}
 
 	context_->removeProject(projectId_.toStdString(), mb.checkBox()->isChecked());
+}
+
+void ProjectItemWidget::updateTips()
+{
+	ProjectInfo pi;
+	if (context_->getProject(pi, projectId_.toStdString()))
+	{
+		ui_.thumbnailViewer->setToolTip(
+			name() +
+			"\n" +
+			QString::fromLocal8Bit(pi.location.c_str()));
+	}
+
+	ui_.nameLabel->setToolTip(tr("Double click to edit"));
 }
 

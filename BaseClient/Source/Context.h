@@ -65,6 +65,7 @@ struct Context
 	std::function<void(const std::string&, const std::string&, const std::string&)> createProject;
 	std::function<void(const std::string&, const std::string&, const std::string&, const std::string&)> addProject;
 	std::function<void(const std::string&, bool)> removeProject;
+	std::function<void(const std::string&, const std::string&)> renameProject;
 	std::function<bool(ProjectInfo&, const std::string& id)> getProject;
 	std::function<void(std::vector<ProjectInfo>&)> getProjectList;
 

@@ -54,6 +54,7 @@ private:
 	void createProject(const std::string& id, const std::string& title, const std::string& location);
 	void addProject(const std::string& id, const std::string& contentId, const std::string& location, const std::string& name);
 	void removeProject(const std::string& id, bool removeDir);
+	void renameProject(const std::string& id, const std::string& newName);
 	bool getProject(ProjectInfo&, const std::string& id);
 	void getProjectList(std::vector<ProjectInfo>&);
 

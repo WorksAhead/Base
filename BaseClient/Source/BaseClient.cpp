@@ -87,6 +87,7 @@ BaseClient::BaseClient(Rpc::SessionPrx session)
 	context_->createProject = std::bind(&BaseClient::createProject, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
 	context_->addProject = std::bind(&BaseClient::addProject, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4);
 	context_->removeProject = std::bind(&BaseClient::removeProject, this, std::placeholders::_1, std::placeholders::_2);
+	context_->renameProject = std::bind(&BaseClient::renameProject, this, std::placeholders::_1, std::placeholders::_2);
 	context_->getProject = std::bind(&BaseClient::getProject, this, std::placeholders::_1, std::placeholders::_2);
 	context_->getProjectList = std::bind(&BaseClient::getProjectList, this, std::placeholders::_1);
 	context_->promptRpcError = std::bind(&BaseClient::promptRpcError, this, std::placeholders::_1);
@@ -426,6 +427,25 @@ void BaseClient::removeProject(const std::string& id, bool removeDir)
 
 	boost::recursive_mutex::scoped_lock lock(projectTabelSync_);
 	projectTabel_.erase(id.c_str());
+}
+
+void BaseClient::renameProject(const std::string& id, const std::string& newName)
+{
+	std::ostringstream oss;
+	oss << "UPDATE Projects SET Name=";
+	oss << sqlText(fromLocal8bit(newName));
+	oss << " WHERE Id=";
+	oss << sqlText(id);
+
+	SQLite::Transaction t(*db_);
+	db_->exec(oss.str());
+	t.commit();
+
+	boost::recursive_mutex::scoped_lock lock(projectTabelSync_);
+	auto it = projectTabel_.find(id);
+	if (it != projectTabel_.end()) {
+		it->second.name = newName;
+	}
 }
 
 bool BaseClient::getProject(ProjectInfo& outInfo, const std::string& id)
