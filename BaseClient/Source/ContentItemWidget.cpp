@@ -77,7 +77,11 @@ void ContentItemWidget::onCreate()
 {
 	CreateProjectDialog d;
 
-	d.setDirectory(boost::erase_all_copy(title().toStdString(), R"(\/:*?"<>|)").c_str());
+	std::string t(title().toLocal8Bit().data());
+
+	t.erase(std::remove_if(t.begin(), t.end(), boost::is_any_of(R"(\/:*?"<>|)")), t.end());
+
+	d.setDirectory(QString::fromLocal8Bit(t.c_str()));
 
 	int ret = d.exec();
 	if (ret == 0) {

@@ -232,7 +232,7 @@ void SubmitContentDialog::onSubmit()
 
 	boost::shared_ptr<ASyncSubmitContentTask> task(new ASyncSubmitContentTask(context_, submitter));
 
-	task->setInfoHead(QString("Submit %1").arg(ui_.titleEdit->text()).toStdString());
+	task->setInfoHead(QString("Submit %1").arg(ui_.titleEdit->text()).toLocal8Bit().data());
 	task->setContentPath(ui_.pathEdit->text().toLocal8Bit().data());
 
 	std::string imageFilename;
