@@ -17,7 +17,7 @@ ContentDownloadDialog::~ContentDownloadDialog()
 
 void ContentDownloadDialog::setEngineVersionAboutToBeDownloaded(const QString& name, const QString& version)
 {
-	ui_.installEngineLabel->setText("Install engine " + name + " " + version);
+	ui_.installEngineLabel->setText("Install Engine " + name + " " + version);
 }
 
 bool ContentDownloadDialog::isInstallEngineChecked()

@@ -31,6 +31,9 @@ private Q_SLOTS:
 	void onRemove();
 
 private:
+	void updateTips();
+
+private:
 	ContextPtr context_;
 	Ui::ContentItemWidget ui_;
 	QString contentId_;

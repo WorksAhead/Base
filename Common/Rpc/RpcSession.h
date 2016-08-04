@@ -203,7 +203,7 @@ struct ContentInfo
     ::std::string category;
     ::std::string engineName;
     ::std::string engineVersion;
-    ::std::string command;
+    ::std::string startup;
     ::Ice::Int imageCount;
     ::std::string desc;
     ::std::string user;
@@ -244,7 +244,7 @@ struct ContentInfo
         {
             return false;
         }
-        if(command != __rhs.command)
+        if(startup != __rhs.startup)
         {
             return false;
         }
@@ -333,11 +333,11 @@ struct ContentInfo
         {
             return false;
         }
-        if(command < __rhs.command)
+        if(startup < __rhs.startup)
         {
             return true;
         }
-        else if(__rhs.command < command)
+        else if(__rhs.startup < startup)
         {
             return false;
         }
@@ -562,7 +562,7 @@ struct StreamWriter< ::Rpc::ContentInfo, S>
         __os->write(v.category);
         __os->write(v.engineName);
         __os->write(v.engineVersion);
-        __os->write(v.command);
+        __os->write(v.startup);
         __os->write(v.imageCount);
         __os->write(v.desc);
         __os->write(v.user);
@@ -583,7 +583,7 @@ struct StreamReader< ::Rpc::ContentInfo, S>
         __is->read(v.category);
         __is->read(v.engineName);
         __is->read(v.engineVersion);
-        __is->read(v.command);
+        __is->read(v.startup);
         __is->read(v.imageCount);
         __is->read(v.desc);
         __is->read(v.user);
@@ -670,8 +670,8 @@ typedef ::IceUtil::Handle< Callback_ContentSubmitter_setCategory_Base> Callback_
 class Callback_ContentSubmitter_setEngine_Base : virtual public ::IceInternal::CallbackBase { };
 typedef ::IceUtil::Handle< Callback_ContentSubmitter_setEngine_Base> Callback_ContentSubmitter_setEnginePtr;
 
-class Callback_ContentSubmitter_setCommand_Base : virtual public ::IceInternal::CallbackBase { };
-typedef ::IceUtil::Handle< Callback_ContentSubmitter_setCommand_Base> Callback_ContentSubmitter_setCommandPtr;
+class Callback_ContentSubmitter_setStartup_Base : virtual public ::IceInternal::CallbackBase { };
+typedef ::IceUtil::Handle< Callback_ContentSubmitter_setStartup_Base> Callback_ContentSubmitter_setStartupPtr;
 
 class Callback_ContentSubmitter_setParentId_Base : virtual public ::IceInternal::CallbackBase { };
 typedef ::IceUtil::Handle< Callback_ContentSubmitter_setParentId_Base> Callback_ContentSubmitter_setParentIdPtr;
@@ -2175,79 +2175,79 @@ private:
     
 public:
 
-    ::Rpc::ErrorCode setCommand(const ::std::string& __p_command)
+    ::Rpc::ErrorCode setStartup(const ::std::string& __p_startup)
     {
-        return setCommand(__p_command, 0);
+        return setStartup(__p_startup, 0);
     }
-    ::Rpc::ErrorCode setCommand(const ::std::string& __p_command, const ::Ice::Context& __ctx)
+    ::Rpc::ErrorCode setStartup(const ::std::string& __p_startup, const ::Ice::Context& __ctx)
     {
-        return setCommand(__p_command, &__ctx);
+        return setStartup(__p_startup, &__ctx);
     }
 #ifdef ICE_CPP11
     ::Ice::AsyncResultPtr
-    begin_setCommand(const ::std::string& __p_command, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    begin_setStartup(const ::std::string& __p_startup, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
     {
-        return __begin_setCommand(__p_command, 0, __response, __exception, __sent);
+        return __begin_setStartup(__p_startup, 0, __response, __exception, __sent);
     }
     ::Ice::AsyncResultPtr
-    begin_setCommand(const ::std::string& __p_command, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    begin_setStartup(const ::std::string& __p_startup, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
     {
-        return begin_setCommand(__p_command, 0, ::Ice::newCallback(__completed, __sent), 0);
+        return begin_setStartup(__p_startup, 0, ::Ice::newCallback(__completed, __sent), 0);
     }
     ::Ice::AsyncResultPtr
-    begin_setCommand(const ::std::string& __p_command, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    begin_setStartup(const ::std::string& __p_startup, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
     {
-        return __begin_setCommand(__p_command, &__ctx, __response, __exception, __sent);
+        return __begin_setStartup(__p_startup, &__ctx, __response, __exception, __sent);
     }
     ::Ice::AsyncResultPtr
-    begin_setCommand(const ::std::string& __p_command, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    begin_setStartup(const ::std::string& __p_startup, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
     {
-        return begin_setCommand(__p_command, &__ctx, ::Ice::newCallback(__completed, __sent));
+        return begin_setStartup(__p_startup, &__ctx, ::Ice::newCallback(__completed, __sent));
     }
     
 private:
 
-    ::Ice::AsyncResultPtr __begin_setCommand(const ::std::string& __p_command, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent);
+    ::Ice::AsyncResultPtr __begin_setStartup(const ::std::string& __p_startup, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent);
     
 public:
 #endif
 
-    ::Ice::AsyncResultPtr begin_setCommand(const ::std::string& __p_command)
+    ::Ice::AsyncResultPtr begin_setStartup(const ::std::string& __p_startup)
     {
-        return begin_setCommand(__p_command, 0, ::IceInternal::__dummyCallback, 0);
+        return begin_setStartup(__p_startup, 0, ::IceInternal::__dummyCallback, 0);
     }
 
-    ::Ice::AsyncResultPtr begin_setCommand(const ::std::string& __p_command, const ::Ice::Context& __ctx)
+    ::Ice::AsyncResultPtr begin_setStartup(const ::std::string& __p_startup, const ::Ice::Context& __ctx)
     {
-        return begin_setCommand(__p_command, &__ctx, ::IceInternal::__dummyCallback, 0);
+        return begin_setStartup(__p_startup, &__ctx, ::IceInternal::__dummyCallback, 0);
     }
 
-    ::Ice::AsyncResultPtr begin_setCommand(const ::std::string& __p_command, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    ::Ice::AsyncResultPtr begin_setStartup(const ::std::string& __p_startup, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
     {
-        return begin_setCommand(__p_command, 0, __del, __cookie);
+        return begin_setStartup(__p_startup, 0, __del, __cookie);
     }
 
-    ::Ice::AsyncResultPtr begin_setCommand(const ::std::string& __p_command, const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    ::Ice::AsyncResultPtr begin_setStartup(const ::std::string& __p_startup, const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
     {
-        return begin_setCommand(__p_command, &__ctx, __del, __cookie);
+        return begin_setStartup(__p_startup, &__ctx, __del, __cookie);
     }
 
-    ::Ice::AsyncResultPtr begin_setCommand(const ::std::string& __p_command, const ::Rpc::Callback_ContentSubmitter_setCommandPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    ::Ice::AsyncResultPtr begin_setStartup(const ::std::string& __p_startup, const ::Rpc::Callback_ContentSubmitter_setStartupPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
     {
-        return begin_setCommand(__p_command, 0, __del, __cookie);
+        return begin_setStartup(__p_startup, 0, __del, __cookie);
     }
 
-    ::Ice::AsyncResultPtr begin_setCommand(const ::std::string& __p_command, const ::Ice::Context& __ctx, const ::Rpc::Callback_ContentSubmitter_setCommandPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    ::Ice::AsyncResultPtr begin_setStartup(const ::std::string& __p_startup, const ::Ice::Context& __ctx, const ::Rpc::Callback_ContentSubmitter_setStartupPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
     {
-        return begin_setCommand(__p_command, &__ctx, __del, __cookie);
+        return begin_setStartup(__p_startup, &__ctx, __del, __cookie);
     }
 
-    ::Rpc::ErrorCode end_setCommand(const ::Ice::AsyncResultPtr&);
+    ::Rpc::ErrorCode end_setStartup(const ::Ice::AsyncResultPtr&);
     
 private:
 
-    ::Rpc::ErrorCode setCommand(const ::std::string&, const ::Ice::Context*);
-    ::Ice::AsyncResultPtr begin_setCommand(const ::std::string&, const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
+    ::Rpc::ErrorCode setStartup(const ::std::string&, const ::Ice::Context*);
+    ::Ice::AsyncResultPtr begin_setStartup(const ::std::string&, const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
     
 public:
 
@@ -4167,8 +4167,8 @@ public:
     virtual ::Rpc::ErrorCode setEngine(const ::std::string&, const ::std::string&, const ::Ice::Current& = ::Ice::Current()) = 0;
     ::Ice::DispatchStatus ___setEngine(::IceInternal::Incoming&, const ::Ice::Current&);
 
-    virtual ::Rpc::ErrorCode setCommand(const ::std::string&, const ::Ice::Current& = ::Ice::Current()) = 0;
-    ::Ice::DispatchStatus ___setCommand(::IceInternal::Incoming&, const ::Ice::Current&);
+    virtual ::Rpc::ErrorCode setStartup(const ::std::string&, const ::Ice::Current& = ::Ice::Current()) = 0;
+    ::Ice::DispatchStatus ___setStartup(::IceInternal::Incoming&, const ::Ice::Current&);
 
     virtual ::Rpc::ErrorCode setParentId(const ::std::string&, const ::Ice::Current& = ::Ice::Current()) = 0;
     ::Ice::DispatchStatus ___setParentId(::IceInternal::Incoming&, const ::Ice::Current&);
@@ -5580,7 +5580,7 @@ newCallback_ContentSubmitter_setEngine(T* instance, void (T::*cb)(::Rpc::ErrorCo
 }
 
 template<class T>
-class CallbackNC_ContentSubmitter_setCommand : public Callback_ContentSubmitter_setCommand_Base, public ::IceInternal::TwowayCallbackNC<T>
+class CallbackNC_ContentSubmitter_setStartup : public Callback_ContentSubmitter_setStartup_Base, public ::IceInternal::TwowayCallbackNC<T>
 {
 public:
 
@@ -5590,7 +5590,7 @@ public:
     typedef void (T::*Sent)(bool);
     typedef void (T::*Response)(::Rpc::ErrorCode);
 
-    CallbackNC_ContentSubmitter_setCommand(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+    CallbackNC_ContentSubmitter_setStartup(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
         : ::IceInternal::TwowayCallbackNC<T>(obj, cb != 0, excb, sentcb), _response(cb)
     {
     }
@@ -5601,7 +5601,7 @@ public:
         ::Rpc::ErrorCode __ret;
         try
         {
-            __ret = __proxy->end_setCommand(__result);
+            __ret = __proxy->end_setStartup(__result);
         }
         catch(const ::Ice::Exception& ex)
         {
@@ -5619,20 +5619,20 @@ public:
     Response _response;
 };
 
-template<class T> Callback_ContentSubmitter_setCommandPtr
-newCallback_ContentSubmitter_setCommand(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+template<class T> Callback_ContentSubmitter_setStartupPtr
+newCallback_ContentSubmitter_setStartup(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
 {
-    return new CallbackNC_ContentSubmitter_setCommand<T>(instance, cb, excb, sentcb);
+    return new CallbackNC_ContentSubmitter_setStartup<T>(instance, cb, excb, sentcb);
 }
 
-template<class T> Callback_ContentSubmitter_setCommandPtr
-newCallback_ContentSubmitter_setCommand(T* instance, void (T::*cb)(::Rpc::ErrorCode), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+template<class T> Callback_ContentSubmitter_setStartupPtr
+newCallback_ContentSubmitter_setStartup(T* instance, void (T::*cb)(::Rpc::ErrorCode), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
 {
-    return new CallbackNC_ContentSubmitter_setCommand<T>(instance, cb, excb, sentcb);
+    return new CallbackNC_ContentSubmitter_setStartup<T>(instance, cb, excb, sentcb);
 }
 
 template<class T, typename CT>
-class Callback_ContentSubmitter_setCommand : public Callback_ContentSubmitter_setCommand_Base, public ::IceInternal::TwowayCallback<T, CT>
+class Callback_ContentSubmitter_setStartup : public Callback_ContentSubmitter_setStartup_Base, public ::IceInternal::TwowayCallback<T, CT>
 {
 public:
 
@@ -5642,7 +5642,7 @@ public:
     typedef void (T::*Sent)(bool , const CT&);
     typedef void (T::*Response)(::Rpc::ErrorCode, const CT&);
 
-    Callback_ContentSubmitter_setCommand(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+    Callback_ContentSubmitter_setStartup(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
         : ::IceInternal::TwowayCallback<T, CT>(obj, cb != 0, excb, sentcb), _response(cb)
     {
     }
@@ -5653,7 +5653,7 @@ public:
         ::Rpc::ErrorCode __ret;
         try
         {
-            __ret = __proxy->end_setCommand(__result);
+            __ret = __proxy->end_setStartup(__result);
         }
         catch(const ::Ice::Exception& ex)
         {
@@ -5671,16 +5671,16 @@ public:
     Response _response;
 };
 
-template<class T, typename CT> Callback_ContentSubmitter_setCommandPtr
-newCallback_ContentSubmitter_setCommand(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+template<class T, typename CT> Callback_ContentSubmitter_setStartupPtr
+newCallback_ContentSubmitter_setStartup(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
 {
-    return new Callback_ContentSubmitter_setCommand<T, CT>(instance, cb, excb, sentcb);
+    return new Callback_ContentSubmitter_setStartup<T, CT>(instance, cb, excb, sentcb);
 }
 
-template<class T, typename CT> Callback_ContentSubmitter_setCommandPtr
-newCallback_ContentSubmitter_setCommand(T* instance, void (T::*cb)(::Rpc::ErrorCode, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+template<class T, typename CT> Callback_ContentSubmitter_setStartupPtr
+newCallback_ContentSubmitter_setStartup(T* instance, void (T::*cb)(::Rpc::ErrorCode, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
 {
-    return new Callback_ContentSubmitter_setCommand<T, CT>(instance, cb, excb, sentcb);
+    return new Callback_ContentSubmitter_setStartup<T, CT>(instance, cb, excb, sentcb);
 }
 
 template<class T>

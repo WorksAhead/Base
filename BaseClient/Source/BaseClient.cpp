@@ -161,12 +161,12 @@ std::string BaseClient::uniquePath()
 
 std::string BaseClient::cachePath()
 {
-	return "Cache";
+	return (fs::current_path() / "Cache").string();
 }
 
 std::string BaseClient::libraryPath()
 {
-	return "Library";
+	return (fs::current_path() / "Library").string();
 }
 
 std::string BaseClient::enginePath(const std::string& name, const std::string& version)
@@ -363,41 +363,64 @@ bool BaseClient::changeContentState(const std::string& id, int& oldState, int ne
 	return true;
 }
 
-void BaseClient::createProject(const std::string& id, const std::string& title, const std::string& location)
+void BaseClient::createProject(const std::string& contentId, const std::string& title, const std::string& location)
 {
+	Rpc::ContentInfo ci;
+	Rpc::ErrorCode ec = context_->session->getContentInfo(contentId, ci);
+	if (ec != Rpc::ec_success) {
+		return;
+	}
+
+	std::vector<std::string> versions;
+	boost::split(versions, ci.engineVersion, boost::is_any_of("|"));
+
+	if (versions.empty()) {
+		return;
+	}
+
+	std::map<std::string, std::string> properties;
+	properties["name"] = title;
+	properties["default_engine_version"] = ci.engineName + "\n" + versions.at(0);
+	properties["startup"] = toLocal8bit(ci.startup);
+
 	boost::shared_ptr<ASyncCreateProjectTask> task(new ASyncCreateProjectTask(context_));
 	task->setInfoHead("Create " + title);
-	task->setContentId(id);
+	task->setContentId(contentId);
 	task->setProjectId(boost::uuids::to_string(rand_()));
-	task->setProjectName(title);
 	task->setLocation(location);
+	task->setProperties(properties);
 
 	addTask(task);
 }
 
-void BaseClient::addProject(const std::string& id, const std::string& contentId, const std::string& location, const std::string& name)
+void BaseClient::addProject(const std::string& id, const std::string& contentId, const std::string& location, const std::map<std::string, std::string>& properties)
 {
 	std::ostringstream oss;
 	oss << "INSERT INTO Projects VALUES (";
 	oss << sqlText(id) << ", ";
 	oss << sqlText(contentId) << ", ";
 	oss << sqlText(fromLocal8bit(location)) << ", ";
-	oss << sqlText(fromLocal8bit(name)) << ")";
+	oss << sqlText(fromLocal8bit(properties.at("name"))) << ", ";
+	oss << sqlText(properties.at("default_engine_version")) << ", ";
+	oss << sqlText(fromLocal8bit(properties.at("startup"))) << ")";
 
 	SQLite::Transaction t(*db_);
 	db_->exec(oss.str());
 	t.commit();
 
-	QMetaObject::invokeMethod(library_, "addProject", Qt::QueuedConnection, Q_ARG(QString, id.c_str()));
-
 	ProjectInfo pi;
 	pi.id = id;
 	pi.contentId = contentId;
 	pi.location = location;
-	pi.name = name;
+	pi.name = properties.at("name");
+	pi.defaultEngineVersion = properties.at("default_engine_version");
+	pi.startup = fromLocal8bit(properties.at("startup"));
 
-	boost::recursive_mutex::scoped_lock lock(projectTabelSync_);
+	boost::unique_lock<boost::recursive_mutex> lock(projectTabelSync_);
 	projectTabel_.insert(std::make_pair(id, pi));
+	lock.unlock();
+
+	QMetaObject::invokeMethod(library_, "addProject", Qt::QueuedConnection, Q_ARG(QString, id.c_str()));
 }
 
 void BaseClient::removeProject(const std::string& id, bool removeDir)
@@ -504,7 +527,7 @@ void BaseClient::initDb()
 		"Id TEXT)");
 
 	db_->exec("CREATE TABLE IF NOT EXISTS Projects ("
-		"Id TEXT, ContentId TEXT, Location TEXT, Name TEXT)");
+		"Id TEXT, ContentId TEXT, Location TEXT, Name TEXT, DefaultEngineVersion TEXT, Startup TEXT)");
 }
 
 void BaseClient::loadDownloadedContentsFromDb()
@@ -562,6 +585,8 @@ void BaseClient::loadProjectsFromDb()
 		pi.contentId = s.getColumn("ContentId").getText();
 		pi.location = toLocal8bit(s.getColumn("Location").getText());
 		pi.name = toLocal8bit(s.getColumn("Name").getText());
+		pi.defaultEngineVersion = s.getColumn("DefaultEngineVersion").getText();
+		pi.startup = toLocal8bit(s.getColumn("Startup").getText());
 		projectTabel_.insert(std::make_pair(pi.id, pi));
 	}
 }

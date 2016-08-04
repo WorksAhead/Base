@@ -31,7 +31,7 @@ public:
 
 	virtual Rpc::ErrorCode setEngine(const std::string&, const std::string&, const Ice::Current&);
 
-	virtual Rpc::ErrorCode setCommand(const std::string&, const Ice::Current&);
+	virtual Rpc::ErrorCode setStartup(const std::string&, const Ice::Current&);
 
 	virtual Rpc::ErrorCode setParentId(const std::string&, const Ice::Current&);
 

@@ -35,9 +35,9 @@ void ASyncCreateProjectTask::setProjectId(const std::string& id)
 	projectId_ = id;
 }
 
-void ASyncCreateProjectTask::setProjectName(const std::string& name)
+void ASyncCreateProjectTask::setProperties(const std::map<std::string, std::string>& properties)
 {
-	projectName_ = name;
+	properties_ = properties;
 }
 
 void ASyncCreateProjectTask::setLocation(const std::string& location)
@@ -125,7 +125,7 @@ void ASyncCreateProjectTask::run()
 		std::this_thread::sleep_for(std::chrono::milliseconds(100));
 	}
 
-	context_->addProject(projectId_, contentId_, location_, projectName_);
+	context_->addProject(projectId_, contentId_, location_, properties_);
 
 	commit = true;
 

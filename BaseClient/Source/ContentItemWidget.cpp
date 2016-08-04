@@ -35,6 +35,7 @@ ContentItemWidget::~ContentItemWidget()
 void ContentItemWidget::setContentId(const QString& id)
 {
 	contentId_ = id;
+	updateTips();
 }
 
 const QString& ContentItemWidget::contentId() const
@@ -109,6 +110,30 @@ void ContentItemWidget::onRemove()
 		if (fs::exists(p)) {
 			fs::remove_all(p);
 		}
+	}
+}
+
+void ContentItemWidget::updateTips()
+{
+	QString tips;
+
+	Rpc::ContentInfo ci;
+	Rpc::ErrorCode ec = context_->session->getContentInfo(contentId_.toStdString(), ci);
+	if (ec == Rpc::ec_success)
+	{
+		if (!tips.isEmpty()) {
+			tips += "\n";
+		}
+		tips +=
+			QString(tr("Supported Engine Versions:")) +
+			"\n" +
+			ci.engineName.c_str() +
+			" " +
+			ci.engineVersion.c_str();
+	}
+
+	if (!tips.isEmpty()) {
+		ui_.thumbnailViewer->setToolTip(tips);
 	}
 }
 

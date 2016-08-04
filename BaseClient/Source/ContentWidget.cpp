@@ -237,13 +237,10 @@ void ContentWidget::onDownload()
 		return;
 	}
 
-	fs::path fullPath(context_->contentPath(contentId_.toStdString()));
-	fullPath /= "content";
-
 	boost::shared_ptr<ASyncDownloadContentTask> task(new ASyncDownloadContentTask(context_, downloader));
 	task->setInfoHead(QString("Download %1").arg(ui_.titleLabel->text()).toLocal8Bit().data());
 	task->setContentId(contentId_.toStdString());
-	task->setFilename(fullPath.string());
+	task->setFilename((fs::path(context_->contentPath(contentId_.toStdString())) / "content").string());
 	context_->addTask(task);
 
 	if (installEngine) {

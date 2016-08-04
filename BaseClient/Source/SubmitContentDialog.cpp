@@ -29,7 +29,7 @@ SubmitContentDialog::SubmitContentDialog(ContextPtr context, QWidget* parent) : 
 		ui_.categoryBox->addItem(category.c_str());
 	}
 
-	QObject::connect(ui_.selectPathButton, &QPushButton::clicked, this, &SubmitContentDialog::onSelectPath);
+	QObject::connect(ui_.selectPathButton, &QPushButton::clicked, this, &SubmitContentDialog::onSelectLocation);
 
 	QObject::connect(ui_.setCoverButton, &QPushButton::clicked, this, &SubmitContentDialog::onSetCover);
 
@@ -54,13 +54,13 @@ void SubmitContentDialog::setPage(const QString& name)
 	ui_.pageEdit->setText(name);
 }
 
-void SubmitContentDialog::onSelectPath()
+void SubmitContentDialog::onSelectLocation()
 {
-	QString path = QFileDialog::getExistingDirectory(this, "Select Path");
+	QString path = QFileDialog::getExistingDirectory(this, "Select location");
 	if (!path.isEmpty()) {
 		fs::path p = path.toLocal8Bit().data();
 		p.make_preferred();
-		ui_.pathEdit->setText(QString::fromLocal8Bit(p.string().c_str()));
+		ui_.locationEdit->setText(QString::fromLocal8Bit(p.string().c_str()));
 	}
 }
 
@@ -192,15 +192,15 @@ void SubmitContentDialog::onSubmit()
 	ec = submitter->setEngine(ui_.engineNameEdit->text().toStdString(), ui_.engineVersionEdit->text().toStdString());
 	CHECK_ERROR_CODE(ec);
 
-	if (ui_.pathEdit->text().isEmpty()) {
-		QMessageBox::information(this, "Base", tr("The Path is not specified."));
+	if (ui_.locationEdit->text().isEmpty()) {
+		QMessageBox::information(this, "Base", tr("The Location is not specified."));
 		return;
 	}
 
-	QFileInfo fileInfo(ui_.pathEdit->text());
+	QFileInfo fileInfo(ui_.locationEdit->text());
 
 	if (!fileInfo.exists() || !fileInfo.isDir() || fileInfo.isRoot()) {
-		QMessageBox::information(this, "Base", tr("\"%1\" is not a valid path."));
+		QMessageBox::information(this, "Base", tr("\"%1\" is not a valid location."));
 		return;
 	}
 
@@ -209,7 +209,13 @@ void SubmitContentDialog::onSubmit()
 		return;
 	}
 
-	ec = submitter->setCommand(ui_.commandEdit->text().toStdString());
+	QString startup = ui_.commandEdit->text();
+	if (!ui_.workDirEdit->text().isEmpty()) {
+		startup += "\n";
+		startup += ui_.workDirEdit->text();
+	}
+
+	ec = submitter->setStartup(startup.toStdString());
 	CHECK_ERROR_CODE(ec);
 
 	if (!ui_.parentIdEdit->text().isEmpty()) {
@@ -233,7 +239,7 @@ void SubmitContentDialog::onSubmit()
 	boost::shared_ptr<ASyncSubmitContentTask> task(new ASyncSubmitContentTask(context_, submitter));
 
 	task->setInfoHead(QString("Submit %1").arg(ui_.titleEdit->text()).toLocal8Bit().data());
-	task->setContentPath(ui_.pathEdit->text().toLocal8Bit().data());
+	task->setContentLocation(ui_.locationEdit->text().toLocal8Bit().data());
 
 	std::string imageFilename;
 

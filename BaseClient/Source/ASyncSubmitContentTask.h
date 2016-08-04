@@ -20,7 +20,7 @@ public:
 
 	void setInfoHead(const std::string&);
 
-	void setContentPath(const std::string&);
+	void setContentLocation(const std::string&);
 	void addImageFile(const std::string&);
 
 	virtual void start();
@@ -40,7 +40,7 @@ private:
 
 	std::string infoHead_;
 	std::string info_;
-	std::string contentPath_;
+	std::string contentLocation_;
 	std::vector<std::string> imageFiles_;
 
 	int state_;

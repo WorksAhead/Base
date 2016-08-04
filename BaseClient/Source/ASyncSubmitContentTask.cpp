@@ -28,9 +28,9 @@ void ASyncSubmitContentTask::setInfoHead(const std::string& infoHead)
 	infoHead_ = infoHead;
 }
 
-void ASyncSubmitContentTask::setContentPath(const std::string& path)
+void ASyncSubmitContentTask::setContentLocation(const std::string& location)
 {
-	contentPath_ = path;
+	contentLocation_ = location;
 }
 
 void ASyncSubmitContentTask::addImageFile(const std::string& path)
@@ -123,7 +123,7 @@ void ASyncSubmitContentTask::run()
 
 	std::unique_ptr<ASyncPackTask> packTask(new ASyncPackTask(context_));
 	packTask->setInfoHead(infoHead_);
-	packTask->setPath(contentPath_);
+	packTask->setPath(contentLocation_);
 	packTask->start();
 
 	for (;;)

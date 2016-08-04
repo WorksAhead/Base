@@ -19,6 +19,7 @@
 
 #include <unordered_set>
 #include <unordered_map>
+#include <map>
 
 // forward declaration
 class LibraryWidget;
@@ -51,8 +52,8 @@ private:
 	int getContentState(const std::string& id);
 	bool changeContentState(const std::string& id, int& oldState, int newState);
 
-	void createProject(const std::string& id, const std::string& title, const std::string& location);
-	void addProject(const std::string& id, const std::string& contentId, const std::string& location, const std::string& name);
+	void createProject(const std::string& contentId, const std::string& title, const std::string& location);
+	void addProject(const std::string& id, const std::string& contentId, const std::string& location, const std::map<std::string, std::string>& properties);
 	void removeProject(const std::string& id, bool removeDir);
 	void renameProject(const std::string& id, const std::string& newName);
 	bool getProject(ProjectInfo&, const std::string& id);

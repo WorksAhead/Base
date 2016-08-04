@@ -69,7 +69,7 @@ const ::std::string __Rpc__ContentSubmitter__setCategory_name = "setCategory";
 
 const ::std::string __Rpc__ContentSubmitter__setEngine_name = "setEngine";
 
-const ::std::string __Rpc__ContentSubmitter__setCommand_name = "setCommand";
+const ::std::string __Rpc__ContentSubmitter__setStartup_name = "setStartup";
 
 const ::std::string __Rpc__ContentSubmitter__setParentId_name = "setParentId";
 
@@ -1541,14 +1541,14 @@ IceProxy::Rpc::ContentSubmitter::end_setEngine(const ::Ice::AsyncResultPtr& __re
 }
 
 ::Rpc::ErrorCode
-IceProxy::Rpc::ContentSubmitter::setCommand(const ::std::string& __p_command, const ::Ice::Context* __ctx)
+IceProxy::Rpc::ContentSubmitter::setStartup(const ::std::string& __p_startup, const ::Ice::Context* __ctx)
 {
-    __checkTwowayOnly(__Rpc__ContentSubmitter__setCommand_name);
-    ::IceInternal::Outgoing __og(this, __Rpc__ContentSubmitter__setCommand_name, ::Ice::Normal, __ctx);
+    __checkTwowayOnly(__Rpc__ContentSubmitter__setStartup_name);
+    ::IceInternal::Outgoing __og(this, __Rpc__ContentSubmitter__setStartup_name, ::Ice::Normal, __ctx);
     try
     {
         ::IceInternal::BasicStream* __os = __og.startWriteParams(::Ice::DefaultFormat);
-        __os->write(__p_command);
+        __os->write(__p_startup);
         __og.endWriteParams();
     }
     catch(const ::Ice::LocalException& __ex)
@@ -1575,15 +1575,15 @@ IceProxy::Rpc::ContentSubmitter::setCommand(const ::std::string& __p_command, co
 }
 
 ::Ice::AsyncResultPtr
-IceProxy::Rpc::ContentSubmitter::begin_setCommand(const ::std::string& __p_command, const ::Ice::Context* __ctx, const ::IceInternal::CallbackBasePtr& __del, const ::Ice::LocalObjectPtr& __cookie)
+IceProxy::Rpc::ContentSubmitter::begin_setStartup(const ::std::string& __p_startup, const ::Ice::Context* __ctx, const ::IceInternal::CallbackBasePtr& __del, const ::Ice::LocalObjectPtr& __cookie)
 {
-    __checkAsyncTwowayOnly(__Rpc__ContentSubmitter__setCommand_name);
-    ::IceInternal::OutgoingAsyncPtr __result = new ::IceInternal::OutgoingAsync(this, __Rpc__ContentSubmitter__setCommand_name, __del, __cookie);
+    __checkAsyncTwowayOnly(__Rpc__ContentSubmitter__setStartup_name);
+    ::IceInternal::OutgoingAsyncPtr __result = new ::IceInternal::OutgoingAsync(this, __Rpc__ContentSubmitter__setStartup_name, __del, __cookie);
     try
     {
-        __result->prepare(__Rpc__ContentSubmitter__setCommand_name, ::Ice::Normal, __ctx);
+        __result->prepare(__Rpc__ContentSubmitter__setStartup_name, ::Ice::Normal, __ctx);
         ::IceInternal::BasicStream* __os = __result->startWriteParams(::Ice::DefaultFormat);
-        __os->write(__p_command);
+        __os->write(__p_startup);
         __result->endWriteParams();
         __result->invoke();
     }
@@ -1597,7 +1597,7 @@ IceProxy::Rpc::ContentSubmitter::begin_setCommand(const ::std::string& __p_comma
 #ifdef ICE_CPP11
 
 ::Ice::AsyncResultPtr
-IceProxy::Rpc::ContentSubmitter::__begin_setCommand(const ::std::string& __p_command, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent)
+IceProxy::Rpc::ContentSubmitter::__begin_setStartup(const ::std::string& __p_startup, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent)
 {
     class Cpp11CB : public ::IceInternal::Cpp11FnCallbackNC
     {
@@ -1616,7 +1616,7 @@ IceProxy::Rpc::ContentSubmitter::__begin_setCommand(const ::std::string& __p_com
             ::Rpc::ErrorCode __ret;
             try
             {
-                __ret = __proxy->end_setCommand(__result);
+                __ret = __proxy->end_setStartup(__result);
             }
             catch(const ::Ice::Exception& ex)
             {
@@ -1633,14 +1633,14 @@ IceProxy::Rpc::ContentSubmitter::__begin_setCommand(const ::std::string& __p_com
         
         ::std::function<void (::Rpc::ErrorCode)> _response;
     };
-    return begin_setCommand(__p_command, __ctx, new Cpp11CB(__response, __exception, __sent));
+    return begin_setStartup(__p_startup, __ctx, new Cpp11CB(__response, __exception, __sent));
 }
 #endif
 
 ::Rpc::ErrorCode
-IceProxy::Rpc::ContentSubmitter::end_setCommand(const ::Ice::AsyncResultPtr& __result)
+IceProxy::Rpc::ContentSubmitter::end_setStartup(const ::Ice::AsyncResultPtr& __result)
 {
-    ::Ice::AsyncResult::__check(__result, this, __Rpc__ContentSubmitter__setCommand_name);
+    ::Ice::AsyncResult::__check(__result, this, __Rpc__ContentSubmitter__setStartup_name);
     ::Rpc::ErrorCode __ret;
     if(!__result->__wait())
     {
@@ -4629,14 +4629,14 @@ Rpc::ContentSubmitter::___setEngine(::IceInternal::Incoming& __inS, const ::Ice:
 }
 
 ::Ice::DispatchStatus
-Rpc::ContentSubmitter::___setCommand(::IceInternal::Incoming& __inS, const ::Ice::Current& __current)
+Rpc::ContentSubmitter::___setStartup(::IceInternal::Incoming& __inS, const ::Ice::Current& __current)
 {
     __checkMode(::Ice::Normal, __current.mode);
     ::IceInternal::BasicStream* __is = __inS.startReadParams();
-    ::std::string __p_command;
-    __is->read(__p_command);
+    ::std::string __p_startup;
+    __is->read(__p_startup);
     __inS.endReadParams();
-    ::Rpc::ErrorCode __ret = setCommand(__p_command, __current);
+    ::Rpc::ErrorCode __ret = setStartup(__p_startup, __current);
     ::IceInternal::BasicStream* __os = __inS.__startWriteParams(::Ice::DefaultFormat);
     __os->write(__ret);
     __inS.__endWriteParams(true);
@@ -4738,11 +4738,11 @@ const ::std::string __Rpc__ContentSubmitter_all[] =
     "ice_isA",
     "ice_ping",
     "setCategory",
-    "setCommand",
     "setDescription",
     "setEngine",
     "setPage",
     "setParentId",
+    "setStartup",
     "setTitle",
     "uploadContent",
     "uploadImage"
@@ -4795,23 +4795,23 @@ Rpc::ContentSubmitter::__dispatch(::IceInternal::Incoming& in, const ::Ice::Curr
         }
         case 8:
         {
-            return ___setCommand(in, current);
+            return ___setDescription(in, current);
         }
         case 9:
         {
-            return ___setDescription(in, current);
+            return ___setEngine(in, current);
         }
         case 10:
         {
-            return ___setEngine(in, current);
+            return ___setPage(in, current);
         }
         case 11:
         {
-            return ___setPage(in, current);
+            return ___setParentId(in, current);
         }
         case 12:
         {
-            return ___setParentId(in, current);
+            return ___setStartup(in, current);
         }
         case 13:
         {

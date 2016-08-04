@@ -34,6 +34,8 @@ struct ProjectInfo {
 	std::string contentId;
 	std::string location;
 	std::string name;
+	std::string defaultEngineVersion;
+	std::string startup;
 };
 
 struct Context
@@ -63,7 +65,7 @@ struct Context
 	std::function<bool(const std::string&, int&, int)> changeContentState;
 
 	std::function<void(const std::string&, const std::string&, const std::string&)> createProject;
-	std::function<void(const std::string&, const std::string&, const std::string&, const std::string&)> addProject;
+	std::function<void(const std::string&, const std::string&, const std::string&, const std::map<std::string, std::string>& properties)> addProject;
 	std::function<void(const std::string&, bool)> removeProject;
 	std::function<void(const std::string&, const std::string&)> renameProject;
 	std::function<bool(ProjectInfo&, const std::string& id)> getProject;

@@ -41,7 +41,7 @@ Center::Center()
 	db_->exec("CREATE TABLE IF NOT EXISTS Contents ("
 		"Id TEXT, ParentId TEXT, "
 		"Title TEXT, Page TEXT, Category TEXT, EngineName TEXT, "
-		"EngineVersion TEXT, Command TEXT, ImageCount INT, Desc TEXT, "
+		"EngineVersion TEXT, Startup TEXT, ImageCount INT, Desc TEXT, "
 		"User TEXT, UpTime DATETIME, State TEXT)");
 
 	db_->exec("CREATE TABLE IF NOT EXISTS Info ("
@@ -199,7 +199,7 @@ void Center::addContent(const std::map<std::string, std::string>& form, const st
 	oss << sqlText(form.at("Category")) << ", ";
 	oss << sqlText(form.at("EngineName")) << ", ";
 	oss << sqlText(form.at("EngineVersion")) << ", ";
-	oss << sqlText(form.at("Command")) << ", ";
+	oss << sqlText(form.at("Startup")) << ", ";
 	oss << sqlText(form.at("ImageCount")) << ", ";
 	oss << sqlText(form.at("Desc")) << ", ";
 	oss << sqlText(form.at("User")) << ", ";
@@ -230,7 +230,7 @@ bool Center::getContent(std::map<std::string, std::string>& form, const std::str
 	form["Category"] = s.getColumn("Category").getText();
 	form["EngineName"] = s.getColumn("EngineName").getText();
 	form["EngineVersion"] = s.getColumn("EngineVersion").getText();
-	form["Command"] = s.getColumn("Command").getText();
+	form["Startup"] = s.getColumn("Startup").getText();
 	form["ImageCount"] = s.getColumn("ImageCount").getText();
 	form["Desc"] = s.getColumn("Desc").getText();
 	form["User"] = s.getColumn("User").getText();

@@ -21,7 +21,7 @@ module Rpc
 		string category;
 		string engineName;
 		string engineVersion;
-		string command;
+		string startup;
 		int imageCount;
 		string desc;
 		string user;
@@ -73,7 +73,7 @@ module Rpc
 		ErrorCode setPage(string page);
 		ErrorCode setCategory(string category);
 		ErrorCode setEngine(string name, string version);
-		ErrorCode setCommand(string command);
+		ErrorCode setStartup(string startup);
 		ErrorCode setParentId(string id);
 		ErrorCode setDescription(string description);
 		ErrorCode uploadImage(int index, out Uploader* uploader);

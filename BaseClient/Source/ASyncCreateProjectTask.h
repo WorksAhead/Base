@@ -11,6 +11,7 @@
 #include <memory>
 #include <thread>
 #include <string>
+#include <map>
 
 class ASyncCreateProjectTask : public ASyncTask {
 public:
@@ -20,8 +21,8 @@ public:
 	void setInfoHead(const std::string&);
 	void setContentId(const std::string& id);
 	void setProjectId(const std::string& id);
-	void setProjectName(const std::string& name);
 	void setLocation(const std::string& location);
+	void setProperties(const std::map<std::string, std::string>& properties);
 
 	virtual void start();
 	virtual void cancel();
@@ -38,11 +39,12 @@ private:
 	ContextPtr context_;
 
 	std::string infoHead_;
+	std::string info_;
+
 	std::string contentId_;
 	std::string projectId_;
-	std::string projectName_;
 	std::string location_;
-	std::string info_;
+	std::map<std::string, std::string> properties_;
 
 	int state_;
 	int progress_;

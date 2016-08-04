@@ -9,10 +9,15 @@
 #include <QCheckBox>
 #include <QPushButton>
 #include <QFileDialog>
+#include <QProcess>
 #include <QMessageBox>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
+
+#include <sstream>
+
+#include <windows.h>
 
 namespace fs = boost::filesystem;
 
@@ -20,6 +25,8 @@ ProjectItemWidget::ProjectItemWidget(ContextPtr context, QWidget* parent) : QWid
 {
 	setAutoFillBackground(true);
 	ui_.setupUi(this);
+
+	ui_.nameLabel->setToolTip(tr("Double click to edit"));
 
 	QMenu* menu = new QMenu;
 	ui_.openButton->setMenu(menu);
@@ -114,6 +121,82 @@ void ProjectItemWidget::paintEvent(QPaintEvent*)
 
 void ProjectItemWidget::onOpen()
 {
+	ProjectInfo pi;
+	if (!context_->getProject(pi, projectId_.toStdString())) {
+		return;
+	}
+
+	std::string engineName;
+	std::string engineVersion;
+	{
+		std::istringstream stream(pi.defaultEngineVersion);
+		std::getline(stream, engineName);
+		std::getline(stream, engineVersion);
+		if (engineName.empty() || engineVersion.empty()) {
+			QMessageBox::information(this, "Base", tr("No default Engine."));
+		}
+	}
+
+	int state = context_->getEngineState(engineName, engineVersion);
+
+	if (state == EngineState::installed)
+	{
+		std::string startup = pi.startup;
+		boost::ireplace_all(startup, "$(EngineDir)", context_->enginePath(engineName, engineVersion));
+		boost::ireplace_all(startup, "$(ProjectDir)", pi.location);
+		std::string command;
+		std::string workDir;
+		std::istringstream stream(startup);
+		getline(stream, command);
+		getline(stream, workDir);
+
+		STARTUPINFOA si;
+		memset(&si, 0, sizeof(STARTUPINFOA));
+		si.cb = sizeof(STARTUPINFOA);
+
+		PROCESS_INFORMATION pi;
+		memset(&pi, 0, sizeof(PROCESS_INFORMATION));
+
+		std::vector<char> buf(command.c_str(), command.c_str() + command.size() + 1);
+
+		if (!CreateProcessA(NULL, buf.data(), NULL, NULL, FALSE, 0, NULL, (workDir.empty() ? NULL : workDir.c_str()), &si, &pi)) {
+			QMessageBox::information(this, "Base", tr("Failed to open project, please check the command."));
+			return;
+		}
+
+		CloseHandle(pi.hProcess);
+		CloseHandle(pi.hThread);
+	}
+	else if (state == EngineState::not_installed)
+	{
+		const int ret = QMessageBox::question(
+			0, "Base",
+			QString(tr("The default Engine (%1 %2) to open this project is not installed, "
+			"do you want to install it now ?")).arg(engineName.c_str()).arg(engineVersion.c_str()),
+			QMessageBox::Yes|QMessageBox::Default, QMessageBox::No);
+
+		if (ret == QMessageBox::Yes) {
+			context_->installEngine(engineName, engineVersion);
+		}
+
+		return;
+	}
+	else if (state == EngineState::removing)
+	{
+		QMessageBox::information(this, "Base",
+			QString(tr("The default Engine (%1 %2) to open this project is now removing, "
+			"you can reinstall after removing the Engine.")).arg(engineName.c_str()).arg(engineVersion.c_str()));
+
+		return;
+	}
+	else if (state == EngineState::installing)
+	{
+		QMessageBox::information(this, "Base",
+			QString(tr("The default Engine (%1 %2) to open this project is now installing, "
+			"please wait.")).arg(engineName.c_str()).arg(engineVersion.c_str()));
+
+		return;
+	}
 }
 
 void ProjectItemWidget::onRemove()
@@ -135,15 +218,37 @@ void ProjectItemWidget::onRemove()
 
 void ProjectItemWidget::updateTips()
 {
+	QString tips;
+
+	Rpc::ContentInfo ci;
+	Rpc::ErrorCode ec = context_->session->getContentInfo(contentId_.toStdString(), ci);
+	if (ec == Rpc::ec_success)
+	{
+		if (!tips.isEmpty()) {
+			tips += "\n";
+		}
+		tips +=
+			QString(tr("Supported Engine Versions:")) +
+			"\n" +
+			ci.engineName.c_str() +
+			" " +
+			ci.engineVersion.c_str();
+	}
+
 	ProjectInfo pi;
 	if (context_->getProject(pi, projectId_.toStdString()))
 	{
-		ui_.thumbnailViewer->setToolTip(
-			name() +
+		if (!tips.isEmpty()) {
+			tips += "\n";
+		}
+		tips +=
+			QString(tr("Location:")) +
 			"\n" +
-			QString::fromLocal8Bit(pi.location.c_str()));
+			QString::fromLocal8Bit(pi.location.c_str());
 	}
 
-	ui_.nameLabel->setToolTip(tr("Double click to edit"));
+	if (!tips.isEmpty()) {
+		ui_.thumbnailViewer->setToolTip(tips);
+	}
 }
 

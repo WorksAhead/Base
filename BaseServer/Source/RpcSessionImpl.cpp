@@ -121,7 +121,7 @@ Rpc::ErrorCode RpcSessionImpl::getContentInfo(const std::string& id, Rpc::Conten
 	info.category = form.at("Category");
 	info.engineName = form.at("EngineName");
 	info.engineVersion = form.at("EngineVersion");
-	info.command = form.at("Command");
+	info.startup = form.at("Startup");
 	info.imageCount = std::stoi(form.at("ImageCount"));
 	info.desc = form.at("Desc");
 	info.user = form.at("User");

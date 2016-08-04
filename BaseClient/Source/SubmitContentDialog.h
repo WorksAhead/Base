@@ -16,7 +16,7 @@ public:
 	void setPage(const QString& name);
 
 private Q_SLOTS:
-	void onSelectPath();
+	void onSelectLocation();
 	void onSetCover();
 	void onPrevScreenshot();
 	void onNextScreenshot();

@@ -84,12 +84,12 @@ void ManageEngineWidget::onRefresh()
 
 void ManageEngineWidget::onRemove()
 {
-	const int rc = QMessageBox::question(
+	const int ret = QMessageBox::question(
 		0, "Base",
 		tr("Are you sure you want to remove these versions ?\nWarning: This operation cannot be undone."),
 		QMessageBox::Yes, QMessageBox::No|QMessageBox::Default);
 
-	if (rc != QMessageBox::Yes) {
+	if (ret != QMessageBox::Yes) {
 		return;
 	}
 

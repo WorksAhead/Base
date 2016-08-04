@@ -152,7 +152,7 @@ Rpc::ErrorCode RpcContentSubmitterImpl::setEngine(const std::string& name, const
 	return Rpc::ec_success;
 }
 
-Rpc::ErrorCode RpcContentSubmitterImpl::setCommand(const std::string& command, const Ice::Current&)
+Rpc::ErrorCode RpcContentSubmitterImpl::setStartup(const std::string& startup, const Ice::Current&)
 {
 	boost::recursive_mutex::scoped_lock lock(sync_);
 	checkIsDestroyed();
@@ -161,7 +161,7 @@ Rpc::ErrorCode RpcContentSubmitterImpl::setCommand(const std::string& command, c
 		return Rpc::ec_invalid_operation;
 	}
 
-	form_["Command"] = command;
+	form_["Startup"] = startup;
 
 	return Rpc::ec_success;
 }
@@ -304,7 +304,7 @@ Rpc::ErrorCode RpcContentSubmitterImpl::finish(const Ice::Current&)
 
 	if (!form_.count("Title") || !form_.count("Page") ||
 		!form_.count("Category") || !form_.count("EngineName") ||
-		!form_.count("EngineVersion") || !form_.count("Command") ||
+		!form_.count("EngineVersion") || !form_.count("Startup") ||
 		!form_.count("ParentId") || !form_.count("Desc")) {
 		return Rpc::ec_incomplete_form;
 	}
