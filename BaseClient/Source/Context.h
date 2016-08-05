@@ -5,6 +5,9 @@
 
 #include <RpcSession.h>
 
+#include <boost/algorithm/string.hpp>
+#include <boost/functional/hash.hpp>
+
 #include <functional>
 #include <memory>
 #include <string>
@@ -38,6 +41,35 @@ struct ProjectInfo {
 	std::string startup;
 };
 
+typedef std::pair<std::string, std::string> EngineVersion;
+
+class EngineVersionEq : public std::binary_function<EngineVersion, EngineVersion, bool> {
+public:
+	bool operator()(const EngineVersion& a, const EngineVersion& b) const
+	{
+		std::locale locale;
+		return (boost::iequals(a.first, b.first, locale) && boost::iequals(a.second, b.second, locale));
+	}
+};
+
+class EngineVersionHash : public std::unary_function<EngineVersion, std::size_t> {
+public:
+	std::size_t operator()(const EngineVersion& v) const
+	{
+		std::size_t seed = 0;
+		std::locale locale;
+
+		for (auto ch : v.first) {
+			boost::hash_combine(seed, std::tolower(ch, locale));
+		}
+		for (auto ch : v.second) {
+			boost::hash_combine(seed, std::tolower(ch, locale));
+		}
+
+		return seed;
+	}
+};
+
 struct Context
 {
 	Rpc::SessionPrx session;
@@ -52,12 +84,14 @@ struct Context
 	std::function<std::string()> cachePath;
 	std::function<std::string()> libraryPath;
 
-	std::function<std::string(const std::string&, const std::string&)> enginePath;
+	std::function<std::string(const EngineVersion&)> enginePath;
 	std::function<std::string(const std::string&)> contentPath;
 
-	std::function<void(const std::string&, const std::string&)> installEngine;
-	std::function<int(const std::string&, const std::string&)> getEngineState;
-	std::function<bool(const std::string&, const std::string&, int&, int)> changeEngineState;
+	std::function<void(const EngineVersion&)> installEngine;
+	std::function<void(const EngineVersion&)> removeEngine;
+	std::function<int(const EngineVersion&)> getEngineState;
+	std::function<bool(const EngineVersion&, int&, int)> changeEngineState;
+	std::function<void(std::vector<EngineVersion>&)> getEngineList;
 
 	std::function<void(std::vector<std::string>&)> getDownloadedContentList;
 

@@ -82,20 +82,24 @@ std::string ASyncRemoveTask::information()
 
 void ASyncRemoveTask::run()
 {
+#define CHECK_EC(ec)								\
+	if (ec) {										\
+		boost::mutex::scoped_lock lock(sync_);		\
+		infoBody_ = ec.message();					\
+		state_ = ASyncTask::state_failed;			\
+		return;										\
+	}
+
 	sync_.lock();
 	state_ = ASyncTask::state_running;
 	sync_.unlock();
 
-	if (!fs::exists(path_)) {
-		boost::mutex::scoped_lock lock(sync_);
-		state_ = ASyncTask::state_finished;
-		progress_ = 100;
-		return;
-	}
+	boost::system::error_code ec;
 
 	std::vector<FileScanner::Path> srcFiles;
 
-	FileScanner scanner(path_);
+	FileScanner scanner(path_, ec);
+	CHECK_EC(ec);
 
 	sync_.lock();
 	infoBody_ = "Scanning";
@@ -113,7 +117,10 @@ void ASyncRemoveTask::run()
 		sync_.unlock();
 
 		FileScanner::Path path;
-		int ret = scanner.nextFile(path);
+
+		int ret = scanner.nextFile(path, ec);
+		CHECK_EC(ec);
+
 		if (ret > 0) {
 			srcFiles.push_back(path);
 		}
@@ -143,28 +150,26 @@ void ASyncRemoveTask::run()
 		infoBody_ = "Removing " + p.generic_string();
 		sync_.unlock();
 
-		if (!fs::remove(p)) {
-			boost::mutex::scoped_lock lock(sync_);
-			infoBody_ = "Unable to remove " + p.generic_string();
-			state_ = ASyncTask::state_failed;
-			return;
-		}
-		else {
-			boost::mutex::scoped_lock lock(sync_);
-			progress_ = (double)i / (double)srcFiles.size() * 100.0;
-		}
+		fs::remove(p, ec);
+		CHECK_EC(ec);
+
+		boost::mutex::scoped_lock lock(sync_);
+		progress_ = (double)i / (double)srcFiles.size() * 100.0;
 	}
 
 	sync_.lock();
 	infoBody_ = "Removing " + path_;
 	sync_.unlock();
 
-	fs::remove_all(path_);
+	fs::remove_all(path_, ec);
+	CHECK_EC(ec);
 
 	sync_.lock();
 	infoBody_.clear();
 	state_ = ASyncTask::state_finished;
 	progress_ = 100;
 	sync_.unlock();
+
+#undef CHECK_EC
 }
 

@@ -1,5 +1,4 @@
 #include "ASyncInstallEngineTask.h"
-#include "ASyncRemoveTask.h"
 #include "ASyncDownloadTask.h"
 #include "AsyncUnpackTask.h"
 
@@ -27,10 +26,9 @@ void ASyncInstallEngineTask::setInfoHead(const std::string& infoHead)
 	infoHead_ = infoHead;
 }
 
-void ASyncInstallEngineTask::setEngineVersion(const std::string& name, const std::string& version)
+void ASyncInstallEngineTask::setEngineVersion(const EngineVersion& v)
 {
-	engineName_ = name;
-	engineVersion_ = version;
+	engineVersion_ = v;
 }
 
 void ASyncInstallEngineTask::setPath(const std::string& path)
@@ -96,10 +94,10 @@ void ASyncInstallEngineTask::run()
 	{
 		int state = EngineState::installing;
 		if (commit) {
-			context_->changeEngineState(engineName_, engineVersion_, state, EngineState::installed);
+			context_->changeEngineState(engineVersion_, state, EngineState::installed);
 		}
 		else {
-			context_->changeEngineState(engineName_, engineVersion_, state, EngineState::not_installed);
+			context_->changeEngineState(engineVersion_, state, EngineState::not_installed);
 		}
 	};
 
@@ -115,23 +113,6 @@ void ASyncInstallEngineTask::run()
 			if (downloadTask->state() == ASyncTask::state_cancelled) {
 				downloader_->cancel();
 			}
-			return;
-		}
-		else if (ret > 0) {
-			break;
-		}
-		std::this_thread::sleep_for(std::chrono::milliseconds(100));
-	}
-
-	std::unique_ptr<ASyncRemoveTask> removeTask(new ASyncRemoveTask);
-	removeTask->setInfoHead(infoHead_);
-	removeTask->setPath(path_);
-	removeTask->start();
-
-	for (;;)
-	{
-		const int ret = update(removeTask.get(), 50, 0.0);
-		if (ret < 0) {
 			return;
 		}
 		else if (ret > 0) {

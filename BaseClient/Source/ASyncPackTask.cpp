@@ -82,6 +82,14 @@ std::string ASyncPackTask::information()
 
 void ASyncPackTask::run()
 {
+#define CHECK_EC(ec)								\
+	if (ec) {										\
+		boost::mutex::scoped_lock lock(sync_);		\
+		infoBody_ = ec.message();					\
+		state_ = ASyncTask::state_failed;			\
+		return;										\
+	}
+
 	const int level = 0;
 
 	bool commit = false;
@@ -90,9 +98,12 @@ void ASyncPackTask::run()
 	state_ = ASyncTask::state_running;
 	sync_.unlock();
 
+	boost::system::error_code ec;
+
 	std::vector<FileScanner::Path> srcFiles;
 
-	FileScanner scanner(path_);
+	FileScanner scanner(path_, ec);
+	CHECK_EC(ec);
 
 	sync_.lock();
 	infoBody_ = "Scanning";
@@ -110,7 +121,9 @@ void ASyncPackTask::run()
 		sync_.unlock();
 
 		FileScanner::Path path;
-		int ret = scanner.nextFile(path);
+		int ret = scanner.nextFile(path, ec);
+		CHECK_EC(ec);
+
 		if (ret > 0) {
 			srcFiles.push_back(path);
 		}
@@ -190,5 +203,7 @@ void ASyncPackTask::run()
 	state_ = ASyncTask::state_finished;
 	progress_ = 100;
 	sync_.unlock();
+
+#undef CHECK_EC
 }
 

@@ -322,6 +322,10 @@ QWidget#LibraryContentWidget {
 	background: rgb(20, 20, 20);
 }
 
+QWidget#LibraryEngineWidget {
+	background: rgb(20, 20, 20);
+}
+
 ASyncTaskWidget, ASyncTaskWidget[selected="false"] {	
 	background: rgb(30, 30, 30);
 }

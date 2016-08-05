@@ -3,6 +3,7 @@
 #include "LibraryWidget.h"
 #include "ManageWidget.h"
 #include "ASyncInstallEngineTask.h"
+#include "ASyncRemoveEngineTask.h"
 #include "ASyncCreateProjectTask.h"
 #include "ASyncRemoveTask.h"
 #include "ContentImageLoader.h"
@@ -22,6 +23,7 @@
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_io.hpp>
 
+#include <sstream>
 #include <memory>
 
 namespace fs = boost::filesystem;
@@ -76,11 +78,13 @@ BaseClient::BaseClient(Rpc::SessionPrx session)
 	context_->uniquePath = std::bind(&BaseClient::uniquePath, this);
 	context_->cachePath = std::bind(&BaseClient::cachePath, this);
 	context_->libraryPath = std::bind(&BaseClient::libraryPath, this);
-	context_->enginePath = std::bind(&BaseClient::enginePath, this, std::placeholders::_1, std::placeholders::_2);
+	context_->enginePath = std::bind(&BaseClient::enginePath, this, std::placeholders::_1);
 	context_->contentPath = std::bind(&BaseClient::contentPath, this, std::placeholders::_1);
-	context_->installEngine = std::bind(&BaseClient::installEngine, this, std::placeholders::_1, std::placeholders::_2);
-	context_->getEngineState = std::bind(&BaseClient::getEngineState, this, std::placeholders::_1, std::placeholders::_2);
-	context_->changeEngineState = std::bind(&BaseClient::changeEngineState, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4);
+	context_->installEngine = std::bind(&BaseClient::installEngine, this, std::placeholders::_1);
+	context_->removeEngine = std::bind(&BaseClient::removeEngine, this, std::placeholders::_1);
+	context_->getEngineState = std::bind(&BaseClient::getEngineState, this, std::placeholders::_1);
+	context_->changeEngineState = std::bind(&BaseClient::changeEngineState, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+	context_->getEngineList = std::bind(&BaseClient::getEngineList, this, std::placeholders::_1);
 	context_->getDownloadedContentList = std::bind(&BaseClient::getDownloadedContentList, this, std::placeholders::_1);
 	context_->getContentState = std::bind(&BaseClient::getContentState, this, std::placeholders::_1);
 	context_->changeContentState = std::bind(&BaseClient::changeContentState, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
@@ -169,14 +173,14 @@ std::string BaseClient::libraryPath()
 	return (fs::current_path() / "Library").string();
 }
 
-std::string BaseClient::enginePath(const std::string& name, const std::string& version)
+std::string BaseClient::enginePath(const EngineVersion& v)
 {
 	fs::path path = libraryPath();
 	path /= "Engines";
 	path /= boost::to_lower_copy(
-		boost::replace_all_copy(name, " ", "_") +
+		boost::replace_all_copy(v.first, " ", "_") +
 		"-" +
-		boost::replace_all_copy(version, " ", "_")
+		boost::replace_all_copy(v.second, " ", "_")
 		);
 	return path.string();
 }
@@ -189,64 +193,90 @@ std::string BaseClient::contentPath(const std::string& id)
 	return path.string();
 }
 
-void BaseClient::installEngine(const std::string& name, const std::string& version)
+void BaseClient::installEngine(const EngineVersion& v)
 {
 	int state = EngineState::not_installed;
 
-	if (!context_->changeEngineState(name, version, state, EngineState::installing))
+	if (!changeEngineState(v, state, EngineState::installing))
 	{
 		if (state == EngineState::installing) {
 			QMessageBox::information(this, "Base",
-				QString("%1 %2 is now installing").arg(name.c_str()).arg(version.c_str()));
+				QString("%1 %2 is now installing").arg(v.first.c_str()).arg(v.second.c_str()));
 		}
 		else if (state == EngineState::installed) {
 			QMessageBox::information(this, "Base",
-				QString("%1 %2 is already installed").arg(name.c_str()).arg(version.c_str()));
+				QString("%1 %2 is already installed").arg(v.first.c_str()).arg(v.second.c_str()));
 		}
 		else if (state == EngineState::removing) {
 			QMessageBox::information(this, "Base",
-				QString("%1 %2 is now removing").arg(name.c_str()).arg(version.c_str()));
+				QString("%1 %2 is now removing").arg(v.first.c_str()).arg(v.second.c_str()));
 		}
 		return;
 	}
 
 	Rpc::DownloaderPrx downloader;
-	Rpc::ErrorCode ec = context_->session->downloadEngineVersion(name, version, downloader);
+	Rpc::ErrorCode ec = context_->session->downloadEngineVersion(v.first, v.second, downloader);
 	if (ec != Rpc::ec_success) {
 		state = EngineState::installing;
-		context_->changeEngineState(name, version, state, EngineState::not_installed);
-		QMessageBox::information(this, "Base", QString("Unable to download %1 %2").arg(name.c_str()).arg(version.c_str()));
+		changeEngineState(v, state, EngineState::not_installed);
+		QMessageBox::information(this, "Base", QString("Unable to download %1 %2").arg(v.first.c_str()).arg(v.second.c_str()));
 		return;
 	}
 
 	boost::shared_ptr<ASyncInstallEngineTask> task(new ASyncInstallEngineTask(context_, downloader));
-	task->setInfoHead("Install " + name + " " + version);
-	task->setEngineVersion(name, version);
-	task->setPath(context_->enginePath(name, version));
+	task->setInfoHead("Install " + v.first + " " + v.second);
+	task->setEngineVersion(v);
+	task->setPath(context_->enginePath(v));
 
 	addTask(task);
 }
 
-int BaseClient::getEngineState(const std::string& name, const std::string& version)
+void BaseClient::removeEngine(const EngineVersion& v)
 {
-	const std::string& key = boost::to_lower_copy(name + "\n" + version);
+	int state = EngineState::installed;
 
-	boost::recursive_mutex::scoped_lock lock(engineStateTabelSync_);
-
-	if (engineStateTabel_.count(key) == 0) {
-		engineStateTabel_.insert(std::make_pair(key, EngineState::not_installed));
+	if (!changeEngineState(v, state, EngineState::removing))
+	{
+		if (state == EngineState::installing) {
+			QMessageBox::information(this, "Base",
+				QString("%1 %2 is now installing").arg(v.first.c_str()).arg(v.second.c_str()));
+		}
+		else if (state == EngineState::not_installed) {
+			QMessageBox::information(this, "Base",
+				QString("%1 %2 is not installed").arg(v.first.c_str()).arg(v.second.c_str()));
+		}
+		else if (state == EngineState::removing) {
+			QMessageBox::information(this, "Base",
+				QString("%1 %2 is now removing").arg(v.first.c_str()).arg(v.second.c_str()));
+		}
+		return;
 	}
 
-	return engineStateTabel_[key];
+	library_->removeEngine(v.first.c_str(), v.second.c_str());
+
+	boost::shared_ptr<ASyncRemoveEngineTask> task(new ASyncRemoveEngineTask(context_));
+	task->setInfoHead("Remove " + v.first + " " + v.second);
+	task->setEngineVersion(v);
+
+	addTask(task);
 }
 
-bool BaseClient::changeEngineState(const std::string& name, const std::string& version, int& oldState, int newState)
+int BaseClient::getEngineState(const EngineVersion& v)
 {
-	const std::string& key = boost::to_lower_copy(name + "\n" + version);
-
 	boost::recursive_mutex::scoped_lock lock(engineStateTabelSync_);
 
-	const int state = getEngineState(name, version);
+	if (engineStateTabel_.count(v) == 0) {
+		engineStateTabel_.insert(std::make_pair(v, EngineState::not_installed));
+	}
+
+	return engineStateTabel_[v];
+}
+
+bool BaseClient::changeEngineState(const EngineVersion& v, int& oldState, int newState)
+{
+	boost::recursive_mutex::scoped_lock lock(engineStateTabelSync_);
+
+	const int state = getEngineState(v);
 	if (state != oldState) {
 		oldState = state;
 		return false;
@@ -260,36 +290,47 @@ bool BaseClient::changeEngineState(const std::string& name, const std::string& v
 	{
 		std::ostringstream oss;
 		oss << "INSERT INTO InstalledEngines VALUES (";
-		oss << sqlText(name) << ", ";
-		oss << sqlText(version) << ")";
+		oss << sqlText(v.first) << ", ";
+		oss << sqlText(v.second) << ")";
 
 		SQLite::Transaction t(*db_);
 		db_->exec(oss.str());
 		t.commit();
 
+		QMetaObject::invokeMethod(library_, "addEngine", Qt::QueuedConnection, Q_ARG(QString, v.first.c_str()), Q_ARG(QString, v.second.c_str()));
+
 		boost::recursive_mutex::scoped_lock lock(installedEngineTabelSync_);
-		installedEngineTabel_.insert(key);
+		installedEngineTabel_.insert(v);
 	}
 	else if (newState == EngineState::removing)
 	{
 		std::ostringstream oss;
 		oss << "DELETE FROM InstalledEngines";
 		oss << " WHERE Name=";
-		oss << sqlText(name);
+		oss << sqlText(v.first);
 		oss << " AND Version=";
-		oss << sqlText(version);
+		oss << sqlText(v.second);
 
 		SQLite::Transaction t(*db_);
 		db_->exec(oss.str());
 		t.commit();
 
 		boost::recursive_mutex::scoped_lock lock(installedEngineTabelSync_);
-		installedEngineTabel_.erase(key);
+		installedEngineTabel_.erase(v);
 	}
 
-	engineStateTabel_[key] = newState;
+	engineStateTabel_[v] = newState;
 
 	return true;
+}
+
+void BaseClient::getEngineList(std::vector<EngineVersion>& outList)
+{
+	outList.clear();
+	boost::recursive_mutex::scoped_lock lock(installedEngineTabelSync_);
+	for (const EngineVersion& v : installedEngineTabel_) {
+		outList.push_back(v);
+	}
 }
 
 void BaseClient::getDownloadedContentList(std::vector<std::string>& outList)
@@ -560,14 +601,13 @@ void BaseClient::loadInstalledEnginesFromDb()
 	while (s.executeStep()) {
 		const std::string& name = s.getColumn("Name").getText();
 		const std::string& version = s.getColumn("Version").getText();
-		const std::string& key = boost::to_lower_copy(name + "\n" + version);
-		installedEngineTabel_.insert(key);
+		installedEngineTabel_.insert(EngineVersion(name, version));
 	}
 
 	boost::recursive_mutex::scoped_lock lock2(engineStateTabelSync_);
 
-	for (const std::string& key : installedEngineTabel_) {
-		engineStateTabel_[key] = EngineState::installed;
+	for (const EngineVersion& v : installedEngineTabel_) {
+		engineStateTabel_[v] = EngineState::installed;
 	}
 }
 

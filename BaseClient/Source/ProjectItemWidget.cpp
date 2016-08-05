@@ -137,12 +137,12 @@ void ProjectItemWidget::onOpen()
 		}
 	}
 
-	int state = context_->getEngineState(engineName, engineVersion);
+	int state = context_->getEngineState(EngineVersion(engineName, engineVersion));
 
 	if (state == EngineState::installed)
 	{
 		std::string startup = pi.startup;
-		boost::ireplace_all(startup, "$(EngineDir)", context_->enginePath(engineName, engineVersion));
+		boost::ireplace_all(startup, "$(EngineDir)", context_->enginePath(EngineVersion(engineName, engineVersion)));
 		boost::ireplace_all(startup, "$(ProjectDir)", pi.location);
 		std::string command;
 		std::string workDir;
@@ -160,7 +160,7 @@ void ProjectItemWidget::onOpen()
 		std::vector<char> buf(command.c_str(), command.c_str() + command.size() + 1);
 
 		if (!CreateProcessA(NULL, buf.data(), NULL, NULL, FALSE, 0, NULL, (workDir.empty() ? NULL : workDir.c_str()), &si, &pi)) {
-			QMessageBox::information(this, "Base", tr("Failed to open project, please check the command."));
+			QMessageBox::information(this, "Base", tr("Failed to open, please check the command."));
 			return;
 		}
 
@@ -176,7 +176,7 @@ void ProjectItemWidget::onOpen()
 			QMessageBox::Yes|QMessageBox::Default, QMessageBox::No);
 
 		if (ret == QMessageBox::Yes) {
-			context_->installEngine(engineName, engineVersion);
+			context_->installEngine(EngineVersion(engineName, engineVersion));
 		}
 
 		return;
@@ -206,14 +206,14 @@ void ProjectItemWidget::onRemove()
 		QMessageBox::Yes|QMessageBox::No);
 
 	mb.setDefaultButton(QMessageBox::No);
-	mb.setCheckBox(new QCheckBox("Remove project directory from disk"));
+	//mb.setCheckBox(new QCheckBox("Remove project directory from disk"));
 
 	int ret = mb.exec();
 	if (ret != QMessageBox::Yes) {
 		return;
 	}
 
-	context_->removeProject(projectId_.toStdString(), mb.checkBox()->isChecked());
+	context_->removeProject(projectId_.toStdString(), false/*mb.checkBox()->isChecked()*/);
 }
 
 void ProjectItemWidget::updateTips()

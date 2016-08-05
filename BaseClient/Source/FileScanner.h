@@ -11,11 +11,11 @@ public:
 	typedef boost::filesystem::directory_iterator DirectoryIterator;
 
 public:
-	explicit FileScanner(const Path& path) : stack_(1, DirectoryIterator(path))
+	FileScanner(const Path& path, boost::system::error_code& ec) : stack_(1, DirectoryIterator(path, ec))
 	{
 	}
 
-	int nextFile(Path& outPath)
+	int nextFile(Path& outPath, boost::system::error_code& ec)
 	{
 		DirectoryIterator& current = stack_.back();
 
@@ -23,13 +23,13 @@ public:
 		{
 			const Path& path = current->path();
 
-			if (boost::filesystem::is_regular_file(path))
+			if (boost::filesystem::is_regular_file(path, ec))
 			{
 				outPath = base_ / path.filename();
 				++current;
 				return 1;
 			}
-			else if (boost::filesystem::is_directory(path))
+			else if (boost::filesystem::is_directory(path, ec))
 			{
 				stack_.push_back(DirectoryIterator(path));
 				try {

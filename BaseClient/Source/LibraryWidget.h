@@ -7,6 +7,7 @@
 
 // forward declaration
 class LibraryContentWidget;
+class LibraryEngineWidget;
 
 class LibraryWidget : public QWidget {
 private:
@@ -21,11 +22,14 @@ public Q_SLOTS:
 	void removeContent(const QString& id);
 	void addProject(const QString& id);
 	void removeProject(const QString& id);
+	void addEngine(const QString& engineName, const QString& engineVersion);
+	void removeEngine(const QString& engineName, const QString& engineVersion);
 
 private:
 	ContextPtr context_;
 
 	LibraryContentWidget* libraryContent_;
+	LibraryEngineWidget* libraryEngine_;
 };
 
 #endif // LIBRARYWIDGET_HEADER_

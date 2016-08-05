@@ -40,12 +40,14 @@ private:
 	std::string cachePath();
 	std::string libraryPath();
 
-	std::string enginePath(const std::string& name, const std::string& version);
+	std::string enginePath(const EngineVersion&);
 	std::string contentPath(const std::string& id);
 
-	void installEngine(const std::string& name, const std::string& version);
-	int getEngineState(const std::string& name, const std::string& version);
-	bool changeEngineState(const std::string& name, const std::string& version, int& oldState, int newState);
+	void installEngine(const EngineVersion&);
+	void removeEngine(const EngineVersion&);
+	int getEngineState(const EngineVersion&);
+	bool changeEngineState(const EngineVersion&, int& oldState, int newState);
+	void getEngineList(std::vector<EngineVersion>&);
 
 	void getDownloadedContentList(std::vector<std::string>&);
 
@@ -91,13 +93,13 @@ private:
 	std::unordered_set<std::string> downloadedContentTabel_;
 	boost::recursive_mutex downloadedContentTabelSync_;
 
-	std::unordered_set<std::string> installedEngineTabel_;
+	std::unordered_set<EngineVersion, EngineVersionHash, EngineVersionEq> installedEngineTabel_;
 	boost::recursive_mutex installedEngineTabelSync_;
 
 	std::unordered_map<std::string, int> contentStateTabel_;
 	boost::recursive_mutex contentStateTabelSync_;
 
-	std::unordered_map<std::string, int> engineStateTabel_;
+	std::unordered_map<EngineVersion, int, EngineVersionHash, EngineVersionEq> engineStateTabel_;
 	boost::recursive_mutex engineStateTabelSync_;
 
 	std::unordered_map<std::string, ProjectInfo> projectTabel_;

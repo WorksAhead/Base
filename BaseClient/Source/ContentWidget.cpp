@@ -74,7 +74,7 @@ void ContentWidget::setEngineVersion(int index, const QString& name, const QStri
 	if (index == 0) {
 		ui_.installEngineButton->setText(QString("Install %1 %2").arg(name).arg(version));
 		QObject::connect(ui_.installEngineButton, &QToolButton::clicked, [this, name, version](){
-			context_->installEngine(name.toStdString(), version.toStdString());
+			context_->installEngine(EngineVersion(name.toStdString(), version.toStdString()));
 		});
 		firstEngineVersion_.first = name;
 		firstEngineVersion_.second = version;
@@ -83,7 +83,7 @@ void ContentWidget::setEngineVersion(int index, const QString& name, const QStri
 		QMenu* menu = ui_.installEngineButton->menu();
 		QAction* action = menu->addAction(QString("Install %1 %2").arg(name).arg(version));
 		QObject::connect(action, &QAction::triggered, [this, name, version](){
-			context_->installEngine(name.toStdString(), version.toStdString());
+			context_->installEngine(EngineVersion(name.toStdString(), version.toStdString()));
 		});
 	}
 }
@@ -212,7 +212,7 @@ void ContentWidget::onDownload()
 
 	bool installEngine = false;
 
-	int engineState = context_->getEngineState(engineName.toStdString(), engineVersion.toStdString());
+	int engineState = context_->getEngineState(EngineVersion(engineName.toStdString(), engineVersion.toStdString()));
 
 	if (engineState == EngineState::not_installed)
 	{
@@ -244,7 +244,7 @@ void ContentWidget::onDownload()
 	context_->addTask(task);
 
 	if (installEngine) {
-		context_->installEngine(engineName.toStdString(), engineVersion.toStdString());
+		context_->installEngine(EngineVersion(engineName.toStdString(), engineVersion.toStdString()));
 	}
 }
 
