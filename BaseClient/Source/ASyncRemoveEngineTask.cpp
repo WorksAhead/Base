@@ -87,7 +87,7 @@ void ASyncRemoveEngineTask::run()
 
 	for (;;)
 	{
-		const int ret = update(removeTask.get(), 50, 0.0);
+		const int ret = update(removeTask.get(), 0, 1.0);
 		if (ret < 0) {
 			return;
 		}
