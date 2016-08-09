@@ -4,6 +4,7 @@
 #include "RpcEngineVersionDownloaderImpl.h"
 #include "RpcContentSubmitterImpl.h"
 #include "RpcContentBrowserImpl.h"
+#include "RpcUserBrowserImpl.h"
 
 #include <Ice/Ice.h>
 
@@ -273,6 +274,52 @@ Rpc::ErrorCode RpcSessionImpl::submitEngineVersion(const std::string& name, cons
 	}
 
 	return Rpc::ec_success;
+}
+
+Rpc::ErrorCode RpcSessionImpl::browseUsers(Rpc::UserBrowserPrx& browserPrx, const Ice::Current& c)
+{
+	boost::recursive_mutex::scoped_lock lock(sync_);
+	checkIsDestroyed();
+
+	RpcUserBrowserImplPtr browser = new RpcUserBrowserImpl(context_);
+
+	Rpc::ErrorCode ec = browser->init();
+	if (ec != Rpc::ec_success) {
+		return ec;
+	}
+
+	browserPrx = Rpc::UserBrowserPrx::uncheckedCast(c.adapter->addWithUUID(browser));
+
+	if (!context_->objectManager()->addObject(browserPrx)) {
+		browserPrx->destroy();
+		return Rpc::ec_server_busy;
+	}
+
+	return Rpc::ec_success;
+}
+
+Rpc::ErrorCode RpcSessionImpl::setUserGroup(const std::string& username, const std::string& group, const Ice::Current& c)
+{
+	boost::recursive_mutex::scoped_lock lock(sync_);
+	checkIsDestroyed();
+
+	if (context_->center()->setUserGroup(username, group)) {
+		return Rpc::ec_success;
+	}
+
+	return Rpc::ec_operation_failed;
+}
+
+Rpc::ErrorCode RpcSessionImpl::removeUser(const std::string& username, const Ice::Current& c)
+{
+	boost::recursive_mutex::scoped_lock lock(sync_);
+	checkIsDestroyed();
+
+	if (context_->center()->removeUser(username)) {
+		return Rpc::ec_success;
+	}
+
+	return Rpc::ec_operation_failed;
 }
 
 IceUtil::Time RpcSessionImpl::timestamp()

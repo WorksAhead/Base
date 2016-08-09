@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>ManageEngineWidget</class>
- <widget class="QWidget" name="ManageEngineWidget">
+ <class>ManageUserWidget</class>
+ <widget class="QWidget" name="ManageUserWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>820</width>
-    <height>650</height>
+    <width>776</width>
+    <height>623</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
@@ -24,7 +24,7 @@
     <number>9</number>
    </property>
    <item>
-    <widget class="QTreeWidget" name="engineList">
+    <widget class="QTreeWidget" name="userList">
      <property name="selectionMode">
       <enum>QAbstractItemView::ExtendedSelection</enum>
      </property>
@@ -40,29 +40,27 @@
      <property name="sortingEnabled">
       <bool>true</bool>
      </property>
+     <attribute name="headerShowSortIndicator" stdset="0">
+      <bool>true</bool>
+     </attribute>
      <column>
       <property name="text">
-       <string>Engine</string>
+       <string>Username</string>
       </property>
      </column>
      <column>
       <property name="text">
-       <string>Version</string>
+       <string>Group</string>
       </property>
      </column>
      <column>
       <property name="text">
-       <string>Time</string>
+       <string>RegTime</string>
       </property>
      </column>
      <column>
       <property name="text">
        <string>Info</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>State</string>
       </property>
      </column>
     </widget>
@@ -107,30 +105,23 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="submitButton">
-       <property name="font">
-        <font>
-         <weight>75</weight>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>Submit Engine</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <spacer name="horizontalSpacer_2">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
+      <widget class="QToolButton" name="setGroupButton">
+       <property name="minimumSize">
         <size>
-         <width>40</width>
-         <height>20</height>
+         <width>0</width>
+         <height>23</height>
         </size>
        </property>
-      </spacer>
+       <property name="text">
+        <string>Set Group</string>
+       </property>
+       <property name="popupMode">
+        <enum>QToolButton::InstantPopup</enum>
+       </property>
+       <property name="toolButtonStyle">
+        <enum>Qt::ToolButtonTextOnly</enum>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QPushButton" name="removeButton">

@@ -86,7 +86,7 @@ void ManageEngineWidget::onRemove()
 {
 	const int ret = QMessageBox::question(
 		0, "Base",
-		tr("Are you sure you want to remove these versions ?\nWarning: This operation cannot be undone."),
+		tr("Are you sure you want to remove these Engine versions ?\nWarning: This operation cannot be undone."),
 		QMessageBox::Yes, QMessageBox::No|QMessageBox::Default);
 
 	if (ret != QMessageBox::Yes) {
@@ -107,15 +107,15 @@ void ManageEngineWidget::showSubmitDialog()
 	{
 		Rpc::UploaderPrx uploader;
 
-		Rpc::ErrorCode ec = context_->session->submitEngineVersion(d.engine().toStdString(), d.version().toStdString(), d.info().toStdString(), uploader);
+		Rpc::ErrorCode ec = context_->session->submitEngineVersion(d.engineName().toStdString(), d.engineVersion().toStdString(), d.info().toStdString(), uploader);
 		if (ec != Rpc::ec_success) {
 			context_->promptRpcError(ec);
 			return;
 		}
 
 		boost::shared_ptr<ASyncSubmitEngineTask> task(new ASyncSubmitEngineTask(context_, uploader));
-		task->setInfoHead(QString("Submit %1 %2").arg(d.engine(), d.version()).toStdString());
-		task->setPath(d.path().toLocal8Bit().data());
+		task->setInfoHead(QString("Submit %1 %2").arg(d.engineName(), d.engineVersion()).toStdString());
+		task->setPath(d.location().toLocal8Bit().data());
 
 		context_->addTask(task);
 	}

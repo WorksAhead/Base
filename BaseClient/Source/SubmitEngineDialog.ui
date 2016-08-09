@@ -35,10 +35,10 @@
     </rect>
    </property>
    <property name="text">
-    <string>Path</string>
+    <string>Location</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="pathEdit">
+  <widget class="QLineEdit" name="locationEdit">
    <property name="geometry">
     <rect>
      <x>40</x>
@@ -51,7 +51,7 @@
     <string>D:\Mtv</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="selectPathButton">
+  <widget class="QPushButton" name="selectLocationButton">
    <property name="geometry">
     <rect>
      <x>330</x>
@@ -77,10 +77,10 @@
     </rect>
    </property>
    <property name="text">
-    <string>Engine</string>
+    <string>Name</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="engineEdit">
+  <widget class="QLineEdit" name="nameEdit">
    <property name="geometry">
     <rect>
      <x>40</x>
@@ -160,10 +160,10 @@
   </widget>
  </widget>
  <tabstops>
-  <tabstop>engineEdit</tabstop>
+  <tabstop>nameEdit</tabstop>
   <tabstop>versionEdit</tabstop>
-  <tabstop>pathEdit</tabstop>
-  <tabstop>selectPathButton</tabstop>
+  <tabstop>locationEdit</tabstop>
+  <tabstop>selectLocationButton</tabstop>
   <tabstop>infoEdit</tabstop>
   <tabstop>submitButton</tabstop>
  </tabstops>

@@ -102,6 +102,9 @@
     <ClCompile Include="..\BaseServer\Source\RpcContentBrowserImpl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\BaseServer\Source\RpcUserBrowserImpl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Common\Rpc\RpcErrorCode.h">
@@ -192,6 +195,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\BaseServer\Source\RpcContentBrowserImpl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseServer\Source\RpcUserBrowserImpl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

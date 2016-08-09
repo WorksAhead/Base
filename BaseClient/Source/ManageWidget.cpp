@@ -1,6 +1,7 @@
 #include "ManageWidget.h"
 #include "VTabWidget.h"
 #include "ManageEngineWidget.h"
+#include "ManageUserWidget.h"
 #include "ManagePageWidget.h"
 #include "ManageCategoryWidget.h"
 
@@ -12,11 +13,12 @@ ManageWidget::ManageWidget(ContextPtr context, QWidget* parent) : QWidget(parent
 	VTabWidget* p = new VTabWidget;
 
 	manageEngine_ = new ManageEngineWidget(context_);
+	manageUser_ = new ManageUserWidget(context_);
 	managePage_ = new ManagePageWidget(context_);
 	manageCategory_ = new ManageCategoryWidget(context_);
 
 	p->addTab("Engine", manageEngine_);
-	p->addTab("User", new QTextEdit);
+	p->addTab("User", manageUser_);
 	p->addTab("Page", managePage_);
 	p->addTab("Category", manageCategory_);
 

@@ -52,6 +52,21 @@ module Rpc
 		ErrorCode next(int n, out EngineVersionItemSeq items);
 	};
 
+	struct User
+	{
+		string username;
+		string group;
+		string regTime;
+		string info;
+	};
+
+	sequence<User> UserSeq;
+
+	interface UserBrowser extends ManagedObject
+	{
+		ErrorCode next(int n, out UserSeq items);
+	};
+
 	interface Uploader extends ManagedObject
 	{
 		ErrorCode write(long offset, ["cpp:array"] ByteSeq bytes);
@@ -102,6 +117,10 @@ module Rpc
 		ErrorCode downloadEngineVersion(string name, string version, out Downloader* downloader);
 		ErrorCode removeEngineVersion(string name, string version);
 		ErrorCode submitEngineVersion(string name, string version, string info, out Uploader* uploader);
+
+		ErrorCode browseUsers(out UserBrowser* browser);
+		ErrorCode setUserGroup(string username, string group);
+		ErrorCode removeUser(string username);
 	};
 };
 

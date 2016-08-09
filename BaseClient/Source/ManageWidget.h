@@ -7,6 +7,7 @@
 
 // forward declaration
 class ManageEngineWidget;
+class ManageUserWidget;
 class ManagePageWidget;
 class ManageCategoryWidget;
 
@@ -20,6 +21,7 @@ public:
 
 private:
 	ManageEngineWidget* manageEngine_;
+	ManageUserWidget* manageUser_;
 	ManagePageWidget* managePage_;
 	ManageCategoryWidget* manageCategory_;
 

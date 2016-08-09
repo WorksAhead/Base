@@ -45,7 +45,11 @@ int main(int argc, char* argv[])
 
 		Rpc::StartPrx startPrx = Rpc::StartPrx::checkedCast(ic->propertyToProxy("Start"));
 
-		startPrx->getServerVersion();
+		std::string serverVersion = startPrx->getServerVersion();
+		if (serverVersion != "1.0.0.0") {
+			QMessageBox::information(0, "Base", QString("Unmatched server version (%1).").arg(serverVersion.c_str()));
+			return 0;
+		}
 
 		LoginDialog ld(startPrx);
 		const int rc = ld.exec();

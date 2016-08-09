@@ -170,6 +170,7 @@
     <ClCompile Include="..\BaseServer\Source\RpcSessionImpl.cpp" />
     <ClCompile Include="..\BaseServer\Source\RpcSessionMaintainer.cpp" />
     <ClCompile Include="..\BaseServer\Source\RpcStartImpl.cpp" />
+    <ClCompile Include="..\BaseServer\Source\RpcUserBrowserImpl.cpp" />
     <ClCompile Include="..\Common\Crc.cpp" />
     <ClCompile Include="..\Common\ErrorMessage.cpp" />
     <ClCompile Include="..\Common\Rpc\RpcErrorCode.cpp" />
@@ -199,6 +200,7 @@
     <ClInclude Include="..\BaseServer\Source\RpcSessionImpl.h" />
     <ClInclude Include="..\BaseServer\Source\RpcSessionMaintainer.h" />
     <ClInclude Include="..\BaseServer\Source\RpcStartImpl.h" />
+    <ClInclude Include="..\BaseServer\Source\RpcUserBrowserImpl.h" />
     <ClInclude Include="..\BaseServer\Source\SQLiteUtil.h" />
     <ClInclude Include="..\Common\Crc.h" />
     <ClInclude Include="..\Common\ErrorMessage.h" />

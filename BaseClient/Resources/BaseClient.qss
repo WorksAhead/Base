@@ -109,19 +109,27 @@ QToolButton {
     border: 1px solid rgb(80, 80, 80);
     border-radius: 2px;
 }
-QToolButton[popupMode="1"] {
+QToolButton::menu-indicator {
+    image: url(:/Icons/IndicatorArrowDown.png);
+    subcontrol-origin: padding;
+    subcontrol-position: bottom right;
+}
+QToolButton[popupMode="1"],
+QToolButton[popupMode="2"] {
     padding-right: 20px;
 }
 QToolButton:pressed {
     background: rgb(246, 96, 0);
 	border: 1px solid rgb(246, 96, 0);
 }
-QToolButton::menu-button {
-	border-left: 1px solid rgb(40, 40, 40);
-    width: 16px;
+QToolButton:open {
+	background: rgb(60, 60, 60);
+	border: 1px solid rgb(246, 96, 0);	
 }
-QToolButton::menu-arrow {
-    image: url(:/Icons/IndicatorArrowDown.png);
+QToolButton::menu-button {
+	/*border-left: 1px solid rgb(40, 40, 40);*/
+	border: 0;
+    width: 16px;
 }
 
 QToolTip {
@@ -304,6 +312,11 @@ PageWidget {
 }
 
 ManageEngineWidget {
+	background: rgb(30, 30, 30);
+	/*border: 2px solid rgb(20, 20, 20);*/
+}
+
+ManageUserWidget {
 	background: rgb(30, 30, 30);
 	/*border: 2px solid rgb(20, 20, 20);*/
 }

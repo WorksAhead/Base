@@ -22,6 +22,7 @@ module Rpc
 		ec_incomplete_content,
 		ec_parent_does_not_exist,
 		ec_content_does_not_exist,
+		ec_operation_failed,
 	};
 };
 

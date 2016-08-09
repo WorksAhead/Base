@@ -13,20 +13,20 @@ public:
 	explicit SubmitEngineDialog(QWidget* parent = 0);
 	~SubmitEngineDialog();
 
-	QString engine() const { return engine_; }
-	QString version() const { return version_; }
-	QString path() const { return path_; }
+	QString engineName() const { return engineName_; }
+	QString engineVersion() const { return engineVersion_; }
+	QString location() const { return location_; }
 	QString info() const { return info_; }
 
 private Q_SLOTS:
-	void selectPath();
+	void selectLocation();
 	void submit();
 
 private:
 	Ui::SubmitEngineDialog ui_;
-	QString engine_;
-	QString version_;
-	QString path_;
+	QString engineName_;
+	QString engineVersion_;
+	QString location_;
 	QString info_;
 };
 

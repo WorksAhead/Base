@@ -48,6 +48,9 @@ public:
 	void addEngineVersion(const std::string& name, const std::string& version, const std::string& info);
 	void changeEngineVersionState(const std::string& name, const std::string& version, const std::string& state);
 
+	bool setUserGroup(const std::string& username, const std::string& group);
+	bool removeUser(const std::string& username);
+
 	DatabasePtr db() const { return db_; }
 
 private:

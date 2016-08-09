@@ -289,6 +289,35 @@ void Center::changeEngineVersionState(const std::string& name, const std::string
 	t.commit();
 }
 
+bool Center::setUserGroup(const std::string& username, const std::string& group)
+{
+	std::ostringstream oss;
+	oss << "UPDATE Users SET \"Group\"=";
+	oss << sqlText(group);
+	oss << " WHERE Username=";
+	oss << sqlText(username);
+
+	SQLite::Transaction t(*db_);
+	int n = db_->exec(oss.str());
+	t.commit();
+
+	return (n > 0);
+}
+
+bool Center::removeUser(const std::string& username)
+{
+	std::ostringstream oss;
+	oss << "DELETE FROM Users";
+	oss << " WHERE Username=";
+	oss << sqlText(username);
+
+	SQLite::Transaction t(*db_);
+	int n = db_->exec(oss.str());
+	t.commit();
+
+	return (n > 0);
+}
+
 void Center::loadPagesFromDb()
 {
 	boost::mutex::scoped_lock lock(pagesSync_);

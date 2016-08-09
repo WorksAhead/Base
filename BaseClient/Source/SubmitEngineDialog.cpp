@@ -18,10 +18,10 @@ SubmitEngineDialog::SubmitEngineDialog(QWidget* parent) : QDialog(parent)
 	QRegExp engineExp(R"([ A-Za-z0-9]*)");
 	QRegExp versionExp(R"([ ,.A-Za-z0-9]*)");
 
-	ui_.engineEdit->setValidator(new QRegExpValidator(engineExp));
+	ui_.nameEdit->setValidator(new QRegExpValidator(engineExp));
 	ui_.versionEdit->setValidator(new QRegExpValidator(versionExp));
 
-	QObject::connect(ui_.selectPathButton, &QPushButton::clicked, this, &SubmitEngineDialog::selectPath);
+	QObject::connect(ui_.selectLocationButton, &QPushButton::clicked, this, &SubmitEngineDialog::selectLocation);
 	QObject::connect(ui_.submitButton, &QPushButton::clicked, this, &SubmitEngineDialog::submit);
 }
 
@@ -29,39 +29,39 @@ SubmitEngineDialog::~SubmitEngineDialog()
 {
 }
 
-void SubmitEngineDialog::selectPath()
+void SubmitEngineDialog::selectLocation()
 {
 	QString path = QFileDialog::getExistingDirectory(this, "Select Path");
 	if (!path.isEmpty()) {
 		fs::path p = path.toLocal8Bit().data();
 		p.make_preferred();
-		ui_.pathEdit->setText(QString::fromLocal8Bit(p.string().c_str()));
+		ui_.locationEdit->setText(QString::fromLocal8Bit(p.string().c_str()));
 	}
 }
 
 void SubmitEngineDialog::submit()
 {
-	engine_ = ui_.engineEdit->text();
-	version_ = ui_.versionEdit->text();
-	path_ = ui_.pathEdit->text();
+	engineName_ = ui_.nameEdit->text();
+	engineVersion_ = ui_.versionEdit->text();
+	location_ = ui_.locationEdit->text();
 	info_ = ui_.infoEdit->toPlainText();
 
-	if (engine_.isEmpty()) {
+	if (engineName_.isEmpty()) {
 		QMessageBox::information(this, "Base", tr("The Engine field cannot be left empty."));
 		return;
 	}
 
-	if (version_.isEmpty()) {
+	if (engineVersion_.isEmpty()) {
 		QMessageBox::information(this, "Base", tr("The Version field cannot be left empty."));
 		return;
 	}
 
-	if (path_.isEmpty()) {
+	if (location_.isEmpty()) {
 		QMessageBox::information(this, "Base", tr("The Path field cannot be left empty."));
 		return;
 	}
 
-	QFileInfo fileInfo(path_);
+	QFileInfo fileInfo(location_);
 
 	if (!fileInfo.exists() ||!fileInfo.isDir() || fileInfo.isRoot()) {
 		QMessageBox::information(this, "Base", tr("\"%1\" is not a valid path."));
