@@ -20,16 +20,28 @@ RpcContentSubmitterImpl::~RpcContentSubmitterImpl()
 {
 }
 
-Rpc::ErrorCode RpcContentSubmitterImpl::init()
+Rpc::ErrorCode RpcContentSubmitterImpl::init(int mode, const std::string& id)
 {
-	uid_ = context_->center()->generateUuid();
-	base_ = context_->center()->getContentPath(uid_);
+	if (mode == submit_mode)
+	{
+		id_ = id.empty() ? context_->center()->generateUuid() : id;
+		base_ = context_->center()->getContentPath(id_);
 
-	if (!fs::create_directories(base_)) {
-		return Rpc::ec_file_io_error;
+		if (!fs::create_directories(base_)) {
+			return Rpc::ec_file_io_error;
+		}
+
+		mode_ = mode;
+
+		return Rpc::ec_success;
 	}
+	else
+	{
+		id_ = id;
+		mode_ = mode;
 
-	return Rpc::ec_success;
+		return Rpc::ec_success;
+	}
 }
 
 bool RpcContentSubmitterImpl::isFinished()
@@ -204,6 +216,10 @@ Rpc::ErrorCode RpcContentSubmitterImpl::uploadImage(Ice::Int index, Rpc::Uploade
 	boost::recursive_mutex::scoped_lock lock(sync_);
 	checkIsDestroyed();
 
+	if (mode_ == update_mode) {
+		return Rpc::ec_access_denied;
+	}
+
 	if (finished_ || cancelled_) {
 		return Rpc::ec_invalid_operation;
 	}
@@ -245,6 +261,10 @@ Rpc::ErrorCode RpcContentSubmitterImpl::uploadContent(Rpc::UploaderPrx& uploader
 	boost::recursive_mutex::scoped_lock lock(sync_);
 	checkIsDestroyed();
 
+	if (mode_ == update_mode) {
+		return Rpc::ec_access_denied;
+	}
+
 	if (finished_ || cancelled_) {
 		return Rpc::ec_invalid_operation;
 	}
@@ -285,7 +305,10 @@ void RpcContentSubmitterImpl::cancel(const Ice::Current& c)
 		return;
 	}
 
-	contentUploader_.first->cancel();
+	if (contentUploader_.first) {
+		contentUploader_.first->cancel();
+	}
+
 	for (auto& p : imageUploaders_) {
 		p.second.first->cancel();
 	}
@@ -305,34 +328,45 @@ Rpc::ErrorCode RpcContentSubmitterImpl::finish(const Ice::Current&)
 	if (!form_.count("Title") || !form_.count("Page") ||
 		!form_.count("Category") || !form_.count("EngineName") ||
 		!form_.count("EngineVersion") || !form_.count("Startup") ||
-		!form_.count("ParentId") || !form_.count("Desc")) {
+		!form_.count("Desc")) {
 		return Rpc::ec_incomplete_form;
 	}
 
-	int imageCount = 0;
-
-	for (int i = 0; i <= 5; ++i) {
-		if (imageUploaders_.count(i) && imageUploaders_[i].second && imageUploaders_[i].second->isFinished()) {
-			++imageCount;
+	if (mode_ == submit_mode)
+	{
+		if (!form_.count("ParentId")) {
+			return Rpc::ec_incomplete_form;
 		}
-		else {
-			break;
+
+		int imageCount = 0;
+
+		for (int i = 0; i <= 5; ++i) {
+			if (imageUploaders_.count(i) && imageUploaders_[i].second && imageUploaders_[i].second->isFinished()) {
+				++imageCount;
+			}
+			else {
+				break;
+			}
 		}
+
+		if (imageCount < 1) {
+			return Rpc::ec_incomplete_form;
+		}
+
+		form_["ImageCount"] = std::to_string(imageCount);
+
+		if (!contentUploader_.second || !contentUploader_.second->isFinished()) {
+			return Rpc::ec_incomplete_content;
+		}
+
+		form_["User"] = context_->user();
+
+		context_->center()->addContent(form_, id_);
 	}
-
-	if (imageCount < 1) {
-		return Rpc::ec_incomplete_form;
+	else
+	{
+		context_->center()->updateContent(form_, id_);
 	}
-
-	form_["ImageCount"] = std::to_string(imageCount);
-
-	if (!contentUploader_.second || !contentUploader_.second->isFinished()) {
-		return Rpc::ec_incomplete_content;
-	}
-	
-	form_["User"] = context_->user();
-
-	context_->center()->addContent(form_, uid_);
 
 	return Rpc::ec_success;
 }

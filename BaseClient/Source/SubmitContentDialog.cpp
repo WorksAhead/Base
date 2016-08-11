@@ -9,6 +9,7 @@
 #include <QKeyEvent>
 #include <QFileInfo>
 #include <QMessageBox>
+#include <QMenu>
 
 #include <boost/filesystem.hpp>
 
@@ -22,6 +23,18 @@ SubmitContentDialog::SubmitContentDialog(ContextPtr context, QWidget* parent) : 
 
 	ui_.setupUi(this);
 
+	QMenu* menu1 = new QMenu;
+	QMenu* menu2 = new QMenu;
+
+	ui_.macroButton1->setMenu(menu1);
+	ui_.macroButton2->setMenu(menu2);
+
+	QAction* addEngineDir1 = menu1->addAction("$(EngineDir)");
+	QAction* addProjectDir1 = menu1->addAction("$(ProjectDir)");
+
+	QAction* addEngineDir2 = menu2->addAction("$(EngineDir)");
+	QAction* addProjectDir2 = menu2->addAction("$(ProjectDir)");
+
 	Rpc::StringSeq categories;
 	context_->session->getCategories(categories);
 
@@ -29,7 +42,20 @@ SubmitContentDialog::SubmitContentDialog(ContextPtr context, QWidget* parent) : 
 		ui_.categoryBox->addItem(category.c_str());
 	}
 
-	QObject::connect(ui_.selectPathButton, &QPushButton::clicked, this, &SubmitContentDialog::onSelectLocation);
+	QObject::connect(ui_.selectLocationButton, &QPushButton::clicked, this, &SubmitContentDialog::onSelectLocation);
+
+	QObject::connect(addEngineDir1, &QAction::triggered, [this](){
+		ui_.commandEdit->insert("$(EngineDir)");
+	});
+	QObject::connect(addProjectDir1, &QAction::triggered, [this](){
+		ui_.commandEdit->insert("$(ProjectDir)");
+	});
+	QObject::connect(addEngineDir2, &QAction::triggered, [this](){
+		ui_.workDirEdit->insert("$(EngineDir)");
+	});
+	QObject::connect(addProjectDir2, &QAction::triggered, [this](){
+		ui_.workDirEdit->insert("$(ProjectDir)");
+	});
 
 	QObject::connect(ui_.setCoverButton, &QPushButton::clicked, this, &SubmitContentDialog::onSetCover);
 
@@ -49,9 +75,69 @@ SubmitContentDialog::~SubmitContentDialog()
 {
 }
 
+void SubmitContentDialog::switchToEditMode(const QString& contentId)
+{
+	setWindowTitle(tr("Edit Content"));
+
+	ui_.locationEdit->setEnabled(false);
+	ui_.selectLocationButton->setEnabled(false);
+	ui_.coverLabel->setEnabled(false);
+	ui_.coverViewer->setEnabled(false);
+	ui_.setCoverButton->setEnabled(false);
+	ui_.screenshotLabel->setEnabled(false);
+	ui_.screenshotWidget->setEnabled(false);
+	ui_.addScreenshotButton->setEnabled(false);
+	ui_.removeScreenshotButton->setEnabled(false);
+	ui_.prevScreenshotButton->setEnabled(false);
+	ui_.nextScreenshotButton->setEnabled(false);
+
+	contentId_ = contentId;
+	editMode_ = true;
+}
+
+void SubmitContentDialog::setParentId(const QString& parentId)
+{
+	ui_.parentIdEdit->setText(parentId);
+}
+
+void SubmitContentDialog::setTitle(const QString& title)
+{
+	ui_.titleEdit->setText(title);
+}
+
 void SubmitContentDialog::setPage(const QString& name)
 {
 	ui_.pageEdit->setText(name);
+}
+
+void SubmitContentDialog::setCategory(const QString& category)
+{
+	ui_.categoryBox->setCurrentText(category);
+}
+
+void SubmitContentDialog::setEngineName(const QString& name)
+{
+	ui_.engineNameEdit->setText(name);
+}
+
+void SubmitContentDialog::setEngineVersion(const QString& version)
+{
+	ui_.engineVersionEdit->setText(version);
+}
+
+void SubmitContentDialog::setCommand(const QString& command)
+{
+	ui_.commandEdit->setText(command);
+}
+
+void SubmitContentDialog::setWorkingDir(const QString& workDir)
+{
+	ui_.workDirEdit->setText(workDir);
+}
+
+void SubmitContentDialog::setDesc(const QString& desc)
+{
+	ui_.descriptionEdit->setPlainText(desc);
 }
 
 void SubmitContentDialog::onSelectLocation()
@@ -153,8 +239,16 @@ void SubmitContentDialog::onSubmit()
 
 	Rpc::ContentSubmitterPrx submitter;
 
-	Rpc::ErrorCode ec = context_->session->submitContent(submitter);
-	CHECK_ERROR_CODE(ec);
+	Rpc::ErrorCode ec;
+
+	if (editMode_) {
+		ec = context_->session->updateContent(contentId_.toStdString(), submitter);
+		CHECK_ERROR_CODE(ec);
+	}
+	else {
+		ec = context_->session->submitContent(submitter);
+		CHECK_ERROR_CODE(ec);
+	}
 
 	if (ui_.titleEdit->text().isEmpty()) {
 		QMessageBox::information(this, "Base", tr("The Title field cannot be left empty."));
@@ -192,16 +286,19 @@ void SubmitContentDialog::onSubmit()
 	ec = submitter->setEngine(ui_.engineNameEdit->text().toStdString(), ui_.engineVersionEdit->text().toStdString());
 	CHECK_ERROR_CODE(ec);
 
-	if (ui_.locationEdit->text().isEmpty()) {
-		QMessageBox::information(this, "Base", tr("The Location is not specified."));
-		return;
-	}
+	if (!editMode_)
+	{
+		if (ui_.locationEdit->text().isEmpty()) {
+			QMessageBox::information(this, "Base", tr("The Location is not specified."));
+			return;
+		}
 
-	QFileInfo fileInfo(ui_.locationEdit->text());
+		QFileInfo fileInfo(ui_.locationEdit->text());
 
-	if (!fileInfo.exists() || !fileInfo.isDir() || fileInfo.isRoot()) {
-		QMessageBox::information(this, "Base", tr("\"%1\" is not a valid location."));
-		return;
+		if (!fileInfo.exists() || !fileInfo.isDir() || fileInfo.isRoot()) {
+			QMessageBox::information(this, "Base", tr("\"%1\" is not a valid location."));
+			return;
+		}
 	}
 
 	if (ui_.commandEdit->text().isEmpty()) {
@@ -223,9 +320,12 @@ void SubmitContentDialog::onSubmit()
 		CHECK_ERROR_CODE(ec);
 	}
 
-	if (!ui_.coverViewer->pixmap()) {
-		QMessageBox::information(this, "Base", tr("The Cover is not set."));
-		return;
+	if (!editMode_)
+	{
+		if (!ui_.coverViewer->pixmap()) {
+			QMessageBox::information(this, "Base", tr("The Cover is not set."));
+			return;
+		}
 	}
 
 	if (ui_.descriptionEdit->toPlainText().isEmpty()) {
@@ -236,33 +336,41 @@ void SubmitContentDialog::onSubmit()
 	ec = submitter->setDescription(ui_.descriptionEdit->toPlainText().toStdString());
 	CHECK_ERROR_CODE(ec);
 
-	boost::shared_ptr<ASyncSubmitContentTask> task(new ASyncSubmitContentTask(context_, submitter));
+	if (!editMode_)
+	{
+		boost::shared_ptr<ASyncSubmitContentTask> task(new ASyncSubmitContentTask(context_, submitter));
 
-	task->setInfoHead(QString("Submit %1").arg(ui_.titleEdit->text()).toLocal8Bit().data());
-	task->setContentLocation(ui_.locationEdit->text().toLocal8Bit().data());
+		task->setInfoHead(QString("Submit %1").arg(ui_.titleEdit->text()).toLocal8Bit().data());
+		task->setContentLocation(ui_.locationEdit->text().toLocal8Bit().data());
 
-	std::string imageFilename;
+		std::string imageFilename;
 
-	imageFilename = context_->uniquePath() + ".jpg";
-
-	if (!ui_.coverViewer->pixmap().scaled(QSize(300, 300), Qt::KeepAspectRatio, Qt::SmoothTransformation).save(imageFilename.c_str(), "JPG")) {
-		QMessageBox::information(this, "Base", tr("Failed to save image"));
-		return;
-	}
-
-	task->addImageFile(imageFilename);
-
-	for (int i = 0; i < ui_.screenshotWidget->count(); ++i) {
-		ImageViewerWidget* imageViewer = static_cast<ImageViewerWidget*>(ui_.screenshotWidget->widget(i));
 		imageFilename = context_->uniquePath() + ".jpg";
-		if (!imageViewer->pixmap().save(imageFilename.c_str(), "JPG")) {
+
+		if (!ui_.coverViewer->pixmap().scaled(QSize(300, 300), Qt::KeepAspectRatio, Qt::SmoothTransformation).save(imageFilename.c_str(), "JPG")) {
 			QMessageBox::information(this, "Base", tr("Failed to save image"));
 			return;
 		}
-		task->addImageFile(imageFilename);
-	}
 
-	context_->addTask(task);
+		task->addImageFile(imageFilename);
+
+		for (int i = 0; i < ui_.screenshotWidget->count(); ++i) {
+			ImageViewerWidget* imageViewer = static_cast<ImageViewerWidget*>(ui_.screenshotWidget->widget(i));
+			imageFilename = context_->uniquePath() + ".jpg";
+			if (!imageViewer->pixmap().save(imageFilename.c_str(), "JPG")) {
+				QMessageBox::information(this, "Base", tr("Failed to save image"));
+				return;
+			}
+			task->addImageFile(imageFilename);
+		}
+
+		context_->addTask(task);
+	}
+	else
+	{
+		ec = submitter->finish();
+		CHECK_ERROR_CODE(ec);
+	}
 
 	done(1);
 

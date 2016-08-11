@@ -543,8 +543,12 @@ void BaseClient::getProjectList(std::vector<ProjectInfo>& outList)
 
 void BaseClient::promptRpcError(Rpc::ErrorCode ec)
 {
-	QMessageBox::critical(this, "Base", errorMessage(ec));
-	return;
+	if (ec == Rpc::ec_success) {
+		QMessageBox::information(this, "Base", errorMessage(ec));
+	}
+	else {
+		QMessageBox::critical(this, "Base", errorMessage(ec));
+	}
 }
 
 void BaseClient::onShowTaskManager()

@@ -161,7 +161,29 @@ Rpc::ErrorCode RpcSessionImpl::submitContent(Rpc::ContentSubmitterPrx& submitter
 
 	RpcContentSubmitterImplPtr submitter = new RpcContentSubmitterImpl(context_);
 
-	Rpc::ErrorCode ec = submitter->init();
+	Rpc::ErrorCode ec = submitter->init(RpcContentSubmitterImpl::submit_mode);
+	if (ec != Rpc::ec_success) {
+		return ec;
+	}
+
+	submitterPrx = Rpc::ContentSubmitterPrx::uncheckedCast(c.adapter->addWithUUID(submitter));
+
+	if (!context_->objectManager()->addObject(submitterPrx)) {
+		submitterPrx->destroy();
+		return Rpc::ec_server_busy;
+	}
+
+	return Rpc::ec_success;
+}
+
+Rpc::ErrorCode RpcSessionImpl::updateContent(const std::string& id, Rpc::ContentSubmitterPrx& submitterPrx, const Ice::Current& c)
+{
+	boost::recursive_mutex::scoped_lock lock(sync_);
+	checkIsDestroyed();
+
+	RpcContentSubmitterImplPtr submitter = new RpcContentSubmitterImpl(context_);
+
+	Rpc::ErrorCode ec = submitter->init(RpcContentSubmitterImpl::update_mode, id);
 	if (ec != Rpc::ec_success) {
 		return ec;
 	}
@@ -247,9 +269,8 @@ Rpc::ErrorCode RpcSessionImpl::removeEngineVersion(const std::string& name, cons
 
 	const std::string& filename = context_->center()->getEnginePath(name, version);
 
-	if (!fs::remove(filename)) {
-		return Rpc::ec_file_io_error;
-	}
+	boost::system::error_code ec;
+	fs::remove(filename, ec);
 
 	return Rpc::ec_success;
 }

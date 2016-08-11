@@ -175,10 +175,10 @@ std::string Center::getEnginePath(const std::string& name, const std::string& ve
 	return path.string();
 }
 
-std::string Center::getContentPath(const std::string& uid)
+std::string Center::getContentPath(const std::string& id)
 {
 	std::vector<std::string> parts;
-	boost::split(parts, uid, boost::is_any_of("-"));
+	boost::split(parts, id, boost::is_any_of("-"));
 
 	fs::path path = contentDir();
 	for (const std::string& part : parts) {
@@ -188,11 +188,11 @@ std::string Center::getContentPath(const std::string& uid)
 	return path.string();
 }
 
-void Center::addContent(const std::map<std::string, std::string>& form, const std::string& uid)
+void Center::addContent(const std::map<std::string, std::string>& form, const std::string& id)
 {
 	std::ostringstream oss;
 	oss << "INSERT INTO Contents VALUES (";
-	oss << sqlText(uid) << ", ";
+	oss << sqlText(id) << ", ";
 	oss << sqlText(form.at("ParentId")) << ", ";
 	oss << sqlText(form.at("Title")) << ", ";
 	oss << sqlText(form.at("Page")) << ", ";
@@ -211,12 +211,33 @@ void Center::addContent(const std::map<std::string, std::string>& form, const st
 	t.commit();
 }
 
-bool Center::getContent(std::map<std::string, std::string>& form, const std::string& uid)
+void Center::updateContent(const std::map<std::string, std::string>& form, const std::string& id)
+{
+	std::ostringstream oss;
+	oss << "UPDATE Contents SET ";
+	if (form.count("ParentId")) {
+		oss << "ParentId=" << sqlText(form.at("ParentId")) << ", ";
+	}
+	oss << "Title=" << sqlText(form.at("Title")) << ", ";
+	oss << "Page=" << sqlText(form.at("Page")) << ", ";
+	oss << "Category=" << sqlText(form.at("Category")) << ", ";
+	oss << "EngineName=" << sqlText(form.at("EngineName")) << ", ";
+	oss << "EngineVersion=" << sqlText(form.at("EngineVersion")) << ", ";
+	oss << "Startup=" << sqlText(form.at("Startup")) << ", ";
+	oss << "Desc=" << sqlText(form.at("Desc"));
+	oss << " WHERE Id=" << sqlText(id);
+
+	SQLite::Transaction t(*db_);
+	db_->exec(oss.str());
+	t.commit();
+}
+
+bool Center::getContent(std::map<std::string, std::string>& form, const std::string& id)
 {
 	std::ostringstream oss;
 	oss << "SELECT * FROM Contents";
 	oss << " WHERE ";
-	oss << "Id=" << sqlText(uid);
+	oss << "Id=" << sqlText(id);
 
 	SQLite::Statement s(*db_, oss.str());
 	if (!s.executeStep()) {

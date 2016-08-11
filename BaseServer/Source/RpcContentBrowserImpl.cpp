@@ -14,10 +14,21 @@ Rpc::ErrorCode RpcContentBrowserImpl::init(const std::string& page, const std::s
 {
 	std::ostringstream oss;
 	oss << "SELECT Id, Title FROM Contents";
-	oss << " WHERE Page=" << sqlText(page);
-	if (!category.empty()) {
-		oss << " AND Category=" << sqlText(category);
+
+	if (!page.empty() || !category.empty()) {
+		oss << " WHERE";
+		if (!page.empty() && !category.empty()) {
+			oss << " Page=" << sqlText(page);
+			oss << " AND Category=" << sqlText(category);
+		}
+		else if (!page.empty()) {
+			oss << " Page=" << sqlText(page);
+		}
+		else {
+			oss << " Category=" << sqlText(category);
+		}
 	}
+
 	oss << " ORDER BY UpTime DESC";
 
 	s_.reset(new SQLite::Statement(*center_->db(), oss.str()));

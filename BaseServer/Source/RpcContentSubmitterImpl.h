@@ -14,10 +14,16 @@ private:
 	typedef std::pair<Rpc::UploaderPrx, RpcFileUploaderImplPtr> Uploader;
 
 public:
+	enum {
+		submit_mode,
+		update_mode,
+	};
+
+public:
 	explicit RpcContentSubmitterImpl(ContextPtr);
 	~RpcContentSubmitterImpl();
 
-	Rpc::ErrorCode init();
+	Rpc::ErrorCode init(int mode = submit_mode, const std::string& id = "");
 	bool isFinished();
 	bool isCancelled();
 
@@ -53,8 +59,9 @@ public:
 	bool destroyed_;
 	bool finished_;
 	bool cancelled_;
-	std::string uid_;
+	std::string id_;
 	std::string base_;
+	int mode_;
 	Uploader contentUploader_;
 	std::map<Ice::Int, Uploader> imageUploaders_;
 	std::map<std::string, std::string> form_;

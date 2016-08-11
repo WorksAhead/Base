@@ -20,22 +20,34 @@ ManageUserWidget::ManageUserWidget(ContextPtr context, QWidget* parent) : QWidge
 
 	QObject::connect(setUserGroupAction, &QAction::triggered, [this](){
 		QList<QTreeWidgetItem*> items = ui_.userList->selectedItems();
+		Rpc::ErrorCode ec;
 		for (int i = 0; i < items.count(); ++i) {
-			Rpc::ErrorCode ec = context_->session->setUserGroup(items[i]->text(0).toStdString(), "User");
+			ec = context_->session->setUserGroup(items[i]->text(0).toStdString(), "User");
 			if (ec == Rpc::ec_success) {
 				items[i]->setText(1, "User");
 			}
+			else {
+				context_->promptRpcError(ec);
+				return;
+			}
 		}
+		context_->promptRpcError(ec);
 	});
 
 	QObject::connect(setAdminGroupAction, &QAction::triggered, [this](){
 		QList<QTreeWidgetItem*> items = ui_.userList->selectedItems();
+		Rpc::ErrorCode ec;
 		for (int i = 0; i < items.count(); ++i) {
-			Rpc::ErrorCode ec = context_->session->setUserGroup(items[i]->text(0).toStdString(), "Admin");
+			ec = context_->session->setUserGroup(items[i]->text(0).toStdString(), "Admin");
 			if (ec == Rpc::ec_success) {
 				items[i]->setText(1, "Admin");
 			}
+			else {
+				context_->promptRpcError(ec);
+				return;
+			}
 		}
+		context_->promptRpcError(ec);
 	});
 
 	QObject::connect(ui_.showMoreButton, &QPushButton::clicked, this, &ManageUserWidget::onShowMore);

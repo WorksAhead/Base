@@ -6,6 +6,7 @@
 #include <QWidget>
 
 // forward declaration
+class ManageContentWidget;
 class ManageEngineWidget;
 class ManageUserWidget;
 class ManagePageWidget;
@@ -20,6 +21,7 @@ public:
 	~ManageWidget();
 
 private:
+	ManageContentWidget* manageContent_;
 	ManageEngineWidget* manageEngine_;
 	ManageUserWidget* manageUser_;
 	ManagePageWidget* managePage_;

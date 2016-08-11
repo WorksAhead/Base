@@ -26,7 +26,7 @@ private Q_SLOTS:
 	void onMoveDown();
 	void onAdd();
 	void onRemove();
-	void onSave();
+	void onSubmit();
 
 private:
 	Ui::ManagePageWidget ui_;

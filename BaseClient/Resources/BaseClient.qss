@@ -311,6 +311,11 @@ PageWidget {
 	background: rgb(30, 30, 30);
 }
 
+ManageContentWidget {
+	background: rgb(30, 30, 30);
+	/*border: 2px solid rgb(20, 20, 20);*/
+}
+
 ManageEngineWidget {
 	background: rgb(30, 30, 30);
 	/*border: 2px solid rgb(20, 20, 20);*/

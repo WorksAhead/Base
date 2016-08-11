@@ -859,6 +859,9 @@ typedef ::IceUtil::Handle< Callback_Session_downloadContent_Base> Callback_Sessi
 class Callback_Session_submitContent_Base : virtual public ::IceInternal::CallbackBase { };
 typedef ::IceUtil::Handle< Callback_Session_submitContent_Base> Callback_Session_submitContentPtr;
 
+class Callback_Session_updateContent_Base : virtual public ::IceInternal::CallbackBase { };
+typedef ::IceUtil::Handle< Callback_Session_updateContent_Base> Callback_Session_updateContentPtr;
+
 class Callback_Session_browseEngineVersions_Base : virtual public ::IceInternal::CallbackBase { };
 typedef ::IceUtil::Handle< Callback_Session_browseEngineVersions_Base> Callback_Session_browseEngineVersionsPtr;
 
@@ -3908,6 +3911,82 @@ private:
     
 public:
 
+    ::Rpc::ErrorCode updateContent(const ::std::string& __p_id, ::Rpc::ContentSubmitterPrx& __p_submitter)
+    {
+        return updateContent(__p_id, __p_submitter, 0);
+    }
+    ::Rpc::ErrorCode updateContent(const ::std::string& __p_id, ::Rpc::ContentSubmitterPrx& __p_submitter, const ::Ice::Context& __ctx)
+    {
+        return updateContent(__p_id, __p_submitter, &__ctx);
+    }
+#ifdef ICE_CPP11
+    ::Ice::AsyncResultPtr
+    begin_updateContent(const ::std::string& __p_id, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::ContentSubmitterPrx&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return __begin_updateContent(__p_id, 0, __response, __exception, __sent);
+    }
+    ::Ice::AsyncResultPtr
+    begin_updateContent(const ::std::string& __p_id, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_updateContent(__p_id, 0, ::Ice::newCallback(__completed, __sent), 0);
+    }
+    ::Ice::AsyncResultPtr
+    begin_updateContent(const ::std::string& __p_id, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::ContentSubmitterPrx&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return __begin_updateContent(__p_id, &__ctx, __response, __exception, __sent);
+    }
+    ::Ice::AsyncResultPtr
+    begin_updateContent(const ::std::string& __p_id, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_updateContent(__p_id, &__ctx, ::Ice::newCallback(__completed, __sent));
+    }
+    
+private:
+
+    ::Ice::AsyncResultPtr __begin_updateContent(const ::std::string& __p_id, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::ContentSubmitterPrx&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent);
+    
+public:
+#endif
+
+    ::Ice::AsyncResultPtr begin_updateContent(const ::std::string& __p_id)
+    {
+        return begin_updateContent(__p_id, 0, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_updateContent(const ::std::string& __p_id, const ::Ice::Context& __ctx)
+    {
+        return begin_updateContent(__p_id, &__ctx, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_updateContent(const ::std::string& __p_id, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_updateContent(__p_id, 0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_updateContent(const ::std::string& __p_id, const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_updateContent(__p_id, &__ctx, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_updateContent(const ::std::string& __p_id, const ::Rpc::Callback_Session_updateContentPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_updateContent(__p_id, 0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_updateContent(const ::std::string& __p_id, const ::Ice::Context& __ctx, const ::Rpc::Callback_Session_updateContentPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_updateContent(__p_id, &__ctx, __del, __cookie);
+    }
+
+    ::Rpc::ErrorCode end_updateContent(::Rpc::ContentSubmitterPrx& __p_submitter, const ::Ice::AsyncResultPtr&);
+    
+private:
+
+    ::Rpc::ErrorCode updateContent(const ::std::string&, ::Rpc::ContentSubmitterPrx&, const ::Ice::Context*);
+    ::Ice::AsyncResultPtr begin_updateContent(const ::std::string&, const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
+    
+public:
+
     ::Rpc::ErrorCode browseEngineVersions(::Rpc::EngineVersionBrowserPrx& __p_browser)
     {
         return browseEngineVersions(__p_browser, 0);
@@ -4848,6 +4927,9 @@ public:
 
     virtual ::Rpc::ErrorCode submitContent(::Rpc::ContentSubmitterPrx&, const ::Ice::Current& = ::Ice::Current()) = 0;
     ::Ice::DispatchStatus ___submitContent(::IceInternal::Incoming&, const ::Ice::Current&);
+
+    virtual ::Rpc::ErrorCode updateContent(const ::std::string&, ::Rpc::ContentSubmitterPrx&, const ::Ice::Current& = ::Ice::Current()) = 0;
+    ::Ice::DispatchStatus ___updateContent(::IceInternal::Incoming&, const ::Ice::Current&);
 
     virtual ::Rpc::ErrorCode browseEngineVersions(::Rpc::EngineVersionBrowserPrx&, const ::Ice::Current& = ::Ice::Current()) = 0;
     ::Ice::DispatchStatus ___browseEngineVersions(::IceInternal::Incoming&, const ::Ice::Current&);
@@ -8034,6 +8116,112 @@ template<class T, typename CT> Callback_Session_submitContentPtr
 newCallback_Session_submitContent(T* instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::ContentSubmitterPrx&, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
 {
     return new Callback_Session_submitContent<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T>
+class CallbackNC_Session_updateContent : public Callback_Session_updateContent_Base, public ::IceInternal::TwowayCallbackNC<T>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception&);
+    typedef void (T::*Sent)(bool);
+    typedef void (T::*Response)(::Rpc::ErrorCode, const ::Rpc::ContentSubmitterPrx&);
+
+    CallbackNC_Session_updateContent(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::TwowayCallbackNC<T>(obj, cb != 0, excb, sentcb), _response(cb)
+    {
+    }
+
+    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+    {
+        ::Rpc::SessionPrx __proxy = ::Rpc::SessionPrx::uncheckedCast(__result->getProxy());
+        ::Rpc::ContentSubmitterPrx submitter;
+        ::Rpc::ErrorCode __ret;
+        try
+        {
+            __ret = __proxy->end_updateContent(submitter, __result);
+        }
+        catch(const ::Ice::Exception& ex)
+        {
+            ::IceInternal::CallbackNC<T>::exception(__result, ex);
+            return;
+        }
+        if(_response)
+        {
+            (::IceInternal::CallbackNC<T>::_callback.get()->*_response)(__ret, submitter);
+        }
+    }
+
+    private:
+
+    Response _response;
+};
+
+template<class T> Callback_Session_updateContentPtr
+newCallback_Session_updateContent(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::ContentSubmitterPrx&), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_Session_updateContent<T>(instance, cb, excb, sentcb);
+}
+
+template<class T> Callback_Session_updateContentPtr
+newCallback_Session_updateContent(T* instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::ContentSubmitterPrx&), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_Session_updateContent<T>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT>
+class Callback_Session_updateContent : public Callback_Session_updateContent_Base, public ::IceInternal::TwowayCallback<T, CT>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception& , const CT&);
+    typedef void (T::*Sent)(bool , const CT&);
+    typedef void (T::*Response)(::Rpc::ErrorCode, const ::Rpc::ContentSubmitterPrx&, const CT&);
+
+    Callback_Session_updateContent(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::TwowayCallback<T, CT>(obj, cb != 0, excb, sentcb), _response(cb)
+    {
+    }
+
+    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+    {
+        ::Rpc::SessionPrx __proxy = ::Rpc::SessionPrx::uncheckedCast(__result->getProxy());
+        ::Rpc::ContentSubmitterPrx submitter;
+        ::Rpc::ErrorCode __ret;
+        try
+        {
+            __ret = __proxy->end_updateContent(submitter, __result);
+        }
+        catch(const ::Ice::Exception& ex)
+        {
+            ::IceInternal::Callback<T, CT>::exception(__result, ex);
+            return;
+        }
+        if(_response)
+        {
+            (::IceInternal::Callback<T, CT>::_callback.get()->*_response)(__ret, submitter, CT::dynamicCast(__result->getCookie()));
+        }
+    }
+
+    private:
+
+    Response _response;
+};
+
+template<class T, typename CT> Callback_Session_updateContentPtr
+newCallback_Session_updateContent(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::ContentSubmitterPrx&, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_Session_updateContent<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT> Callback_Session_updateContentPtr
+newCallback_Session_updateContent(T* instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::ContentSubmitterPrx&, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_Session_updateContent<T, CT>(instance, cb, excb, sentcb);
 }
 
 template<class T>

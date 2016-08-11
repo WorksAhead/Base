@@ -16,7 +16,7 @@ ManagePageWidget::ManagePageWidget(ContextPtr context, QWidget* parent) : QWidge
 	QObject::connect(ui_.moveDownButton, &QPushButton::clicked, this, &ManagePageWidget::onMoveDown);
 	QObject::connect(ui_.addButton, &QPushButton::clicked, this, &ManagePageWidget::onAdd);
 	QObject::connect(ui_.removeButton, &QPushButton::clicked, this, &ManagePageWidget::onRemove);
-	QObject::connect(ui_.saveButton, &QPushButton::clicked, this, &ManagePageWidget::onSave);
+	QObject::connect(ui_.submitButton, &QPushButton::clicked, this, &ManagePageWidget::onSubmit);
 }
 
 ManagePageWidget::~ManagePageWidget()
@@ -99,7 +99,7 @@ void ManagePageWidget::onRemove()
 }
 
 
-void ManagePageWidget::onSave()
+void ManagePageWidget::onSubmit()
 {
 	Rpc::StringSeq pages;
 
@@ -108,9 +108,7 @@ void ManagePageWidget::onSave()
 	}
 
 	Rpc::ErrorCode ec = context_->session->setPages(pages);
-	if (ec != Rpc::ec_success) {
-		context_->promptRpcError(ec);
-		return;
-	}
+
+	context_->promptRpcError(ec);
 }
 

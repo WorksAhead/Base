@@ -39,10 +39,11 @@ public:
 	std::string generateUuid();
 
 	std::string getEnginePath(const std::string& name, const std::string& version);
-	std::string getContentPath(const std::string& uid);
+	std::string getContentPath(const std::string& id);
 
-	void addContent(const std::map<std::string, std::string>& form, const std::string& uid);
-	bool getContent(std::map<std::string, std::string>& form, const std::string& uid);
+	void addContent(const std::map<std::string, std::string>& form, const std::string& id);
+	void updateContent(const std::map<std::string, std::string>& form, const std::string& id);
+	bool getContent(std::map<std::string, std::string>& form, const std::string& id);
 
 	bool getEngineVersionState(const std::string& name, const std::string& version, std::string& outState);
 	void addEngineVersion(const std::string& name, const std::string& version, const std::string& info);

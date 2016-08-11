@@ -112,6 +112,7 @@ module Rpc
 		ErrorCode downloadContentImage(string id, int index, out Downloader* downloader);
 		ErrorCode downloadContent(string id, out Downloader* downloader);
 		ErrorCode submitContent(out ContentSubmitter* submitter);
+		ErrorCode updateContent(string id, out ContentSubmitter* submitter);
 
 		ErrorCode browseEngineVersions(out EngineVersionBrowser* browser);
 		ErrorCode downloadEngineVersion(string name, string version, out Downloader* downloader);

@@ -13,7 +13,17 @@ public:
 	SubmitContentDialog(ContextPtr context, QWidget* parent = 0);
 	~SubmitContentDialog();
 
+	void switchToEditMode(const QString& contentId);
+
+	void setParentId(const QString& parentId);
+	void setTitle(const QString& title);
 	void setPage(const QString& name);
+	void setCategory(const QString& category);
+	void setEngineName(const QString& name);
+	void setEngineVersion(const QString& version);
+	void setCommand(const QString& command);
+	void setWorkingDir(const QString& workDir);
+	void setDesc(const QString& desc);
 
 private Q_SLOTS:
 	void onSelectLocation();
@@ -33,7 +43,8 @@ private:
 
 private:
 	ContextPtr context_;
-
+	bool editMode_;
+	QString contentId_;
 	Ui::SubmitContentDialog ui_;
 };
 

@@ -16,7 +16,7 @@ ManageCategoryWidget::ManageCategoryWidget(ContextPtr context, QWidget* parent) 
 	QObject::connect(ui_.moveDownButton, &QPushButton::clicked, this, &ManageCategoryWidget::onMoveDown);
 	QObject::connect(ui_.addButton, &QPushButton::clicked, this, &ManageCategoryWidget::onAdd);
 	QObject::connect(ui_.removeButton, &QPushButton::clicked, this, &ManageCategoryWidget::onRemove);
-	QObject::connect(ui_.saveButton, &QPushButton::clicked, this, &ManageCategoryWidget::onSave);
+	QObject::connect(ui_.submitButton, &QPushButton::clicked, this, &ManageCategoryWidget::onSubmit);
 }
 
 ManageCategoryWidget::~ManageCategoryWidget()
@@ -99,7 +99,7 @@ void ManageCategoryWidget::onRemove()
 }
 
 
-void ManageCategoryWidget::onSave()
+void ManageCategoryWidget::onSubmit()
 {
 	Rpc::StringSeq categories;
 
@@ -108,9 +108,7 @@ void ManageCategoryWidget::onSave()
 	}
 
 	Rpc::ErrorCode ec = context_->session->setCategories(categories);
-	if (ec != Rpc::ec_success) {
-		context_->promptRpcError(ec);
-		return;
-	}
+
+	context_->promptRpcError(ec);
 }
 
