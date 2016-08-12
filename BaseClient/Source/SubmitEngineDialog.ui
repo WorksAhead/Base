@@ -47,9 +47,6 @@
      <height>20</height>
     </rect>
    </property>
-   <property name="text">
-    <string>D:\Mtv</string>
-   </property>
   </widget>
   <widget class="QPushButton" name="selectLocationButton">
    <property name="geometry">
@@ -72,12 +69,12 @@
     <rect>
      <x>40</x>
      <y>40</y>
-     <width>54</width>
-     <height>12</height>
+     <width>321</width>
+     <height>16</height>
     </rect>
    </property>
    <property name="text">
-    <string>Name</string>
+    <string>Engine Name</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="nameEdit">
@@ -89,21 +86,18 @@
      <height>20</height>
     </rect>
    </property>
-   <property name="text">
-    <string>MTV</string>
-   </property>
   </widget>
   <widget class="QLabel" name="label_3">
    <property name="geometry">
     <rect>
      <x>40</x>
      <y>100</y>
-     <width>54</width>
-     <height>12</height>
+     <width>321</width>
+     <height>16</height>
     </rect>
    </property>
    <property name="text">
-    <string>Version</string>
+    <string>Engine Version</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="versionEdit">
@@ -114,9 +108,6 @@
      <width>321</width>
      <height>20</height>
     </rect>
-   </property>
-   <property name="text">
-    <string>2</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_4">
