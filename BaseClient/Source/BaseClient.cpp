@@ -55,23 +55,15 @@ BaseClient::BaseClient(Rpc::SessionPrx session)
 	timer_ = new IceUtil::Timer;
 	timer_->scheduleRepeated(new RefreshTask(session), IceUtil::Time::seconds(5));
 
-	if (!fs::exists("Cache") && !fs::create_directories("Cache")) {
-		throw std::runtime_error("Failed to create directory");
-	}
-	if (!fs::exists("Library/Contents") && !fs::create_directories("Library/Contents")) {
-		throw std::runtime_error("Failed to create directory");
-	}
-	if (!fs::exists("Library/Engines") && !fs::create_directories("Library/Engines")) {
-		throw std::runtime_error("Failed to create directory");
-	}
-
-	initDb();
-	loadDownloadedContentsFromDb();
-	loadInstalledEnginesFromDb();
-	loadProjectsFromDb();
-
 	context_.reset(new Context);
+
 	context_->session = session;
+	if (session->getCurrentUser(context_->currentUser) != Rpc::ec_success) {
+		throw std::runtime_error("Failed to get current User");
+	}
+	if (session->getCurrentUserGroup(context_->currentUserGroup) != Rpc::ec_success) {
+		throw std::runtime_error("Failed to get current User Group");
+	}
 	context_->contentImageLoader = new ContentImageLoader(context_, this);
 	context_->addTask = std::bind(&BaseClient::addTask, this, std::placeholders::_1);
 	context_->showTaskManager = std::bind(&BaseClient::onShowTaskManager, this);
@@ -95,6 +87,21 @@ BaseClient::BaseClient(Rpc::SessionPrx session)
 	context_->getProject = std::bind(&BaseClient::getProject, this, std::placeholders::_1, std::placeholders::_2);
 	context_->getProjectList = std::bind(&BaseClient::getProjectList, this, std::placeholders::_1);
 	context_->promptRpcError = std::bind(&BaseClient::promptRpcError, this, std::placeholders::_1);
+
+	if (!fs::exists(cachePath()) && !fs::create_directories(cachePath())) {
+		throw std::runtime_error("Failed to create directory");
+	}
+	if (!fs::exists(userPath()) && !fs::create_directories(userPath())) {
+		throw std::runtime_error("Failed to create directory");
+	}
+	if (!fs::exists(libraryPath()) && !fs::create_directories(libraryPath())) {
+		throw std::runtime_error("Failed to create directory");
+	}
+
+	initDb();
+	loadDownloadedContentsFromDb();
+	loadInstalledEnginesFromDb();
+	loadProjectsFromDb();
 
 	taskManagerDialog_ = new ASyncTaskManagerDialog;
 
@@ -165,12 +172,20 @@ std::string BaseClient::uniquePath()
 
 std::string BaseClient::cachePath()
 {
-	return (fs::current_path() / "Cache").string();
+	fs::path p = fs::current_path().parent_path() / "Cache";
+	return p.string();
+}
+
+std::string BaseClient::userPath()
+{
+	fs::path p = fs::current_path().parent_path() / "Users" / context_->currentUser;
+	return p.string();
 }
 
 std::string BaseClient::libraryPath()
 {
-	return (fs::current_path() / "Library").string();
+	fs::path p = fs::path(userPath()) / "Library";
+	return p.string();
 }
 
 std::string BaseClient::enginePath(const EngineVersion& v)
@@ -563,7 +578,9 @@ void BaseClient::onShowTaskManager()
 
 void BaseClient::initDb()
 {
-	db_.reset(new SQLite::Database("BaseClient.db", SQLITE_OPEN_READWRITE|SQLITE_OPEN_CREATE));
+	fs::path p = fs::path(userPath()) / "BaseClient.db";
+
+	db_.reset(new SQLite::Database(p.string().c_str(), SQLITE_OPEN_READWRITE|SQLITE_OPEN_CREATE));
 
 	db_->exec("CREATE TABLE IF NOT EXISTS InstalledEngines ("
 		"Name TEXT COLLATE NOCASE, Version TEXT COLLATE NOCASE)");

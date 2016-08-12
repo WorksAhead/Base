@@ -101,6 +101,9 @@ module Rpc
 	{
 		void refresh();
 
+		ErrorCode getCurrentUser(out string user);
+		ErrorCode getCurrentUserGroup(out string group);
+
 		ErrorCode setPages(StringSeq pages);
 		ErrorCode getPages(out StringSeq pages);
 

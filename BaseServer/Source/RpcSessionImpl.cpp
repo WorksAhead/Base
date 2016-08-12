@@ -47,10 +47,32 @@ void RpcSessionImpl::refresh(const Ice::Current& c)
 	timestamp_ = IceUtil::Time::now(IceUtil::Time::Monotonic);
 }
 
+Rpc::ErrorCode RpcSessionImpl::getCurrentUser(std::string& outUser, const Ice::Current&)
+{
+	boost::recursive_mutex::scoped_lock lock(sync_);
+	checkIsDestroyed();
+
+	outUser = context_->user();
+	return Rpc::ec_success;
+}
+
+Rpc::ErrorCode RpcSessionImpl::getCurrentUserGroup(std::string& outGroup, const Ice::Current&)
+{
+	boost::recursive_mutex::scoped_lock lock(sync_);
+	checkIsDestroyed();
+
+	outGroup = context_->userGroup();
+	return Rpc::ec_success;
+}
+
 Rpc::ErrorCode RpcSessionImpl::setPages(const Rpc::StringSeq& pages, const Ice::Current&)
 {
 	boost::recursive_mutex::scoped_lock lock(sync_);
 	checkIsDestroyed();
+
+	if (context_->userGroup() != "Admin") {
+		return Rpc::ec_access_denied;
+	}
 
 	context_->center()->setPages(pages);
 	return Rpc::ec_success;
@@ -69,6 +91,10 @@ Rpc::ErrorCode RpcSessionImpl::setCategories(const Rpc::StringSeq& categories, c
 {
 	boost::recursive_mutex::scoped_lock lock(sync_);
 	checkIsDestroyed();
+
+	if (context_->userGroup() != "Admin") {
+		return Rpc::ec_access_denied;
+	}
 
 	context_->center()->setCategories(categories);
 	return Rpc::ec_success;
@@ -181,6 +207,15 @@ Rpc::ErrorCode RpcSessionImpl::updateContent(const std::string& id, Rpc::Content
 	boost::recursive_mutex::scoped_lock lock(sync_);
 	checkIsDestroyed();
 
+	std::map<std::string, std::string> form;
+	if (!context_->center()->getContent(form, id)) {
+		return Rpc::ec_content_does_not_exist;
+	}
+
+	if (!boost::iequals(context_->user(), form.at("User")) && context_->userGroup() != "Admin") {
+		return Rpc::ec_access_denied;
+	}
+
 	RpcContentSubmitterImplPtr submitter = new RpcContentSubmitterImpl(context_);
 
 	Rpc::ErrorCode ec = submitter->init(RpcContentSubmitterImpl::update_mode, id);
@@ -247,6 +282,10 @@ Rpc::ErrorCode RpcSessionImpl::removeEngineVersion(const std::string& name, cons
 	boost::recursive_mutex::scoped_lock lock(sync_);
 	checkIsDestroyed();
 
+	if (context_->userGroup() != "Admin") {
+		return Rpc::ec_access_denied;
+	}
+
 	EngineVersionLockGuard engineLock(context_->center().get(), name, version, Center::lock_write);
 
 	if (!engineLock.isLocked()) {
@@ -280,6 +319,10 @@ Rpc::ErrorCode RpcSessionImpl::submitEngineVersion(const std::string& name, cons
 	boost::recursive_mutex::scoped_lock lock(sync_);
 	checkIsDestroyed();
 
+	if (context_->userGroup() != "Admin") {
+		return Rpc::ec_access_denied;
+	}
+
 	RpcEngineUploaderImplPtr uploader = new RpcEngineVersionUploaderImpl(context_->center());
 
 	Rpc::ErrorCode ec = uploader->init(name, version, info);
@@ -301,6 +344,10 @@ Rpc::ErrorCode RpcSessionImpl::browseUsers(Rpc::UserBrowserPrx& browserPrx, cons
 {
 	boost::recursive_mutex::scoped_lock lock(sync_);
 	checkIsDestroyed();
+
+	if (context_->userGroup() != "Admin") {
+		return Rpc::ec_access_denied;
+	}
 
 	RpcUserBrowserImplPtr browser = new RpcUserBrowserImpl(context_);
 
@@ -324,6 +371,9 @@ Rpc::ErrorCode RpcSessionImpl::setUserGroup(const std::string& username, const s
 	boost::recursive_mutex::scoped_lock lock(sync_);
 	checkIsDestroyed();
 
+	if (context_->userGroup() != "Admin") {
+		return Rpc::ec_access_denied;
+	}
 	if (context_->center()->setUserGroup(username, group)) {
 		return Rpc::ec_success;
 	}
@@ -335,6 +385,10 @@ Rpc::ErrorCode RpcSessionImpl::removeUser(const std::string& username, const Ice
 {
 	boost::recursive_mutex::scoped_lock lock(sync_);
 	checkIsDestroyed();
+
+	if (context_->userGroup() != "Admin") {
+		return Rpc::ec_access_denied;
+	}
 
 	if (context_->center()->removeUser(username)) {
 		return Rpc::ec_success;

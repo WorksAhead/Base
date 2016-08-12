@@ -832,6 +832,12 @@ typedef ::IceUtil::Handle< Callback_ContentSubmitter_finish_Base> Callback_Conte
 class Callback_Session_refresh_Base : virtual public ::IceInternal::CallbackBase { };
 typedef ::IceUtil::Handle< Callback_Session_refresh_Base> Callback_Session_refreshPtr;
 
+class Callback_Session_getCurrentUser_Base : virtual public ::IceInternal::CallbackBase { };
+typedef ::IceUtil::Handle< Callback_Session_getCurrentUser_Base> Callback_Session_getCurrentUserPtr;
+
+class Callback_Session_getCurrentUserGroup_Base : virtual public ::IceInternal::CallbackBase { };
+typedef ::IceUtil::Handle< Callback_Session_getCurrentUserGroup_Base> Callback_Session_getCurrentUserGroupPtr;
+
 class Callback_Session_setPages_Base : virtual public ::IceInternal::CallbackBase { };
 typedef ::IceUtil::Handle< Callback_Session_setPages_Base> Callback_Session_setPagesPtr;
 
@@ -3227,6 +3233,158 @@ private:
     
 public:
 
+    ::Rpc::ErrorCode getCurrentUser(::std::string& __p_user)
+    {
+        return getCurrentUser(__p_user, 0);
+    }
+    ::Rpc::ErrorCode getCurrentUser(::std::string& __p_user, const ::Ice::Context& __ctx)
+    {
+        return getCurrentUser(__p_user, &__ctx);
+    }
+#ifdef ICE_CPP11
+    ::Ice::AsyncResultPtr
+    begin_getCurrentUser(const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::std::string&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return __begin_getCurrentUser(0, __response, __exception, __sent);
+    }
+    ::Ice::AsyncResultPtr
+    begin_getCurrentUser(const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_getCurrentUser(0, ::Ice::newCallback(__completed, __sent), 0);
+    }
+    ::Ice::AsyncResultPtr
+    begin_getCurrentUser(const ::Ice::Context& __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::std::string&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return __begin_getCurrentUser(&__ctx, __response, __exception, __sent);
+    }
+    ::Ice::AsyncResultPtr
+    begin_getCurrentUser(const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_getCurrentUser(&__ctx, ::Ice::newCallback(__completed, __sent));
+    }
+    
+private:
+
+    ::Ice::AsyncResultPtr __begin_getCurrentUser(const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::std::string&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent);
+    
+public:
+#endif
+
+    ::Ice::AsyncResultPtr begin_getCurrentUser()
+    {
+        return begin_getCurrentUser(0, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_getCurrentUser(const ::Ice::Context& __ctx)
+    {
+        return begin_getCurrentUser(&__ctx, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_getCurrentUser(const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_getCurrentUser(0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_getCurrentUser(const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_getCurrentUser(&__ctx, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_getCurrentUser(const ::Rpc::Callback_Session_getCurrentUserPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_getCurrentUser(0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_getCurrentUser(const ::Ice::Context& __ctx, const ::Rpc::Callback_Session_getCurrentUserPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_getCurrentUser(&__ctx, __del, __cookie);
+    }
+
+    ::Rpc::ErrorCode end_getCurrentUser(::std::string& __p_user, const ::Ice::AsyncResultPtr&);
+    
+private:
+
+    ::Rpc::ErrorCode getCurrentUser(::std::string&, const ::Ice::Context*);
+    ::Ice::AsyncResultPtr begin_getCurrentUser(const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
+    
+public:
+
+    ::Rpc::ErrorCode getCurrentUserGroup(::std::string& __p_group)
+    {
+        return getCurrentUserGroup(__p_group, 0);
+    }
+    ::Rpc::ErrorCode getCurrentUserGroup(::std::string& __p_group, const ::Ice::Context& __ctx)
+    {
+        return getCurrentUserGroup(__p_group, &__ctx);
+    }
+#ifdef ICE_CPP11
+    ::Ice::AsyncResultPtr
+    begin_getCurrentUserGroup(const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::std::string&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return __begin_getCurrentUserGroup(0, __response, __exception, __sent);
+    }
+    ::Ice::AsyncResultPtr
+    begin_getCurrentUserGroup(const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_getCurrentUserGroup(0, ::Ice::newCallback(__completed, __sent), 0);
+    }
+    ::Ice::AsyncResultPtr
+    begin_getCurrentUserGroup(const ::Ice::Context& __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::std::string&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return __begin_getCurrentUserGroup(&__ctx, __response, __exception, __sent);
+    }
+    ::Ice::AsyncResultPtr
+    begin_getCurrentUserGroup(const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_getCurrentUserGroup(&__ctx, ::Ice::newCallback(__completed, __sent));
+    }
+    
+private:
+
+    ::Ice::AsyncResultPtr __begin_getCurrentUserGroup(const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::std::string&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent);
+    
+public:
+#endif
+
+    ::Ice::AsyncResultPtr begin_getCurrentUserGroup()
+    {
+        return begin_getCurrentUserGroup(0, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_getCurrentUserGroup(const ::Ice::Context& __ctx)
+    {
+        return begin_getCurrentUserGroup(&__ctx, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_getCurrentUserGroup(const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_getCurrentUserGroup(0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_getCurrentUserGroup(const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_getCurrentUserGroup(&__ctx, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_getCurrentUserGroup(const ::Rpc::Callback_Session_getCurrentUserGroupPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_getCurrentUserGroup(0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_getCurrentUserGroup(const ::Ice::Context& __ctx, const ::Rpc::Callback_Session_getCurrentUserGroupPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_getCurrentUserGroup(&__ctx, __del, __cookie);
+    }
+
+    ::Rpc::ErrorCode end_getCurrentUserGroup(::std::string& __p_group, const ::Ice::AsyncResultPtr&);
+    
+private:
+
+    ::Rpc::ErrorCode getCurrentUserGroup(::std::string&, const ::Ice::Context*);
+    ::Ice::AsyncResultPtr begin_getCurrentUserGroup(const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
+    
+public:
+
     ::Rpc::ErrorCode setPages(const ::Rpc::StringSeq& __p_pages)
     {
         return setPages(__p_pages, 0);
@@ -4900,6 +5058,12 @@ public:
 
     virtual void refresh(const ::Ice::Current& = ::Ice::Current()) = 0;
     ::Ice::DispatchStatus ___refresh(::IceInternal::Incoming&, const ::Ice::Current&);
+
+    virtual ::Rpc::ErrorCode getCurrentUser(::std::string&, const ::Ice::Current& = ::Ice::Current()) = 0;
+    ::Ice::DispatchStatus ___getCurrentUser(::IceInternal::Incoming&, const ::Ice::Current&);
+
+    virtual ::Rpc::ErrorCode getCurrentUserGroup(::std::string&, const ::Ice::Current& = ::Ice::Current()) = 0;
+    ::Ice::DispatchStatus ___getCurrentUserGroup(::IceInternal::Incoming&, const ::Ice::Current&);
 
     virtual ::Rpc::ErrorCode setPages(const ::Rpc::StringSeq&, const ::Ice::Current& = ::Ice::Current()) = 0;
     ::Ice::DispatchStatus ___setPages(::IceInternal::Incoming&, const ::Ice::Current&);
@@ -7166,6 +7330,218 @@ template<class T, typename CT> Callback_Session_refreshPtr
 newCallback_Session_refresh(T* instance, void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
 {
     return new Callback_Session_refresh<T, CT>(instance, 0, excb, sentcb);
+}
+
+template<class T>
+class CallbackNC_Session_getCurrentUser : public Callback_Session_getCurrentUser_Base, public ::IceInternal::TwowayCallbackNC<T>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception&);
+    typedef void (T::*Sent)(bool);
+    typedef void (T::*Response)(::Rpc::ErrorCode, const ::std::string&);
+
+    CallbackNC_Session_getCurrentUser(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::TwowayCallbackNC<T>(obj, cb != 0, excb, sentcb), _response(cb)
+    {
+    }
+
+    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+    {
+        ::Rpc::SessionPrx __proxy = ::Rpc::SessionPrx::uncheckedCast(__result->getProxy());
+        ::std::string user;
+        ::Rpc::ErrorCode __ret;
+        try
+        {
+            __ret = __proxy->end_getCurrentUser(user, __result);
+        }
+        catch(const ::Ice::Exception& ex)
+        {
+            ::IceInternal::CallbackNC<T>::exception(__result, ex);
+            return;
+        }
+        if(_response)
+        {
+            (::IceInternal::CallbackNC<T>::_callback.get()->*_response)(__ret, user);
+        }
+    }
+
+    private:
+
+    Response _response;
+};
+
+template<class T> Callback_Session_getCurrentUserPtr
+newCallback_Session_getCurrentUser(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode, const ::std::string&), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_Session_getCurrentUser<T>(instance, cb, excb, sentcb);
+}
+
+template<class T> Callback_Session_getCurrentUserPtr
+newCallback_Session_getCurrentUser(T* instance, void (T::*cb)(::Rpc::ErrorCode, const ::std::string&), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_Session_getCurrentUser<T>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT>
+class Callback_Session_getCurrentUser : public Callback_Session_getCurrentUser_Base, public ::IceInternal::TwowayCallback<T, CT>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception& , const CT&);
+    typedef void (T::*Sent)(bool , const CT&);
+    typedef void (T::*Response)(::Rpc::ErrorCode, const ::std::string&, const CT&);
+
+    Callback_Session_getCurrentUser(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::TwowayCallback<T, CT>(obj, cb != 0, excb, sentcb), _response(cb)
+    {
+    }
+
+    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+    {
+        ::Rpc::SessionPrx __proxy = ::Rpc::SessionPrx::uncheckedCast(__result->getProxy());
+        ::std::string user;
+        ::Rpc::ErrorCode __ret;
+        try
+        {
+            __ret = __proxy->end_getCurrentUser(user, __result);
+        }
+        catch(const ::Ice::Exception& ex)
+        {
+            ::IceInternal::Callback<T, CT>::exception(__result, ex);
+            return;
+        }
+        if(_response)
+        {
+            (::IceInternal::Callback<T, CT>::_callback.get()->*_response)(__ret, user, CT::dynamicCast(__result->getCookie()));
+        }
+    }
+
+    private:
+
+    Response _response;
+};
+
+template<class T, typename CT> Callback_Session_getCurrentUserPtr
+newCallback_Session_getCurrentUser(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode, const ::std::string&, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_Session_getCurrentUser<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT> Callback_Session_getCurrentUserPtr
+newCallback_Session_getCurrentUser(T* instance, void (T::*cb)(::Rpc::ErrorCode, const ::std::string&, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_Session_getCurrentUser<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T>
+class CallbackNC_Session_getCurrentUserGroup : public Callback_Session_getCurrentUserGroup_Base, public ::IceInternal::TwowayCallbackNC<T>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception&);
+    typedef void (T::*Sent)(bool);
+    typedef void (T::*Response)(::Rpc::ErrorCode, const ::std::string&);
+
+    CallbackNC_Session_getCurrentUserGroup(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::TwowayCallbackNC<T>(obj, cb != 0, excb, sentcb), _response(cb)
+    {
+    }
+
+    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+    {
+        ::Rpc::SessionPrx __proxy = ::Rpc::SessionPrx::uncheckedCast(__result->getProxy());
+        ::std::string group;
+        ::Rpc::ErrorCode __ret;
+        try
+        {
+            __ret = __proxy->end_getCurrentUserGroup(group, __result);
+        }
+        catch(const ::Ice::Exception& ex)
+        {
+            ::IceInternal::CallbackNC<T>::exception(__result, ex);
+            return;
+        }
+        if(_response)
+        {
+            (::IceInternal::CallbackNC<T>::_callback.get()->*_response)(__ret, group);
+        }
+    }
+
+    private:
+
+    Response _response;
+};
+
+template<class T> Callback_Session_getCurrentUserGroupPtr
+newCallback_Session_getCurrentUserGroup(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode, const ::std::string&), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_Session_getCurrentUserGroup<T>(instance, cb, excb, sentcb);
+}
+
+template<class T> Callback_Session_getCurrentUserGroupPtr
+newCallback_Session_getCurrentUserGroup(T* instance, void (T::*cb)(::Rpc::ErrorCode, const ::std::string&), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_Session_getCurrentUserGroup<T>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT>
+class Callback_Session_getCurrentUserGroup : public Callback_Session_getCurrentUserGroup_Base, public ::IceInternal::TwowayCallback<T, CT>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception& , const CT&);
+    typedef void (T::*Sent)(bool , const CT&);
+    typedef void (T::*Response)(::Rpc::ErrorCode, const ::std::string&, const CT&);
+
+    Callback_Session_getCurrentUserGroup(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::TwowayCallback<T, CT>(obj, cb != 0, excb, sentcb), _response(cb)
+    {
+    }
+
+    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+    {
+        ::Rpc::SessionPrx __proxy = ::Rpc::SessionPrx::uncheckedCast(__result->getProxy());
+        ::std::string group;
+        ::Rpc::ErrorCode __ret;
+        try
+        {
+            __ret = __proxy->end_getCurrentUserGroup(group, __result);
+        }
+        catch(const ::Ice::Exception& ex)
+        {
+            ::IceInternal::Callback<T, CT>::exception(__result, ex);
+            return;
+        }
+        if(_response)
+        {
+            (::IceInternal::Callback<T, CT>::_callback.get()->*_response)(__ret, group, CT::dynamicCast(__result->getCookie()));
+        }
+    }
+
+    private:
+
+    Response _response;
+};
+
+template<class T, typename CT> Callback_Session_getCurrentUserGroupPtr
+newCallback_Session_getCurrentUserGroup(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode, const ::std::string&, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_Session_getCurrentUserGroup<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT> Callback_Session_getCurrentUserGroupPtr
+newCallback_Session_getCurrentUserGroup(T* instance, void (T::*cb)(::Rpc::ErrorCode, const ::std::string&, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_Session_getCurrentUserGroup<T, CT>(instance, cb, excb, sentcb);
 }
 
 template<class T>

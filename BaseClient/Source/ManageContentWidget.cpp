@@ -6,6 +6,8 @@
 #include <QMessageBox>
 #include <QMenu>
 
+#include <boost/algorithm/string.hpp>
+
 #include <sstream>
 
 #define ITEMS_PER_REQUEST 100
@@ -171,6 +173,10 @@ void ManageContentWidget::showMore(int count)
 		{
 			Rpc::ContentInfo ci;
 			if (context_->session->getContentInfo(items[i].id, ci) != Rpc::ec_success) {
+				continue;
+			}
+
+			if (!boost::iequals(context_->currentUser, ci.user) && context_->currentUserGroup != "Admin") {
 				continue;
 			}
 

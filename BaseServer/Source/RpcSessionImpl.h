@@ -20,6 +20,9 @@ public:
 
 	virtual void refresh(const Ice::Current&);
 
+	virtual Rpc::ErrorCode getCurrentUser(std::string&, const Ice::Current&);
+	virtual Rpc::ErrorCode getCurrentUserGroup(std::string&, const Ice::Current&);
+
 	virtual Rpc::ErrorCode setPages(const Rpc::StringSeq&, const Ice::Current&);
 	virtual Rpc::ErrorCode getPages(Rpc::StringSeq&, const Ice::Current&);
 

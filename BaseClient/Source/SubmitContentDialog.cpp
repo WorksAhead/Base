@@ -69,6 +69,8 @@ SubmitContentDialog::SubmitContentDialog(ContextPtr context, QWidget* parent) : 
 	ui_.prevScreenshotButton->setEnabled(false);
 	ui_.nextScreenshotButton->setEnabled(false);
 	ui_.removeScreenshotButton->setEnabled(false);
+
+	editMode_ = false;
 }
 
 SubmitContentDialog::~SubmitContentDialog()

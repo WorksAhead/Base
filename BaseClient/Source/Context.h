@@ -74,6 +74,9 @@ struct Context
 {
 	Rpc::SessionPrx session;
 
+	std::string currentUser;
+	std::string currentUserGroup;
+
 	ContentImageLoader* contentImageLoader;
 
 	std::function<void(ASyncTaskPtr)> addTask;

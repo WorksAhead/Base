@@ -14,16 +14,20 @@ ManageWidget::ManageWidget(ContextPtr context, QWidget* parent) : QWidget(parent
 	VTabWidget* p = new VTabWidget;
 
 	manageContent_ = new ManageContentWidget(context_);
-	manageEngine_ = new ManageEngineWidget(context_);
-	manageUser_ = new ManageUserWidget(context_);
-	managePage_ = new ManagePageWidget(context_);
-	manageCategory_ = new ManageCategoryWidget(context_);
-
 	p->addTab("Content", manageContent_);
-	p->addTab("Engine", manageEngine_);
-	p->addTab("User", manageUser_);
-	p->addTab("Page", managePage_);
-	p->addTab("Category", manageCategory_);
+
+	if (context_->currentUserGroup == "Admin")
+	{
+		manageEngine_ = new ManageEngineWidget(context_);
+		manageUser_ = new ManageUserWidget(context_);
+		managePage_ = new ManagePageWidget(context_);
+		manageCategory_ = new ManageCategoryWidget(context_);
+
+		p->addTab("Engine", manageEngine_);
+		p->addTab("User", manageUser_);
+		p->addTab("Page", managePage_);
+		p->addTab("Category", manageCategory_);
+	}
 
 	p->setCurrentIndex(0);
 

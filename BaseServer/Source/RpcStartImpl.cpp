@@ -19,7 +19,7 @@ RpcStartImpl::RpcStartImpl(CenterPtr center) : center_(center)
 
 std::string RpcStartImpl::getServerVersion(const Ice::Current&)
 {
-	return "1.0.0.0";
+	return "1.0.0.1";
 }
 
 Rpc::ErrorCode RpcStartImpl::signup(const std::string& username, const std::string& password, const Ice::Current&)
