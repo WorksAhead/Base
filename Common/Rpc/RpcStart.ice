@@ -10,5 +10,6 @@ module Rpc
 		string getServerVersion();
 		ErrorCode signup(string username, string password);
 		ErrorCode login(string username, string password, out Session* session);
+		ErrorCode resetPassword(string username, string oldPassword, string newPassword);
 	};
 };

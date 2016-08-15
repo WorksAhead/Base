@@ -17,13 +17,15 @@ public:
 	Rpc::SessionPrx session();
 
 private Q_SLOTS:
-	void login();
-	void signup();
+	void onLogin();
+	void onSignup();
+	void onReset();
 
 private:
 	Ui::LoginDialog ui_;
 	Rpc::StartPrx startPrx_;
 	Rpc::SessionPrx sessionPrx_;
+	QString password_;
 };
 
 #endif // LOGINDIALOG_HEADER_

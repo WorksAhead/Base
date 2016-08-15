@@ -16,6 +16,8 @@ public:
 
 	virtual Rpc::ErrorCode login(const std::string&, const std::string&, Rpc::SessionPrx&, const Ice::Current&);
 
+	virtual Rpc::ErrorCode resetPassword(const std::string&, const std::string&, const std::string&, const Ice::Current&);
+
 private:
 	CenterPtr center_;
 	IceUtil::TimerPtr timer_;

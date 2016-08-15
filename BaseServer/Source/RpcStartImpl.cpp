@@ -67,3 +67,13 @@ Rpc::ErrorCode RpcStartImpl::login(const std::string& username, const std::strin
 	return Rpc::ec_success;
 }
 
+Rpc::ErrorCode RpcStartImpl::resetPassword(const std::string& username, const std::string& oldPassword, const std::string& newPassword, const Ice::Current&)
+{
+	if (center_->resetUserPassword(username, oldPassword, newPassword)) {
+		return Rpc::ec_success;
+	}
+	else {
+		return Rpc::ec_username_or_password_incorrect;
+	}
+}
+

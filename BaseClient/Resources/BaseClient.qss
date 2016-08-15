@@ -168,6 +168,17 @@ QMenu::item:selected {
     background-color: rgb(246, 96, 0);
 }
 
+QCheckBox::indicator {
+	width: 12px;
+    height: 12px;
+	background: rgb(20, 20, 20);
+	border: 1px solid rgb(50, 50, 50);
+	border-radius: 2px;
+}
+QCheckBox::indicator::checked {
+	image: url(:/Icons/IndicatorChecked.png);
+}
+
 QTabWidget#loginDialogTab::pane {
 	margin: 0;
 	border: 0;
@@ -190,11 +201,10 @@ QTabBar#loginDialogTabBar::tab:selected {
 }
 
 QTabBar#loginDialogTabBar::tab:hover:!selected {
-	background: rgb(45, 45, 45);
+	background: rgb(60, 60, 60);
 }
 
 QTabBar#loginDialogTabBar::tab:!selected {
-	
 }
 
 QTabWidget#MainTab::pane {

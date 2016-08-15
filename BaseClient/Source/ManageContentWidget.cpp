@@ -103,7 +103,7 @@ void ManageContentWidget::onEdit()
 {
 	QList<QTreeWidgetItem*> items = ui_.contentList->selectedItems();
 	if (items.count() == 0 || items.count() > 1) {
-		QMessageBox::information(0, "Base", tr("Please select a single line of Content to edit"));
+		QMessageBox::information(0, "Base", tr("Please select a single Content."));
 		return;
 	}
 

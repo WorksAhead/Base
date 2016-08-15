@@ -87,6 +87,9 @@ typedef ::IceUtil::Handle< Callback_Start_signup_Base> Callback_Start_signupPtr;
 class Callback_Start_login_Base : virtual public ::IceInternal::CallbackBase { };
 typedef ::IceUtil::Handle< Callback_Start_login_Base> Callback_Start_loginPtr;
 
+class Callback_Start_resetPassword_Base : virtual public ::IceInternal::CallbackBase { };
+typedef ::IceUtil::Handle< Callback_Start_resetPassword_Base> Callback_Start_resetPasswordPtr;
+
 }
 
 namespace IceProxy
@@ -326,6 +329,82 @@ private:
     ::Ice::AsyncResultPtr begin_login(const ::std::string&, const ::std::string&, const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
     
 public:
+
+    ::Rpc::ErrorCode resetPassword(const ::std::string& __p_username, const ::std::string& __p_oldPassword, const ::std::string& __p_newPassword)
+    {
+        return resetPassword(__p_username, __p_oldPassword, __p_newPassword, 0);
+    }
+    ::Rpc::ErrorCode resetPassword(const ::std::string& __p_username, const ::std::string& __p_oldPassword, const ::std::string& __p_newPassword, const ::Ice::Context& __ctx)
+    {
+        return resetPassword(__p_username, __p_oldPassword, __p_newPassword, &__ctx);
+    }
+#ifdef ICE_CPP11
+    ::Ice::AsyncResultPtr
+    begin_resetPassword(const ::std::string& __p_username, const ::std::string& __p_oldPassword, const ::std::string& __p_newPassword, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return __begin_resetPassword(__p_username, __p_oldPassword, __p_newPassword, 0, __response, __exception, __sent);
+    }
+    ::Ice::AsyncResultPtr
+    begin_resetPassword(const ::std::string& __p_username, const ::std::string& __p_oldPassword, const ::std::string& __p_newPassword, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_resetPassword(__p_username, __p_oldPassword, __p_newPassword, 0, ::Ice::newCallback(__completed, __sent), 0);
+    }
+    ::Ice::AsyncResultPtr
+    begin_resetPassword(const ::std::string& __p_username, const ::std::string& __p_oldPassword, const ::std::string& __p_newPassword, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return __begin_resetPassword(__p_username, __p_oldPassword, __p_newPassword, &__ctx, __response, __exception, __sent);
+    }
+    ::Ice::AsyncResultPtr
+    begin_resetPassword(const ::std::string& __p_username, const ::std::string& __p_oldPassword, const ::std::string& __p_newPassword, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_resetPassword(__p_username, __p_oldPassword, __p_newPassword, &__ctx, ::Ice::newCallback(__completed, __sent));
+    }
+    
+private:
+
+    ::Ice::AsyncResultPtr __begin_resetPassword(const ::std::string& __p_username, const ::std::string& __p_oldPassword, const ::std::string& __p_newPassword, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent);
+    
+public:
+#endif
+
+    ::Ice::AsyncResultPtr begin_resetPassword(const ::std::string& __p_username, const ::std::string& __p_oldPassword, const ::std::string& __p_newPassword)
+    {
+        return begin_resetPassword(__p_username, __p_oldPassword, __p_newPassword, 0, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_resetPassword(const ::std::string& __p_username, const ::std::string& __p_oldPassword, const ::std::string& __p_newPassword, const ::Ice::Context& __ctx)
+    {
+        return begin_resetPassword(__p_username, __p_oldPassword, __p_newPassword, &__ctx, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_resetPassword(const ::std::string& __p_username, const ::std::string& __p_oldPassword, const ::std::string& __p_newPassword, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_resetPassword(__p_username, __p_oldPassword, __p_newPassword, 0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_resetPassword(const ::std::string& __p_username, const ::std::string& __p_oldPassword, const ::std::string& __p_newPassword, const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_resetPassword(__p_username, __p_oldPassword, __p_newPassword, &__ctx, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_resetPassword(const ::std::string& __p_username, const ::std::string& __p_oldPassword, const ::std::string& __p_newPassword, const ::Rpc::Callback_Start_resetPasswordPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_resetPassword(__p_username, __p_oldPassword, __p_newPassword, 0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_resetPassword(const ::std::string& __p_username, const ::std::string& __p_oldPassword, const ::std::string& __p_newPassword, const ::Ice::Context& __ctx, const ::Rpc::Callback_Start_resetPasswordPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_resetPassword(__p_username, __p_oldPassword, __p_newPassword, &__ctx, __del, __cookie);
+    }
+
+    ::Rpc::ErrorCode end_resetPassword(const ::Ice::AsyncResultPtr&);
+    
+private:
+
+    ::Rpc::ErrorCode resetPassword(const ::std::string&, const ::std::string&, const ::std::string&, const ::Ice::Context*);
+    ::Ice::AsyncResultPtr begin_resetPassword(const ::std::string&, const ::std::string&, const ::std::string&, const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
+    
+public:
     
     ::IceInternal::ProxyHandle<Start> ice_context(const ::Ice::Context& __context) const
     {
@@ -465,6 +544,9 @@ public:
 
     virtual ::Rpc::ErrorCode login(const ::std::string&, const ::std::string&, ::Rpc::SessionPrx&, const ::Ice::Current& = ::Ice::Current()) = 0;
     ::Ice::DispatchStatus ___login(::IceInternal::Incoming&, const ::Ice::Current&);
+
+    virtual ::Rpc::ErrorCode resetPassword(const ::std::string&, const ::std::string&, const ::std::string&, const ::Ice::Current& = ::Ice::Current()) = 0;
+    ::Ice::DispatchStatus ___resetPassword(::IceInternal::Incoming&, const ::Ice::Current&);
 
     virtual ::Ice::DispatchStatus __dispatch(::IceInternal::Incoming&, const ::Ice::Current&);
 
@@ -802,6 +884,110 @@ template<class T, typename CT> Callback_Start_loginPtr
 newCallback_Start_login(T* instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::SessionPrx&, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
 {
     return new Callback_Start_login<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T>
+class CallbackNC_Start_resetPassword : public Callback_Start_resetPassword_Base, public ::IceInternal::TwowayCallbackNC<T>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception&);
+    typedef void (T::*Sent)(bool);
+    typedef void (T::*Response)(::Rpc::ErrorCode);
+
+    CallbackNC_Start_resetPassword(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::TwowayCallbackNC<T>(obj, cb != 0, excb, sentcb), _response(cb)
+    {
+    }
+
+    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+    {
+        ::Rpc::StartPrx __proxy = ::Rpc::StartPrx::uncheckedCast(__result->getProxy());
+        ::Rpc::ErrorCode __ret;
+        try
+        {
+            __ret = __proxy->end_resetPassword(__result);
+        }
+        catch(const ::Ice::Exception& ex)
+        {
+            ::IceInternal::CallbackNC<T>::exception(__result, ex);
+            return;
+        }
+        if(_response)
+        {
+            (::IceInternal::CallbackNC<T>::_callback.get()->*_response)(__ret);
+        }
+    }
+
+    private:
+
+    Response _response;
+};
+
+template<class T> Callback_Start_resetPasswordPtr
+newCallback_Start_resetPassword(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_Start_resetPassword<T>(instance, cb, excb, sentcb);
+}
+
+template<class T> Callback_Start_resetPasswordPtr
+newCallback_Start_resetPassword(T* instance, void (T::*cb)(::Rpc::ErrorCode), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_Start_resetPassword<T>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT>
+class Callback_Start_resetPassword : public Callback_Start_resetPassword_Base, public ::IceInternal::TwowayCallback<T, CT>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception& , const CT&);
+    typedef void (T::*Sent)(bool , const CT&);
+    typedef void (T::*Response)(::Rpc::ErrorCode, const CT&);
+
+    Callback_Start_resetPassword(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::TwowayCallback<T, CT>(obj, cb != 0, excb, sentcb), _response(cb)
+    {
+    }
+
+    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+    {
+        ::Rpc::StartPrx __proxy = ::Rpc::StartPrx::uncheckedCast(__result->getProxy());
+        ::Rpc::ErrorCode __ret;
+        try
+        {
+            __ret = __proxy->end_resetPassword(__result);
+        }
+        catch(const ::Ice::Exception& ex)
+        {
+            ::IceInternal::Callback<T, CT>::exception(__result, ex);
+            return;
+        }
+        if(_response)
+        {
+            (::IceInternal::Callback<T, CT>::_callback.get()->*_response)(__ret, CT::dynamicCast(__result->getCookie()));
+        }
+    }
+
+    private:
+
+    Response _response;
+};
+
+template<class T, typename CT> Callback_Start_resetPasswordPtr
+newCallback_Start_resetPassword(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_Start_resetPassword<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT> Callback_Start_resetPasswordPtr
+newCallback_Start_resetPassword(T* instance, void (T::*cb)(::Rpc::ErrorCode, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_Start_resetPassword<T, CT>(instance, cb, excb, sentcb);
 }
 
 }

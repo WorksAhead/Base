@@ -124,6 +124,7 @@ module Rpc
 
 		ErrorCode browseUsers(out UserBrowser* browser);
 		ErrorCode setUserGroup(string username, string group);
+		ErrorCode resetUserPassword(string username, string password);
 		ErrorCode removeUser(string username);
 	};
 };
