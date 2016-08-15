@@ -44,6 +44,7 @@ public:
 	void addContent(const std::map<std::string, std::string>& form, const std::string& id);
 	void updateContent(const std::map<std::string, std::string>& form, const std::string& id);
 	bool getContent(std::map<std::string, std::string>& form, const std::string& id);
+	bool changeContentState(const std::string& id, const std::string& state);
 
 	bool getEngineVersionState(const std::string& name, const std::string& version, std::string& outState);
 	void addEngineVersion(const std::string& name, const std::string& version, const std::string& info);

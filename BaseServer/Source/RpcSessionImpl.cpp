@@ -233,6 +233,18 @@ Rpc::ErrorCode RpcSessionImpl::updateContent(const std::string& id, Rpc::Content
 	return Rpc::ec_success;
 }
 
+Rpc::ErrorCode RpcSessionImpl::removeContent(const std::string& id, const Ice::Current&)
+{
+	boost::recursive_mutex::scoped_lock lock(sync_);
+	checkIsDestroyed();
+
+	if (!context_->center()->changeContentState(id, "Removed")) {
+		return Rpc::ec_operation_failed;
+	}
+
+	return Rpc::ec_success;
+}
+
 Rpc::ErrorCode RpcSessionImpl::browseEngineVersions(Rpc::EngineVersionBrowserPrx& browserPrx, const Ice::Current& c)
 {
 	boost::recursive_mutex::scoped_lock lock(sync_);

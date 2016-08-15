@@ -868,6 +868,9 @@ typedef ::IceUtil::Handle< Callback_Session_submitContent_Base> Callback_Session
 class Callback_Session_updateContent_Base : virtual public ::IceInternal::CallbackBase { };
 typedef ::IceUtil::Handle< Callback_Session_updateContent_Base> Callback_Session_updateContentPtr;
 
+class Callback_Session_removeContent_Base : virtual public ::IceInternal::CallbackBase { };
+typedef ::IceUtil::Handle< Callback_Session_removeContent_Base> Callback_Session_removeContentPtr;
+
 class Callback_Session_browseEngineVersions_Base : virtual public ::IceInternal::CallbackBase { };
 typedef ::IceUtil::Handle< Callback_Session_browseEngineVersions_Base> Callback_Session_browseEngineVersionsPtr;
 
@@ -4148,6 +4151,82 @@ private:
     
 public:
 
+    ::Rpc::ErrorCode removeContent(const ::std::string& __p_id)
+    {
+        return removeContent(__p_id, 0);
+    }
+    ::Rpc::ErrorCode removeContent(const ::std::string& __p_id, const ::Ice::Context& __ctx)
+    {
+        return removeContent(__p_id, &__ctx);
+    }
+#ifdef ICE_CPP11
+    ::Ice::AsyncResultPtr
+    begin_removeContent(const ::std::string& __p_id, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return __begin_removeContent(__p_id, 0, __response, __exception, __sent);
+    }
+    ::Ice::AsyncResultPtr
+    begin_removeContent(const ::std::string& __p_id, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_removeContent(__p_id, 0, ::Ice::newCallback(__completed, __sent), 0);
+    }
+    ::Ice::AsyncResultPtr
+    begin_removeContent(const ::std::string& __p_id, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return __begin_removeContent(__p_id, &__ctx, __response, __exception, __sent);
+    }
+    ::Ice::AsyncResultPtr
+    begin_removeContent(const ::std::string& __p_id, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_removeContent(__p_id, &__ctx, ::Ice::newCallback(__completed, __sent));
+    }
+    
+private:
+
+    ::Ice::AsyncResultPtr __begin_removeContent(const ::std::string& __p_id, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent);
+    
+public:
+#endif
+
+    ::Ice::AsyncResultPtr begin_removeContent(const ::std::string& __p_id)
+    {
+        return begin_removeContent(__p_id, 0, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_removeContent(const ::std::string& __p_id, const ::Ice::Context& __ctx)
+    {
+        return begin_removeContent(__p_id, &__ctx, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_removeContent(const ::std::string& __p_id, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_removeContent(__p_id, 0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_removeContent(const ::std::string& __p_id, const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_removeContent(__p_id, &__ctx, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_removeContent(const ::std::string& __p_id, const ::Rpc::Callback_Session_removeContentPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_removeContent(__p_id, 0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_removeContent(const ::std::string& __p_id, const ::Ice::Context& __ctx, const ::Rpc::Callback_Session_removeContentPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_removeContent(__p_id, &__ctx, __del, __cookie);
+    }
+
+    ::Rpc::ErrorCode end_removeContent(const ::Ice::AsyncResultPtr&);
+    
+private:
+
+    ::Rpc::ErrorCode removeContent(const ::std::string&, const ::Ice::Context*);
+    ::Ice::AsyncResultPtr begin_removeContent(const ::std::string&, const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
+    
+public:
+
     ::Rpc::ErrorCode browseEngineVersions(::Rpc::EngineVersionBrowserPrx& __p_browser)
     {
         return browseEngineVersions(__p_browser, 0);
@@ -5173,6 +5252,9 @@ public:
 
     virtual ::Rpc::ErrorCode updateContent(const ::std::string&, ::Rpc::ContentSubmitterPrx&, const ::Ice::Current& = ::Ice::Current()) = 0;
     ::Ice::DispatchStatus ___updateContent(::IceInternal::Incoming&, const ::Ice::Current&);
+
+    virtual ::Rpc::ErrorCode removeContent(const ::std::string&, const ::Ice::Current& = ::Ice::Current()) = 0;
+    ::Ice::DispatchStatus ___removeContent(::IceInternal::Incoming&, const ::Ice::Current&);
 
     virtual ::Rpc::ErrorCode browseEngineVersions(::Rpc::EngineVersionBrowserPrx&, const ::Ice::Current& = ::Ice::Current()) = 0;
     ::Ice::DispatchStatus ___browseEngineVersions(::IceInternal::Incoming&, const ::Ice::Current&);
@@ -8680,6 +8762,110 @@ template<class T, typename CT> Callback_Session_updateContentPtr
 newCallback_Session_updateContent(T* instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::ContentSubmitterPrx&, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
 {
     return new Callback_Session_updateContent<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T>
+class CallbackNC_Session_removeContent : public Callback_Session_removeContent_Base, public ::IceInternal::TwowayCallbackNC<T>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception&);
+    typedef void (T::*Sent)(bool);
+    typedef void (T::*Response)(::Rpc::ErrorCode);
+
+    CallbackNC_Session_removeContent(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::TwowayCallbackNC<T>(obj, cb != 0, excb, sentcb), _response(cb)
+    {
+    }
+
+    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+    {
+        ::Rpc::SessionPrx __proxy = ::Rpc::SessionPrx::uncheckedCast(__result->getProxy());
+        ::Rpc::ErrorCode __ret;
+        try
+        {
+            __ret = __proxy->end_removeContent(__result);
+        }
+        catch(const ::Ice::Exception& ex)
+        {
+            ::IceInternal::CallbackNC<T>::exception(__result, ex);
+            return;
+        }
+        if(_response)
+        {
+            (::IceInternal::CallbackNC<T>::_callback.get()->*_response)(__ret);
+        }
+    }
+
+    private:
+
+    Response _response;
+};
+
+template<class T> Callback_Session_removeContentPtr
+newCallback_Session_removeContent(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_Session_removeContent<T>(instance, cb, excb, sentcb);
+}
+
+template<class T> Callback_Session_removeContentPtr
+newCallback_Session_removeContent(T* instance, void (T::*cb)(::Rpc::ErrorCode), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_Session_removeContent<T>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT>
+class Callback_Session_removeContent : public Callback_Session_removeContent_Base, public ::IceInternal::TwowayCallback<T, CT>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception& , const CT&);
+    typedef void (T::*Sent)(bool , const CT&);
+    typedef void (T::*Response)(::Rpc::ErrorCode, const CT&);
+
+    Callback_Session_removeContent(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::TwowayCallback<T, CT>(obj, cb != 0, excb, sentcb), _response(cb)
+    {
+    }
+
+    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+    {
+        ::Rpc::SessionPrx __proxy = ::Rpc::SessionPrx::uncheckedCast(__result->getProxy());
+        ::Rpc::ErrorCode __ret;
+        try
+        {
+            __ret = __proxy->end_removeContent(__result);
+        }
+        catch(const ::Ice::Exception& ex)
+        {
+            ::IceInternal::Callback<T, CT>::exception(__result, ex);
+            return;
+        }
+        if(_response)
+        {
+            (::IceInternal::Callback<T, CT>::_callback.get()->*_response)(__ret, CT::dynamicCast(__result->getCookie()));
+        }
+    }
+
+    private:
+
+    Response _response;
+};
+
+template<class T, typename CT> Callback_Session_removeContentPtr
+newCallback_Session_removeContent(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_Session_removeContent<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT> Callback_Session_removeContentPtr
+newCallback_Session_removeContent(T* instance, void (T::*cb)(::Rpc::ErrorCode, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_Session_removeContent<T, CT>(instance, cb, excb, sentcb);
 }
 
 template<class T>

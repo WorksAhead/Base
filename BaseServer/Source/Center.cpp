@@ -261,6 +261,21 @@ bool Center::getContent(std::map<std::string, std::string>& form, const std::str
 	return true;
 }
 
+bool Center::changeContentState(const std::string& id, const std::string& state)
+{
+	std::ostringstream oss;
+	oss << "UPDATE Contents SET State=";
+	oss << sqlText(state);
+	oss << " WHERE Id=";
+	oss << sqlText(id);
+
+	SQLite::Transaction t(*db_);
+	int n = db_->exec(oss.str());
+	t.commit();
+
+	return (n > 0);
+}
+
 bool Center::getEngineVersionState(const std::string& name, const std::string& version, std::string& outState)
 {
 	std::ostringstream oss;

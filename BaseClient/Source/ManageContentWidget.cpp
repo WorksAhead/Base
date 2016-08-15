@@ -149,13 +149,20 @@ void ManageContentWidget::onRemove()
 		return;
 	}
 
+	int count = 0;
+
 	QList<QTreeWidgetItem*> items = ui_.contentList->selectedItems();
 	for (int i = 0; i < items.count(); ++i) {
-		//Rpc::ErrorCode ec = context_->session->removeUser(items[i]->text(0).toStdString());
-		//if (ec == Rpc::ec_success) {
-		//	delete items[i];
-		//}
+		Rpc::ErrorCode ec = context_->session->removeContent(items[i]->text(0).toStdString());
+		if (ec == Rpc::ec_success) {
+			++count;
+			delete items[i];
+		}
 	}
+
+	QMessageBox::information(0, "Base",
+		QString(tr("%1 Contents have been removed.")).arg(count),
+		QMessageBox::Yes);
 }
 
 void ManageContentWidget::showMore(int count)
