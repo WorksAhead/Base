@@ -105,13 +105,6 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="resetPasswordButton">
-       <property name="text">
-        <string>Reset Password</string>
-       </property>
-      </widget>
-     </item>
-     <item>
       <widget class="QToolButton" name="setGroupButton">
        <property name="minimumSize">
         <size>
@@ -131,9 +124,9 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="removeButton">
+      <widget class="QPushButton" name="resetPasswordButton">
        <property name="text">
-        <string>Remove</string>
+        <string>Reset Password</string>
        </property>
       </widget>
      </item>
@@ -141,6 +134,14 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>userList</tabstop>
+  <tabstop>showMoreButton</tabstop>
+  <tabstop>showAllButton</tabstop>
+  <tabstop>refreshButton</tabstop>
+  <tabstop>setGroupButton</tabstop>
+  <tabstop>resetPasswordButton</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

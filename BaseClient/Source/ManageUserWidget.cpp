@@ -59,7 +59,7 @@ ManageUserWidget::ManageUserWidget(ContextPtr context, QWidget* parent) : QWidge
 	QObject::connect(ui_.showAllButton, &QPushButton::clicked, this, &ManageUserWidget::onShowAll);
 	QObject::connect(ui_.refreshButton, &QPushButton::clicked, this, &ManageUserWidget::onRefresh);
 	QObject::connect(ui_.resetPasswordButton, &QPushButton::clicked, this, &ManageUserWidget::onResetPassword);
-	QObject::connect(ui_.removeButton, &QPushButton::clicked, this, &ManageUserWidget::onRemove);
+	//QObject::connect(ui_.removeButton, &QPushButton::clicked, this, &ManageUserWidget::onRemove);
 
 	firstShow_ = true;
 }
@@ -162,25 +162,25 @@ void ManageUserWidget::onResetPassword()
 	}
 }
 
-void ManageUserWidget::onRemove()
-{
-	const int ret = QMessageBox::question(
-		0, "Base",
-		tr("Are you sure you want to remove these Users ?\nWarning: This operation cannot be undone."),
-		QMessageBox::Yes, QMessageBox::No|QMessageBox::Default);
-
-	if (ret != QMessageBox::Yes) {
-		return;
-	}
-
-	QList<QTreeWidgetItem*> items = ui_.userList->selectedItems();
-	for (int i = 0; i < items.count(); ++i) {
-		Rpc::ErrorCode ec = context_->session->removeUser(items[i]->text(0).toStdString());
-		if (ec == Rpc::ec_success) {
-			delete items[i];
-		}
-	}
-}
+//void ManageUserWidget::onRemove()
+//{
+//	const int ret = QMessageBox::question(
+//		0, "Base",
+//		tr("Are you sure you want to remove these Users ?\nWarning: This operation cannot be undone."),
+//		QMessageBox::Yes, QMessageBox::No|QMessageBox::Default);
+//
+//	if (ret != QMessageBox::Yes) {
+//		return;
+//	}
+//
+//	QList<QTreeWidgetItem*> items = ui_.userList->selectedItems();
+//	for (int i = 0; i < items.count(); ++i) {
+//		Rpc::ErrorCode ec = context_->session->removeUser(items[i]->text(0).toStdString());
+//		if (ec == Rpc::ec_success) {
+//			delete items[i];
+//		}
+//	}
+//}
 
 void ManageUserWidget::showMore(int count)
 {

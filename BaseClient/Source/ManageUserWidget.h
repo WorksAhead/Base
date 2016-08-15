@@ -24,7 +24,7 @@ private Q_SLOTS:
 	void onShowAll();
 	void onRefresh();
 	void onResetPassword();
-	void onRemove();
+	//void onRemove();
 
 private:
 	void showMore(int);
