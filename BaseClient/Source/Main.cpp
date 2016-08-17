@@ -46,7 +46,7 @@ int main(int argc, char* argv[])
 		Rpc::StartPrx startPrx = Rpc::StartPrx::checkedCast(ic->propertyToProxy("Start"));
 
 		std::string serverVersion = startPrx->getServerVersion();
-		if (serverVersion != "1.0.0.1") {
+		if (serverVersion != "1.0.0.2") {
 			QMessageBox::information(0, "Base", QString("Unmatched server version (%1).").arg(serverVersion.c_str()));
 			return 0;
 		}

@@ -6,6 +6,7 @@
 #include <boost/algorithm/string.hpp>
 
 #include <list>
+#include <set>
 #include <assert.h>
 
 namespace fs = boost::filesystem;
@@ -93,17 +94,40 @@ Rpc::ErrorCode RpcContentSubmitterImpl::setPage(const std::string& page, const I
 		return Rpc::ec_invalid_operation;
 	}
 
-	std::vector<std::string> pages;
-	context_->center()->getPages(pages);
-
-	for (size_t i = 0; i < pages.size(); ++i) {
-		if (pages[i] == page) {
-			form_["Page"] = page;
-			return Rpc::ec_success;
+	std::set<std::string> pageSet;
+	{
+		std::vector<std::string> v;
+		context_->center()->getPages(v);
+		for (const std::string& p : v) {
+			pageSet.insert(p);
 		}
 	}
 
-	return Rpc::ec_page_does_not_exist;
+	std::string formattedPage;
+	{
+		std::vector<std::string> v;
+		boost::split(v, page, boost::is_any_of(","));
+		for (std::string& p : v) {
+			boost::trim(p);
+			if (!p.empty()) {
+				if (pageSet.count(p) == 0) {
+					return Rpc::ec_page_does_not_exist;
+				}
+				if (!formattedPage.empty()) {
+					formattedPage += ",";
+				}
+				formattedPage += "(" + p + ")";
+			}
+		}
+	}
+
+	if (formattedPage.empty()) {
+		return Rpc::ec_page_does_not_exist;
+	}
+
+	form_["Page"] = formattedPage;
+
+	return Rpc::ec_success;
 }
 
 Rpc::ErrorCode RpcContentSubmitterImpl::setCategory(const std::string& category, const Ice::Current&)

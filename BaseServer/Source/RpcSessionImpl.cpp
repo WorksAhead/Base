@@ -11,6 +11,8 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
 
+#include <algorithm>
+
 namespace fs = boost::filesystem;
 
 RpcSessionImpl::RpcSessionImpl(ContextPtr context)
@@ -144,7 +146,11 @@ Rpc::ErrorCode RpcSessionImpl::getContentInfo(const std::string& id, Rpc::Conten
 	info.id = form.at("Id");
 	info.parentId = form.at("ParentId");
 	info.title = form.at("Title");
-	info.page = form.at("Page");
+
+	std::string page = form.at("Page");
+	page.erase(std::remove_if(page.begin(), page.end(), boost::is_any_of("()")), page.end());
+	info.page = page;
+
 	info.category = form.at("Category");
 	info.engineName = form.at("EngineName");
 	info.engineVersion = form.at("EngineVersion");

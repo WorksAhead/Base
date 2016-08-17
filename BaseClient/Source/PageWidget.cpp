@@ -169,7 +169,13 @@ void PageWidget::onRefresh()
 		category = ui_.categoryBox->currentText();
 	}
 
-	context_->session->browseContent(name_.toStdString(), category.toStdString(), browser_);
+	if (name_.endsWith('*')) {
+		context_->session->browseContent("", category.toStdString(), browser_);
+	}
+	else {
+		context_->session->browseContent(name_.toStdString(), category.toStdString(), browser_);
+	}
+
 	if (browser_) {
 		showMore(ITEMS_PER_REQUEST);
 	}

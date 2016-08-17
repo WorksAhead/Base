@@ -17,7 +17,7 @@ Rpc::ErrorCode RpcContentBrowserImpl::init(const std::string& page, const std::s
 	oss << " WHERE State=" << sqlText("Normal");
 
 	if (!page.empty()) {
-		oss << " AND Page=" << sqlText(page);
+		oss << " AND Page LIKE " << sqlText("%(" + page + ")%");
 	}
 
 	if (!category.empty()) {

@@ -85,7 +85,7 @@ void ManagePageWidget::onAdd()
 
 	text = text.trimmed();
 
-	if (text.isEmpty() || text.contains(',')) {
+	if (text.isEmpty() || text.contains(',') || text.contains('(') || text.contains(')')) {
 		QMessageBox::information(this, "Base", tr("Invalid page name"));
 		return;
 	}

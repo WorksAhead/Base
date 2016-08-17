@@ -129,7 +129,8 @@ BaseClient::BaseClient(Rpc::SessionPrx session)
 	}
 
 	for (const std::string& page : pages) {
-		tabWidget_->addTab(new PageWidget(context_, page.c_str()), page.c_str());
+		std::string name = boost::erase_last_copy(page, "*");
+		tabWidget_->addTab(new PageWidget(context_, page.c_str()), name.c_str());
 	}
 
 	library_ = new LibraryWidget(context_);
