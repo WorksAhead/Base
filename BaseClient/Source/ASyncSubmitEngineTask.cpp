@@ -1,13 +1,14 @@
 #include "ASyncSubmitEngineTask.h"
 #include "AsyncPackTask.h"
 #include "ASyncUploadTask.h"
+#include "ErrorMessage.h"
 
 #include <boost/filesystem.hpp>
 #include <boost/scope_exit.hpp>
 
 namespace fs = boost::filesystem;
 
-ASyncSubmitEngineTask::ASyncSubmitEngineTask(ContextPtr context, Rpc::UploaderPrx uploader) : context_(context), uploader_(uploader)
+ASyncSubmitEngineTask::ASyncSubmitEngineTask(ContextPtr context, Rpc::EngineVersionSubmitterPrx submitter) : context_(context), submitter_(submitter)
 {
 	state_ = ASyncTask::state_idle;
 	progress_ = 0;
@@ -74,6 +75,15 @@ void ASyncSubmitEngineTask::run()
 	info_ = infoHead_;
 	sync_.unlock();
 
+	Rpc::UploaderPrx uploader;
+	Rpc::ErrorCode ec = submitter_->uploadEngine(uploader);
+	if (ec != Rpc::ec_success) {
+		boost::mutex::scoped_lock lock(sync_);
+		info_ = infoHead_ + " - " + std::string("Rpc: ") + errorMessage(ec);
+		state_ = ASyncTask::state_failed;
+		return;
+	}
+
 	std::unique_ptr<ASyncPackTask> packTask(new ASyncPackTask(context_));
 	packTask->setInfoHead(infoHead_);
 	packTask->setPath(path_);
@@ -84,7 +94,7 @@ void ASyncSubmitEngineTask::run()
 		const int ret = update(packTask.get(), 0, 0.5);
 		if (ret < 0) {
 			if (packTask->state() == ASyncTask::state_cancelled) {
-				uploader_->cancel();
+				submitter_->cancel();
 			}
 			return;
 		}
@@ -102,7 +112,7 @@ void ASyncSubmitEngineTask::run()
 		}
 	};
 
-	std::unique_ptr<ASyncUploadTask> uploadTask(new ASyncUploadTask(context_, uploader_));
+	std::unique_ptr<ASyncUploadTask> uploadTask(new ASyncUploadTask(context_, uploader));
 	uploadTask->setInfoHead(infoHead_);
 	uploadTask->setFilename(packTask->package());
 	uploadTask->start();
@@ -117,6 +127,14 @@ void ASyncSubmitEngineTask::run()
 			break;
 		}
 		std::this_thread::sleep_for(std::chrono::milliseconds(100));
+	}
+
+	ec = submitter_->finish();
+	if (ec != Rpc::ec_success) {
+		boost::mutex::scoped_lock lock(sync_);
+		info_ = infoHead_ + " - " + std::string("Rpc: ") + errorMessage(ec);
+		state_ = ASyncTask::state_failed;
+		return;
 	}
 
 	sync_.lock();

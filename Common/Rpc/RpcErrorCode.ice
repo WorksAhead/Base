@@ -23,6 +23,7 @@ module Rpc
 		ec_parent_does_not_exist,
 		ec_content_does_not_exist,
 		ec_operation_failed,
+		ec_incomplete_engine_version,
 	};
 };
 

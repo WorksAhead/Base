@@ -36,6 +36,7 @@ Center::Center()
 
 	db_->exec("CREATE TABLE IF NOT EXISTS EngineVersions ("
 		"Name TEXT COLLATE NOCASE, Version TEXT COLLATE NOCASE, "
+		"Setup TEXT, UnSetup TEXT, "
 		"UpTime DATETIME, Info TEXT, State TEXT)");
 
 	db_->exec("CREATE TABLE IF NOT EXISTS Contents ("
@@ -188,7 +189,7 @@ std::string Center::getContentPath(const std::string& id)
 	return path.string();
 }
 
-void Center::addContent(const std::map<std::string, std::string>& form, const std::string& id)
+void Center::addContent(const Form& form, const std::string& id)
 {
 	std::ostringstream oss;
 	oss << "INSERT INTO Contents VALUES (";
@@ -211,7 +212,7 @@ void Center::addContent(const std::map<std::string, std::string>& form, const st
 	t.commit();
 }
 
-void Center::updateContent(const std::map<std::string, std::string>& form, const std::string& id)
+void Center::updateContent(const Form& form, const std::string& id)
 {
 	std::ostringstream oss;
 	oss << "UPDATE Contents SET ";
@@ -232,7 +233,7 @@ void Center::updateContent(const std::map<std::string, std::string>& form, const
 	t.commit();
 }
 
-bool Center::getContent(std::map<std::string, std::string>& form, const std::string& id)
+bool Center::getContent(Form& form, const std::string& id)
 {
 	std::ostringstream oss;
 	oss << "SELECT * FROM Contents";
@@ -276,10 +277,71 @@ bool Center::changeContentState(const std::string& id, const std::string& state)
 	return (n > 0);
 }
 
-bool Center::getEngineVersionState(const std::string& name, const std::string& version, std::string& outState)
+bool Center::addEngineVersion(const std::string& name, const std::string& version, const Form& form)
+{
+	std::ostringstream oss;
+	oss << "INSERT INTO EngineVersions VALUES (";
+	oss << sqlText(name) << ", ";
+	oss << sqlText(version) << ", ";
+	oss << sqlText(form.at("Setup")) << ", ";
+	oss << sqlText(form.at("UnSetup")) << ", ";
+	oss << sqlText(getCurrentTimeString()) << ", ";
+	oss << sqlText(form.at("Info")) << ", ";
+	oss << sqlText("Normal") << ")";
+
+	SQLite::Transaction t(*db_);
+	int n = db_->exec(oss.str());
+	t.commit();
+
+	return (n > 0);
+}
+
+bool Center::updateEngineVersion(const std::string& name, const std::string& version, const Form& form)
+{
+	std::ostringstream oss;
+	oss << "UPDATE EngineVersions SET ";
+	oss << "Setup=" << sqlText(form.at("Setup")) << ", ";
+	oss << "UnSetup=" << sqlText(form.at("UnSetup")) << ", ";
+	oss << "Info=" << sqlText(form.at("Info"));
+	oss << " WHERE ";
+	oss << "Name=" << sqlText(name);
+	oss << " AND ";
+	oss << "Version=" << sqlText(version);
+
+	SQLite::Transaction t(*db_);
+	int n = db_->exec(oss.str());
+	t.commit();
+
+	return (n > 0);
+}
+
+bool Center::getEngineVersion(const std::string& name, const std::string& version, Form& form)
 {
 	std::ostringstream oss;
 	oss << "SELECT * FROM EngineVersions";
+	oss << " WHERE ";
+	oss << "Name=" << sqlText(name);
+	oss << " AND ";
+	oss << "Version=" << sqlText(version);
+
+	SQLite::Statement s(*db_, oss.str());
+	if (!s.executeStep()) {
+		return false;
+	}
+
+	form["Setup"] = s.getColumn("Setup").getText();
+	form["UnSetup"] = s.getColumn("UnSetup").getText();
+	form["UpTime"] = s.getColumn("UpTime").getText();
+	form["Info"] = s.getColumn("Info").getText();
+	form["State"] = s.getColumn("State").getText();
+
+	return true;
+}
+
+bool Center::getEngineVersionState(const std::string& name, const std::string& version, std::string& outState)
+{
+	std::ostringstream oss;
+	oss << "SELECT State FROM EngineVersions";
 	oss << " WHERE ";
 	oss << "Name=" << sqlText(name);
 	oss << " AND ";
@@ -295,22 +357,7 @@ bool Center::getEngineVersionState(const std::string& name, const std::string& v
 	return true;
 }
 
-void Center::addEngineVersion(const std::string& name, const std::string& version, const std::string& info)
-{
-	std::ostringstream oss;
-	oss << "INSERT INTO EngineVersions VALUES (";
-	oss << sqlText(name) << ", ";
-	oss << sqlText(version) << ", ";
-	oss << sqlText(getCurrentTimeString()) << ", ";
-	oss << sqlText(info) << ", ";
-	oss << sqlText("Normal") << ")";
-
-	SQLite::Transaction t(*db_);
-	db_->exec(oss.str());
-	t.commit();
-}
-
-void Center::changeEngineVersionState(const std::string& name, const std::string& version, const std::string& state)
+bool Center::changeEngineVersionState(const std::string& name, const std::string& version, const std::string& state)
 {
 	std::ostringstream oss;
 	oss << "UPDATE EngineVersions SET State=";
@@ -321,8 +368,10 @@ void Center::changeEngineVersionState(const std::string& name, const std::string
 	oss << sqlText(version);
 
 	SQLite::Transaction t(*db_);
-	db_->exec(oss.str());
+	int n = db_->exec(oss.str());
 	t.commit();
+
+	return (n > 0);
 }
 
 bool Center::setUserGroup(const std::string& username, const std::string& group)

@@ -164,7 +164,7 @@
     <ClCompile Include="..\BaseServer\Source\RpcContentSubmitterImpl.cpp" />
     <ClCompile Include="..\BaseServer\Source\RpcEngineVersionBrowserImpl.cpp" />
     <ClCompile Include="..\BaseServer\Source\RpcEngineVersionDownloaderImpl.cpp" />
-    <ClCompile Include="..\BaseServer\Source\RpcEngineVersionUploaderImpl.cpp" />
+    <ClCompile Include="..\BaseServer\Source\RpcEngineVersionSubmitterImpl.cpp" />
     <ClCompile Include="..\BaseServer\Source\RpcFileDownloaderImpl.cpp" />
     <ClCompile Include="..\BaseServer\Source\RpcFileUploaderImpl.cpp" />
     <ClCompile Include="..\BaseServer\Source\RpcObjectManager.cpp" />
@@ -194,7 +194,7 @@
     <ClInclude Include="..\BaseServer\Source\RpcContentSubmitterImpl.h" />
     <ClInclude Include="..\BaseServer\Source\RpcEngineVersionBrowserImpl.h" />
     <ClInclude Include="..\BaseServer\Source\RpcEngineVersionDownloaderImpl.h" />
-    <ClInclude Include="..\BaseServer\Source\RpcEngineVersionUploaderImpl.h" />
+    <ClInclude Include="..\BaseServer\Source\RpcEngineVersionSubmitterImpl.h" />
     <ClInclude Include="..\BaseServer\Source\RpcFileDownloaderImpl.h" />
     <ClInclude Include="..\BaseServer\Source\RpcFileUploaderImpl.h" />
     <ClInclude Include="..\BaseServer\Source\RpcObjectManager.h" />

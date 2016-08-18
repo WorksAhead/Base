@@ -52,6 +52,16 @@
      </column>
      <column>
       <property name="text">
+       <string>Setup</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>UnSetup</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
        <string>Time</string>
       </property>
      </column>
@@ -133,6 +143,13 @@
       </spacer>
      </item>
      <item>
+      <widget class="QPushButton" name="editButton">
+       <property name="text">
+        <string>Edit</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QPushButton" name="removeButton">
        <property name="text">
         <string>Remove</string>
@@ -143,6 +160,15 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>engineList</tabstop>
+  <tabstop>showMoreButton</tabstop>
+  <tabstop>showAllButton</tabstop>
+  <tabstop>refreshButton</tabstop>
+  <tabstop>submitButton</tabstop>
+  <tabstop>editButton</tabstop>
+  <tabstop>removeButton</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

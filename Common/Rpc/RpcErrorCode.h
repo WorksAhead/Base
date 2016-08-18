@@ -67,7 +67,8 @@ enum ErrorCode
     ec_incomplete_content = 16,
     ec_parent_does_not_exist = 17,
     ec_content_does_not_exist = 18,
-    ec_operation_failed = 19
+    ec_operation_failed = 19,
+    ec_incomplete_engine_version = 20
 };
 
 }
@@ -79,7 +80,7 @@ struct StreamableTraits< ::Rpc::ErrorCode>
 {
     static const StreamHelperCategory helper = StreamHelperCategoryEnum;
     static const int minValue = 0;
-    static const int maxValue = 19;
+    static const int maxValue = 20;
     static const int minWireSize = 1;
     static const bool fixedLength = false;
 };

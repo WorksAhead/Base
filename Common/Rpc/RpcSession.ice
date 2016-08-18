@@ -36,20 +36,22 @@ module Rpc
 		ErrorCode next(int n, out ContentItemSeq items);
 	};
 
-	struct EngineVersionItem
+	struct EngineVersion
 	{
 		string name;
 		string version;
+		string setup;
+		string unsetup;
 		string uptime;
 		string info;
 		string state;
 	};
 
-	sequence<EngineVersionItem> EngineVersionItemSeq;
+	sequence<EngineVersion> EngineVersionSeq;
 
 	interface EngineVersionBrowser extends ManagedObject
 	{
-		ErrorCode next(int n, out EngineVersionItemSeq items);
+		ErrorCode next(int n, out EngineVersionSeq items);
 	};
 
 	struct User
@@ -97,6 +99,16 @@ module Rpc
 		ErrorCode finish();
 	};
 
+	interface EngineVersionSubmitter extends ManagedObject
+	{
+		ErrorCode setSetup(string setup);
+		ErrorCode setUnSetup(string unsetup);
+		ErrorCode setInfo(string info);
+		ErrorCode uploadEngine(out Uploader* uploader);
+		void cancel();
+		ErrorCode finish();
+	};
+
 	interface Session extends ManagedObject
 	{
 		void refresh();
@@ -121,7 +133,9 @@ module Rpc
 		ErrorCode browseEngineVersions(out EngineVersionBrowser* browser);
 		ErrorCode downloadEngineVersion(string name, string version, out Downloader* downloader);
 		ErrorCode removeEngineVersion(string name, string version);
-		ErrorCode submitEngineVersion(string name, string version, string info, out Uploader* uploader);
+		ErrorCode submitEngineVersion(string name, string version, out EngineVersionSubmitter* submitter);
+		ErrorCode updateEngineVersion(string name, string version, out EngineVersionSubmitter* submitter);
+		ErrorCode getEngineVersion(string name, string version, out EngineVersion engineVersion);
 
 		ErrorCode browseUsers(out UserBrowser* browser);
 		ErrorCode setUserGroup(string username, string group);

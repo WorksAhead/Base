@@ -1,6 +1,6 @@
 #include "RpcSessionImpl.h"
 #include "RpcEngineVersionBrowserImpl.h"
-#include "RpcEngineVersionUploaderImpl.h"
+#include "RpcEngineVersionSubmitterImpl.h"
 #include "RpcEngineVersionDownloaderImpl.h"
 #include "RpcContentSubmitterImpl.h"
 #include "RpcContentBrowserImpl.h"
@@ -332,7 +332,7 @@ Rpc::ErrorCode RpcSessionImpl::removeEngineVersion(const std::string& name, cons
 	return Rpc::ec_success;
 }
 
-Rpc::ErrorCode RpcSessionImpl::submitEngineVersion(const std::string& name, const std::string& version, const std::string& info, Rpc::UploaderPrx& uploaderPrx, const Ice::Current& c)
+Rpc::ErrorCode RpcSessionImpl::submitEngineVersion(const std::string& name, const std::string& version, Rpc::EngineVersionSubmitterPrx& submitterPrx, const Ice::Current& c)
 {
 	boost::recursive_mutex::scoped_lock lock(sync_);
 	checkIsDestroyed();
@@ -341,19 +341,66 @@ Rpc::ErrorCode RpcSessionImpl::submitEngineVersion(const std::string& name, cons
 		return Rpc::ec_access_denied;
 	}
 
-	RpcEngineUploaderImplPtr uploader = new RpcEngineVersionUploaderImpl(context_->center());
+	RpcEngineVersionSubmitterImplPtr submitter = new RpcEngineVersionSubmitterImpl(context_);
 
-	Rpc::ErrorCode ec = uploader->init(name, version, info);
+	Rpc::ErrorCode ec = submitter->init(name, version, RpcEngineVersionSubmitterImpl::submit_mode);
 	if (ec != Rpc::ec_success) {
 		return ec;
 	}
 
-	uploaderPrx = Rpc::UploaderPrx::uncheckedCast(c.adapter->addWithUUID(uploader));
+	submitterPrx = Rpc::EngineVersionSubmitterPrx::uncheckedCast(c.adapter->addWithUUID(submitter));
 
-	if (!context_->objectManager()->addObject(uploaderPrx)) {
-		uploaderPrx->destroy();
+	if (!context_->objectManager()->addObject(submitterPrx)) {
+		submitterPrx->destroy();
 		return Rpc::ec_server_busy;
 	}
+
+	return Rpc::ec_success;
+}
+
+Rpc::ErrorCode RpcSessionImpl::updateEngineVersion(const std::string& name, const std::string& version, Rpc::EngineVersionSubmitterPrx& submitterPrx, const Ice::Current& c)
+{
+	boost::recursive_mutex::scoped_lock lock(sync_);
+	checkIsDestroyed();
+
+	if (context_->userGroup() != "Admin") {
+		return Rpc::ec_access_denied;
+	}
+
+	RpcEngineVersionSubmitterImplPtr submitter = new RpcEngineVersionSubmitterImpl(context_);
+
+	Rpc::ErrorCode ec = submitter->init(name, version, RpcEngineVersionSubmitterImpl::update_mode);
+	if (ec != Rpc::ec_success) {
+		return ec;
+	}
+
+	submitterPrx = Rpc::EngineVersionSubmitterPrx::uncheckedCast(c.adapter->addWithUUID(submitter));
+
+	if (!context_->objectManager()->addObject(submitterPrx)) {
+		submitterPrx->destroy();
+		return Rpc::ec_server_busy;
+	}
+
+	return Rpc::ec_success;
+}
+
+Rpc::ErrorCode RpcSessionImpl::getEngineVersion(const std::string& name, const std::string& version, Rpc::EngineVersion& engineVersion, const Ice::Current&)
+{
+	boost::recursive_mutex::scoped_lock lock(sync_);
+	checkIsDestroyed();
+
+	Form form;
+	if (!context_->center()->getEngineVersion(name, version, form)) {
+		return Rpc::ec_engine_version_does_not_exist;
+	}
+
+	engineVersion.name = name;
+	engineVersion.version = version;
+	engineVersion.setup = form.at("Setup");
+	engineVersion.unsetup = form.at("UnSetup");
+	engineVersion.uptime = form.at("UpTime");
+	engineVersion.info = form.at("Info");
+	engineVersion.state = form.at("State");
 
 	return Rpc::ec_success;
 }

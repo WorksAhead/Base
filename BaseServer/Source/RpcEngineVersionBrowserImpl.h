@@ -19,7 +19,7 @@ public:
 
 	virtual void destroy(const Ice::Current&);
 
-	virtual Rpc::ErrorCode next(Ice::Int, Rpc::EngineVersionItemSeq&, const Ice::Current&);
+	virtual Rpc::ErrorCode next(Ice::Int, Rpc::EngineVersionSeq&, const Ice::Current&);
 
 private:
 	void checkIsDestroyed();

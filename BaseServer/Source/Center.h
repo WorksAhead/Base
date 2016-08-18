@@ -13,6 +13,8 @@
 #include <map>
 #include <string>
 
+typedef std::map<std::string, std::string> Form;
+
 class Center {
 public:
 	enum LockMode {
@@ -41,14 +43,16 @@ public:
 	std::string getEnginePath(const std::string& name, const std::string& version);
 	std::string getContentPath(const std::string& id);
 
-	void addContent(const std::map<std::string, std::string>& form, const std::string& id);
-	void updateContent(const std::map<std::string, std::string>& form, const std::string& id);
-	bool getContent(std::map<std::string, std::string>& form, const std::string& id);
+	void addContent(const Form& form, const std::string& id);
+	void updateContent(const Form& form, const std::string& id);
+	bool getContent(Form& form, const std::string& id);
 	bool changeContentState(const std::string& id, const std::string& state);
 
+	bool addEngineVersion(const std::string& name, const std::string& version, const Form& form);
+	bool updateEngineVersion(const std::string& name, const std::string& version, const Form& form);
+	bool getEngineVersion(const std::string& name, const std::string& version, Form& form);
 	bool getEngineVersionState(const std::string& name, const std::string& version, std::string& outState);
-	void addEngineVersion(const std::string& name, const std::string& version, const std::string& info);
-	void changeEngineVersionState(const std::string& name, const std::string& version, const std::string& state);
+	bool changeEngineVersionState(const std::string& name, const std::string& version, const std::string& state);
 
 	bool setUserGroup(const std::string& username, const std::string& group);
 	bool resetUserPassword(const std::string& username, const std::string& oldPassword, const std::string& newPassword);
@@ -113,6 +117,12 @@ private:
 };
 
 typedef boost::shared_ptr<Center> CenterPtr;
+
+
+inline void setEmptyIfNotExist(Form& form, const char* key)
+{
+	form.insert(std::make_pair(key, ""));
+}
 
 #endif // BASESERVER_CENTER_HEADER_
 

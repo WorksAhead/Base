@@ -14,7 +14,6 @@ namespace fs = boost::filesystem;
 RpcContentSubmitterImpl::RpcContentSubmitterImpl(ContextPtr context)
 	: context_(context), destroyed_(false), finished_(false), cancelled_(false)
 {
-	form_["ParentId"] = "";
 }
 
 RpcContentSubmitterImpl::~RpcContentSubmitterImpl()
@@ -358,10 +357,6 @@ Rpc::ErrorCode RpcContentSubmitterImpl::finish(const Ice::Current&)
 
 	if (mode_ == submit_mode)
 	{
-		if (!form_.count("ParentId")) {
-			return Rpc::ec_incomplete_form;
-		}
-
 		int imageCount = 0;
 
 		for (int i = 0; i <= 5; ++i) {
@@ -385,10 +380,12 @@ Rpc::ErrorCode RpcContentSubmitterImpl::finish(const Ice::Current&)
 
 		form_["User"] = context_->user();
 
+		setEmptyIfNotExist(form_, "ParentId");
 		context_->center()->addContent(form_, id_);
 	}
 	else
 	{
+		setEmptyIfNotExist(form_, "ParentId");
 		context_->center()->updateContent(form_, id_);
 	}
 

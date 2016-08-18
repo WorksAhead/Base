@@ -13,10 +13,20 @@ public:
 	explicit SubmitEngineDialog(QWidget* parent = 0);
 	~SubmitEngineDialog();
 
-	QString engineName() const { return engineName_; }
-	QString engineVersion() const { return engineVersion_; }
-	QString location() const { return location_; }
-	QString info() const { return info_; }
+	void switchToEditMode();
+
+	void setEngineName(const QString& name);
+	void setEngineVersion(const QString& version);
+	void setSetup(const QString& setup);
+	void setUnSetup(const QString& unSetup);
+	void setInfo(const QString& info);
+
+	QString getEngineName() const;
+	QString getEngineVersion() const;
+	QString getLocation() const;
+	QString getSetup() const;
+	QString getUnSetup() const;
+	QString getInfo() const;
 
 private Q_SLOTS:
 	void selectLocation();
@@ -24,10 +34,7 @@ private Q_SLOTS:
 
 private:
 	Ui::SubmitEngineDialog ui_;
-	QString engineName_;
-	QString engineVersion_;
-	QString location_;
-	QString info_;
+	bool editMode_;
 };
 
 #endif // SUBMITENGINEDIALOG_HEADER_

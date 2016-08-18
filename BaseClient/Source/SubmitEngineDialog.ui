@@ -25,34 +25,27 @@
   <property name="windowTitle">
    <string>Submit Engine</string>
   </property>
-  <widget class="QLabel" name="label">
-   <property name="geometry">
-    <rect>
-     <x>40</x>
-     <y>160</y>
-     <width>54</width>
-     <height>12</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Location</string>
-   </property>
-  </widget>
   <widget class="QLineEdit" name="locationEdit">
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>180</y>
+     <y>120</y>
      <width>281</width>
      <height>20</height>
     </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="placeholderText">
+    <string>Location</string>
    </property>
   </widget>
   <widget class="QPushButton" name="selectLocationButton">
    <property name="geometry">
     <rect>
      <x>330</x>
-     <y>180</y>
+     <y>120</y>
      <width>30</width>
      <height>23</height>
     </rect>
@@ -64,63 +57,36 @@
     <bool>false</bool>
    </property>
   </widget>
-  <widget class="QLabel" name="label_2">
+  <widget class="QLineEdit" name="nameEdit">
    <property name="geometry">
     <rect>
      <x>40</x>
      <y>40</y>
      <width>321</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Engine Name</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="nameEdit">
-   <property name="geometry">
-    <rect>
-     <x>40</x>
-     <y>60</y>
-     <width>321</width>
      <height>20</height>
     </rect>
    </property>
-  </widget>
-  <widget class="QLabel" name="label_3">
-   <property name="geometry">
-    <rect>
-     <x>40</x>
-     <y>100</y>
-     <width>321</width>
-     <height>16</height>
-    </rect>
-   </property>
    <property name="text">
-    <string>Engine Version</string>
+    <string/>
+   </property>
+   <property name="placeholderText">
+    <string>Name</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="versionEdit">
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>120</y>
+     <y>80</y>
      <width>321</width>
      <height>20</height>
     </rect>
    </property>
-  </widget>
-  <widget class="QLabel" name="label_4">
-   <property name="geometry">
-    <rect>
-     <x>40</x>
-     <y>220</y>
-     <width>81</width>
-     <height>16</height>
-    </rect>
-   </property>
    <property name="text">
-    <string>Information</string>
+    <string/>
+   </property>
+   <property name="placeholderText">
+    <string>Version</string>
    </property>
   </widget>
   <widget class="QPlainTextEdit" name="infoEdit">
@@ -134,6 +100,12 @@
    </property>
    <property name="lineWrapMode">
     <enum>QPlainTextEdit::NoWrap</enum>
+   </property>
+   <property name="plainText">
+    <string/>
+   </property>
+   <property name="placeholderText">
+    <string>Information</string>
    </property>
   </widget>
   <widget class="QPushButton" name="submitButton">
@@ -149,12 +121,46 @@
     <string>Submit</string>
    </property>
   </widget>
+  <widget class="QLineEdit" name="setupEdit">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>160</y>
+     <width>321</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="placeholderText">
+    <string>Setup</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="unSetupEdit">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>200</y>
+     <width>321</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="placeholderText">
+    <string>UnSetup</string>
+   </property>
+  </widget>
  </widget>
  <tabstops>
   <tabstop>nameEdit</tabstop>
   <tabstop>versionEdit</tabstop>
   <tabstop>locationEdit</tabstop>
   <tabstop>selectLocationButton</tabstop>
+  <tabstop>setupEdit</tabstop>
+  <tabstop>unSetupEdit</tabstop>
   <tabstop>infoEdit</tabstop>
   <tabstop>submitButton</tabstop>
  </tabstops>

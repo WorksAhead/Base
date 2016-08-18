@@ -14,7 +14,7 @@
 
 class ASyncSubmitEngineTask : public ASyncTask {
 public:
-	ASyncSubmitEngineTask(ContextPtr context, Rpc::UploaderPrx uploader);
+	ASyncSubmitEngineTask(ContextPtr context, Rpc::EngineVersionSubmitterPrx submitter);
 	~ASyncSubmitEngineTask();
 
 	void setInfoHead(const std::string&);
@@ -34,7 +34,7 @@ private:
 
 private:
 	ContextPtr context_;
-	Rpc::UploaderPrx uploader_;
+	Rpc::EngineVersionSubmitterPrx submitter_;
 
 	std::string path_;
 	std::string infoHead_;

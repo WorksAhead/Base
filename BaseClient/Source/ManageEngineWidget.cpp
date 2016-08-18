@@ -22,12 +22,12 @@ namespace fs = boost::filesystem;
 ManageEngineWidget::ManageEngineWidget(ContextPtr context, QWidget* parent) : QWidget(parent), context_(context)
 {
 	ui_.setupUi(this);
-	ui_.engineList->header()->setSortIndicator(2, Qt::DescendingOrder);
+	ui_.engineList->header()->setSortIndicator(4, Qt::DescendingOrder);
 
 	QObject::connect(ui_.showMoreButton, &QPushButton::clicked, this, &ManageEngineWidget::onShowMore);
 	QObject::connect(ui_.showAllButton, &QPushButton::clicked, this, &ManageEngineWidget::onShowAll);
 	QObject::connect(ui_.refreshButton, &QPushButton::clicked, this, &ManageEngineWidget::onRefresh);
-
+	QObject::connect(ui_.editButton, &QPushButton::clicked, this, &ManageEngineWidget::onEdit);
 	QObject::connect(ui_.removeButton, &QPushButton::clicked, this, &ManageEngineWidget::onRemove);
 
 	QObject::connect(ui_.submitButton, &QPushButton::clicked, this, &ManageEngineWidget::showSubmitDialog);
@@ -82,6 +82,56 @@ void ManageEngineWidget::onRefresh()
 	}
 }
 
+void ManageEngineWidget::onEdit()
+{
+#define CHECK_ERROR_CODE(ec)										\
+	if (ec != Rpc::ec_success) {									\
+		context_->promptRpcError(ec);								\
+		return;														\
+	}
+
+	QList<QTreeWidgetItem*> items = ui_.engineList->selectedItems();
+	if (items.count() != 1) {
+		QMessageBox::information(0, "Base", tr("Please select a single Engine version."));
+		return;
+	}
+
+	SubmitEngineDialog d;
+	d.switchToEditMode();
+
+	d.setEngineName(items[0]->text(0));
+	d.setEngineVersion(items[0]->text(1));
+	d.setSetup(items[0]->text(2));
+	d.setUnSetup(items[0]->text(3));
+	d.setInfo(items[0]->text(5));
+
+	if (d.exec() == 1)
+	{
+		Rpc::EngineVersionSubmitterPrx submitter;
+
+		Rpc::ErrorCode ec = context_->session->updateEngineVersion(d.getEngineName().toStdString(), d.getEngineVersion().toStdString(), submitter);
+		CHECK_ERROR_CODE(ec);
+
+		if (!d.getSetup().isEmpty()) {
+			ec = submitter->setSetup(d.getSetup().toStdString());
+			CHECK_ERROR_CODE(ec);
+		}
+		if (!d.getUnSetup().isEmpty()) {
+			ec = submitter->setUnSetup(d.getUnSetup().toStdString());
+			CHECK_ERROR_CODE(ec);
+		}
+		if (!d.getInfo().isEmpty()) {
+			ec = submitter->setInfo(d.getInfo().toStdString());
+			CHECK_ERROR_CODE(ec);
+		}
+
+		ec = submitter->finish();
+		context_->promptRpcError(ec);
+	}
+
+#undef CHECK_ERROR_CODE
+}
+
 void ManageEngineWidget::onRemove()
 {
 	const int ret = QMessageBox::question(
@@ -101,24 +151,42 @@ void ManageEngineWidget::onRemove()
 
 void ManageEngineWidget::showSubmitDialog()
 {
+#define CHECK_ERROR_CODE(ec)										\
+	if (ec != Rpc::ec_success) {									\
+		context_->promptRpcError(ec);								\
+		return;														\
+	}
+
 	SubmitEngineDialog d;
 
 	if (d.exec() == 1)
 	{
-		Rpc::UploaderPrx uploader;
+		Rpc::EngineVersionSubmitterPrx submitter;
 
-		Rpc::ErrorCode ec = context_->session->submitEngineVersion(d.engineName().toStdString(), d.engineVersion().toStdString(), d.info().toStdString(), uploader);
-		if (ec != Rpc::ec_success) {
-			context_->promptRpcError(ec);
-			return;
+		Rpc::ErrorCode ec = context_->session->submitEngineVersion(d.getEngineName().toStdString(), d.getEngineVersion().toStdString(), submitter);
+		CHECK_ERROR_CODE(ec);
+
+		if (!d.getSetup().isEmpty()) {
+			ec = submitter->setSetup(d.getSetup().toStdString());
+			CHECK_ERROR_CODE(ec);
+		}
+		if (!d.getUnSetup().isEmpty()) {
+			ec = submitter->setUnSetup(d.getUnSetup().toStdString());
+			CHECK_ERROR_CODE(ec);
+		}
+		if (!d.getInfo().isEmpty()) {
+			ec = submitter->setInfo(d.getInfo().toStdString());
+			CHECK_ERROR_CODE(ec);
 		}
 
-		boost::shared_ptr<ASyncSubmitEngineTask> task(new ASyncSubmitEngineTask(context_, uploader));
-		task->setInfoHead(QString("Submit %1 %2").arg(d.engineName(), d.engineVersion()).toStdString());
-		task->setPath(d.location().toLocal8Bit().data());
+		boost::shared_ptr<ASyncSubmitEngineTask> task(new ASyncSubmitEngineTask(context_, submitter));
+		task->setInfoHead(QString("Submit %1 %2").arg(d.getEngineName(), d.getEngineVersion()).toStdString());
+		task->setPath(d.getLocation().toLocal8Bit().data());
 
 		context_->addTask(task);
 	}
+
+#undef CHECK_ERROR_CODE
 }
 
 void ManageEngineWidget::showMore(int count)
@@ -127,7 +195,7 @@ void ManageEngineWidget::showMore(int count)
 	{
 		const int n = std::min(count, ITEMS_PER_REQUEST);
 
-		Rpc::EngineVersionItemSeq engineItems;
+		Rpc::EngineVersionSeq engineItems;
 		browser_->next(n, engineItems);
 
 		QList<QTreeWidgetItem*> items;
@@ -137,6 +205,8 @@ void ManageEngineWidget::showMore(int count)
 			QStringList list;
 			list << engineItems[i].name.c_str();
 			list << engineItems[i].version.c_str();
+			list << engineItems[i].setup.c_str();
+			list << engineItems[i].unsetup.c_str();
 			list << engineItems[i].uptime.c_str();
 			boost::replace_all(engineItems[i].info, "\n", "\r");
 			list << engineItems[i].info.c_str();

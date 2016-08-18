@@ -78,9 +78,6 @@
     <ClCompile Include="..\BaseServer\Source\RpcEngineVersionDownloaderImpl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\BaseServer\Source\RpcEngineVersionUploaderImpl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\BaseServer\Source\RpcContentSubmitterImpl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -103,6 +100,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\BaseServer\Source\RpcUserBrowserImpl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseServer\Source\RpcEngineVersionSubmitterImpl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -173,9 +173,6 @@
     <ClInclude Include="..\BaseServer\Source\RpcEngineVersionDownloaderImpl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\BaseServer\Source\RpcEngineVersionUploaderImpl.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\BaseServer\Source\RpcContentSubmitterImpl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -198,6 +195,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\BaseServer\Source\RpcUserBrowserImpl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseServer\Source\RpcEngineVersionSubmitterImpl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
