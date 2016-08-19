@@ -28,11 +28,15 @@ EngineItemWidget::EngineItemWidget(ContextPtr context, QWidget* parent) : QWidge
 	ui_.setupUi(this);
 
 	QMenu* menu = new QMenu;
-	ui_.showButton->setMenu(menu);
+	ui_.browseButton->setMenu(menu);
 
+	QAction* setupAction = menu->addAction("Setup");
+	QAction* unSetupAction = menu->addAction("UnSetup");
 	QAction* removeAction = menu->addAction("Remove");
 
-	QObject::connect(ui_.showButton, &QPushButton::clicked, this, &EngineItemWidget::onShow);
+	QObject::connect(ui_.browseButton, &QPushButton::clicked, this, &EngineItemWidget::onBrowse);
+	QObject::connect(setupAction, &QAction::triggered, this, &EngineItemWidget::onSetup);
+	QObject::connect(unSetupAction, &QAction::triggered, this, &EngineItemWidget::onUnSetup);
 	QObject::connect(removeAction, &QAction::triggered, this, &EngineItemWidget::onRemove);
 }
 
@@ -71,7 +75,17 @@ void EngineItemWidget::paintEvent(QPaintEvent*)
 	style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
-void EngineItemWidget::onShow()
+void EngineItemWidget::onSetup()
+{
+	context_->setupEngine(EngineVersion(engineVersion_.first.toStdString(), engineVersion_.second.toStdString()));
+}
+
+void EngineItemWidget::onUnSetup()
+{
+	context_->unSetupEngine(EngineVersion(engineVersion_.first.toStdString(), engineVersion_.second.toStdString()));
+}
+
+void EngineItemWidget::onBrowse()
 {
 	std::string path = context_->enginePath(EngineVersion(engineVersion_.first.toStdString(), engineVersion_.second.toStdString()));
 	QDesktopServices::openUrl(QUrl::fromLocalFile(QString::fromLocal8Bit(path.c_str())));

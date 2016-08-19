@@ -91,6 +91,8 @@ struct Context
 	std::function<std::string(const std::string&)> contentPath;
 
 	std::function<void(const EngineVersion&)> installEngine;
+	std::function<void(const EngineVersion&)> setupEngine;
+	std::function<void(const EngineVersion&)> unSetupEngine;
 	std::function<void(const EngineVersion&)> removeEngine;
 	std::function<int(const EngineVersion&)> getEngineState;
 	std::function<bool(const EngineVersion&, int&, int)> changeEngineState;
@@ -108,6 +110,7 @@ struct Context
 	std::function<bool(ProjectInfo&, const std::string& id)> getProject;
 	std::function<void(std::vector<ProjectInfo>&)> getProjectList;
 
+	std::function<void(int, const std::string&)> prompt;
 	std::function<void(Rpc::ErrorCode)> promptRpcError;
 };
 

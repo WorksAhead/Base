@@ -82,7 +82,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QToolButton" name="showButton">
+      <widget class="QToolButton" name="browseButton">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
          <horstretch>0</horstretch>
@@ -101,7 +101,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Show</string>
+        <string>Browse</string>
        </property>
        <property name="popupMode">
         <enum>QToolButton::MenuButtonPopup</enum>

@@ -16,6 +16,8 @@
 #include <QBoxLayout>
 #include <QTabBar>
 #include <QTextEdit>
+#include <QThread>
+#include <QProcess>
 #include <QMessageBox>
 
 #include <boost/algorithm/string.hpp>
@@ -55,15 +57,20 @@ BaseClient::BaseClient(Rpc::SessionPrx session)
 	timer_ = new IceUtil::Timer;
 	timer_->scheduleRepeated(new RefreshTask(session), IceUtil::Time::seconds(5));
 
+	Qt::HANDLE guitid = QThread::currentThreadId();
+
 	context_.reset(new Context);
 
 	context_->session = session;
+
 	if (session->getCurrentUser(context_->currentUser) != Rpc::ec_success) {
 		throw std::runtime_error("Failed to get current User");
 	}
+
 	if (session->getCurrentUserGroup(context_->currentUserGroup) != Rpc::ec_success) {
 		throw std::runtime_error("Failed to get current User Group");
 	}
+
 	context_->contentImageLoader = new ContentImageLoader(context_, this);
 	context_->addTask = std::bind(&BaseClient::addTask, this, std::placeholders::_1);
 	context_->showTaskManager = std::bind(&BaseClient::onShowTaskManager, this);
@@ -73,6 +80,8 @@ BaseClient::BaseClient(Rpc::SessionPrx session)
 	context_->enginePath = std::bind(&BaseClient::enginePath, this, std::placeholders::_1);
 	context_->contentPath = std::bind(&BaseClient::contentPath, this, std::placeholders::_1);
 	context_->installEngine = std::bind(&BaseClient::installEngine, this, std::placeholders::_1);
+	context_->setupEngine = std::bind(&BaseClient::setupEngine, this, std::placeholders::_1);
+	context_->unSetupEngine = std::bind(&BaseClient::unSetupEngine, this, std::placeholders::_1);
 	context_->removeEngine = std::bind(&BaseClient::removeEngine, this, std::placeholders::_1);
 	context_->getEngineState = std::bind(&BaseClient::getEngineState, this, std::placeholders::_1);
 	context_->changeEngineState = std::bind(&BaseClient::changeEngineState, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
@@ -86,7 +95,24 @@ BaseClient::BaseClient(Rpc::SessionPrx session)
 	context_->renameProject = std::bind(&BaseClient::renameProject, this, std::placeholders::_1, std::placeholders::_2);
 	context_->getProject = std::bind(&BaseClient::getProject, this, std::placeholders::_1, std::placeholders::_2);
 	context_->getProjectList = std::bind(&BaseClient::getProjectList, this, std::placeholders::_1);
-	context_->promptRpcError = std::bind(&BaseClient::promptRpcError, this, std::placeholders::_1);
+
+	context_->prompt = [guitid,this](int level, const std::string& message){
+		if (QThread::currentThreadId() == guitid) {
+			prompt(level, message);
+		}
+		else {
+			QMetaObject::invokeMethod(this, "prompt", Qt::BlockingQueuedConnection, Q_ARG(int, level), Q_ARG(std::string, message));
+		}
+	};
+
+	context_->promptRpcError = [guitid,this](Rpc::ErrorCode ec){
+		if (QThread::currentThreadId() == guitid) {
+			promptRpcError(ec);
+		}
+		else {
+			QMetaObject::invokeMethod(this, "promptRpcError", Qt::BlockingQueuedConnection, Q_ARG(Rpc::ErrorCode, ec));
+		}
+	};
 
 	if (!fs::exists(cachePath()) && !fs::create_directories(cachePath())) {
 		throw std::runtime_error("Failed to create directory");
@@ -189,6 +215,12 @@ std::string BaseClient::libraryPath()
 	return p.string();
 }
 
+std::string BaseClient::outputPath()
+{
+	fs::path p = fs::path(userPath()) / "Output";
+	return p.string();
+}
+
 std::string BaseClient::enginePath(const EngineVersion& v)
 {
 	fs::path path = libraryPath();
@@ -230,21 +262,93 @@ void BaseClient::installEngine(const EngineVersion& v)
 		return;
 	}
 
+	Rpc::ErrorCode ec;
+
 	Rpc::DownloaderPrx downloader;
-	Rpc::ErrorCode ec = context_->session->downloadEngineVersion(v.first, v.second, downloader);
-	if (ec != Rpc::ec_success) {
+	if ((ec = context_->session->downloadEngineVersion(v.first, v.second, downloader)) != Rpc::ec_success) {
 		state = EngineState::installing;
 		changeEngineState(v, state, EngineState::not_installed);
-		QMessageBox::information(this, "Base", QString("Unable to download %1 %2").arg(v.first.c_str()).arg(v.second.c_str()));
+		promptRpcError(ec);
 		return;
 	}
 
 	boost::shared_ptr<ASyncInstallEngineTask> task(new ASyncInstallEngineTask(context_, downloader));
+
 	task->setInfoHead("Install " + v.first + " " + v.second);
 	task->setEngineVersion(v);
 	task->setPath(context_->enginePath(v));
 
 	addTask(task);
+}
+
+void BaseClient::setupEngine(const EngineVersion& v)
+{
+	Rpc::ErrorCode ec;
+
+	Rpc::EngineVersionInfo info;
+	if ((ec = context_->session->getEngineVersion(v.first, v.second, info)) != Rpc::ec_success) {
+		context_->promptRpcError(ec);
+		return;
+	}
+
+	QStringList args = parseCombinedArgString(info.setup.c_str());
+	QString program = args.first();
+	args.removeFirst();
+
+	fs::path stdOutputFilename = fs::path(outputPath()) / (v.first + "-" + v.second + "-Setup.txt");
+	if (!fs::exists(stdOutputFilename.parent_path())) {
+		fs::create_directories(stdOutputFilename.parent_path());
+	}
+
+	QProcess p;
+
+	p.setWorkingDirectory(QString::fromLocal8Bit(enginePath(v).c_str()));
+	p.setProcessChannelMode(QProcess::MergedChannels);
+	p.setStandardOutputFile(QString::fromLocal8Bit(stdOutputFilename.string().c_str()));
+	p.start(program, args);
+	p.waitForFinished(-1);
+
+	if (p.exitStatus() != QProcess::NormalExit) {
+		context_->prompt(1, "Setup program of " + v.first + " " + v.second + " not exited normally.\n"
+			"As a result, this Engine may not function correctly.\n"
+			"Please contact administrator for help.");
+		return;
+	}
+
+	if (p.exitCode() != 0) {
+		context_->prompt(1, "Setup program of " + v.first + " " + v.second + " returned non-zero exit code.\n"
+			"As a result, this Engine may not function correctly.\n"
+			"Please contact administrator for help.");
+		return;
+	}
+}
+
+void BaseClient::unSetupEngine(const EngineVersion& v)
+{
+	Rpc::ErrorCode ec;
+
+	Rpc::EngineVersionInfo info;
+	if ((ec = context_->session->getEngineVersion(v.first, v.second, info)) != Rpc::ec_success) {
+		context_->promptRpcError(ec);
+		return;
+	}
+
+	QStringList args = parseCombinedArgString(info.unsetup.c_str());
+	QString program = args.first();
+	args.removeFirst();
+
+	fs::path stdOutputFilename = fs::path(outputPath()) / (v.first + "-" + v.second + "-UnSetup.txt");
+	if (!fs::exists(stdOutputFilename.parent_path())) {
+		fs::create_directories(stdOutputFilename.parent_path());
+	}
+
+	QProcess p;
+
+	p.setWorkingDirectory(QString::fromLocal8Bit(enginePath(v).c_str()));
+	p.setProcessChannelMode(QProcess::MergedChannels);
+	p.setStandardOutputFile(QString::fromLocal8Bit(stdOutputFilename.string().c_str()));
+	p.start(program, args);
+	p.waitForFinished(-1);
 }
 
 void BaseClient::removeEngine(const EngineVersion& v)
@@ -555,6 +659,19 @@ void BaseClient::getProjectList(std::vector<ProjectInfo>& outList)
 	});
 
 	outList = std::move(list);
+}
+
+void BaseClient::prompt(int level, const std::string& message)
+{
+	if (level <= 0) {
+		QMessageBox::information(this, "Base", QString::fromLocal8Bit(message.c_str()));
+	}
+	else if (level == 1) {
+		QMessageBox::warning(this, "Base", QString::fromLocal8Bit(message.c_str()));
+	}
+	else {
+		QMessageBox::critical(this, "Base", QString::fromLocal8Bit(message.c_str()));
+	}
 }
 
 void BaseClient::promptRpcError(Rpc::ErrorCode ec)

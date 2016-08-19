@@ -40,11 +40,14 @@ private:
 	std::string cachePath();
 	std::string userPath();
 	std::string libraryPath();
+	std::string outputPath();
 
 	std::string enginePath(const EngineVersion&);
 	std::string contentPath(const std::string& id);
 
 	void installEngine(const EngineVersion&);
+	void setupEngine(const EngineVersion&);
+	void unSetupEngine(const EngineVersion&);
 	void removeEngine(const EngineVersion&);
 	int getEngineState(const EngineVersion&);
 	bool changeEngineState(const EngineVersion&, int& oldState, int newState);
@@ -62,9 +65,9 @@ private:
 	bool getProject(ProjectInfo&, const std::string& id);
 	void getProjectList(std::vector<ProjectInfo>&);
 
-	void promptRpcError(Rpc::ErrorCode);
-
 private Q_SLOTS:
+	void prompt(int level, const std::string& message);
+	void promptRpcError(Rpc::ErrorCode);
 	void onShowTaskManager();
 
 private:

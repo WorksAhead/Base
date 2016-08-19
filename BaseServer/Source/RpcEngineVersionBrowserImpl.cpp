@@ -31,12 +31,12 @@ void RpcEngineVersionBrowserImpl::destroy(const Ice::Current& c)
 	}
 }
 
-Rpc::ErrorCode RpcEngineVersionBrowserImpl::next(Ice::Int n, Rpc::EngineVersionSeq& items, const Ice::Current&)
+Rpc::ErrorCode RpcEngineVersionBrowserImpl::next(Ice::Int n, Rpc::EngineVersionSeq& seq, const Ice::Current&)
 {
 	boost::recursive_mutex::scoped_lock lock(sync_);
 	checkIsDestroyed();
 
-	items.clear();
+	seq.clear();
 
 	for (int i = 0; i < n; ++i)
 	{
@@ -44,16 +44,16 @@ Rpc::ErrorCode RpcEngineVersionBrowserImpl::next(Ice::Int n, Rpc::EngineVersionS
 			break;
 		}
 
-		Rpc::EngineVersion item;
-		item.name = s_->getColumn("Name").getText();
-		item.version = s_->getColumn("Version").getText();
-		item.setup = s_->getColumn("Setup").getText();
-		item.unsetup = s_->getColumn("UnSetup").getText();
-		item.uptime = s_->getColumn("UpTime").getText();
-		item.info = s_->getColumn("Info").getText();
-		item.state = s_->getColumn("State").getText();
+		Rpc::EngineVersionInfo info;
+		info.name = s_->getColumn("Name").getText();
+		info.version = s_->getColumn("Version").getText();
+		info.setup = s_->getColumn("Setup").getText();
+		info.unsetup = s_->getColumn("UnSetup").getText();
+		info.uptime = s_->getColumn("UpTime").getText();
+		info.info = s_->getColumn("Info").getText();
+		info.state = s_->getColumn("State").getText();
 
-		items.push_back(item);
+		seq.push_back(info);
 	}
 
 	return Rpc::ec_success;

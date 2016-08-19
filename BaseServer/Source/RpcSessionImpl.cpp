@@ -384,7 +384,7 @@ Rpc::ErrorCode RpcSessionImpl::updateEngineVersion(const std::string& name, cons
 	return Rpc::ec_success;
 }
 
-Rpc::ErrorCode RpcSessionImpl::getEngineVersion(const std::string& name, const std::string& version, Rpc::EngineVersion& engineVersion, const Ice::Current&)
+Rpc::ErrorCode RpcSessionImpl::getEngineVersion(const std::string& name, const std::string& version, Rpc::EngineVersionInfo& info, const Ice::Current&)
 {
 	boost::recursive_mutex::scoped_lock lock(sync_);
 	checkIsDestroyed();
@@ -394,13 +394,13 @@ Rpc::ErrorCode RpcSessionImpl::getEngineVersion(const std::string& name, const s
 		return Rpc::ec_engine_version_does_not_exist;
 	}
 
-	engineVersion.name = name;
-	engineVersion.version = version;
-	engineVersion.setup = form.at("Setup");
-	engineVersion.unsetup = form.at("UnSetup");
-	engineVersion.uptime = form.at("UpTime");
-	engineVersion.info = form.at("Info");
-	engineVersion.state = form.at("State");
+	info.name = name;
+	info.version = version;
+	info.setup = form.at("Setup");
+	info.unsetup = form.at("UnSetup");
+	info.uptime = form.at("UpTime");
+	info.info = form.at("Info");
+	info.state = form.at("State");
 
 	return Rpc::ec_success;
 }

@@ -36,7 +36,7 @@ module Rpc
 		ErrorCode next(int n, out ContentItemSeq items);
 	};
 
-	struct EngineVersion
+	struct EngineVersionInfo
 	{
 		string name;
 		string version;
@@ -47,7 +47,7 @@ module Rpc
 		string state;
 	};
 
-	sequence<EngineVersion> EngineVersionSeq;
+	sequence<EngineVersionInfo> EngineVersionSeq;
 
 	interface EngineVersionBrowser extends ManagedObject
 	{
@@ -135,7 +135,7 @@ module Rpc
 		ErrorCode removeEngineVersion(string name, string version);
 		ErrorCode submitEngineVersion(string name, string version, out EngineVersionSubmitter* submitter);
 		ErrorCode updateEngineVersion(string name, string version, out EngineVersionSubmitter* submitter);
-		ErrorCode getEngineVersion(string name, string version, out EngineVersion engineVersion);
+		ErrorCode getEngineVersion(string name, string version, out EngineVersionInfo engineVersion);
 
 		ErrorCode browseUsers(out UserBrowser* browser);
 		ErrorCode setUserGroup(string username, string group);

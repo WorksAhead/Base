@@ -42,7 +42,7 @@ public:
 	virtual Rpc::ErrorCode removeEngineVersion(const std::string&, const std::string&, const Ice::Current&);
 	virtual Rpc::ErrorCode submitEngineVersion(const std::string&, const std::string&, Rpc::EngineVersionSubmitterPrx&, const Ice::Current&);
 	virtual Rpc::ErrorCode updateEngineVersion(const std::string&, const std::string&, Rpc::EngineVersionSubmitterPrx&, const Ice::Current&);
-	virtual Rpc::ErrorCode getEngineVersion(const std::string&, const std::string&, Rpc::EngineVersion&, const Ice::Current&);
+	virtual Rpc::ErrorCode getEngineVersion(const std::string&, const std::string&, Rpc::EngineVersionInfo&, const Ice::Current&);
 
 	virtual Rpc::ErrorCode browseUsers(Rpc::UserBrowserPrx&, const Ice::Current&);
 	virtual Rpc::ErrorCode setUserGroup(const std::string&, const std::string&, const Ice::Current&);

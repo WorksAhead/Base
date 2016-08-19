@@ -424,7 +424,7 @@ struct ContentInfo
 
 typedef ::std::vector< ::Rpc::ContentItem> ContentItemSeq;
 
-struct EngineVersion
+struct EngineVersionInfo
 {
     ::std::string name;
     ::std::string version;
@@ -434,7 +434,7 @@ struct EngineVersion
     ::std::string info;
     ::std::string state;
 
-    bool operator==(const EngineVersion& __rhs) const
+    bool operator==(const EngineVersionInfo& __rhs) const
     {
         if(this == &__rhs)
         {
@@ -471,7 +471,7 @@ struct EngineVersion
         return true;
     }
 
-    bool operator<(const EngineVersion& __rhs) const
+    bool operator<(const EngineVersionInfo& __rhs) const
     {
         if(this == &__rhs)
         {
@@ -536,25 +536,25 @@ struct EngineVersion
         return false;
     }
 
-    bool operator!=(const EngineVersion& __rhs) const
+    bool operator!=(const EngineVersionInfo& __rhs) const
     {
         return !operator==(__rhs);
     }
-    bool operator<=(const EngineVersion& __rhs) const
+    bool operator<=(const EngineVersionInfo& __rhs) const
     {
         return operator<(__rhs) || operator==(__rhs);
     }
-    bool operator>(const EngineVersion& __rhs) const
+    bool operator>(const EngineVersionInfo& __rhs) const
     {
         return !operator<(__rhs) && !operator==(__rhs);
     }
-    bool operator>=(const EngineVersion& __rhs) const
+    bool operator>=(const EngineVersionInfo& __rhs) const
     {
         return !operator<(__rhs);
     }
 };
 
-typedef ::std::vector< ::Rpc::EngineVersion> EngineVersionSeq;
+typedef ::std::vector< ::Rpc::EngineVersionInfo> EngineVersionSeq;
 
 struct User
 {
@@ -732,7 +732,7 @@ struct StreamReader< ::Rpc::ContentInfo, S>
 };
 
 template<>
-struct StreamableTraits< ::Rpc::EngineVersion>
+struct StreamableTraits< ::Rpc::EngineVersionInfo>
 {
     static const StreamHelperCategory helper = StreamHelperCategoryStruct;
     static const int minWireSize = 7;
@@ -740,9 +740,9 @@ struct StreamableTraits< ::Rpc::EngineVersion>
 };
 
 template<class S>
-struct StreamWriter< ::Rpc::EngineVersion, S>
+struct StreamWriter< ::Rpc::EngineVersionInfo, S>
 {
-    static void write(S* __os, const ::Rpc::EngineVersion& v)
+    static void write(S* __os, const ::Rpc::EngineVersionInfo& v)
     {
         __os->write(v.name);
         __os->write(v.version);
@@ -755,9 +755,9 @@ struct StreamWriter< ::Rpc::EngineVersion, S>
 };
 
 template<class S>
-struct StreamReader< ::Rpc::EngineVersion, S>
+struct StreamReader< ::Rpc::EngineVersionInfo, S>
 {
-    static void read(S* __is, ::Rpc::EngineVersion& v)
+    static void read(S* __is, ::Rpc::EngineVersionInfo& v)
     {
         __is->read(v.name);
         __is->read(v.version);
@@ -5236,17 +5236,17 @@ private:
     
 public:
 
-    ::Rpc::ErrorCode getEngineVersion(const ::std::string& __p_name, const ::std::string& __p_version, ::Rpc::EngineVersion& __p_engineVersion)
+    ::Rpc::ErrorCode getEngineVersion(const ::std::string& __p_name, const ::std::string& __p_version, ::Rpc::EngineVersionInfo& __p_engineVersion)
     {
         return getEngineVersion(__p_name, __p_version, __p_engineVersion, 0);
     }
-    ::Rpc::ErrorCode getEngineVersion(const ::std::string& __p_name, const ::std::string& __p_version, ::Rpc::EngineVersion& __p_engineVersion, const ::Ice::Context& __ctx)
+    ::Rpc::ErrorCode getEngineVersion(const ::std::string& __p_name, const ::std::string& __p_version, ::Rpc::EngineVersionInfo& __p_engineVersion, const ::Ice::Context& __ctx)
     {
         return getEngineVersion(__p_name, __p_version, __p_engineVersion, &__ctx);
     }
 #ifdef ICE_CPP11
     ::Ice::AsyncResultPtr
-    begin_getEngineVersion(const ::std::string& __p_name, const ::std::string& __p_version, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::EngineVersion&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    begin_getEngineVersion(const ::std::string& __p_name, const ::std::string& __p_version, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::EngineVersionInfo&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
     {
         return __begin_getEngineVersion(__p_name, __p_version, 0, __response, __exception, __sent);
     }
@@ -5256,7 +5256,7 @@ public:
         return begin_getEngineVersion(__p_name, __p_version, 0, ::Ice::newCallback(__completed, __sent), 0);
     }
     ::Ice::AsyncResultPtr
-    begin_getEngineVersion(const ::std::string& __p_name, const ::std::string& __p_version, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::EngineVersion&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    begin_getEngineVersion(const ::std::string& __p_name, const ::std::string& __p_version, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::EngineVersionInfo&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
     {
         return __begin_getEngineVersion(__p_name, __p_version, &__ctx, __response, __exception, __sent);
     }
@@ -5268,7 +5268,7 @@ public:
     
 private:
 
-    ::Ice::AsyncResultPtr __begin_getEngineVersion(const ::std::string& __p_name, const ::std::string& __p_version, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::EngineVersion&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent);
+    ::Ice::AsyncResultPtr __begin_getEngineVersion(const ::std::string& __p_name, const ::std::string& __p_version, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::EngineVersionInfo&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent);
     
 public:
 #endif
@@ -5303,11 +5303,11 @@ public:
         return begin_getEngineVersion(__p_name, __p_version, &__ctx, __del, __cookie);
     }
 
-    ::Rpc::ErrorCode end_getEngineVersion(::Rpc::EngineVersion& __p_engineVersion, const ::Ice::AsyncResultPtr&);
+    ::Rpc::ErrorCode end_getEngineVersion(::Rpc::EngineVersionInfo& __p_engineVersion, const ::Ice::AsyncResultPtr&);
     
 private:
 
-    ::Rpc::ErrorCode getEngineVersion(const ::std::string&, const ::std::string&, ::Rpc::EngineVersion&, const ::Ice::Context*);
+    ::Rpc::ErrorCode getEngineVersion(const ::std::string&, const ::std::string&, ::Rpc::EngineVersionInfo&, const ::Ice::Context*);
     ::Ice::AsyncResultPtr begin_getEngineVersion(const ::std::string&, const ::std::string&, const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
     
 public:
@@ -6101,7 +6101,7 @@ public:
     virtual ::Rpc::ErrorCode updateEngineVersion(const ::std::string&, const ::std::string&, ::Rpc::EngineVersionSubmitterPrx&, const ::Ice::Current& = ::Ice::Current()) = 0;
     ::Ice::DispatchStatus ___updateEngineVersion(::IceInternal::Incoming&, const ::Ice::Current&);
 
-    virtual ::Rpc::ErrorCode getEngineVersion(const ::std::string&, const ::std::string&, ::Rpc::EngineVersion&, const ::Ice::Current& = ::Ice::Current()) = 0;
+    virtual ::Rpc::ErrorCode getEngineVersion(const ::std::string&, const ::std::string&, ::Rpc::EngineVersionInfo&, const ::Ice::Current& = ::Ice::Current()) = 0;
     ::Ice::DispatchStatus ___getEngineVersion(::IceInternal::Incoming&, const ::Ice::Current&);
 
     virtual ::Rpc::ErrorCode browseUsers(::Rpc::UserBrowserPrx&, const ::Ice::Current& = ::Ice::Current()) = 0;
@@ -10845,7 +10845,7 @@ public:
 
     typedef void (T::*Exception)(const ::Ice::Exception&);
     typedef void (T::*Sent)(bool);
-    typedef void (T::*Response)(::Rpc::ErrorCode, const ::Rpc::EngineVersion&);
+    typedef void (T::*Response)(::Rpc::ErrorCode, const ::Rpc::EngineVersionInfo&);
 
     CallbackNC_Session_getEngineVersion(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
         : ::IceInternal::TwowayCallbackNC<T>(obj, cb != 0, excb, sentcb), _response(cb)
@@ -10855,7 +10855,7 @@ public:
     virtual void completed(const ::Ice::AsyncResultPtr& __result) const
     {
         ::Rpc::SessionPrx __proxy = ::Rpc::SessionPrx::uncheckedCast(__result->getProxy());
-        ::Rpc::EngineVersion engineVersion;
+        ::Rpc::EngineVersionInfo engineVersion;
         ::Rpc::ErrorCode __ret;
         try
         {
@@ -10878,13 +10878,13 @@ public:
 };
 
 template<class T> Callback_Session_getEngineVersionPtr
-newCallback_Session_getEngineVersion(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::EngineVersion&), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+newCallback_Session_getEngineVersion(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::EngineVersionInfo&), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
 {
     return new CallbackNC_Session_getEngineVersion<T>(instance, cb, excb, sentcb);
 }
 
 template<class T> Callback_Session_getEngineVersionPtr
-newCallback_Session_getEngineVersion(T* instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::EngineVersion&), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+newCallback_Session_getEngineVersion(T* instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::EngineVersionInfo&), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
 {
     return new CallbackNC_Session_getEngineVersion<T>(instance, cb, excb, sentcb);
 }
@@ -10898,7 +10898,7 @@ public:
 
     typedef void (T::*Exception)(const ::Ice::Exception& , const CT&);
     typedef void (T::*Sent)(bool , const CT&);
-    typedef void (T::*Response)(::Rpc::ErrorCode, const ::Rpc::EngineVersion&, const CT&);
+    typedef void (T::*Response)(::Rpc::ErrorCode, const ::Rpc::EngineVersionInfo&, const CT&);
 
     Callback_Session_getEngineVersion(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
         : ::IceInternal::TwowayCallback<T, CT>(obj, cb != 0, excb, sentcb), _response(cb)
@@ -10908,7 +10908,7 @@ public:
     virtual void completed(const ::Ice::AsyncResultPtr& __result) const
     {
         ::Rpc::SessionPrx __proxy = ::Rpc::SessionPrx::uncheckedCast(__result->getProxy());
-        ::Rpc::EngineVersion engineVersion;
+        ::Rpc::EngineVersionInfo engineVersion;
         ::Rpc::ErrorCode __ret;
         try
         {
@@ -10931,13 +10931,13 @@ public:
 };
 
 template<class T, typename CT> Callback_Session_getEngineVersionPtr
-newCallback_Session_getEngineVersion(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::EngineVersion&, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+newCallback_Session_getEngineVersion(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::EngineVersionInfo&, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
 {
     return new Callback_Session_getEngineVersion<T, CT>(instance, cb, excb, sentcb);
 }
 
 template<class T, typename CT> Callback_Session_getEngineVersionPtr
-newCallback_Session_getEngineVersion(T* instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::EngineVersion&, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+newCallback_Session_getEngineVersion(T* instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::EngineVersionInfo&, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
 {
     return new Callback_Session_getEngineVersion<T, CT>(instance, cb, excb, sentcb);
 }

@@ -1,5 +1,6 @@
 #include "ProjectItemWidget.h"
 #include "CreateProjectDialog.h"
+#include "QtUtils.h"
 
 #include <QPainter>
 #include <QMouseEvent>
@@ -16,8 +17,6 @@
 #include <boost/filesystem.hpp>
 
 #include <sstream>
-
-#include <windows.h>
 
 namespace fs = boost::filesystem;
 
@@ -150,22 +149,11 @@ void ProjectItemWidget::onOpen()
 		getline(stream, command);
 		getline(stream, workDir);
 
-		STARTUPINFOA si;
-		memset(&si, 0, sizeof(STARTUPINFOA));
-		si.cb = sizeof(STARTUPINFOA);
+		QStringList args = parseCombinedArgString(QString::fromLocal8Bit(command.c_str()));
+		QString program = args.first();
+		args.removeFirst();
 
-		PROCESS_INFORMATION pi;
-		memset(&pi, 0, sizeof(PROCESS_INFORMATION));
-
-		std::vector<char> buf(command.c_str(), command.c_str() + command.size() + 1);
-
-		if (!CreateProcessA(NULL, buf.data(), NULL, NULL, FALSE, 0, NULL, (workDir.empty() ? NULL : workDir.c_str()), &si, &pi)) {
-			QMessageBox::information(this, "Base", tr("Failed to open, please check the command."));
-			return;
-		}
-
-		CloseHandle(pi.hProcess);
-		CloseHandle(pi.hThread);
+		QProcess::startDetached(program, args, QString::fromLocal8Bit(workDir.c_str()));
 	}
 	else if (state == EngineState::not_installed)
 	{

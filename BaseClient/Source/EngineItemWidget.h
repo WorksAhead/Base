@@ -23,7 +23,9 @@ protected:
 	virtual void paintEvent(QPaintEvent*);
 
 private Q_SLOTS:
-	void onShow();
+	void onSetup();
+	void onUnSetup();
+	void onBrowse();
 	void onRemove();
 
 private:

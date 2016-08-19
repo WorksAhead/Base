@@ -371,7 +371,7 @@ void SubmitContentDialog::onSubmit()
 	else
 	{
 		ec = submitter->finish();
-		CHECK_ERROR_CODE(ec);
+		context_->promptRpcError(ec);
 	}
 
 	done(1);

@@ -5281,7 +5281,7 @@ IceProxy::Rpc::Session::end_updateEngineVersion(::Rpc::EngineVersionSubmitterPrx
 }
 
 ::Rpc::ErrorCode
-IceProxy::Rpc::Session::getEngineVersion(const ::std::string& __p_name, const ::std::string& __p_version, ::Rpc::EngineVersion& __p_engineVersion, const ::Ice::Context* __ctx)
+IceProxy::Rpc::Session::getEngineVersion(const ::std::string& __p_name, const ::std::string& __p_version, ::Rpc::EngineVersionInfo& __p_engineVersion, const ::Ice::Context* __ctx)
 {
     __checkTwowayOnly(__Rpc__Session__getEngineVersion_name);
     ::IceInternal::Outgoing __og(this, __Rpc__Session__getEngineVersion_name, ::Ice::Normal, __ctx);
@@ -5340,13 +5340,13 @@ IceProxy::Rpc::Session::begin_getEngineVersion(const ::std::string& __p_name, co
 #ifdef ICE_CPP11
 
 ::Ice::AsyncResultPtr
-IceProxy::Rpc::Session::__begin_getEngineVersion(const ::std::string& __p_name, const ::std::string& __p_version, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::EngineVersion&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent)
+IceProxy::Rpc::Session::__begin_getEngineVersion(const ::std::string& __p_name, const ::std::string& __p_version, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::EngineVersionInfo&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent)
 {
     class Cpp11CB : public ::IceInternal::Cpp11FnCallbackNC
     {
     public:
 
-        Cpp11CB(const ::std::function<void (::Rpc::ErrorCode, const ::Rpc::EngineVersion&)>& responseFunc, const ::std::function<void (const ::Ice::Exception&)>& exceptionFunc, const ::std::function<void (bool)>& sentFunc) :
+        Cpp11CB(const ::std::function<void (::Rpc::ErrorCode, const ::Rpc::EngineVersionInfo&)>& responseFunc, const ::std::function<void (const ::Ice::Exception&)>& exceptionFunc, const ::std::function<void (bool)>& sentFunc) :
             ::IceInternal::Cpp11FnCallbackNC(exceptionFunc, sentFunc),
             _response(responseFunc)
         {
@@ -5356,7 +5356,7 @@ IceProxy::Rpc::Session::__begin_getEngineVersion(const ::std::string& __p_name, 
         virtual void completed(const ::Ice::AsyncResultPtr& __result) const
         {
             ::Rpc::SessionPrx __proxy = ::Rpc::SessionPrx::uncheckedCast(__result->getProxy());
-            ::Rpc::EngineVersion __p_engineVersion;
+            ::Rpc::EngineVersionInfo __p_engineVersion;
             ::Rpc::ErrorCode __ret;
             try
             {
@@ -5375,14 +5375,14 @@ IceProxy::Rpc::Session::__begin_getEngineVersion(const ::std::string& __p_name, 
     
     private:
         
-        ::std::function<void (::Rpc::ErrorCode, const ::Rpc::EngineVersion&)> _response;
+        ::std::function<void (::Rpc::ErrorCode, const ::Rpc::EngineVersionInfo&)> _response;
     };
     return begin_getEngineVersion(__p_name, __p_version, __ctx, new Cpp11CB(__response, __exception, __sent));
 }
 #endif
 
 ::Rpc::ErrorCode
-IceProxy::Rpc::Session::end_getEngineVersion(::Rpc::EngineVersion& __p_engineVersion, const ::Ice::AsyncResultPtr& __result)
+IceProxy::Rpc::Session::end_getEngineVersion(::Rpc::EngineVersionInfo& __p_engineVersion, const ::Ice::AsyncResultPtr& __result)
 {
     ::Ice::AsyncResult::__check(__result, this, __Rpc__Session__getEngineVersion_name);
     ::Rpc::ErrorCode __ret;
@@ -7576,7 +7576,7 @@ Rpc::Session::___getEngineVersion(::IceInternal::Incoming& __inS, const ::Ice::C
     __is->read(__p_name);
     __is->read(__p_version);
     __inS.endReadParams();
-    ::Rpc::EngineVersion __p_engineVersion;
+    ::Rpc::EngineVersionInfo __p_engineVersion;
     ::Rpc::ErrorCode __ret = getEngineVersion(__p_name, __p_version, __p_engineVersion, __current);
     ::IceInternal::BasicStream* __os = __inS.__startWriteParams(::Ice::DefaultFormat);
     __os->write(__p_engineVersion);
