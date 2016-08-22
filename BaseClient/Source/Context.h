@@ -20,6 +20,7 @@ namespace EngineState {
 		not_installed = 0,
 		installing,
 		installed,
+		configuring,
 		removing,
 	};
 }
@@ -97,11 +98,15 @@ struct Context
 	std::function<int(const EngineVersion&)> getEngineState;
 	std::function<bool(const EngineVersion&, int&, int)> changeEngineState;
 	std::function<void(std::vector<EngineVersion>&)> getEngineList;
+	std::function<void(const EngineVersion&)> addEngineToGui;
+	std::function<void(const EngineVersion&)> removeEngineFromGui;
 
 	std::function<void(std::vector<std::string>&)> getDownloadedContentList;
 
 	std::function<int(const std::string&)> getContentState;
 	std::function<bool(const std::string&, int&, int)> changeContentState;
+	std::function<void(const std::string&)> addContentToGui;
+	std::function<void(const std::string&)> removeContentFromGui;
 
 	std::function<void(const std::string&, const std::string&, const std::string&)> createProject;
 	std::function<void(const std::string&, const std::string&, const std::string&, const std::map<std::string, std::string>& properties)> addProject;
@@ -109,9 +114,12 @@ struct Context
 	std::function<void(const std::string&, const std::string&)> renameProject;
 	std::function<bool(ProjectInfo&, const std::string& id)> getProject;
 	std::function<void(std::vector<ProjectInfo>&)> getProjectList;
+	std::function<void(const std::string&)> addProjectToGui;
+	std::function<void(const std::string&)> removeProjectFromGui;
 
 	std::function<void(int, const std::string&)> prompt;
 	std::function<void(Rpc::ErrorCode)> promptRpcError;
+	std::function<void(const EngineVersion&, int)> promptEngineState;
 };
 
 typedef std::shared_ptr<Context> ContextPtr;

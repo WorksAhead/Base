@@ -66,8 +66,15 @@ private:
 	void getProjectList(std::vector<ProjectInfo>&);
 
 private Q_SLOTS:
+	void addEngineToGui(const EngineVersion&);
+	void removeEngineFromGui(const EngineVersion&);
+	void addContentToGui(const std::string& contentId);
+	void removeContentFromGui(const std::string& contentId);
+	void addProjectToGui(const std::string& projectId);
+	void removeProjectFromGui(const std::string& projectId);
 	void prompt(int level, const std::string& message);
 	void promptRpcError(Rpc::ErrorCode);
+	void promptEngineState(const EngineVersion&, int);
 	void onShowTaskManager();
 
 private:

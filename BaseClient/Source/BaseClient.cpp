@@ -86,15 +86,71 @@ BaseClient::BaseClient(Rpc::SessionPrx session)
 	context_->getEngineState = std::bind(&BaseClient::getEngineState, this, std::placeholders::_1);
 	context_->changeEngineState = std::bind(&BaseClient::changeEngineState, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
 	context_->getEngineList = std::bind(&BaseClient::getEngineList, this, std::placeholders::_1);
+
+	context_->addEngineToGui = [guitid, this](const EngineVersion& v){
+		if (QThread::currentThreadId() == guitid) {
+			addEngineToGui(v);
+		}
+		else {
+			QMetaObject::invokeMethod(this, "addEngineToGui", Qt::BlockingQueuedConnection, Q_ARG(EngineVersion, v));
+		}
+	};
+
+	context_->removeEngineFromGui = [guitid, this](const EngineVersion& v){
+		if (QThread::currentThreadId() == guitid) {
+			removeEngineFromGui(v);
+		}
+		else {
+			QMetaObject::invokeMethod(this, "removeEngineFromGui", Qt::BlockingQueuedConnection, Q_ARG(EngineVersion, v));
+		}
+	};
+
 	context_->getDownloadedContentList = std::bind(&BaseClient::getDownloadedContentList, this, std::placeholders::_1);
 	context_->getContentState = std::bind(&BaseClient::getContentState, this, std::placeholders::_1);
 	context_->changeContentState = std::bind(&BaseClient::changeContentState, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+
+	context_->addContentToGui = [guitid, this](const std::string& contentId){
+		if (QThread::currentThreadId() == guitid) {
+			addContentToGui(contentId);
+		}
+		else {
+			QMetaObject::invokeMethod(this, "addContentToGui", Qt::BlockingQueuedConnection, Q_ARG(std::string, contentId));
+		}
+	};
+
+	context_->removeContentFromGui = [guitid, this](const std::string& contentId){
+		if (QThread::currentThreadId() == guitid) {
+			removeContentFromGui(contentId);
+		}
+		else {
+			QMetaObject::invokeMethod(this, "removeContentFromGui", Qt::BlockingQueuedConnection, Q_ARG(std::string, contentId));
+		}
+	};
+
 	context_->createProject = std::bind(&BaseClient::createProject, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
 	context_->addProject = std::bind(&BaseClient::addProject, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4);
 	context_->removeProject = std::bind(&BaseClient::removeProject, this, std::placeholders::_1, std::placeholders::_2);
 	context_->renameProject = std::bind(&BaseClient::renameProject, this, std::placeholders::_1, std::placeholders::_2);
 	context_->getProject = std::bind(&BaseClient::getProject, this, std::placeholders::_1, std::placeholders::_2);
 	context_->getProjectList = std::bind(&BaseClient::getProjectList, this, std::placeholders::_1);
+
+	context_->addProjectToGui = [guitid, this](const std::string& projectId){
+		if (QThread::currentThreadId() == guitid) {
+			addProjectToGui(projectId);
+		}
+		else {
+			QMetaObject::invokeMethod(this, "addProjectToGui", Qt::BlockingQueuedConnection, Q_ARG(std::string, projectId));
+		}
+	};
+
+	context_->removeProjectFromGui = [guitid, this](const std::string& projectId){
+		if (QThread::currentThreadId() == guitid) {
+			removeProjectFromGui(projectId);
+		}
+		else {
+			QMetaObject::invokeMethod(this, "removeProjectFromGui", Qt::BlockingQueuedConnection, Q_ARG(std::string, projectId));
+		}
+	};
 
 	context_->prompt = [guitid,this](int level, const std::string& message){
 		if (QThread::currentThreadId() == guitid) {
@@ -111,6 +167,15 @@ BaseClient::BaseClient(Rpc::SessionPrx session)
 		}
 		else {
 			QMetaObject::invokeMethod(this, "promptRpcError", Qt::BlockingQueuedConnection, Q_ARG(Rpc::ErrorCode, ec));
+		}
+	};
+
+	context_->promptEngineState = [guitid,this](const EngineVersion& v, int state){
+		if (QThread::currentThreadId() == guitid) {
+			promptEngineState(v, state);
+		}
+		else {
+			QMetaObject::invokeMethod(this, "promptEngineState", Qt::BlockingQueuedConnection, Q_ARG(EngineVersion, v), Q_ARG(int, state));
 		}
 	};
 
@@ -245,20 +310,8 @@ void BaseClient::installEngine(const EngineVersion& v)
 {
 	int state = EngineState::not_installed;
 
-	if (!changeEngineState(v, state, EngineState::installing))
-	{
-		if (state == EngineState::installing) {
-			QMessageBox::information(this, "Base",
-				QString("%1 %2 is now installing").arg(v.first.c_str()).arg(v.second.c_str()));
-		}
-		else if (state == EngineState::installed) {
-			QMessageBox::information(this, "Base",
-				QString("%1 %2 is already installed").arg(v.first.c_str()).arg(v.second.c_str()));
-		}
-		else if (state == EngineState::removing) {
-			QMessageBox::information(this, "Base",
-				QString("%1 %2 is now removing").arg(v.first.c_str()).arg(v.second.c_str()));
-		}
+	if (!changeEngineState(v, state, EngineState::installing)) {
+		promptEngineState(v, state);
 		return;
 	}
 
@@ -292,6 +345,10 @@ void BaseClient::setupEngine(const EngineVersion& v)
 	}
 
 	QStringList args = parseCombinedArgString(info.setup.c_str());
+	if (args.isEmpty()) {
+		return;
+	}
+
 	QString program = args.first();
 	args.removeFirst();
 
@@ -334,6 +391,10 @@ void BaseClient::unSetupEngine(const EngineVersion& v)
 	}
 
 	QStringList args = parseCombinedArgString(info.unsetup.c_str());
+	if (args.isEmpty()) {
+		return;
+	}
+
 	QString program = args.first();
 	args.removeFirst();
 
@@ -355,24 +416,12 @@ void BaseClient::removeEngine(const EngineVersion& v)
 {
 	int state = EngineState::installed;
 
-	if (!changeEngineState(v, state, EngineState::removing))
-	{
-		if (state == EngineState::installing) {
-			QMessageBox::information(this, "Base",
-				QString("%1 %2 is now installing").arg(v.first.c_str()).arg(v.second.c_str()));
-		}
-		else if (state == EngineState::not_installed) {
-			QMessageBox::information(this, "Base",
-				QString("%1 %2 is not installed").arg(v.first.c_str()).arg(v.second.c_str()));
-		}
-		else if (state == EngineState::removing) {
-			QMessageBox::information(this, "Base",
-				QString("%1 %2 is now removing").arg(v.first.c_str()).arg(v.second.c_str()));
-		}
+	if (!changeEngineState(v, state, EngineState::removing)) {
+		promptEngineState(v, state);
 		return;
 	}
 
-	library_->removeEngine(v.first.c_str(), v.second.c_str());
+	removeEngineFromGui(v);
 
 	boost::shared_ptr<ASyncRemoveEngineTask> task(new ASyncRemoveEngineTask(context_));
 	task->setInfoHead("Remove " + v.first + " " + v.second);
@@ -416,8 +465,6 @@ bool BaseClient::changeEngineState(const EngineVersion& v, int& oldState, int ne
 		SQLite::Transaction t(*db_);
 		db_->exec(oss.str());
 		t.commit();
-
-		QMetaObject::invokeMethod(library_, "addEngine", Qt::QueuedConnection, Q_ARG(QString, v.first.c_str()), Q_ARG(QString, v.second.c_str()));
 
 		boost::recursive_mutex::scoped_lock lock(installedEngineTabelSync_);
 		installedEngineTabel_.insert(v);
@@ -497,8 +544,6 @@ bool BaseClient::changeContentState(const std::string& id, int& oldState, int ne
 		db_->exec(oss.str());
 		t.commit();
 
-		QMetaObject::invokeMethod(library_, "addContent", Qt::QueuedConnection, Q_ARG(QString, id.c_str()));
-
 		boost::recursive_mutex::scoped_lock lock(downloadedContentTabelSync_);
 		downloadedContentTabel_.insert(id);
 	}
@@ -512,8 +557,6 @@ bool BaseClient::changeContentState(const std::string& id, int& oldState, int ne
 		SQLite::Transaction t(*db_);
 		db_->exec(oss.str());
 		t.commit();
-
-		QMetaObject::invokeMethod(library_, "removeContent", Qt::QueuedConnection, Q_ARG(QString, id.c_str()));
 
 		boost::recursive_mutex::scoped_lock lock(downloadedContentTabelSync_);
 		downloadedContentTabel_.erase(id);
@@ -580,8 +623,6 @@ void BaseClient::addProject(const std::string& id, const std::string& contentId,
 	boost::unique_lock<boost::recursive_mutex> lock(projectTabelSync_);
 	projectTabel_.insert(std::make_pair(id, pi));
 	lock.unlock();
-
-	QMetaObject::invokeMethod(library_, "addProject", Qt::QueuedConnection, Q_ARG(QString, id.c_str()));
 }
 
 void BaseClient::removeProject(const std::string& id, bool removeDir)
@@ -594,8 +635,6 @@ void BaseClient::removeProject(const std::string& id, bool removeDir)
 	SQLite::Transaction t(*db_);
 	db_->exec(oss.str());
 	t.commit();
-
-	QMetaObject::invokeMethod(library_, "removeProject", Qt::QueuedConnection, Q_ARG(QString, id.c_str()));
 
 	if (removeDir)
 	{
@@ -661,6 +700,36 @@ void BaseClient::getProjectList(std::vector<ProjectInfo>& outList)
 	outList = std::move(list);
 }
 
+void BaseClient::addEngineToGui(const EngineVersion& v)
+{
+	library_->addEngine(v.first.c_str(), v.second.c_str());
+}
+
+void BaseClient::removeEngineFromGui(const EngineVersion& v)
+{
+	library_->removeEngine(v.first.c_str(), v.second.c_str());
+}
+
+void BaseClient::addContentToGui(const std::string& contentId)
+{
+	library_->addContent(contentId.c_str());
+}
+
+void BaseClient::removeContentFromGui(const std::string& contentId)
+{
+	library_->removeContent(contentId.c_str());
+}
+
+void BaseClient::addProjectToGui(const std::string& projectId)
+{
+	library_->addProject(projectId.c_str());
+}
+
+void BaseClient::removeProjectFromGui(const std::string& projectId)
+{
+	library_->removeProject(projectId.c_str());
+}
+
 void BaseClient::prompt(int level, const std::string& message)
 {
 	if (level <= 0) {
@@ -682,6 +751,30 @@ void BaseClient::promptRpcError(Rpc::ErrorCode ec)
 	else {
 		QMessageBox::critical(this, "Base", errorMessage(ec));
 	}
+}
+
+void BaseClient::promptEngineState(const EngineVersion& v, int state)
+{
+	QString engine = QString("%1 %2").arg(v.first.c_str()).arg(v.second.c_str());
+	QString message;
+
+	if (state == EngineState::not_installed) {
+		message = engine + " is not installed";
+	}
+	else if (state == EngineState::installing) {
+		message = engine + " is now installing.";
+	}
+	else if (state == EngineState::installed) {
+		message = engine + " is installed.";
+	}
+	else if (state == EngineState::configuring) {
+		message = engine + " is now configuring.";
+	}
+	else if (state == EngineState::removing) {
+		message = engine + " is now removing.";
+	}
+
+	QMessageBox::information(this, "Base", message);
 }
 
 void BaseClient::onShowTaskManager()

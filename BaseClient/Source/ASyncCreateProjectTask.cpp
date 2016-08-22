@@ -126,6 +126,7 @@ void ASyncCreateProjectTask::run()
 	}
 
 	context_->addProject(projectId_, contentId_, location_, properties_);
+	context_->addProjectToGui(projectId_);
 
 	commit = true;
 

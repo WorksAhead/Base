@@ -77,12 +77,34 @@ void EngineItemWidget::paintEvent(QPaintEvent*)
 
 void EngineItemWidget::onSetup()
 {
-	context_->setupEngine(EngineVersion(engineVersion_.first.toStdString(), engineVersion_.second.toStdString()));
+	EngineVersion v(engineVersion_.first.toStdString(), engineVersion_.second.toStdString());
+
+	int state = EngineState::installed;
+	if (!context_->changeEngineState(v, state, EngineState::configuring)) {
+		context_->promptEngineState(v, state);
+		return;
+	}
+
+	context_->setupEngine(v);
+
+	state = EngineState::configuring;
+	context_->changeEngineState(v, state, EngineState::installed);
 }
 
 void EngineItemWidget::onUnSetup()
 {
+	EngineVersion v(engineVersion_.first.toStdString(), engineVersion_.second.toStdString());
+
+	int state = EngineState::installed;
+	if (!context_->changeEngineState(v, state, EngineState::configuring)) {
+		context_->promptEngineState(v, state);
+		return;
+	}
+
 	context_->unSetupEngine(EngineVersion(engineVersion_.first.toStdString(), engineVersion_.second.toStdString()));
+
+	state = EngineState::configuring;
+	context_->changeEngineState(v, state, EngineState::installed);
 }
 
 void EngineItemWidget::onBrowse()

@@ -201,6 +201,7 @@ void ProjectItemWidget::onRemove()
 		return;
 	}
 
+	context_->removeProjectFromGui(projectId_.toStdString());
 	context_->removeProject(projectId_.toStdString(), false/*mb.checkBox()->isChecked()*/);
 }
 

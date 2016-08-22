@@ -77,15 +77,20 @@ void ASyncDownloadContentTask::run()
 	info_ = infoHead_;
 	sync_.unlock();
 
+	int state = context_->getContentState(contentId_);
+	if (state != ContentState::downloading) {
+		boost::mutex::scoped_lock lock(sync_);
+		info_ = infoHead_ + " - " + "Bad state";
+		state_ = ASyncTask::state_failed;
+		return;
+	}
+
 	bool commit = false;
 
 	BOOST_SCOPE_EXIT_ALL(this, &commit)
 	{
 		int state = ContentState::downloading;
-		if (commit) {
-			context_->changeContentState(contentId_, state, ContentState::downloaded);
-		}
-		else {
+		if (!commit) {
 			context_->changeContentState(contentId_, state, ContentState::not_downloaded);
 		}
 	};
@@ -110,7 +115,16 @@ void ASyncDownloadContentTask::run()
 		std::this_thread::sleep_for(std::chrono::milliseconds(100));
 	}
 
+	if (!context_->changeContentState(contentId_, state, ContentState::downloaded)) {
+		boost::mutex::scoped_lock lock(sync_);
+		info_ = infoHead_ + " - " + "Bad state";
+		state_ = ASyncTask::state_failed;
+		return;
+	}
+
 	commit = true;
+
+	context_->addContentToGui(contentId_);
 
 	sync_.lock();
 	info_ = infoHead_;

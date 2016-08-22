@@ -78,6 +78,14 @@ void ASyncInstallEngineTask::run()
 	info_ = infoHead_;
 	sync_.unlock();
 
+	int state = context_->getEngineState(engineVersion_);
+	if (state != EngineState::installing) {
+		boost::mutex::scoped_lock lock(sync_);
+		info_ = infoHead_ + " - " + "Bad state";
+		state_ = ASyncTask::state_failed;
+		return;
+	}
+
 	const std::string& packageFilename = context_->uniquePath() + ".package";
 
 	BOOST_SCOPE_EXIT_ALL(&packageFilename)
@@ -93,10 +101,7 @@ void ASyncInstallEngineTask::run()
 	BOOST_SCOPE_EXIT_ALL(this, &commit)
 	{
 		int state = EngineState::installing;
-		if (commit) {
-			context_->changeEngineState(engineVersion_, state, EngineState::installed);
-		}
-		else {
+		if (!commit) {
 			context_->changeEngineState(engineVersion_, state, EngineState::not_installed);
 		}
 	};
@@ -141,7 +146,16 @@ void ASyncInstallEngineTask::run()
 
 	context_->setupEngine(engineVersion_);
 
+	if (!context_->changeEngineState(engineVersion_, state, EngineState::installed)) {
+		boost::mutex::scoped_lock lock(sync_);
+		info_ = infoHead_ + " - " + "Bad state";
+		state_ = ASyncTask::state_failed;
+		return;
+	}
+
 	commit = true;
+
+	context_->addEngineToGui(engineVersion_);
 
 	sync_.lock();
 	info_ = infoHead_;

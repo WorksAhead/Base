@@ -103,6 +103,8 @@ void ContentItemWidget::onRemove()
 		return;
 	}
 
+	context_->removeContentFromGui(contentId_.toStdString());
+
 	int state = ContentState::downloaded;
 	if (context_->changeContentState(contentId_.toStdString(), state, ContentState::not_downloaded))
 	{
