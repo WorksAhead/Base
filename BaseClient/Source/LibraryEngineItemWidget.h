@@ -3,15 +3,15 @@
 
 #include "Context.h"
 
-#include "ui_EngineItemWidget.h"
+#include "ui_LibraryEngineItemWidget.h"
 
-class EngineItemWidget : public QWidget {
+class LibraryEngineItemWidget : public QWidget {
 private:
 	Q_OBJECT
 
 public:
-	EngineItemWidget(ContextPtr context, QWidget* parent = 0);
-	~EngineItemWidget();
+	LibraryEngineItemWidget(ContextPtr context, QWidget* parent = 0);
+	~LibraryEngineItemWidget();
 
 	void setEngineVersion(const QPair<QString, QString>& v);
 	QPair<QString, QString> getEngineVersion();
@@ -30,7 +30,7 @@ private Q_SLOTS:
 
 private:
 	ContextPtr context_;
-	Ui::EngineItemWidget ui_;
+	Ui::LibraryEngineItemWidget ui_;
 
 	QPair<QString, QString> engineVersion_;
 };

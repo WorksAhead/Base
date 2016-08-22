@@ -1,5 +1,5 @@
 #include "LibraryEngineWidget.h"
-#include "EngineItemWidget.h"
+#include "LibraryEngineItemWidget.h"
 
 #include <QScrollArea>
 #include <QPainter>
@@ -41,12 +41,12 @@ LibraryEngineWidget::~LibraryEngineWidget()
 
 void LibraryEngineWidget::addEngine(const QString& engineName, const QString& engineVersion)
 {
-	EngineItemWidget* w = new EngineItemWidget(context_);
+	LibraryEngineItemWidget* w = new LibraryEngineItemWidget(context_);
 	w->setEngineVersion(qMakePair(engineName, engineVersion));
 
 	int idx = 0;
 	while (idx < enginesLayout_->count()) {
-		EngineItemWidget* w = (EngineItemWidget*)enginesLayout_->itemAt(idx)->widget();
+		LibraryEngineItemWidget* w = (LibraryEngineItemWidget*)enginesLayout_->itemAt(idx)->widget();
 		if (qMakePair(engineName, engineVersion) < w->getEngineVersion()) {
 			break;
 		}
@@ -63,7 +63,7 @@ void LibraryEngineWidget::removeEngine(const QString& engineName, const QString&
 {
 	QString key = engineName.toLower() + "\n" + engineVersion.toLower();
 
-	EngineItemWidget* w = engineItemWidgets_.value(key, 0);
+	LibraryEngineItemWidget* w = engineItemWidgets_.value(key, 0);
 	if (w) {
 		w->deleteLater();
 		enginesLayout_->removeWidget(w);
@@ -109,7 +109,7 @@ void LibraryEngineWidget::refresh()
 
 	for (const EngineVersion& v : installedEngineList)
 	{
-		EngineItemWidget* w = new EngineItemWidget(context_);
+		LibraryEngineItemWidget* w = new LibraryEngineItemWidget(context_);
 		w->setEngineVersion(qMakePair(v.first.c_str(), v.second.c_str()));
 		enginesLayout_->addWidget(w);
 		QString key = QString(v.first.c_str()).toLower() + "\n" + QString(v.second.c_str()).toLower();

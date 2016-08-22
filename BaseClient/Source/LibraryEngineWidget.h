@@ -10,7 +10,7 @@
 #include <QList>
 
 // forward declaration
-class EngineItemWidget;
+class LibraryEngineItemWidget;
 
 class LibraryEngineWidget : public QWidget {
 private:
@@ -38,7 +38,7 @@ private:
 	FlowLayout* enginesLayout_;
 	bool firstShow_;
 
-	QMap<QString, EngineItemWidget*> engineItemWidgets_;
+	QMap<QString, LibraryEngineItemWidget*> engineItemWidgets_;
 };
 
 #endif // LIBRARYENGINEWIDGET_HEADER_

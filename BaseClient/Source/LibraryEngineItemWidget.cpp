@@ -1,4 +1,4 @@
-#include "EngineItemWidget.h"
+#include "LibraryEngineItemWidget.h"
 #include "CreateProjectDialog.h"
 
 #include <QPainter>
@@ -22,7 +22,7 @@
 
 namespace fs = boost::filesystem;
 
-EngineItemWidget::EngineItemWidget(ContextPtr context, QWidget* parent) : QWidget(parent), context_(context)
+LibraryEngineItemWidget::LibraryEngineItemWidget(ContextPtr context, QWidget* parent) : QWidget(parent), context_(context)
 {
 	setAutoFillBackground(true);
 	ui_.setupUi(this);
@@ -34,40 +34,40 @@ EngineItemWidget::EngineItemWidget(ContextPtr context, QWidget* parent) : QWidge
 	QAction* unSetupAction = menu->addAction("UnSetup");
 	QAction* removeAction = menu->addAction("Remove");
 
-	QObject::connect(ui_.browseButton, &QPushButton::clicked, this, &EngineItemWidget::onBrowse);
-	QObject::connect(setupAction, &QAction::triggered, this, &EngineItemWidget::onSetup);
-	QObject::connect(unSetupAction, &QAction::triggered, this, &EngineItemWidget::onUnSetup);
-	QObject::connect(removeAction, &QAction::triggered, this, &EngineItemWidget::onRemove);
+	QObject::connect(ui_.browseButton, &QPushButton::clicked, this, &LibraryEngineItemWidget::onBrowse);
+	QObject::connect(setupAction, &QAction::triggered, this, &LibraryEngineItemWidget::onSetup);
+	QObject::connect(unSetupAction, &QAction::triggered, this, &LibraryEngineItemWidget::onUnSetup);
+	QObject::connect(removeAction, &QAction::triggered, this, &LibraryEngineItemWidget::onRemove);
 }
 
-EngineItemWidget::~EngineItemWidget()
+LibraryEngineItemWidget::~LibraryEngineItemWidget()
 {
 }
 
-void EngineItemWidget::setEngineVersion(const QPair<QString, QString>& v)
+void LibraryEngineItemWidget::setEngineVersion(const QPair<QString, QString>& v)
 {
 	engineVersion_ = v;
 	ui_.nameLabel->setText(v.first + " " + v.second);
 }
 
-QPair<QString, QString> EngineItemWidget::getEngineVersion()
+QPair<QString, QString> LibraryEngineItemWidget::getEngineVersion()
 {
 	return engineVersion_;
 }
 
-void EngineItemWidget::mousePressEvent(QMouseEvent*)
+void LibraryEngineItemWidget::mousePressEvent(QMouseEvent*)
 {
 }
 
-void EngineItemWidget::mouseDoubleClickEvent(QMouseEvent* e)
+void LibraryEngineItemWidget::mouseDoubleClickEvent(QMouseEvent* e)
 {
 }
 
-void EngineItemWidget::resizeEvent(QResizeEvent*)
+void LibraryEngineItemWidget::resizeEvent(QResizeEvent*)
 {
 }
 
-void EngineItemWidget::paintEvent(QPaintEvent*)
+void LibraryEngineItemWidget::paintEvent(QPaintEvent*)
 {
 	QStyleOption opt;
 	opt.init(this);
@@ -75,7 +75,7 @@ void EngineItemWidget::paintEvent(QPaintEvent*)
 	style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
-void EngineItemWidget::onSetup()
+void LibraryEngineItemWidget::onSetup()
 {
 	EngineVersion v(engineVersion_.first.toStdString(), engineVersion_.second.toStdString());
 
@@ -91,7 +91,7 @@ void EngineItemWidget::onSetup()
 	context_->changeEngineState(v, state, EngineState::installed);
 }
 
-void EngineItemWidget::onUnSetup()
+void LibraryEngineItemWidget::onUnSetup()
 {
 	EngineVersion v(engineVersion_.first.toStdString(), engineVersion_.second.toStdString());
 
@@ -107,13 +107,13 @@ void EngineItemWidget::onUnSetup()
 	context_->changeEngineState(v, state, EngineState::installed);
 }
 
-void EngineItemWidget::onBrowse()
+void LibraryEngineItemWidget::onBrowse()
 {
 	std::string path = context_->enginePath(EngineVersion(engineVersion_.first.toStdString(), engineVersion_.second.toStdString()));
 	QDesktopServices::openUrl(QUrl::fromLocalFile(QString::fromLocal8Bit(path.c_str())));
 }
 
-void EngineItemWidget::onRemove()
+void LibraryEngineItemWidget::onRemove()
 {
 	QMessageBox mb(QMessageBox::Question, "Base",
 		tr("Are you sure you want to remove this Engine ?\nWarning: This operation cannot be undone."),
