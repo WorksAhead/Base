@@ -3,7 +3,7 @@
 #include "FlowLayout.h"
 #include "SubmitContentDialog.h"
 #include "ASyncDownloadTask.h"
-#include "ContentWidget.h"
+#include "PageContentContentWidget.h"
 #include "ContentImageLoader.h"
 
 #include <QPainter>
@@ -36,7 +36,7 @@ PageContentWidget::PageContentWidget(ContextPtr context, const QString& name, QW
 
 	flowLayout_ = new FlowLayout(0);
 
-	content_ = new ContentWidget(context_);
+	content_ = new PageContentContentWidget(context_);
 
 	QWidget* flowWidget = new QWidget;
 	flowWidget->setObjectName("FlowWidget");

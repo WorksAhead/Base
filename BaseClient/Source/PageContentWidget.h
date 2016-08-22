@@ -17,7 +17,7 @@
 class ASyncDownloadTask;
 class FlowLayout;
 class PageContentItemWidget;
-class ContentWidget;
+class PageContentContentWidget;
 
 class PageContentWidget : public QWidget {
 private:
@@ -51,7 +51,7 @@ private:
 	QString name_;
 	FlowLayout* flowLayout_;
 
-	ContentWidget* content_;
+	PageContentContentWidget* content_;
 
 	Rpc::ContentBrowserPrx browser_;
 

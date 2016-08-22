@@ -1,9 +1,9 @@
-#ifndef CONTENTWIDGET_HEADER_
-#define CONTENTWIDGET_HEADER_
+#ifndef PAGECONTENTCONTENTWIDGET_HEADER_
+#define PAGECONTENTCONTENTWIDGET_HEADER_
 
 #include "Context.h"
 
-#include "ui_ContentWidget.h"
+#include "ui_PageContentContentWidget.h"
 
 #include <QList>
 #include <QString>
@@ -11,13 +11,13 @@
 #include <QPixmap>
 #include <QBoxLayout>
 
-class ContentWidget : public QWidget {
+class PageContentContentWidget : public QWidget {
 private:
 	Q_OBJECT
 
 public:
-	ContentWidget(ContextPtr context, QWidget* parent = 0);
-	~ContentWidget();
+	PageContentContentWidget(ContextPtr context, QWidget* parent = 0);
+	~PageContentContentWidget();
 
 	void setContentId(const QString& id);
 	const QString& contentId() const;
@@ -44,7 +44,7 @@ private Q_SLOTS:
 
 private:
 	ContextPtr context_;
-	Ui::ContentWidget ui_;
+	Ui::PageContentContentWidget ui_;
 	QBoxLayout* thumbnailLayout_;
 	QWidget* thumbnailWidget_;
 	QString contentId_;
@@ -52,5 +52,5 @@ private:
 	QVector<QPixmap> screenshots_;
 };
 
-#endif // CONTENTWIDGET_HEADER_
+#endif // PAGECONTENTCONTENTWIDGET_HEADER_
 

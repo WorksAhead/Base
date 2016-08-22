@@ -311,7 +311,7 @@ QFrame#coverViewer, QFrame#screenshotWidget {
     border: 1px solid rgb(80, 80, 80);
 }
 
-QWidget#ContentWidget {
+QWidget#PageContentContentWidget {
 	background: rgb(30, 30, 30);
 }
 

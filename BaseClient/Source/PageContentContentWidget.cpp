@@ -1,4 +1,4 @@
-#include "ContentWidget.h"
+#include "PageContentContentWidget.h"
 #include "ContentDownloadDialog.h"
 #include "ASyncInstallEngineTask.h"
 #include "ASyncDownloadContentTask.h"
@@ -16,7 +16,7 @@
 
 namespace fs = boost::filesystem;
 
-ContentWidget::ContentWidget(ContextPtr context, QWidget* parent) : QWidget(parent), context_(context)
+PageContentContentWidget::PageContentContentWidget(ContextPtr context, QWidget* parent) : QWidget(parent), context_(context)
 {
 	ui_.setupUi(this);
 
@@ -28,16 +28,16 @@ ContentWidget::ContentWidget(ContextPtr context, QWidget* parent) : QWidget(pare
 	thumbnailWidget_->setLayout(thumbnailLayout_);
 	ui_.thumbnailScrollArea->setWidget(thumbnailWidget_);
 
-	QObject::connect(ui_.downloadButton, &QPushButton::clicked, this, &ContentWidget::onDownload);
-	QObject::connect(ui_.copySummaryButton, &QPushButton::clicked, this, &ContentWidget::onCopySummary);
-	QObject::connect(ui_.copyIdButton, &QPushButton::clicked, this, &ContentWidget::onCopyId);
+	QObject::connect(ui_.downloadButton, &QPushButton::clicked, this, &PageContentContentWidget::onDownload);
+	QObject::connect(ui_.copySummaryButton, &QPushButton::clicked, this, &PageContentContentWidget::onCopySummary);
+	QObject::connect(ui_.copyIdButton, &QPushButton::clicked, this, &PageContentContentWidget::onCopyId);
 }
 
-ContentWidget::~ContentWidget()
+PageContentContentWidget::~PageContentContentWidget()
 {
 }
 
-void ContentWidget::setContentId(const QString& id)
+void PageContentContentWidget::setContentId(const QString& id)
 {
 	const int state = context_->getContentState(id.toStdString());
 	//if (state == ContentState::not_downloaded) {
@@ -49,27 +49,27 @@ void ContentWidget::setContentId(const QString& id)
 	contentId_ = id;
 }
 
-const QString& ContentWidget::contentId() const
+const QString& PageContentContentWidget::contentId() const
 {
 	return contentId_;
 }
 
-void ContentWidget::setTitle(const QString& text)
+void PageContentContentWidget::setTitle(const QString& text)
 {
 	ui_.titleLabel->setText(text);
 }
 
-void ContentWidget::setSummary(const QString& text)
+void PageContentContentWidget::setSummary(const QString& text)
 {
 	ui_.summaryLabel->setText(text);
 }
 
-void ContentWidget::setDescription(const QString& text)
+void PageContentContentWidget::setDescription(const QString& text)
 {
 	ui_.descriptionLabel->setText(text);
 }
 
-void ContentWidget::setEngineVersion(int index, const QString& name, const QString& version)
+void PageContentContentWidget::setEngineVersion(int index, const QString& name, const QString& version)
 {
 	if (index == 0) {
 		ui_.installEngineButton->setText(QString("Install %1 %2").arg(name).arg(version));
@@ -88,7 +88,7 @@ void ContentWidget::setEngineVersion(int index, const QString& name, const QStri
 	}
 }
 
-void ContentWidget::setEngineVersionCount(int count)
+void PageContentContentWidget::setEngineVersionCount(int count)
 {
 	ui_.installEngineButton->disconnect();
 
@@ -104,7 +104,7 @@ void ContentWidget::setEngineVersionCount(int count)
 	}
 }
 
-void ContentWidget::setImage(int index, const QPixmap& pixmap)
+void PageContentContentWidget::setImage(int index, const QPixmap& pixmap)
 {
 	QLayoutItem* li = thumbnailLayout_->itemAt(index);
 	if (li && li->widget()) {
@@ -122,7 +122,7 @@ void ContentWidget::setImage(int index, const QPixmap& pixmap)
 	}
 }
 
-void ContentWidget::setImageCount(int count)
+void PageContentContentWidget::setImageCount(int count)
 {
 	while (thumbnailLayout_->count()) {
 		QLayoutItem* li = thumbnailLayout_->takeAt(0);
@@ -162,7 +162,7 @@ void ContentWidget::setImageCount(int count)
 	screenshots_.resize(count);
 }
 
-void ContentWidget::mousePressEvent(QMouseEvent* e)
+void PageContentContentWidget::mousePressEvent(QMouseEvent* e)
 {
 	if (e->button() == Qt::LeftButton)
 	{
@@ -179,12 +179,12 @@ void ContentWidget::mousePressEvent(QMouseEvent* e)
 	}
 }
 
-void ContentWidget::resizeEvent(QResizeEvent* e)
+void PageContentContentWidget::resizeEvent(QResizeEvent* e)
 {
 	ui_.screenshotViewer->setFixedHeight(ui_.screenshotViewer->width() / 1.7777777777);
 }
 
-void ContentWidget::paintEvent(QPaintEvent* e)
+void PageContentContentWidget::paintEvent(QPaintEvent* e)
 {
 	QStyleOption opt;
 	opt.init(this);
@@ -192,7 +192,7 @@ void ContentWidget::paintEvent(QPaintEvent* e)
 	style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
-void ContentWidget::onDownload()
+void PageContentContentWidget::onDownload()
 {
 	int state = ContentState::not_downloaded;
 
@@ -248,13 +248,13 @@ void ContentWidget::onDownload()
 	}
 }
 
-void ContentWidget::onCopyId()
+void PageContentContentWidget::onCopyId()
 {
 	QClipboard* clipboard = QApplication::clipboard();
 	clipboard->setText(contentId_);
 }
 
-void ContentWidget::onCopySummary()
+void PageContentContentWidget::onCopySummary()
 {
 	QClipboard* clipboard = QApplication::clipboard();
 	clipboard->setText(ui_.titleLabel->text() + "\n" + ui_.summaryLabel->text());
