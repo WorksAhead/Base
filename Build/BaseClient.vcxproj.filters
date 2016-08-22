@@ -150,9 +150,6 @@
     <CustomBuild Include="..\BaseClient\Source\LowerPaneWidget.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\PageWidget.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="..\BaseClient\Source\ManageCategoryWidget.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
@@ -218,6 +215,9 @@
     </CustomBuild>
     <CustomBuild Include="..\BaseClient\Source\PageContentWidget.h">
       <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\PageContentWidget.ui">
+      <Filter>Form Files</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
@@ -1002,9 +1002,6 @@
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_LowerPaneWidget.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_PageWidget.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_ManageCategoryWidget.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
@@ -1048,6 +1045,9 @@
       <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_ManageContentWidget.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_PageContentWidget.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>

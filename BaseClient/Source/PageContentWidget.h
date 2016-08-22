@@ -1,7 +1,7 @@
 #ifndef PAGECONTENTWIDGET_HEADER_
 #define PAGECONTENTWIDGET_HEADER_
 
-#include "ui_PageWidget.h"
+#include "ui_PageContentWidget.h"
 
 #include <RpcSession.h>
 
@@ -57,7 +57,7 @@ private:
 
 	QMap<QString, PageItemWidget*> pageItems_;
 
-	Ui::PageWidget ui_;
+	Ui::PageContentWidget ui_;
 	bool firstShow_;
 };
 
