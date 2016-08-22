@@ -1,5 +1,5 @@
 #include "PageContentWidget.h"
-#include "PageItemWidget.h"
+#include "PageContentItemWidget.h"
 #include "FlowLayout.h"
 #include "SubmitContentDialog.h"
 #include "ASyncDownloadTask.h"
@@ -73,7 +73,7 @@ void PageContentWidget::mousePressEvent(QMouseEvent* e)
 		if (ui_.scrollArea1->rect().contains(pos))
 		{
 			QWidget* w = ui_.scrollArea1->childAt(pos);
-			PageItemWidget* pi = qobject_cast<PageItemWidget*>(w);
+			PageContentItemWidget* pi = qobject_cast<PageContentItemWidget*>(w);
 			if (pi)
 			{
 				Rpc::ContentInfo ci;
@@ -184,7 +184,7 @@ void PageContentWidget::onRefresh()
 void PageContentWidget::onImageLoaded(const QString& id, int index, const QPixmap& image)
 {
 	if (index == 0) {
-		PageItemWidget* pi = pageItems_.value(id, 0);
+		PageContentItemWidget* pi = pageItems_.value(id, 0);
 		if (pi) {
 			pi->setBackground(image);
 		}
@@ -209,7 +209,7 @@ void PageContentWidget::showMore(int count)
 		{
 			const Rpc::ContentItem& item = items.at(i);
 
-			PageItemWidget* pi = new PageItemWidget(this);
+			PageContentItemWidget* pi = new PageContentItemWidget(this);
 			pi->setFixedSize(QSize(300, 300));
 			pi->setId(item.id.c_str());
 			pi->setText(item.title.c_str());

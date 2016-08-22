@@ -1,18 +1,18 @@
-#ifndef PAGEITEMWIDGET_HEADER_
-#define PAGEITEMWIDGET_HEADER_
+#ifndef PAGECONTENTITEMWIDGET_HEADER_
+#define PAGECONTENTITEMWIDGET_HEADER_
 
 #include <QWidget>
 #include <QImage>
 #include <QBoxLayout>
 #include <QString>
 
-class PageItemWidget : public QWidget {
+class PageContentItemWidget : public QWidget {
 private:
 	Q_OBJECT
 
 public:
-	explicit PageItemWidget(QWidget* parent = 0);
-	~PageItemWidget();
+	explicit PageContentItemWidget(QWidget* parent = 0);
+	~PageContentItemWidget();
 
 	void setId(const QString&);
 	QString id() const;
@@ -35,5 +35,5 @@ private:
 	QPixmap scaledBg_;
 };
 
-#endif // PAGEITEMWIDGET_HEADER_
+#endif // PAGECONTENTITEMWIDGET_HEADER_
 

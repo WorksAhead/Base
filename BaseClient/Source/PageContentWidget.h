@@ -16,7 +16,7 @@
 // forward declaration
 class ASyncDownloadTask;
 class FlowLayout;
-class PageItemWidget;
+class PageContentItemWidget;
 class ContentWidget;
 
 class PageContentWidget : public QWidget {
@@ -55,7 +55,7 @@ private:
 
 	Rpc::ContentBrowserPrx browser_;
 
-	QMap<QString, PageItemWidget*> pageItems_;
+	QMap<QString, PageContentItemWidget*> pageItems_;
 
 	Ui::PageContentWidget ui_;
 	bool firstShow_;
