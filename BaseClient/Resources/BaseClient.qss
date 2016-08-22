@@ -323,7 +323,7 @@ QWidget#FlowWidget {
 	background: rgb(30, 30, 30);
 }
 
-PageWidget {
+PageContentWidget {
 	background: rgb(30, 30, 30);
 }
 

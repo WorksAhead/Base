@@ -1,4 +1,4 @@
-#include "PageWidget.h"
+#include "PageContentWidget.h"
 #include "PageItemWidget.h"
 #include "FlowLayout.h"
 #include "SubmitContentDialog.h"
@@ -21,7 +21,7 @@ namespace fs = boost::filesystem;
 
 #define ITEMS_PER_REQUEST 20
 
-PageWidget::PageWidget(ContextPtr context, const QString& name, QWidget* parent) : QWidget(parent), context_(context), name_(name)
+PageContentWidget::PageContentWidget(ContextPtr context, const QString& name, QWidget* parent) : QWidget(parent), context_(context), name_(name)
 {
 	ui_.setupUi(this);
 
@@ -45,23 +45,23 @@ PageWidget::PageWidget(ContextPtr context, const QString& name, QWidget* parent)
 	ui_.scrollArea1->setWidget(flowWidget);
 	ui_.scrollArea2->setWidget(content_);
 
-	QObject::connect(ui_.scrollArea1->verticalScrollBar(), &QScrollBar::valueChanged, this, &PageWidget::onScroll);
-	QObject::connect(ui_.backButton, &QPushButton::clicked, this, &PageWidget::onBack);
-	QObject::connect(ui_.categoryBox, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &PageWidget::onRefresh);
-	QObject::connect(ui_.refreshButton, &QPushButton::clicked, this, &PageWidget::onRefresh);
+	QObject::connect(ui_.scrollArea1->verticalScrollBar(), &QScrollBar::valueChanged, this, &PageContentWidget::onScroll);
+	QObject::connect(ui_.backButton, &QPushButton::clicked, this, &PageContentWidget::onBack);
+	QObject::connect(ui_.categoryBox, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &PageContentWidget::onRefresh);
+	QObject::connect(ui_.refreshButton, &QPushButton::clicked, this, &PageContentWidget::onRefresh);
 
-	QObject::connect(ui_.submitButton, &QPushButton::clicked, this, &PageWidget::submit);
+	QObject::connect(ui_.submitButton, &QPushButton::clicked, this, &PageContentWidget::submit);
 
-	QObject::connect(context_->contentImageLoader, &ContentImageLoader::loaded, this, &PageWidget::onImageLoaded);
+	QObject::connect(context_->contentImageLoader, &ContentImageLoader::loaded, this, &PageContentWidget::onImageLoaded);
 
 	firstShow_ = true;
 }
 
-PageWidget::~PageWidget()
+PageContentWidget::~PageContentWidget()
 {
 }
 
-void PageWidget::mousePressEvent(QMouseEvent* e)
+void PageContentWidget::mousePressEvent(QMouseEvent* e)
 {
 	if (e->button() == Qt::LeftButton)
 	{
@@ -123,7 +123,7 @@ void PageWidget::mousePressEvent(QMouseEvent* e)
 	}
 }
 
-void PageWidget::showEvent(QShowEvent* e)
+void PageContentWidget::showEvent(QShowEvent* e)
 {
 	if (firstShow_) {
 		onRefresh();
@@ -131,7 +131,7 @@ void PageWidget::showEvent(QShowEvent* e)
 	}
 }
 
-void PageWidget::paintEvent(QPaintEvent* e)
+void PageContentWidget::paintEvent(QPaintEvent* e)
 {
 	QStyleOption opt;
 	opt.init(this);
@@ -139,7 +139,7 @@ void PageWidget::paintEvent(QPaintEvent* e)
 	style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
-void PageWidget::onScroll(int position)
+void PageContentWidget::onScroll(int position)
 {
 	if (position == ui_.scrollArea1->verticalScrollBar()->maximum()) {
 		if (browser_) {
@@ -148,7 +148,7 @@ void PageWidget::onScroll(int position)
 	}
 }
 
-void PageWidget::onBack()
+void PageContentWidget::onBack()
 {
 	ui_.backButton->setVisible(false);
 	ui_.categoryBox->setVisible(true);
@@ -158,7 +158,7 @@ void PageWidget::onBack()
 	ui_.stackedWidget->setCurrentIndex(0);
 }
 
-void PageWidget::onRefresh()
+void PageContentWidget::onRefresh()
 {
 	clear();
 
@@ -181,7 +181,7 @@ void PageWidget::onRefresh()
 	}
 }
 
-void PageWidget::onImageLoaded(const QString& id, int index, const QPixmap& image)
+void PageContentWidget::onImageLoaded(const QString& id, int index, const QPixmap& image)
 {
 	if (index == 0) {
 		PageItemWidget* pi = pageItems_.value(id, 0);
@@ -196,7 +196,7 @@ void PageWidget::onImageLoaded(const QString& id, int index, const QPixmap& imag
 	}
 }
 
-void PageWidget::showMore(int count)
+void PageContentWidget::showMore(int count)
 {
 	while (count > 0)
 	{
@@ -227,14 +227,14 @@ void PageWidget::showMore(int count)
 	}
 }
 
-void PageWidget::submit()
+void PageContentWidget::submit()
 {
 	SubmitContentDialog d(context_, this);
 	d.setPage(name_);
 	d.exec();
 }
 
-void PageWidget::clear()
+void PageContentWidget::clear()
 {
 	pageItems_.clear();
 

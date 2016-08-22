@@ -1,5 +1,5 @@
-#ifndef PAGEWIDGET_HEADER_
-#define PAGEWIDGET_HEADER_
+#ifndef PAGECONTENTWIDGET_HEADER_
+#define PAGECONTENTWIDGET_HEADER_
 
 #include "ui_PageWidget.h"
 
@@ -19,7 +19,7 @@ class FlowLayout;
 class PageItemWidget;
 class ContentWidget;
 
-class PageWidget : public QWidget {
+class PageContentWidget : public QWidget {
 private:
 	Q_OBJECT
 
@@ -27,8 +27,8 @@ private:
 	typedef QPair<QString, int> ImageIndex;
 
 public:
-	PageWidget(ContextPtr context, const QString& name, QWidget* parent = 0);
-	~PageWidget();
+	PageContentWidget(ContextPtr context, const QString& name, QWidget* parent = 0);
+	~PageContentWidget();
 
 protected:
 	virtual void mousePressEvent(QMouseEvent*);
@@ -61,5 +61,5 @@ private:
 	bool firstShow_;
 };
 
-#endif // PAGEWIDGET_HEADER_
+#endif // PAGECONTENTWIDGET_HEADER_
 
