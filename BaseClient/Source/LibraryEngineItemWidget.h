@@ -1,5 +1,5 @@
-#ifndef ENGINEITEMWIDGET_HEADER_
-#define ENGINEITEMWIDGET_HEADER_
+#ifndef LIBRARYENGINEITEMWIDGET_HEADER_
+#define LIBRARYENGINEITEMWIDGET_HEADER_
 
 #include "Context.h"
 
@@ -35,5 +35,5 @@ private:
 	QPair<QString, QString> engineVersion_;
 };
 
-#endif // ENGINEITEMWIDGET_HEADER_
+#endif // LIBRARYENGINEITEMWIDGET_HEADER_
 

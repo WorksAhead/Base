@@ -1,4 +1,4 @@
-#include "ProjectItemWidget.h"
+#include "LibraryProjectItemWidget.h"
 #include "CreateProjectDialog.h"
 #include "QtUtils.h"
 
@@ -20,7 +20,7 @@
 
 namespace fs = boost::filesystem;
 
-ProjectItemWidget::ProjectItemWidget(ContextPtr context, QWidget* parent) : QWidget(parent), context_(context)
+LibraryProjectItemWidget::LibraryProjectItemWidget(ContextPtr context, QWidget* parent) : QWidget(parent), context_(context)
 {
 	setAutoFillBackground(true);
 	ui_.setupUi(this);
@@ -32,57 +32,57 @@ ProjectItemWidget::ProjectItemWidget(ContextPtr context, QWidget* parent) : QWid
 
 	QAction* removeAction = menu->addAction("Remove");
 
-	QObject::connect(ui_.openButton, &QPushButton::clicked, this, &ProjectItemWidget::onOpen);
-	QObject::connect(removeAction, &QAction::triggered, this, &ProjectItemWidget::onRemove);
+	QObject::connect(ui_.openButton, &QPushButton::clicked, this, &LibraryProjectItemWidget::onOpen);
+	QObject::connect(removeAction, &QAction::triggered, this, &LibraryProjectItemWidget::onRemove);
 
 	updateTips();
 }
 
-ProjectItemWidget::~ProjectItemWidget()
+LibraryProjectItemWidget::~LibraryProjectItemWidget()
 {
 }
 
-void ProjectItemWidget::setContentId(const QString& id)
+void LibraryProjectItemWidget::setContentId(const QString& id)
 {
 	contentId_ = id;
 }
 
-const QString& ProjectItemWidget::contentId() const
+const QString& LibraryProjectItemWidget::contentId() const
 {
 	return contentId_;
 }
 
-void ProjectItemWidget::setProjectId(const QString& id)
+void LibraryProjectItemWidget::setProjectId(const QString& id)
 {
 	projectId_ = id;
 }
 
-const QString& ProjectItemWidget::projectId() const
+const QString& LibraryProjectItemWidget::projectId() const
 {
 	return projectId_;
 }
 
-void ProjectItemWidget::setName(const QString& text)
+void LibraryProjectItemWidget::setName(const QString& text)
 {
 	ui_.nameLabel->setText(text);
 	updateTips();
 }
 
-QString ProjectItemWidget::name() const
+QString LibraryProjectItemWidget::name() const
 {
 	return ui_.nameLabel->text();
 }
 
-void ProjectItemWidget::setImage(const QPixmap& pixmap)
+void LibraryProjectItemWidget::setImage(const QPixmap& pixmap)
 {
 	ui_.thumbnailViewer->setPixmap(pixmap);
 }
 
-void ProjectItemWidget::mousePressEvent(QMouseEvent*)
+void LibraryProjectItemWidget::mousePressEvent(QMouseEvent*)
 {
 }
 
-void ProjectItemWidget::mouseDoubleClickEvent(QMouseEvent* e)
+void LibraryProjectItemWidget::mouseDoubleClickEvent(QMouseEvent* e)
 {
 	if (e->button() == Qt::LeftButton)
 	{
@@ -106,11 +106,11 @@ void ProjectItemWidget::mouseDoubleClickEvent(QMouseEvent* e)
 	}
 }
 
-void ProjectItemWidget::resizeEvent(QResizeEvent*)
+void LibraryProjectItemWidget::resizeEvent(QResizeEvent*)
 {
 }
 
-void ProjectItemWidget::paintEvent(QPaintEvent*)
+void LibraryProjectItemWidget::paintEvent(QPaintEvent*)
 {
 	QStyleOption opt;
 	opt.init(this);
@@ -118,7 +118,7 @@ void ProjectItemWidget::paintEvent(QPaintEvent*)
 	style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
-void ProjectItemWidget::onOpen()
+void LibraryProjectItemWidget::onOpen()
 {
 	ProjectInfo pi;
 	if (!context_->getProject(pi, projectId_.toStdString())) {
@@ -187,7 +187,7 @@ void ProjectItemWidget::onOpen()
 	}
 }
 
-void ProjectItemWidget::onRemove()
+void LibraryProjectItemWidget::onRemove()
 {
 	QMessageBox mb(QMessageBox::Question, "Base",
 		tr("Are you sure you want to remove this project ?\nWarning: This operation cannot be undone."),
@@ -205,7 +205,7 @@ void ProjectItemWidget::onRemove()
 	context_->removeProject(projectId_.toStdString(), false/*mb.checkBox()->isChecked()*/);
 }
 
-void ProjectItemWidget::updateTips()
+void LibraryProjectItemWidget::updateTips()
 {
 	QString tips;
 

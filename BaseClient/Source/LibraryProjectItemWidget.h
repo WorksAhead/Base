@@ -1,17 +1,17 @@
-#ifndef PROJECTITEMWIDGET_HEADER_
-#define PROJECTITEMWIDGET_HEADER_
+#ifndef LIBRARYPROJECTITEMWIDGET_HEADER_
+#define LIBRARYPROJECTITEMWIDGET_HEADER_
 
 #include "Context.h"
 
-#include "ui_ProjectItemWidget.h"
+#include "ui_LibraryProjectItemWidget.h"
 
-class ProjectItemWidget : public QWidget {
+class LibraryProjectItemWidget : public QWidget {
 private:
 	Q_OBJECT
 
 public:
-	ProjectItemWidget(ContextPtr context, QWidget* parent = 0);
-	~ProjectItemWidget();
+	LibraryProjectItemWidget(ContextPtr context, QWidget* parent = 0);
+	~LibraryProjectItemWidget();
 
 	void setContentId(const QString& id);
 	const QString& contentId() const;
@@ -39,10 +39,10 @@ private:
 
 private:
 	ContextPtr context_;
-	Ui::ProjectItemWidget ui_;
+	Ui::LibraryProjectItemWidget ui_;
 	QString contentId_;
 	QString projectId_;
 };
 
-#endif // PROJECTITEMWIDGET_HEADER_
+#endif // LIBRARYPROJECTITEMWIDGET_HEADER_
 

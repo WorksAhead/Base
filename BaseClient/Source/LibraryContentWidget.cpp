@@ -1,5 +1,5 @@
 #include "LibraryContentWidget.h"
-#include "ProjectItemWidget.h"
+#include "LibraryProjectItemWidget.h"
 #include "LibraryContentItemWidget.h"
 #include "ContentImageLoader.h"
 
@@ -83,13 +83,13 @@ void LibraryContentWidget::addProject(const QString& id)
 	ProjectInfo pi;
 	if (context_->getProject(pi, id.toStdString()))
 	{
-		ProjectItemWidget* w = new ProjectItemWidget(context_);
+		LibraryProjectItemWidget* w = new LibraryProjectItemWidget(context_);
 		w->setContentId(pi.contentId.c_str());
 		w->setProjectId(pi.id.c_str());
 		w->setName(QString::fromLocal8Bit(pi.name.c_str()));
 		int idx = 0;
 		while (idx < projectsLayout_->count()) {
-			ProjectItemWidget* w = (ProjectItemWidget*)projectsLayout_->itemAt(idx)->widget();
+			LibraryProjectItemWidget* w = (LibraryProjectItemWidget*)projectsLayout_->itemAt(idx)->widget();
 			if (pi.name < w->name().toLocal8Bit().data()) {
 				break;
 			}
@@ -104,7 +104,7 @@ void LibraryContentWidget::addProject(const QString& id)
 
 void LibraryContentWidget::removeProject(const QString& id)
 {
-	ProjectItemWidget* w = projectItemWidgets_.value(id, 0);
+	LibraryProjectItemWidget* w = projectItemWidgets_.value(id, 0);
 	if (w) {
 		w->deleteLater();
 		projectsLayout_->removeWidget(w);
@@ -186,7 +186,7 @@ void LibraryContentWidget::refresh()
 
 	for (ProjectInfo& pi : projectList)
 	{
-		ProjectItemWidget* w = new ProjectItemWidget(context_);
+		LibraryProjectItemWidget* w = new LibraryProjectItemWidget(context_);
 		w->setContentId(pi.contentId.c_str());
 		w->setProjectId(pi.id.c_str());
 		w->setName(QString::fromLocal8Bit(pi.name.c_str()));
@@ -206,8 +206,8 @@ void LibraryContentWidget::onImageLoaded(const QString& id, int index, const QPi
 
 	auto it = projectItemsOfContentItem_.find(id);
 	if (it != projectItemsOfContentItem_.end()) {
-		QList<ProjectItemWidget*>& list = *it;
-		for (ProjectItemWidget* p : list) {
+		QList<LibraryProjectItemWidget*>& list = *it;
+		for (LibraryProjectItemWidget* p : list) {
 			p->setImage(image);
 		}
 	}

@@ -10,7 +10,7 @@
 #include <QList>
 
 // forward declaration
-class ProjectItemWidget;
+class LibraryProjectItemWidget;
 class LibraryContentItemWidget;
 
 class LibraryContentWidget : public QWidget {
@@ -46,8 +46,8 @@ private:
 	bool firstShow_;
 
 	QMap<QString, LibraryContentItemWidget*> contentItemWidgets_;
-	QMap<QString, ProjectItemWidget*> projectItemWidgets_;
-	QMap<QString, QList<ProjectItemWidget*>> projectItemsOfContentItem_;
+	QMap<QString, LibraryProjectItemWidget*> projectItemWidgets_;
+	QMap<QString, QList<LibraryProjectItemWidget*>> projectItemsOfContentItem_;
 };
 
 #endif // LIBRARYCONTENTWIDGET_HEADER_

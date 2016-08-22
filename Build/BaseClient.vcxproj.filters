@@ -174,12 +174,6 @@
     <CustomBuild Include="..\BaseClient\Source\CreateProjectDialog.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\ProjectItemWidget.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\ProjectItemWidget.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="..\BaseClient\Source\LibraryEngineWidget.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
@@ -217,6 +211,12 @@
       <Filter>Form Files</Filter>
     </CustomBuild>
     <CustomBuild Include="..\BaseClient\Source\LibraryContentItemWidget.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\LibraryProjectItemWidget.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\LibraryProjectItemWidget.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>
@@ -713,21 +713,6 @@
     <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_CreateProjectDialog.cpp">
       <Filter>Generated Files\Release_x64</Filter>
     </ClCompile>
-    <ClCompile Include="..\BaseClient\Source\ProjectItemWidget.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Debug\moc_ProjectItemWidget.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Debug\moc_ProjectItemWidget.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_ProjectItemWidget.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_ProjectItemWidget.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
-    </ClCompile>
     <ClCompile Include="..\BaseClient\Source\LibraryEngineWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -834,6 +819,21 @@
       <Filter>Generated Files\Release_Win32</Filter>
     </ClCompile>
     <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_LibraryContentItemWidget.cpp">
+      <Filter>Generated Files\Release_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\Source\LibraryProjectItemWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Debug\moc_LibraryProjectItemWidget.cpp">
+      <Filter>Generated Files\Debug_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Debug\moc_LibraryProjectItemWidget.cpp">
+      <Filter>Generated Files\Debug_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_LibraryProjectItemWidget.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_LibraryProjectItemWidget.cpp">
       <Filter>Generated Files\Release_x64</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1026,9 +1026,6 @@
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_CreateProjectDialog.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_ProjectItemWidget.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_LibraryEngineWidget.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
@@ -1048,6 +1045,9 @@
       <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_LibraryContentItemWidget.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_LibraryProjectItemWidget.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>
