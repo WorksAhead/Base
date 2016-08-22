@@ -11,7 +11,7 @@
 
 // forward declaration
 class ProjectItemWidget;
-class ContentItemWidget;
+class LibraryContentItemWidget;
 
 class LibraryContentWidget : public QWidget {
 private:
@@ -45,7 +45,7 @@ private:
 	FlowLayout* contentsLayout_;
 	bool firstShow_;
 
-	QMap<QString, ContentItemWidget*> contentItemWidgets_;
+	QMap<QString, LibraryContentItemWidget*> contentItemWidgets_;
 	QMap<QString, ProjectItemWidget*> projectItemWidgets_;
 	QMap<QString, QList<ProjectItemWidget*>> projectItemsOfContentItem_;
 };

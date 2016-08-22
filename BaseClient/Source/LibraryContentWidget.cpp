@@ -1,6 +1,6 @@
 #include "LibraryContentWidget.h"
 #include "ProjectItemWidget.h"
-#include "ContentItemWidget.h"
+#include "LibraryContentItemWidget.h"
 #include "ContentImageLoader.h"
 
 #include <QScrollArea>
@@ -53,14 +53,14 @@ void LibraryContentWidget::addContent(const QString& id)
 	int i = 0;
 
 	while (i < contentsLayout_->count()) {
-		ContentItemWidget* w = (ContentItemWidget*)contentsLayout_->itemAt(i)->widget();
+		LibraryContentItemWidget* w = (LibraryContentItemWidget*)contentsLayout_->itemAt(i)->widget();
 		if (ci.title < w->title().toStdString()) {
 			break;
 		}
 		++i;
 	}
 
-	ContentItemWidget* w = new ContentItemWidget(context_);
+	LibraryContentItemWidget* w = new LibraryContentItemWidget(context_);
 	w->setContentId(id);
 	w->setTitle(ci.title.c_str());
 	contentsLayout_->insertWidget(i, w);
@@ -70,7 +70,7 @@ void LibraryContentWidget::addContent(const QString& id)
 
 void LibraryContentWidget::removeContent(const QString& id)
 {
-	ContentItemWidget* w = contentItemWidgets_.value(id, 0);
+	LibraryContentItemWidget* w = contentItemWidgets_.value(id, 0);
 	if (w) {
 		w->deleteLater();
 		contentsLayout_->removeWidget(w);
@@ -173,7 +173,7 @@ void LibraryContentWidget::refresh()
 
 	for (const TitleIdPair& p : contentList)
 	{
-		ContentItemWidget* w = new ContentItemWidget(context_);
+		LibraryContentItemWidget* w = new LibraryContentItemWidget(context_);
 		w->setContentId(p.second.c_str());
 		w->setTitle(p.first.c_str());
 		contentsLayout_->addWidget(w);
@@ -199,7 +199,7 @@ void LibraryContentWidget::refresh()
 
 void LibraryContentWidget::onImageLoaded(const QString& id, int index, const QPixmap& image)
 {
-	ContentItemWidget* w = contentItemWidgets_.value(id, 0);
+	LibraryContentItemWidget* w = contentItemWidgets_.value(id, 0);
 	if (w && index == 0) {
 		w->setImage(image);
 	}

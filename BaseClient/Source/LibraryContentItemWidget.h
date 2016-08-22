@@ -3,15 +3,15 @@
 
 #include "Context.h"
 
-#include "ui_ContentItemWidget.h"
+#include "ui_LibraryContentItemWidget.h"
 
-class ContentItemWidget : public QWidget {
+class LibraryContentItemWidget : public QWidget {
 private:
 	Q_OBJECT
 
 public:
-	ContentItemWidget(ContextPtr context, QWidget* parent = 0);
-	~ContentItemWidget();
+	LibraryContentItemWidget(ContextPtr context, QWidget* parent = 0);
+	~LibraryContentItemWidget();
 
 	void setContentId(const QString& id);
 	const QString& contentId() const;
@@ -35,7 +35,7 @@ private:
 
 private:
 	ContextPtr context_;
-	Ui::ContentItemWidget ui_;
+	Ui::LibraryContentItemWidget ui_;
 	QString contentId_;
 };
 

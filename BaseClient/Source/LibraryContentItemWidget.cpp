@@ -1,4 +1,4 @@
-#include "ContentItemWidget.h"
+#include "LibraryContentItemWidget.h"
 #include "CreateProjectDialog.h"
 
 #include <QPainter>
@@ -14,7 +14,7 @@
 
 namespace fs = boost::filesystem;
 
-ContentItemWidget::ContentItemWidget(ContextPtr context, QWidget* parent) : QWidget(parent), context_(context)
+LibraryContentItemWidget::LibraryContentItemWidget(ContextPtr context, QWidget* parent) : QWidget(parent), context_(context)
 {
 	setAutoFillBackground(true);
 	ui_.setupUi(this);
@@ -24,49 +24,49 @@ ContentItemWidget::ContentItemWidget(ContextPtr context, QWidget* parent) : QWid
 
 	QAction* removeAction = menu->addAction("Remove");
 
-	QObject::connect(ui_.createButton, &QPushButton::clicked, this, &ContentItemWidget::onCreate);
-	QObject::connect(removeAction, &QAction::triggered, this, &ContentItemWidget::onRemove);
+	QObject::connect(ui_.createButton, &QPushButton::clicked, this, &LibraryContentItemWidget::onCreate);
+	QObject::connect(removeAction, &QAction::triggered, this, &LibraryContentItemWidget::onRemove);
 }
 
-ContentItemWidget::~ContentItemWidget()
+LibraryContentItemWidget::~LibraryContentItemWidget()
 {
 }
 
-void ContentItemWidget::setContentId(const QString& id)
+void LibraryContentItemWidget::setContentId(const QString& id)
 {
 	contentId_ = id;
 	updateTips();
 }
 
-const QString& ContentItemWidget::contentId() const
+const QString& LibraryContentItemWidget::contentId() const
 {
 	return contentId_;
 }
 
-void ContentItemWidget::setTitle(const QString& text)
+void LibraryContentItemWidget::setTitle(const QString& text)
 {
 	ui_.titleLabel->setText(text);
 }
 
-QString ContentItemWidget::title() const
+QString LibraryContentItemWidget::title() const
 {
 	return ui_.titleLabel->text();
 }
 
-void ContentItemWidget::setImage(const QPixmap& pixmap)
+void LibraryContentItemWidget::setImage(const QPixmap& pixmap)
 {
 	ui_.thumbnailViewer->setPixmap(pixmap);
 }
 
-void ContentItemWidget::mousePressEvent(QMouseEvent*)
+void LibraryContentItemWidget::mousePressEvent(QMouseEvent*)
 {
 }
 
-void ContentItemWidget::resizeEvent(QResizeEvent*)
+void LibraryContentItemWidget::resizeEvent(QResizeEvent*)
 {
 }
 
-void ContentItemWidget::paintEvent(QPaintEvent*)
+void LibraryContentItemWidget::paintEvent(QPaintEvent*)
 {
 	QStyleOption opt;
 	opt.init(this);
@@ -74,7 +74,7 @@ void ContentItemWidget::paintEvent(QPaintEvent*)
 	style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
-void ContentItemWidget::onCreate()
+void LibraryContentItemWidget::onCreate()
 {
 	CreateProjectDialog d;
 
@@ -92,7 +92,7 @@ void ContentItemWidget::onCreate()
 	context_->createProject(contentId_.toStdString(), title().toLocal8Bit().data(), d.location().toLocal8Bit().data());
 }
 
-void ContentItemWidget::onRemove()
+void LibraryContentItemWidget::onRemove()
 {
 	const int rc = QMessageBox::question(
 		0, "Base",
@@ -115,7 +115,7 @@ void ContentItemWidget::onRemove()
 	}
 }
 
-void ContentItemWidget::updateTips()
+void LibraryContentItemWidget::updateTips()
 {
 	QString tips;
 
