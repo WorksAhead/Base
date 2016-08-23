@@ -130,7 +130,7 @@ module Rpc
 		ErrorCode updateContent(string id, out ContentSubmitter* submitter);
 		ErrorCode removeContent(string id);
 
-		ErrorCode browseEngineVersions(out EngineVersionBrowser* browser);
+		ErrorCode browseEngineVersions(bool all, out EngineVersionBrowser* browser);
 		ErrorCode downloadEngineVersion(string name, string version, out Downloader* downloader);
 		ErrorCode removeEngineVersion(string name, string version);
 		ErrorCode submitEngineVersion(string name, string version, out EngineVersionSubmitter* submitter);

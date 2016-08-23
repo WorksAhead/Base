@@ -20,6 +20,9 @@ public:
 	explicit ManageWidget(ContextPtr, QWidget* parent = 0);
 	~ManageWidget();
 
+protected:
+	virtual void paintEvent(QPaintEvent*);
+
 private:
 	ManageContentWidget* manageContent_;
 	ManageEngineWidget* manageEngine_;

@@ -15,7 +15,7 @@ public:
 	explicit RpcEngineVersionBrowserImpl(CenterPtr);
 	~RpcEngineVersionBrowserImpl();
 
-	Rpc::ErrorCode init();
+	Rpc::ErrorCode init(bool all = false);
 
 	virtual void destroy(const Ice::Current&);
 

@@ -251,14 +251,14 @@ Rpc::ErrorCode RpcSessionImpl::removeContent(const std::string& id, const Ice::C
 	return Rpc::ec_success;
 }
 
-Rpc::ErrorCode RpcSessionImpl::browseEngineVersions(Rpc::EngineVersionBrowserPrx& browserPrx, const Ice::Current& c)
+Rpc::ErrorCode RpcSessionImpl::browseEngineVersions(bool all, Rpc::EngineVersionBrowserPrx& browserPrx, const Ice::Current& c)
 {
 	boost::recursive_mutex::scoped_lock lock(sync_);
 	checkIsDestroyed();
 
 	RpcEngineBrowserImplPtr browser = new RpcEngineVersionBrowserImpl(context_->center());
 
-	Rpc::ErrorCode ec = browser->init();
+	Rpc::ErrorCode ec = browser->init(all);
 	if (ec != Rpc::ec_success) {
 		return ec;
 	}

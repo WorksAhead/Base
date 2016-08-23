@@ -7,6 +7,7 @@
 #include "ManageCategoryWidget.h"
 
 #include <QBoxLayout>
+#include <QPainter>
 #include <QTextEdit>
 
 ManageWidget::ManageWidget(ContextPtr context, QWidget* parent) : QWidget(parent), context_(context)
@@ -32,7 +33,7 @@ ManageWidget::ManageWidget(ContextPtr context, QWidget* parent) : QWidget(parent
 	p->setCurrentIndex(0);
 
 	QBoxLayout* layout = new QBoxLayout(QBoxLayout::TopToBottom);
-	layout->setMargin(0);
+	layout->setContentsMargins(0, 0, 6, 0);
 	layout->setSpacing(0);
 	layout->addWidget(p);
 	setLayout(layout);
@@ -40,5 +41,13 @@ ManageWidget::ManageWidget(ContextPtr context, QWidget* parent) : QWidget(parent
 
 ManageWidget::~ManageWidget()
 {
+}
+
+void ManageWidget::paintEvent(QPaintEvent* e)
+{
+	QStyleOption opt;
+	opt.init(this);
+	QPainter p(this);
+	style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 

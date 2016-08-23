@@ -76,7 +76,7 @@ void ManageEngineWidget::onShowAll()
 void ManageEngineWidget::onRefresh()
 {
 	ui_.engineList->clear();
-	context_->session->browseEngineVersions(browser_);
+	context_->session->browseEngineVersions(true, browser_);
 	if (browser_) {
 		showMore(ITEMS_PER_REQUEST);
 	}

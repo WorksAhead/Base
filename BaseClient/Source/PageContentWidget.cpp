@@ -34,7 +34,7 @@ PageContentWidget::PageContentWidget(ContextPtr context, const QString& name, QW
 		ui_.categoryBox->addItem(category.c_str());
 	}
 
-	flowLayout_ = new FlowLayout(0);
+	flowLayout_ = new FlowLayout(0, 10, 10);
 
 	content_ = new PageContentContentWidget(context_);
 

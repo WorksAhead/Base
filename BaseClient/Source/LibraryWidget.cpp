@@ -4,6 +4,7 @@
 #include "LibraryEngineWidget.h"
 
 #include <QBoxLayout>
+#include <QPainter>
 #include <QTextEdit>
 
 LibraryWidget::LibraryWidget(ContextPtr context, QWidget* parent) : QWidget(parent), context_(context)
@@ -17,7 +18,7 @@ LibraryWidget::LibraryWidget(ContextPtr context, QWidget* parent) : QWidget(pare
 	p->setCurrentIndex(0);
 
 	QBoxLayout* layout = new QBoxLayout(QBoxLayout::TopToBottom);
-	layout->setMargin(0);
+	layout->setContentsMargins(0, 0, 6, 0);
 	layout->setSpacing(0);
 	layout->addWidget(p);
 	setLayout(layout);
@@ -55,5 +56,13 @@ void LibraryWidget::addEngine(const QString& engineName, const QString& engineVe
 void LibraryWidget::removeEngine(const QString& engineName, const QString& engineVersion)
 {
 	libraryEngine_->removeEngine(engineName, engineVersion);
+}
+
+void LibraryWidget::paintEvent(QPaintEvent* e)
+{
+	QStyleOption opt;
+	opt.init(this);
+	QPainter p(this);
+	style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 

@@ -25,6 +25,9 @@ public Q_SLOTS:
 	void addEngine(const QString& engineName, const QString& engineVersion);
 	void removeEngine(const QString& engineName, const QString& engineVersion);
 
+protected:
+	virtual void paintEvent(QPaintEvent*);
+
 private:
 	ContextPtr context_;
 

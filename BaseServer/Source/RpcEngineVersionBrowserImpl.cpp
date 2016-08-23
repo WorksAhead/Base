@@ -10,9 +10,18 @@ RpcEngineVersionBrowserImpl::~RpcEngineVersionBrowserImpl()
 {
 }
 
-Rpc::ErrorCode RpcEngineVersionBrowserImpl::init()
+Rpc::ErrorCode RpcEngineVersionBrowserImpl::init(bool all)
 {
-	s_.reset(new SQLite::Statement(*center_->db(), "SELECT * FROM EngineVersions ORDER BY UpTime DESC"));
+	std::ostringstream oss;
+	oss << "SELECT * FROM EngineVersions";
+
+	if (!all) {
+		oss << " WHERE State=" << sqlText("Normal");
+	}
+
+	oss << " ORDER BY UpTime DESC";
+
+	s_.reset(new SQLite::Statement(*center_->db(), oss.str()));
 
 	return Rpc::ec_success;
 }

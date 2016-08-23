@@ -265,7 +265,6 @@ QListWidget#VTabList {
 	border-top: 0;
 	border-left: 0;
 	border-bottom: 0;
-	/*border-right: 1px solid rgb(20, 20, 20);*/
 	background-color: rgb(30, 30, 30);
 	font-size: 16px;
 }
@@ -327,37 +326,44 @@ PageContentWidget {
 	background: rgb(30, 30, 30);
 }
 
+PageEngineWidget {
+	background: rgb(30, 30, 30);
+}
+
+LibraryWidget {
+	background: rgb(30, 30, 30);
+}
+
+ManageWidget {
+	background: rgb(30, 30, 30);
+}
+
 ManageContentWidget {
 	background: rgb(30, 30, 30);
-	/*border: 2px solid rgb(20, 20, 20);*/
 }
 
 ManageEngineWidget {
 	background: rgb(30, 30, 30);
-	/*border: 2px solid rgb(20, 20, 20);*/
 }
 
 ManageUserWidget {
 	background: rgb(30, 30, 30);
-	/*border: 2px solid rgb(20, 20, 20);*/
 }
 
 ManagePageWidget {
 	background: rgb(30, 30, 30);
-	/*border: 2px solid rgb(20, 20, 20);*/
 }
 
 ManageCategoryWidget {
 	background: rgb(30, 30, 30);
-	/*border: 2px solid rgb(20, 20, 20);*/
 }
 
 QWidget#LibraryContentWidget {
-	background: rgb(20, 20, 20);
+	background: rgb(30, 30, 30);
 }
 
 QWidget#LibraryEngineWidget {
-	background: rgb(20, 20, 20);
+	background: rgb(30, 30, 30);
 }
 
 ASyncTaskWidget, ASyncTaskWidget[selected="false"] {	

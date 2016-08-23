@@ -1,5 +1,6 @@
 #include "BaseClient.h"
 #include "PageContentWidget.h"
+#include "PageEngineWidget.h"
 #include "LibraryWidget.h"
 #include "ManageWidget.h"
 #include "ASyncInstallEngineTask.h"
@@ -223,6 +224,8 @@ BaseClient::BaseClient(Rpc::SessionPrx session)
 		std::string name = boost::erase_last_copy(page, "*");
 		tabWidget_->addTab(new PageContentWidget(context_, page.c_str()), name.c_str());
 	}
+
+	tabWidget_->addTab(new PageEngineWidget(context_, "Engine"), "Engine");
 
 	library_ = new LibraryWidget(context_);
 	tabWidget_->addTab(library_, "Library");

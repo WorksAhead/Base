@@ -16,10 +16,6 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
 
-#include <sstream>
-
-#include <windows.h>
-
 namespace fs = boost::filesystem;
 
 LibraryEngineItemWidget::LibraryEngineItemWidget(ContextPtr context, QWidget* parent) : QWidget(parent), context_(context)

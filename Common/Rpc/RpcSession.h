@@ -4856,79 +4856,79 @@ private:
     
 public:
 
-    ::Rpc::ErrorCode browseEngineVersions(::Rpc::EngineVersionBrowserPrx& __p_browser)
+    ::Rpc::ErrorCode browseEngineVersions(bool __p_all, ::Rpc::EngineVersionBrowserPrx& __p_browser)
     {
-        return browseEngineVersions(__p_browser, 0);
+        return browseEngineVersions(__p_all, __p_browser, 0);
     }
-    ::Rpc::ErrorCode browseEngineVersions(::Rpc::EngineVersionBrowserPrx& __p_browser, const ::Ice::Context& __ctx)
+    ::Rpc::ErrorCode browseEngineVersions(bool __p_all, ::Rpc::EngineVersionBrowserPrx& __p_browser, const ::Ice::Context& __ctx)
     {
-        return browseEngineVersions(__p_browser, &__ctx);
+        return browseEngineVersions(__p_all, __p_browser, &__ctx);
     }
 #ifdef ICE_CPP11
     ::Ice::AsyncResultPtr
-    begin_browseEngineVersions(const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::EngineVersionBrowserPrx&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    begin_browseEngineVersions(bool __p_all, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::EngineVersionBrowserPrx&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
     {
-        return __begin_browseEngineVersions(0, __response, __exception, __sent);
+        return __begin_browseEngineVersions(__p_all, 0, __response, __exception, __sent);
     }
     ::Ice::AsyncResultPtr
-    begin_browseEngineVersions(const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    begin_browseEngineVersions(bool __p_all, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
     {
-        return begin_browseEngineVersions(0, ::Ice::newCallback(__completed, __sent), 0);
+        return begin_browseEngineVersions(__p_all, 0, ::Ice::newCallback(__completed, __sent), 0);
     }
     ::Ice::AsyncResultPtr
-    begin_browseEngineVersions(const ::Ice::Context& __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::EngineVersionBrowserPrx&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    begin_browseEngineVersions(bool __p_all, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::EngineVersionBrowserPrx&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
     {
-        return __begin_browseEngineVersions(&__ctx, __response, __exception, __sent);
+        return __begin_browseEngineVersions(__p_all, &__ctx, __response, __exception, __sent);
     }
     ::Ice::AsyncResultPtr
-    begin_browseEngineVersions(const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    begin_browseEngineVersions(bool __p_all, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
     {
-        return begin_browseEngineVersions(&__ctx, ::Ice::newCallback(__completed, __sent));
+        return begin_browseEngineVersions(__p_all, &__ctx, ::Ice::newCallback(__completed, __sent));
     }
     
 private:
 
-    ::Ice::AsyncResultPtr __begin_browseEngineVersions(const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::EngineVersionBrowserPrx&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent);
+    ::Ice::AsyncResultPtr __begin_browseEngineVersions(bool __p_all, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::EngineVersionBrowserPrx&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent);
     
 public:
 #endif
 
-    ::Ice::AsyncResultPtr begin_browseEngineVersions()
+    ::Ice::AsyncResultPtr begin_browseEngineVersions(bool __p_all)
     {
-        return begin_browseEngineVersions(0, ::IceInternal::__dummyCallback, 0);
+        return begin_browseEngineVersions(__p_all, 0, ::IceInternal::__dummyCallback, 0);
     }
 
-    ::Ice::AsyncResultPtr begin_browseEngineVersions(const ::Ice::Context& __ctx)
+    ::Ice::AsyncResultPtr begin_browseEngineVersions(bool __p_all, const ::Ice::Context& __ctx)
     {
-        return begin_browseEngineVersions(&__ctx, ::IceInternal::__dummyCallback, 0);
+        return begin_browseEngineVersions(__p_all, &__ctx, ::IceInternal::__dummyCallback, 0);
     }
 
-    ::Ice::AsyncResultPtr begin_browseEngineVersions(const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    ::Ice::AsyncResultPtr begin_browseEngineVersions(bool __p_all, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
     {
-        return begin_browseEngineVersions(0, __del, __cookie);
+        return begin_browseEngineVersions(__p_all, 0, __del, __cookie);
     }
 
-    ::Ice::AsyncResultPtr begin_browseEngineVersions(const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    ::Ice::AsyncResultPtr begin_browseEngineVersions(bool __p_all, const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
     {
-        return begin_browseEngineVersions(&__ctx, __del, __cookie);
+        return begin_browseEngineVersions(__p_all, &__ctx, __del, __cookie);
     }
 
-    ::Ice::AsyncResultPtr begin_browseEngineVersions(const ::Rpc::Callback_Session_browseEngineVersionsPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    ::Ice::AsyncResultPtr begin_browseEngineVersions(bool __p_all, const ::Rpc::Callback_Session_browseEngineVersionsPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
     {
-        return begin_browseEngineVersions(0, __del, __cookie);
+        return begin_browseEngineVersions(__p_all, 0, __del, __cookie);
     }
 
-    ::Ice::AsyncResultPtr begin_browseEngineVersions(const ::Ice::Context& __ctx, const ::Rpc::Callback_Session_browseEngineVersionsPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    ::Ice::AsyncResultPtr begin_browseEngineVersions(bool __p_all, const ::Ice::Context& __ctx, const ::Rpc::Callback_Session_browseEngineVersionsPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
     {
-        return begin_browseEngineVersions(&__ctx, __del, __cookie);
+        return begin_browseEngineVersions(__p_all, &__ctx, __del, __cookie);
     }
 
     ::Rpc::ErrorCode end_browseEngineVersions(::Rpc::EngineVersionBrowserPrx& __p_browser, const ::Ice::AsyncResultPtr&);
     
 private:
 
-    ::Rpc::ErrorCode browseEngineVersions(::Rpc::EngineVersionBrowserPrx&, const ::Ice::Context*);
-    ::Ice::AsyncResultPtr begin_browseEngineVersions(const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
+    ::Rpc::ErrorCode browseEngineVersions(bool, ::Rpc::EngineVersionBrowserPrx&, const ::Ice::Context*);
+    ::Ice::AsyncResultPtr begin_browseEngineVersions(bool, const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
     
 public:
 
@@ -6086,7 +6086,7 @@ public:
     virtual ::Rpc::ErrorCode removeContent(const ::std::string&, const ::Ice::Current& = ::Ice::Current()) = 0;
     ::Ice::DispatchStatus ___removeContent(::IceInternal::Incoming&, const ::Ice::Current&);
 
-    virtual ::Rpc::ErrorCode browseEngineVersions(::Rpc::EngineVersionBrowserPrx&, const ::Ice::Current& = ::Ice::Current()) = 0;
+    virtual ::Rpc::ErrorCode browseEngineVersions(bool, ::Rpc::EngineVersionBrowserPrx&, const ::Ice::Current& = ::Ice::Current()) = 0;
     ::Ice::DispatchStatus ___browseEngineVersions(::IceInternal::Incoming&, const ::Ice::Current&);
 
     virtual ::Rpc::ErrorCode downloadEngineVersion(const ::std::string&, const ::std::string&, ::Rpc::DownloaderPrx&, const ::Ice::Current& = ::Ice::Current()) = 0;
