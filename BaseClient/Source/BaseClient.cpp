@@ -791,7 +791,7 @@ void BaseClient::initDb()
 {
 	fs::path p = fs::path(userPath()) / "BaseClient.db";
 
-	db_.reset(new SQLite::Database(p.string().c_str(), SQLITE_OPEN_READWRITE|SQLITE_OPEN_CREATE));
+	db_.reset(new SQLite::Database(fromLocal8bit(p.string()).c_str(), SQLITE_OPEN_READWRITE|SQLITE_OPEN_CREATE));
 
 	db_->exec("CREATE TABLE IF NOT EXISTS InstalledEngines ("
 		"Name TEXT COLLATE NOCASE, Version TEXT COLLATE NOCASE)");
