@@ -190,6 +190,7 @@
     <ClInclude Include="..\BaseServer\Source\Center.h" />
     <ClInclude Include="..\BaseServer\Source\Context.h" />
     <ClInclude Include="..\BaseServer\Source\Datetime.h" />
+    <ClInclude Include="..\BaseServer\Source\PathUtils.h" />
     <ClInclude Include="..\BaseServer\Source\RpcContentBrowserImpl.h" />
     <ClInclude Include="..\BaseServer\Source\RpcContentSubmitterImpl.h" />
     <ClInclude Include="..\BaseServer\Source\RpcEngineVersionBrowserImpl.h" />

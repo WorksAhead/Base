@@ -189,6 +189,9 @@ BaseClient::BaseClient(Rpc::SessionPrx session)
 	if (!fs::exists(libraryPath()) && !fs::create_directories(libraryPath())) {
 		throw std::runtime_error("Failed to create directory");
 	}
+	if (!fs::exists(outputPath()) && !fs::create_directories(outputPath())) {
+		throw std::runtime_error("Failed to create directory");
+	}
 
 	initDb();
 	loadDownloadedContentsFromDb();
@@ -356,9 +359,6 @@ void BaseClient::setupEngine(const EngineVersion& v)
 	args.removeFirst();
 
 	fs::path stdOutputFilename = fs::path(outputPath()) / (v.first + "-" + v.second + "-Setup.txt");
-	if (!fs::exists(stdOutputFilename.parent_path())) {
-		fs::create_directories(stdOutputFilename.parent_path());
-	}
 
 	QProcess p;
 
@@ -402,9 +402,6 @@ void BaseClient::unSetupEngine(const EngineVersion& v)
 	args.removeFirst();
 
 	fs::path stdOutputFilename = fs::path(outputPath()) / (v.first + "-" + v.second + "-UnSetup.txt");
-	if (!fs::exists(stdOutputFilename.parent_path())) {
-		fs::create_directories(stdOutputFilename.parent_path());
-	}
 
 	QProcess p;
 

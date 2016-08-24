@@ -5,6 +5,7 @@
 #include "RpcContentSubmitterImpl.h"
 #include "RpcContentBrowserImpl.h"
 #include "RpcUserBrowserImpl.h"
+#include "PathUtils.h"
 
 #include <Ice/Ice.h>
 
@@ -324,10 +325,10 @@ Rpc::ErrorCode RpcSessionImpl::removeEngineVersion(const std::string& name, cons
 
 	context_->center()->changeEngineVersionState(name, version, "Removed");
 
-	const std::string& filename = context_->center()->getEnginePath(name, version);
+	std::string fn = normalizePath(context_->center()->getEnginePath(name, version));
 
 	boost::system::error_code ec;
-	fs::remove(filename, ec);
+	fs::remove(fn, ec);
 
 	return Rpc::ec_success;
 }

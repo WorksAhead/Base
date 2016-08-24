@@ -1,4 +1,5 @@
 #include "RpcContentSubmitterImpl.h"
+#include "PathUtils.h"
 
 #include <Ice/Ice.h>
 
@@ -27,7 +28,8 @@ Rpc::ErrorCode RpcContentSubmitterImpl::init(int mode, const std::string& id)
 		id_ = id.empty() ? context_->center()->generateUuid() : id;
 		base_ = context_->center()->getContentPath(id_);
 
-		if (!fs::create_directories(base_)) {
+		boost::system::error_code ec;
+		if (!fs::create_directories(normalizePath(base_), ec)) {
 			return Rpc::ec_file_io_error;
 		}
 

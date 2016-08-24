@@ -1,4 +1,5 @@
 #include "Package.h"
+#include "PathUtils.h"
 
 #include <zip.h>
 #include <unzip.h>
@@ -84,9 +85,9 @@ int Packer::executeStep()
 		}
 
 		Path path = srcFiles_[currentIdx_];
-		Path fullPath = basePath_ / path;
-
-		stream_.reset(new std::fstream(fullPath.string().c_str(), std::ios::in|std::ios::binary));
+		Path fullPath = normalizePath(basePath_ / path);
+		
+		stream_.reset(new std::fstream(fullPath.c_str(), std::ios::in|std::ios::binary));
 		if (!stream_->is_open()) {
 			errorMessage_ = "Failed to open \"" + fullPath.string() + "\"";
 			state_ = state_failed;
@@ -276,10 +277,11 @@ int Unpacker::executeStep()
 		}
 
 		Path path(buf_.data(), buf_.data() + fileInfo.size_filename);
-		Path fullPath = outPath_ / path;
+		Path fullPath = normalizePath(outPath_ / path);
 
 		if (!fs::exists(fullPath.parent_path())) {
-			if (!fs::create_directories(fullPath.parent_path())) {
+			boost::system::error_code ec;
+			if (!fs::create_directories(fullPath.parent_path(), ec)) {
 				errorMessage_ = "Failed to create directory \"" + fullPath.parent_path().string() + "\"";
 				state_ = state_failed;
 				return -1;

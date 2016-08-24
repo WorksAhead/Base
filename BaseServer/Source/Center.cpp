@@ -1,6 +1,7 @@
 #include "Center.h"
 #include "SQLiteUtil.h"
 #include "Datetime.h"
+#include "PathUtils.h"
 
 #include <SQLiteCpp/Database.h>
 #include <SQLiteCpp/Transaction.h>
@@ -20,12 +21,18 @@ Center::Center()
 	engineDir_ = "EngineVersions";
 	contentDir_ = "Contents";
 
-	if (!fs::exists(engineDir_) && !fs::create_directories(engineDir_)) {
-		throw std::runtime_error("failed to create directory");
+	if (!fs::exists(engineDir_)) {
+		boost::system::error_code ec;
+		if (!fs::create_directories(normalizePath(engineDir_), ec)) {
+			throw std::runtime_error("failed to create directory");
+		}
 	}
 
-	if (!fs::exists(contentDir_) && !fs::create_directories(contentDir_)) {
-		throw std::runtime_error("failed to create directory");
+	if (!fs::exists(contentDir_)) {
+		boost::system::error_code ec;
+		if (!fs::create_directories(normalizePath(contentDir_), ec)) {
+			throw std::runtime_error("failed to create directory");
+		}
 	}
 
 	db_.reset(new SQLite::Database("BaseServer.db", SQLITE_OPEN_READWRITE|SQLITE_OPEN_CREATE));

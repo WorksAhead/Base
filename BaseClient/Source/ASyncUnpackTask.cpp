@@ -1,6 +1,5 @@
 #include "ASyncUnpackTask.h"
 #include "Package.h"
-#include "FileScanner.h"
 #include "ErrorMessage.h"
 #include "Crc.h"
 

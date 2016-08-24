@@ -1,6 +1,8 @@
 #ifndef FILESCANNER_HEADER_
 #define FILESCANNER_HEADER_
 
+#include "PathUtils.h"
+
 #include <boost/filesystem.hpp>
 
 #include <list>
@@ -11,7 +13,7 @@ public:
 	typedef boost::filesystem::directory_iterator DirectoryIterator;
 
 public:
-	FileScanner(const Path& path, boost::system::error_code& ec) : stack_(1, DirectoryIterator(path, ec))
+	FileScanner(const Path& path, boost::system::error_code& ec) : stack_(1, DirectoryIterator(normalizePath(path), ec))
 	{
 	}
 
@@ -21,7 +23,7 @@ public:
 
 		if (current != DirectoryIterator())
 		{
-			const Path& path = current->path();
+			const Path& path = normalizePath(current->path());
 
 			if (boost::filesystem::is_regular_file(path, ec))
 			{
@@ -31,7 +33,7 @@ public:
 			}
 			else if (boost::filesystem::is_directory(path, ec))
 			{
-				stack_.push_back(DirectoryIterator(path));
+				stack_.push_back(DirectoryIterator(normalizePath(path)));
 				try {
 					base_ = base_ / path.leaf();
 				}

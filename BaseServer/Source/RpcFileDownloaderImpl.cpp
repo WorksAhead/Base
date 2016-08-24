@@ -1,6 +1,7 @@
 #include "RpcFileDownloaderImpl.h"
 #include "SQLiteUtil.h"
 #include "Datetime.h"
+#include "PathUtils.h"
 
 #include <Ice/Ice.h>
 
@@ -16,7 +17,9 @@ RpcFileDownloaderImpl::~RpcFileDownloaderImpl()
 
 Rpc::ErrorCode RpcFileDownloaderImpl::init(const std::string& filename)
 {
-	stream_.reset(new std::fstream(filename.c_str(), std::ios::in|std::ios::binary));
+	std::string fn = normalizePath(filename);
+
+	stream_.reset(new std::fstream(fn.c_str(), std::ios::in|std::ios::binary));
 	if (!stream_->is_open()) {
 		return Rpc::ec_file_io_error;
 	}

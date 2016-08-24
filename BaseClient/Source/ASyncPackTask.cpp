@@ -3,6 +3,7 @@
 #include "FileScanner.h"
 #include "ErrorMessage.h"
 #include "Crc.h"
+#include "PathUtils.h"
 
 #include <boost/filesystem.hpp>
 #include <boost/scope_exit.hpp>
@@ -100,9 +101,11 @@ void ASyncPackTask::run()
 
 	boost::system::error_code ec;
 
+	std::string path = normalizePath(path_);
+
 	std::vector<FileScanner::Path> srcFiles;
 
-	FileScanner scanner(path_, ec);
+	FileScanner scanner(path, ec);
 	CHECK_EC(ec);
 
 	sync_.lock();
@@ -144,7 +147,7 @@ void ASyncPackTask::run()
 		}
 	};
 
-	std::shared_ptr<Packer> packer(new Packer(package_, path_, srcFiles, level));
+	std::shared_ptr<Packer> packer(new Packer(package_, path, srcFiles, level));
 
 	sync_.lock();
 	infoBody_ = "Packing";

@@ -1484,7 +1484,9 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DNDEBUG -DQT_CORE_LIB -DQT_DLL -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS -D_WINSOCK_DEPRECATED_NO_WARNINGS "-I.\..\Ext\sqlite3" "-I.\..\Ext\SQLiteCpp\include" "-I.\..\Ext\zlib" "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtWebEngine" "-I$(QTDIR)\include\QtWebEngineWidgets" "-I.\..\BaseClient\GeneratedFiles" "-I.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I.\..\Common" "-I.\..\Common\Rpc" "-IC:\Work\_lib\boost_1_59_0" "-IC:\Work\_lib\Ice-3.6.2\include"</Command>
     </CustomBuild>
+    <ClInclude Include="..\BaseClient\Source\PathUtils.h" />
     <ClInclude Include="..\BaseClient\Source\QtUtils.h" />
+    <ClInclude Include="..\BaseClient\Source\SQLiteUtils.h" />
     <ClInclude Include="..\Common\Crc.h" />
     <ClInclude Include="..\Common\Rpc\RpcManagedObject.h" />
     <ClInclude Include="..\Common\Rpc\RpcTypedefs.h" />

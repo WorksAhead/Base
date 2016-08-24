@@ -1,8 +1,8 @@
 #include "ASyncUploadTask.h"
 #include "Package.h"
-#include "FileScanner.h"
 #include "ErrorMessage.h"
 #include "Crc.h"
+#include "PathUtils.h"
 
 #include <boost/filesystem.hpp>
 #include <boost/scope_exit.hpp>
@@ -93,14 +93,16 @@ void ASyncUploadTask::run()
 		}
 	};
 
+	std::string filename = normalizePath(filename_);
+
 	sync_.lock();
 	state_ = ASyncTask::state_running;
 	sync_.unlock();
 
-	std::fstream is(filename_.c_str(), std::ios::in|std::ios::binary);
+	std::fstream is(filename.c_str(), std::ios::in|std::ios::binary);
 	if (!is.is_open()) {
 		boost::mutex::scoped_lock lock(sync_);
-		infoBody_ = "Failed to open file \"" + filename_ + "\"";
+		infoBody_ = "Failed to open file \"" + filename + "\"";
 		state_ = ASyncTask::state_failed;
 		return;
 	}
@@ -167,7 +169,7 @@ void ASyncUploadTask::run()
 
 			if (!is.read(&buf.first[0], n)) {
 				boost::mutex::scoped_lock lock(sync_);
-				infoBody_ = "Failed to read file \"" + filename_ + "\"";
+				infoBody_ = "Failed to read file \"" + filename + "\"";
 				state_ = ASyncTask::state_failed;
 				return;
 			}

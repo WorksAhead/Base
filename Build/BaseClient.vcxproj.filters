@@ -1098,6 +1098,12 @@
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_PageEngineItemWidget.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\BaseClient\Source\SQLiteUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\Source\PathUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Common\Rpc\RpcErrorCode.ice">

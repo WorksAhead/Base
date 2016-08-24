@@ -2,7 +2,7 @@
 #define BASECLIENT_HEADER_
 
 #include "Context.h"
-#include "SQLiteUtil.h"
+#include "SQLiteUtils.h"
 
 #include "Window.h"
 #include "ui_DecoratorWidget.h"

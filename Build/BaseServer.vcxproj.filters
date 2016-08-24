@@ -200,6 +200,9 @@
     <ClInclude Include="..\BaseServer\Source\RpcEngineVersionSubmitterImpl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\BaseServer\Source\PathUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Common\Rpc\RpcErrorCode.ice">

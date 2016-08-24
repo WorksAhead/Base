@@ -1,4 +1,5 @@
 #include "RpcFileUploaderImpl.h"
+#include "PathUtils.h"
 
 #include <Crc.h>
 
@@ -19,19 +20,22 @@ RpcFileUploaderImpl::~RpcFileUploaderImpl()
 	}
 	if (!finished_ && !filename_.empty()) {
 		boost::system::error_code ec;
-		fs::remove(filename_, ec);
+		fs::remove(normalizePath(filename_), ec);
 	}
 }
 
 Rpc::ErrorCode RpcFileUploaderImpl::init(const std::string& filename)
 {
-	if (!fs::exists(fs::path(filename).parent_path())) {
-		if (!fs::create_directories(fs::path(filename).parent_path())) {
+	std::string fn = normalizePath(filename);
+
+	if (!fs::exists(fs::path(fn).parent_path())) {
+		boost::system::error_code ec;
+		if (!fs::create_directories(fs::path(fn).parent_path(), ec)) {
 			return Rpc::ec_file_io_error;
 		}
 	}
 
-	stream_.reset(new std::fstream(filename.c_str(), std::ios::out|std::ios::binary));
+	stream_.reset(new std::fstream(fn.c_str(), std::ios::out|std::ios::binary));
 	if (!stream_->is_open()) {
 		return Rpc::ec_file_io_error;
 	}
@@ -106,7 +110,9 @@ Rpc::ErrorCode RpcFileUploaderImpl::finish(Ice::Int crc32, const Ice::Current& c
 		return Rpc::ec_file_io_error;
 	}
 
-	stream_.reset(new std::fstream(filename_.c_str(), std::ios::in|std::ios::binary));
+	std::string fn = normalizePath(filename_);
+
+	stream_.reset(new std::fstream(fn.c_str(), std::ios::in|std::ios::binary));
 
 	if (!stream_->is_open()) {
 		return Rpc::ec_file_io_error;

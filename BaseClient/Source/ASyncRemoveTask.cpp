@@ -3,6 +3,7 @@
 #include "FileScanner.h"
 #include "ErrorMessage.h"
 #include "Crc.h"
+#include "PathUtils.h"
 
 #include <boost/filesystem.hpp>
 #include <boost/scope_exit.hpp>
@@ -94,74 +95,55 @@ void ASyncRemoveTask::run()
 	state_ = ASyncTask::state_running;
 	sync_.unlock();
 
-	boost::system::error_code ec;
-
-	std::vector<FileScanner::Path> srcFiles;
-
-	FileScanner scanner(path_, ec);
-	CHECK_EC(ec);
-
-	sync_.lock();
-	infoBody_ = "Scanning";
-	sync_.unlock();
-
-	for (;;)
-	{
-		sync_.lock();
-		if (cancelled_) {
-			infoBody_.clear();
-			state_ = ASyncTask::state_cancelled;
-			sync_.unlock();
-			return;
-		}
-		sync_.unlock();
-
-		FileScanner::Path path;
-
-		int ret = scanner.nextFile(path, ec);
-		CHECK_EC(ec);
-
-		if (ret > 0) {
-			srcFiles.push_back(path);
-		}
-		else if (ret < 0) {
-			break;
-		}
-	}
-
 	sync_.lock();
 	infoBody_ = "Removing";
 	sync_.unlock();
 
-	for (size_t i = 0; i < srcFiles.size(); ++i)
+	boost::system::error_code ec;
+
+	fs::path path = normalizePath(path_);
+
+	std::list<fs::directory_iterator> stack(1, fs::directory_iterator(path, ec));
+	CHECK_EC(ec);
+
+	for (;;)
 	{
-		sync_.lock();
-		if (cancelled_) {
-			infoBody_.clear();
-			state_ = ASyncTask::state_cancelled;
-			sync_.unlock();
-			return;
+		fs::directory_iterator& it = stack.back();
+
+		if (it != fs::directory_iterator())
+		{
+			fs::path p = normalizePath(it->path());
+
+			if (boost::filesystem::is_directory(p, ec))
+			{
+				CHECK_EC(ec);
+				stack.push_back(fs::directory_iterator(p, ec));
+				CHECK_EC(ec);
+			}
+			else
+			{
+				CHECK_EC(ec);
+				fs::remove(p, ec);
+				CHECK_EC(ec);
+				++it;
+			}
 		}
-		sync_.unlock();
+		else
+		{
+			stack.pop_back();
+			if (stack.empty()) {
+				break;
+			}
 
-		FileScanner::Path p = path_ / srcFiles[i] ;
+			fs::path p = normalizePath(stack.back()->path());
+			fs::remove(p, ec);
+			CHECK_EC(ec);
 
-		sync_.lock();
-		infoBody_ = "Removing " + p.generic_string();
-		sync_.unlock();
-
-		fs::remove(p, ec);
-		CHECK_EC(ec);
-
-		boost::mutex::scoped_lock lock(sync_);
-		progress_ = (double)i / (double)srcFiles.size() * 100.0;
+			++stack.back();
+		}
 	}
 
-	sync_.lock();
-	infoBody_ = "Removing " + path_;
-	sync_.unlock();
-
-	fs::remove_all(path_, ec);
+	fs::remove(path, ec);
 	CHECK_EC(ec);
 
 	sync_.lock();
