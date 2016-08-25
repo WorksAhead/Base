@@ -95,19 +95,25 @@ void ASyncRemoveTask::run()
 	state_ = ASyncTask::state_running;
 	sync_.unlock();
 
-	sync_.lock();
-	infoBody_ = "Removing";
-	sync_.unlock();
-
 	boost::system::error_code ec;
 
 	fs::path path = normalizePath(path_);
+	fs::path base;
 
 	std::list<fs::directory_iterator> stack(1, fs::directory_iterator(path, ec));
 	CHECK_EC(ec);
 
 	for (;;)
 	{
+		sync_.lock();
+		if (cancelled_) {
+			infoBody_.clear();
+			state_ = ASyncTask::state_cancelled;
+			sync_.unlock();
+			return;
+		}
+		sync_.unlock();
+
 		fs::directory_iterator& it = stack.back();
 
 		if (it != fs::directory_iterator())
@@ -119,10 +125,14 @@ void ASyncRemoveTask::run()
 				CHECK_EC(ec);
 				stack.push_back(fs::directory_iterator(p, ec));
 				CHECK_EC(ec);
+				base = base / p.leaf();
 			}
 			else
 			{
 				CHECK_EC(ec);
+				sync_.lock();
+				infoBody_ = "Removing " + (base / p.leaf()).string();
+				sync_.unlock();
 				fs::remove(p, ec);
 				CHECK_EC(ec);
 				++it;
@@ -131,11 +141,16 @@ void ASyncRemoveTask::run()
 		else
 		{
 			stack.pop_back();
+			base = base.parent_path();
+
 			if (stack.empty()) {
 				break;
 			}
 
 			fs::path p = normalizePath(stack.back()->path());
+			sync_.lock();
+			infoBody_ = "Removing " + (base / p.leaf()).string();
+			sync_.unlock();
 			fs::remove(p, ec);
 			CHECK_EC(ec);
 
@@ -143,6 +158,9 @@ void ASyncRemoveTask::run()
 		}
 	}
 
+	sync_.lock();
+	infoBody_ = "Removing " + path.leaf().string();
+	sync_.unlock();
 	fs::remove(path, ec);
 	CHECK_EC(ec);
 
