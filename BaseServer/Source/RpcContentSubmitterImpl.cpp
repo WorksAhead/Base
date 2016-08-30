@@ -29,7 +29,7 @@ Rpc::ErrorCode RpcContentSubmitterImpl::init(int mode, const std::string& id)
 		base_ = context_->center()->getContentPath(id_);
 
 		boost::system::error_code ec;
-		if (!fs::create_directories(normalizePath(base_), ec)) {
+		if (!fs::create_directories(makeSafePath(base_), ec)) {
 			return Rpc::ec_file_io_error;
 		}
 

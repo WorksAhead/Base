@@ -90,15 +90,15 @@ void ASyncDownloadTask::run()
 {
 	bool commit = false;
 
-	std::string filename = normalizePath(filename_);
+	std::string safeFilename = makeSafePath(filename_);
 
-	BOOST_SCOPE_EXIT_ALL(&commit, filename, this)
+	BOOST_SCOPE_EXIT_ALL(&commit, safeFilename, this)
 	{
 		downloader_->finish();
 		if (!commit) {
 			boost::system::error_code ec;
-			if (fs::exists(filename, ec)) {
-				fs::remove(filename, ec);
+			if (fs::exists(safeFilename, ec)) {
+				fs::remove(safeFilename, ec);
 			}
 		}
 	};
@@ -107,22 +107,24 @@ void ASyncDownloadTask::run()
 	state_ = ASyncTask::state_running;
 	sync_.unlock();
 
-	const fs::path& parentPath = fs::path(filename).parent_path();
+	const fs::path& parentPath = fs::path(filename_).parent_path();
+	const fs::path& safeParentPath = fs::path(safeFilename).parent_path();
 
-	if (!fs::exists(parentPath)) {
+	if (!fs::exists(safeParentPath)) {
 		boost::system::error_code ec;
-		if (!fs::create_directories(parentPath, ec)) {
+		if (!fs::create_directories(safeParentPath, ec)) {
 			boost::mutex::scoped_lock lock(sync_);
 			infoBody_ = "Failed to create directory \"" + parentPath.string() + "\"";
+
 			state_ = ASyncTask::state_failed;
 			return;
 		}
 	}
 
-	std::fstream os(filename.c_str(), std::ios::out|std::ios::binary);
+	std::fstream os(safeFilename.c_str(), std::ios::out|std::ios::binary);
 	if (!os.is_open()) {
 		boost::mutex::scoped_lock lock(sync_);
-		infoBody_ = "Failed to open file \"" + filename + "\"";
+		infoBody_ = "Failed to open file \"" + filename_ + "\"";
 		state_ = ASyncTask::state_failed;
 		return;
 	}
@@ -186,7 +188,7 @@ void ASyncDownloadTask::run()
 				}
 				if (!os.write((const char*)&buf[0], buf.size())) {
 					boost::mutex::scoped_lock lock(sync_);
-					infoBody_ = "Failed to write file \"" + filename + "\"";
+					infoBody_ = "Failed to write file \"" + filename_ + "\"";
 					state_ = ASyncTask::state_failed;
 					return;
 				}

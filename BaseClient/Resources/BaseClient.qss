@@ -330,7 +330,23 @@ PageEngineWidget {
 	background: rgb(30, 30, 30);
 }
 
+PageExtraWidget {
+	background: rgb(30, 30, 30);
+}
+
 LibraryWidget {
+	background: rgb(30, 30, 30);
+}
+
+QWidget#LibraryContentWidget {
+	background: rgb(30, 30, 30);
+}
+
+QWidget#LibraryEngineWidget {
+	background: rgb(30, 30, 30);
+}
+
+QWidget#LibraryExtraWidget {
 	background: rgb(30, 30, 30);
 }
 
@@ -355,14 +371,6 @@ ManagePageWidget {
 }
 
 ManageCategoryWidget {
-	background: rgb(30, 30, 30);
-}
-
-QWidget#LibraryContentWidget {
-	background: rgb(30, 30, 30);
-}
-
-QWidget#LibraryEngineWidget {
 	background: rgb(30, 30, 30);
 }
 

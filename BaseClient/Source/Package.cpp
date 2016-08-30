@@ -61,7 +61,8 @@ int Packer::executeStep()
 
 	if (state_ == state_open_package)
 	{
-		handle_ = zipOpen(packFile_.string().c_str(), APPEND_STATUS_CREATE);
+		std::string safePackFile = makeSafePath(packFile_);
+		handle_ = zipOpen(safePackFile.c_str(), APPEND_STATUS_CREATE);
 		if (!handle_) {
 			errorMessage_ = "Failed to create package file \"" + packFile_.string() + "\"";
 			state_ = state_failed;
@@ -85,9 +86,10 @@ int Packer::executeStep()
 		}
 
 		Path path = srcFiles_[currentIdx_];
-		Path fullPath = normalizePath(basePath_ / path);
+		Path fullPath = basePath_ / path;
+		Path safeFullPath = makeSafePath(basePath_ / path);
 		
-		stream_.reset(new std::fstream(fullPath.c_str(), std::ios::in|std::ios::binary));
+		stream_.reset(new std::fstream(safeFullPath.c_str(), std::ios::in|std::ios::binary));
 		if (!stream_->is_open()) {
 			errorMessage_ = "Failed to open \"" + fullPath.string() + "\"";
 			state_ = state_failed;
@@ -107,7 +109,7 @@ int Packer::executeStep()
 		zip_fileinfo zipFileInfo;
 		{
 			memset(&zipFileInfo, 0, sizeof(zip_fileinfo));
-			time_t lastWriteTime = fs::last_write_time(fullPath);
+			time_t lastWriteTime = fs::last_write_time(safeFullPath);
 			struct tm* ti = localtime(&lastWriteTime);
 			zipFileInfo.tmz_date.tm_year = ti->tm_year + 1900;
 			zipFileInfo.tmz_date.tm_mon = ti->tm_mon;
@@ -218,7 +220,8 @@ int Unpacker::executeStep()
 
 	if (state_ == state_open_package)
 	{
-		handle_ = unzOpen(packFile_.string().c_str());
+		std::string safePackFile = makeSafePath(packFile_);
+		handle_ = unzOpen(safePackFile.c_str());
 		if (!handle_) {
 			errorMessage_ = "Failed to open package file \"" + packFile_.string() + "\"";
 			state_ = state_failed;
@@ -277,18 +280,19 @@ int Unpacker::executeStep()
 		}
 
 		Path path(buf_.data(), buf_.data() + fileInfo.size_filename);
-		Path fullPath = normalizePath(outPath_ / path);
+		Path fullPath = outPath_ / path;
+		Path safeFullPath = makeSafePath(outPath_ / path);
 
-		if (!fs::exists(fullPath.parent_path())) {
+		if (!fs::exists(safeFullPath.parent_path())) {
 			boost::system::error_code ec;
-			if (!fs::create_directories(fullPath.parent_path(), ec)) {
+			if (!fs::create_directories(safeFullPath.parent_path(), ec)) {
 				errorMessage_ = "Failed to create directory \"" + fullPath.parent_path().string() + "\"";
 				state_ = state_failed;
 				return -1;
 			}
 		}
 
-		stream_.reset(new std::fstream(fullPath.string().c_str(), std::ios::out|std::ios::binary));
+		stream_.reset(new std::fstream(safeFullPath.string().c_str(), std::ios::out|std::ios::binary));
 		if (!stream_->is_open()) {
 			errorMessage_ = "Failed to open \"" + fullPath.string() + "\"";
 			state_ = state_failed;

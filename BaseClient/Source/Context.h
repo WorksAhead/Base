@@ -33,6 +33,15 @@ namespace ContentState {
 	};
 }
 
+namespace ExtraState {
+	enum State {
+		not_downloaded = 0,
+		downloading,
+		downloaded,
+		configuring,
+	};
+}
+
 struct ProjectInfo {
 	std::string id;
 	std::string contentId;
@@ -90,6 +99,7 @@ struct Context
 
 	std::function<std::string(const EngineVersion&)> enginePath;
 	std::function<std::string(const std::string&)> contentPath;
+	std::function<std::string(const std::string&)> extraPath;
 
 	std::function<void(const EngineVersion&)> installEngine;
 	std::function<void(const EngineVersion&)> setupEngine;
@@ -102,11 +112,18 @@ struct Context
 	std::function<void(const EngineVersion&)> removeEngineFromGui;
 
 	std::function<void(std::vector<std::string>&)> getDownloadedContentList;
-
 	std::function<int(const std::string&)> getContentState;
 	std::function<bool(const std::string&, int&, int)> changeContentState;
 	std::function<void(const std::string&)> addContentToGui;
 	std::function<void(const std::string&)> removeContentFromGui;
+
+	std::function<void(std::vector<std::string>&)> getDownloadedExtraList;
+	std::function<void(const std::string&)> installExtra;
+	std::function<void(const std::string&)> setupExtra;
+	std::function<int(const std::string&)> getExtraState;
+	std::function<bool(const std::string&, int&, int)> changeExtraState;
+	std::function<void(const std::string&)> addExtraToGui;
+	std::function<void(const std::string&)> removeExtraFromGui;
 
 	std::function<void(const std::string&, const std::string&, const std::string&)> createProject;
 	std::function<void(const std::string&, const std::string&, const std::string&, const std::map<std::string, std::string>& properties)> addProject;
@@ -120,6 +137,7 @@ struct Context
 	std::function<void(int, const std::string&)> prompt;
 	std::function<void(Rpc::ErrorCode)> promptRpcError;
 	std::function<void(const EngineVersion&, int)> promptEngineState;
+	std::function<void(const std::string&, int)> promptExtraState;
 };
 
 typedef std::shared_ptr<Context> ContextPtr;

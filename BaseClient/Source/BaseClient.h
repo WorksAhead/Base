@@ -44,6 +44,7 @@ private:
 
 	std::string enginePath(const EngineVersion&);
 	std::string contentPath(const std::string& id);
+	std::string extraPath(const std::string& id);
 
 	void installEngine(const EngineVersion&);
 	void setupEngine(const EngineVersion&);
@@ -54,9 +55,14 @@ private:
 	void getEngineList(std::vector<EngineVersion>&);
 
 	void getDownloadedContentList(std::vector<std::string>&);
-
 	int getContentState(const std::string& id);
 	bool changeContentState(const std::string& id, int& oldState, int newState);
+
+	void getDownloadedExtraList(std::vector<std::string>&);
+	void installExtra(const std::string& id);
+	void setupExtra(const std::string& id);
+	int getExtraState(const std::string& id);
+	bool changeExtraState(const std::string& id, int& oldState, int newState);
 
 	void createProject(const std::string& contentId, const std::string& title, const std::string& location);
 	void addProject(const std::string& id, const std::string& contentId, const std::string& location, const std::map<std::string, std::string>& properties);
@@ -72,15 +78,19 @@ private Q_SLOTS:
 	void removeContentFromGui(const std::string& contentId);
 	void addProjectToGui(const std::string& projectId);
 	void removeProjectFromGui(const std::string& projectId);
+	void addExtraToGui(const std::string& id);
+	void removeExtraFromGui(const std::string& id);
 	void prompt(int level, const std::string& message);
 	void promptRpcError(Rpc::ErrorCode);
 	void promptEngineState(const EngineVersion&, int);
+	void promptExtraState(const std::string& title, int);
 	void onShowTaskManager();
 
 private:
 	void initDb();
 	void loadDownloadedContentsFromDb();
 	void loadInstalledEnginesFromDb();
+	void loadDownloadedExtrasFromDb();
 	void loadProjectsFromDb();
 
 private:
@@ -104,6 +114,9 @@ private:
 	std::unordered_set<std::string> downloadedContentTabel_;
 	boost::recursive_mutex downloadedContentTabelSync_;
 
+	std::unordered_set<std::string> downloadedExtraTabel_;
+	boost::recursive_mutex downloadedExtraTabelSync_;
+
 	std::unordered_set<EngineVersion, EngineVersionHash, EngineVersionEq> installedEngineTabel_;
 	boost::recursive_mutex installedEngineTabelSync_;
 
@@ -112,6 +125,9 @@ private:
 
 	std::unordered_map<EngineVersion, int, EngineVersionHash, EngineVersionEq> engineStateTabel_;
 	boost::recursive_mutex engineStateTabelSync_;
+
+	std::unordered_map<std::string, int> extraStateTabel_;
+	boost::recursive_mutex extraStateTabelSync_;
 
 	std::unordered_map<std::string, ProjectInfo> projectTabel_;
 	boost::recursive_mutex projectTabelSync_;

@@ -17,9 +17,9 @@ RpcFileDownloaderImpl::~RpcFileDownloaderImpl()
 
 Rpc::ErrorCode RpcFileDownloaderImpl::init(const std::string& filename)
 {
-	std::string fn = normalizePath(filename);
+	std::string safeFilename = makeSafePath(filename);
 
-	stream_.reset(new std::fstream(fn.c_str(), std::ios::in|std::ios::binary));
+	stream_.reset(new std::fstream(safeFilename.c_str(), std::ios::in|std::ios::binary));
 	if (!stream_->is_open()) {
 		return Rpc::ec_file_io_error;
 	}

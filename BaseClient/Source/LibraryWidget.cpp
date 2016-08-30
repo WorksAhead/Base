@@ -2,6 +2,7 @@
 #include "VTabWidget.h"
 #include "LibraryContentWidget.h"
 #include "LibraryEngineWidget.h"
+#include "LibraryExtraWidget.h"
 
 #include <QBoxLayout>
 #include <QPainter>
@@ -11,10 +12,12 @@ LibraryWidget::LibraryWidget(ContextPtr context, QWidget* parent) : QWidget(pare
 {
 	libraryContent_ = new LibraryContentWidget(context_);
 	libraryEngine_ = new LibraryEngineWidget(context_);
+	libraryExtra_ = new LibraryExtraWidget(context_);
 
 	VTabWidget* p = new VTabWidget;
 	p->addTab("Content", libraryContent_);
 	p->addTab("Engine", libraryEngine_);
+	p->addTab("Extra", libraryExtra_);
 	p->setCurrentIndex(0);
 
 	QBoxLayout* layout = new QBoxLayout(QBoxLayout::TopToBottom);
@@ -56,6 +59,16 @@ void LibraryWidget::addEngine(const QString& engineName, const QString& engineVe
 void LibraryWidget::removeEngine(const QString& engineName, const QString& engineVersion)
 {
 	libraryEngine_->removeEngine(engineName, engineVersion);
+}
+
+void LibraryWidget::addExtra(const QString& id)
+{
+	libraryExtra_->addExtra(id);
+}
+
+void LibraryWidget::removeExtra(const QString& id)
+{
+	libraryExtra_->removeExtra(id);
 }
 
 void LibraryWidget::paintEvent(QPaintEvent* e)

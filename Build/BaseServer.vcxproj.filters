@@ -105,6 +105,15 @@
     <ClCompile Include="..\BaseServer\Source\RpcEngineVersionSubmitterImpl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\BaseServer\Source\PathUtils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseServer\Source\RpcExtraBrowserImpl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseServer\Source\RpcExtraSubmitterImpl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Common\Rpc\RpcErrorCode.h">
@@ -201,6 +210,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\BaseServer\Source\PathUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseServer\Source\RpcExtraBrowserImpl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseServer\Source\RpcExtraSubmitterImpl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -24,6 +24,8 @@ module Rpc
 		ec_content_does_not_exist,
 		ec_operation_failed,
 		ec_incomplete_engine_version,
+		ec_extra_does_not_exist,
+		ec_incomplete_extra,
 	};
 };
 

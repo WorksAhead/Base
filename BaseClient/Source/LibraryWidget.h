@@ -8,6 +8,7 @@
 // forward declaration
 class LibraryContentWidget;
 class LibraryEngineWidget;
+class LibraryExtraWidget;
 
 class LibraryWidget : public QWidget {
 private:
@@ -24,6 +25,8 @@ public Q_SLOTS:
 	void removeProject(const QString& id);
 	void addEngine(const QString& engineName, const QString& engineVersion);
 	void removeEngine(const QString& engineName, const QString& engineVersion);
+	void addExtra(const QString& id);
+	void removeExtra(const QString& id);
 
 protected:
 	virtual void paintEvent(QPaintEvent*);
@@ -33,6 +36,7 @@ private:
 
 	LibraryContentWidget* libraryContent_;
 	LibraryEngineWidget* libraryEngine_;
+	LibraryExtraWidget* libraryExtra_;
 };
 
 #endif // LIBRARYWIDGET_HEADER_

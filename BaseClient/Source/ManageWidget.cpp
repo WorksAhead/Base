@@ -2,6 +2,7 @@
 #include "VTabWidget.h"
 #include "ManageContentWidget.h"
 #include "ManageEngineWidget.h"
+#include "ManageExtraWidget.h"
 #include "ManageUserWidget.h"
 #include "ManagePageWidget.h"
 #include "ManageCategoryWidget.h"
@@ -20,11 +21,13 @@ ManageWidget::ManageWidget(ContextPtr context, QWidget* parent) : QWidget(parent
 	if (context_->currentUserGroup == "Admin")
 	{
 		manageEngine_ = new ManageEngineWidget(context_);
+		manageExtra_ = new ManageExtraWidget(context_);
 		manageUser_ = new ManageUserWidget(context_);
 		managePage_ = new ManagePageWidget(context_);
 		manageCategory_ = new ManageCategoryWidget(context_);
 
 		p->addTab("Engine", manageEngine_);
+		p->addTab("Extra", manageExtra_);
 		p->addTab("User", manageUser_);
 		p->addTab("Page", managePage_);
 		p->addTab("Category", manageCategory_);

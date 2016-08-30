@@ -20,17 +20,25 @@ Center::Center()
 {
 	engineDir_ = "EngineVersions";
 	contentDir_ = "Contents";
+	extraDir_ = "Extras";
 
 	if (!fs::exists(engineDir_)) {
 		boost::system::error_code ec;
-		if (!fs::create_directories(normalizePath(engineDir_), ec)) {
+		if (!fs::create_directories(makeSafePath(engineDir_), ec)) {
 			throw std::runtime_error("failed to create directory");
 		}
 	}
 
 	if (!fs::exists(contentDir_)) {
 		boost::system::error_code ec;
-		if (!fs::create_directories(normalizePath(contentDir_), ec)) {
+		if (!fs::create_directories(makeSafePath(contentDir_), ec)) {
+			throw std::runtime_error("failed to create directory");
+		}
+	}
+
+	if (!fs::exists(extraDir_)) {
+		boost::system::error_code ec;
+		if (!fs::create_directories(makeSafePath(extraDir_), ec)) {
 			throw std::runtime_error("failed to create directory");
 		}
 	}
@@ -52,6 +60,10 @@ Center::Center()
 		"EngineVersion TEXT, Startup TEXT, ImageCount INT, Desc TEXT, "
 		"User TEXT, UpTime DATETIME, State TEXT)");
 
+	db_->exec("CREATE TABLE IF NOT EXISTS Extras ("
+		"Id TEXT, Title TEXT, Setup TEXT, "
+		"User TEXT, UpTime DATETIME, Info TEXT, State TEXT)");
+
 	db_->exec("CREATE TABLE IF NOT EXISTS Info ("
 		"Key TEXT UNIQUE, Value TEXT)");
 
@@ -63,6 +75,9 @@ Center::Center()
 
 	db_->exec("CREATE INDEX IF NOT EXISTS IndexOfContents ON Contents ("
 		"Id, ParentId, Page, Category, EngineName, EngineVersion, User, UpTime, State)");
+
+	db_->exec("CREATE INDEX IF NOT EXISTS IndexOfExtras ON Extras ("
+		"Id, Title, User, UpTime, State)");
 
 	loadPagesFromDb();
 	loadCategoriesFromDb();
@@ -196,7 +211,20 @@ std::string Center::getContentPath(const std::string& id)
 	return path.string();
 }
 
-void Center::addContent(const Form& form, const std::string& id)
+std::string Center::getExtraPath(const std::string& id)
+{
+	std::vector<std::string> parts;
+	boost::split(parts, id, boost::is_any_of("-"));
+
+	fs::path path = extraDir();
+	for (const std::string& part : parts) {
+		path /= part;
+	}
+
+	return path.string();
+}
+
+bool Center::addContent(const Form& form, const std::string& id)
 {
 	std::ostringstream oss;
 	oss << "INSERT INTO Contents VALUES (";
@@ -215,11 +243,13 @@ void Center::addContent(const Form& form, const std::string& id)
 	oss << sqlText("Normal") << ")";
 
 	SQLite::Transaction t(*db_);
-	db_->exec(oss.str());
+	int n = db_->exec(oss.str());
 	t.commit();
+
+	return (n > 0);
 }
 
-void Center::updateContent(const Form& form, const std::string& id)
+bool Center::updateContent(const Form& form, const std::string& id)
 {
 	std::ostringstream oss;
 	oss << "UPDATE Contents SET ";
@@ -236,8 +266,10 @@ void Center::updateContent(const Form& form, const std::string& id)
 	oss << " WHERE Id=" << sqlText(id);
 
 	SQLite::Transaction t(*db_);
-	db_->exec(oss.str());
+	int n = db_->exec(oss.str());
 	t.commit();
+
+	return (n > 0);
 }
 
 bool Center::getContent(Form& form, const std::string& id)
@@ -373,6 +405,79 @@ bool Center::changeEngineVersionState(const std::string& name, const std::string
 	oss << sqlText(name);
 	oss << " AND Version=";
 	oss << sqlText(version);
+
+	SQLite::Transaction t(*db_);
+	int n = db_->exec(oss.str());
+	t.commit();
+
+	return (n > 0);
+}
+
+bool Center::addExtra(const Form& form, const std::string& id)
+{
+	std::ostringstream oss;
+	oss << "INSERT INTO Extras VALUES (";
+	oss << sqlText(id) << ", ";
+	oss << sqlText(form.at("Title")) << ", ";
+	oss << sqlText(form.at("Setup")) << ", ";
+	oss << sqlText(form.at("User")) << ", ";
+	oss << sqlText(getCurrentTimeString()) << ", ";
+	oss << sqlText(form.at("Info")) << ", ";
+	oss << sqlText("Normal") << ")";
+
+	SQLite::Transaction t(*db_);
+	int n = db_->exec(oss.str());
+	t.commit();
+
+	return (n > 0);
+}
+
+bool Center::updateExtra(const Form& form, const std::string& id)
+{
+	std::ostringstream oss;
+	oss << "UPDATE Extras SET ";
+	oss << "Title=" << sqlText(form.at("Title")) << ", ";
+	oss << "Setup=" << sqlText(form.at("Setup")) << ", ";
+	oss << "Info=" << sqlText(form.at("Info"));
+	oss << " WHERE Id=" << sqlText(id);
+
+	SQLite::Transaction t(*db_);
+	int n = db_->exec(oss.str());
+	t.commit();
+
+	return (n > 0);
+}
+
+bool Center::getExtra(Form& form, const std::string& id)
+{
+	std::ostringstream oss;
+	oss << "SELECT * FROM Extras";
+	oss << " WHERE ";
+	oss << "Id=" << sqlText(id);
+
+	SQLite::Statement s(*db_, oss.str());
+	if (!s.executeStep()) {
+		return false;
+	}
+
+	form["Id"] = s.getColumn("Id").getText();
+	form["Title"] = s.getColumn("Title").getText();
+	form["Setup"] = s.getColumn("Setup").getText();
+	form["User"] = s.getColumn("User").getText();
+	form["UpTime"] = s.getColumn("UpTime").getText();
+	form["Info"] = s.getColumn("Info").getText();
+	form["State"] = s.getColumn("State").getText();
+
+	return true;
+}
+
+bool Center::changeExtraState(const std::string& id, const std::string& state)
+{
+	std::ostringstream oss;
+	oss << "UPDATE Extras SET State=";
+	oss << sqlText(state);
+	oss << " WHERE Id=";
+	oss << sqlText(id);
 
 	SQLite::Transaction t(*db_);
 	int n = db_->exec(oss.str());

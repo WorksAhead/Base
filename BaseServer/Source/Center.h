@@ -37,14 +37,16 @@ public:
 
 	std::string engineDir() const { return engineDir_; }
 	std::string contentDir() const { return contentDir_; }
+	std::string extraDir() const { return extraDir_; }
 
 	std::string generateUuid();
 
 	std::string getEnginePath(const std::string& name, const std::string& version);
 	std::string getContentPath(const std::string& id);
+	std::string getExtraPath(const std::string& id);
 
-	void addContent(const Form& form, const std::string& id);
-	void updateContent(const Form& form, const std::string& id);
+	bool addContent(const Form& form, const std::string& id);
+	bool updateContent(const Form& form, const std::string& id);
 	bool getContent(Form& form, const std::string& id);
 	bool changeContentState(const std::string& id, const std::string& state);
 
@@ -53,6 +55,11 @@ public:
 	bool getEngineVersion(const std::string& name, const std::string& version, Form& form);
 	bool getEngineVersionState(const std::string& name, const std::string& version, std::string& outState);
 	bool changeEngineVersionState(const std::string& name, const std::string& version, const std::string& state);
+
+	bool addExtra(const Form& form, const std::string& id);
+	bool updateExtra(const Form& form, const std::string& id);
+	bool getExtra(Form& form, const std::string& id);
+	bool changeExtraState(const std::string& id, const std::string& state);
 
 	bool setUserGroup(const std::string& username, const std::string& group);
 	bool resetUserPassword(const std::string& username, const std::string& oldPassword, const std::string& newPassword);
@@ -69,6 +76,7 @@ private:
 	std::string baseDir_;
 	std::string engineDir_;
 	std::string contentDir_;
+	std::string extraDir_;
 
 	boost::uuids::random_generator uniquePathGen_;
 

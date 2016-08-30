@@ -1,5 +1,6 @@
 #include "ContentImageLoader.h"
 #include "ASyncDownloadTask.h"
+#include "QtUtils.h"
 
 #include <QTime>
 
@@ -94,7 +95,7 @@ void ContentImageLoader::onTick()
 			}
 
 			task = new ASyncDownloadTask(context_, downloader);
-			task->setFilename(makeImageFilename(imageIndex).toStdString());
+			task->setFilename(toLocal8bit(makeImageFilename(imageIndex)));
 			task->start();
 			imageLoadTasks_.insert(imageIndex, task);
 		}
@@ -116,7 +117,7 @@ QString ContentImageLoader::makeImageFilename(const ImageIndex& imageIndex)
 	else {
 		path /= imageIndex.first.toStdString() + "_image_" + std::to_string(imageIndex.second) + ".jpg";
 	}
-	return QString(path.string().c_str());
+	return QString::fromLocal8Bit(path.string().c_str());
 }
 
 void ContentImageLoader::setImage(const ImageIndex& imageIndex)

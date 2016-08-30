@@ -17,32 +17,6 @@ ManageContentWidget::ManageContentWidget(ContextPtr context, QWidget* parent) : 
 	ui_.setupUi(this);
 	ui_.contentList->header()->setSortIndicator(11, Qt::DescendingOrder);
 
-	/*QMenu* menu = new QMenu;
-	ui_.setGroupButton->setMenu(menu);
-
-	QAction* setUserGroupAction = menu->addAction("User Group");
-	QAction* setAdminGroupAction = menu->addAction("Admin Group");
-
-	QObject::connect(setUserGroupAction, &QAction::triggered, [this](){
-		QList<QTreeWidgetItem*> items = ui_.userList->selectedItems();
-		for (int i = 0; i < items.count(); ++i) {
-			Rpc::ErrorCode ec = context_->session->setUserGroup(items[i]->text(0).toStdString(), "User");
-			if (ec == Rpc::ec_success) {
-				items[i]->setText(1, "User");
-			}
-		}
-	});
-
-	QObject::connect(setAdminGroupAction, &QAction::triggered, [this](){
-		QList<QTreeWidgetItem*> items = ui_.userList->selectedItems();
-		for (int i = 0; i < items.count(); ++i) {
-			Rpc::ErrorCode ec = context_->session->setUserGroup(items[i]->text(0).toStdString(), "Admin");
-			if (ec == Rpc::ec_success) {
-				items[i]->setText(1, "Admin");
-			}
-		}
-	});*/
-
 	QObject::connect(ui_.showMoreButton, &QPushButton::clicked, this, &ManageContentWidget::onShowMore);
 	QObject::connect(ui_.showAllButton, &QPushButton::clicked, this, &ManageContentWidget::onShowAll);
 	QObject::connect(ui_.refreshButton, &QPushButton::clicked, this, &ManageContentWidget::onRefresh);

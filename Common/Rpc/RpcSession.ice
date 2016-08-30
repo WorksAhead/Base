@@ -54,6 +54,24 @@ module Rpc
 		ErrorCode next(int n, out EngineVersionSeq items);
 	};
 
+	struct ExtraInfo
+	{
+		string id;
+		string title;
+		string setup;
+		string user;
+		string uptime;
+		string info;
+		string state;
+	};
+
+	sequence<ExtraInfo> ExtraInfoSeq;
+
+	interface ExtraBrowser extends ManagedObject
+	{
+		ErrorCode next(int n, out ExtraInfoSeq items);
+	};
+
 	struct User
 	{
 		string username;
@@ -109,6 +127,16 @@ module Rpc
 		ErrorCode finish();
 	};
 
+	interface ExtraSubmitter extends ManagedObject
+	{
+		ErrorCode setTitle(string title);
+		ErrorCode setSetup(string setup);
+		ErrorCode setInfo(string info);
+		ErrorCode uploadExtra(out Uploader* uploader);
+		void cancel();
+		ErrorCode finish();
+	};
+
 	interface Session extends ManagedObject
 	{
 		void refresh();
@@ -136,6 +164,13 @@ module Rpc
 		ErrorCode submitEngineVersion(string name, string version, out EngineVersionSubmitter* submitter);
 		ErrorCode updateEngineVersion(string name, string version, out EngineVersionSubmitter* submitter);
 		ErrorCode getEngineVersion(string name, string version, out EngineVersionInfo engineVersion);
+
+		ErrorCode browseExtra(out ExtraBrowser* browser);
+		ErrorCode getExtraInfo(string id, out ExtraInfo info);
+		ErrorCode downloadExtra(string id, out Downloader* downloader);
+		ErrorCode submitExtra(out ExtraSubmitter* submitter);
+		ErrorCode updateExtra(string id, out ExtraSubmitter* submitter);
+		ErrorCode removeExtra(string id);
 
 		ErrorCode browseUsers(out UserBrowser* browser);
 		ErrorCode setUserGroup(string username, string group);

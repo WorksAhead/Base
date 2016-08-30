@@ -1,10 +1,12 @@
 #include "BaseClient.h"
 #include "PageContentWidget.h"
 #include "PageEngineWidget.h"
+#include "PageExtraWidget.h"
 #include "LibraryWidget.h"
 #include "ManageWidget.h"
 #include "ASyncInstallEngineTask.h"
 #include "ASyncRemoveEngineTask.h"
+#include "ASyncInstallExtraTask.h"
 #include "ASyncCreateProjectTask.h"
 #include "ASyncRemoveTask.h"
 #include "ContentImageLoader.h"
@@ -80,6 +82,7 @@ BaseClient::BaseClient(Rpc::SessionPrx session)
 	context_->libraryPath = std::bind(&BaseClient::libraryPath, this);
 	context_->enginePath = std::bind(&BaseClient::enginePath, this, std::placeholders::_1);
 	context_->contentPath = std::bind(&BaseClient::contentPath, this, std::placeholders::_1);
+	context_->extraPath = std::bind(&BaseClient::extraPath, this, std::placeholders::_1);
 	context_->installEngine = std::bind(&BaseClient::installEngine, this, std::placeholders::_1);
 	context_->setupEngine = std::bind(&BaseClient::setupEngine, this, std::placeholders::_1);
 	context_->unSetupEngine = std::bind(&BaseClient::unSetupEngine, this, std::placeholders::_1);
@@ -125,6 +128,30 @@ BaseClient::BaseClient(Rpc::SessionPrx session)
 		}
 		else {
 			QMetaObject::invokeMethod(this, "removeContentFromGui", Qt::BlockingQueuedConnection, Q_ARG(std::string, contentId));
+		}
+	};
+
+	context_->getDownloadedExtraList = std::bind(&BaseClient::getDownloadedExtraList, this, std::placeholders::_1);
+	context_->installExtra = std::bind(&BaseClient::installExtra, this, std::placeholders::_1);
+	context_->setupExtra = std::bind(&BaseClient::setupExtra, this, std::placeholders::_1);
+	context_->getExtraState = std::bind(&BaseClient::getExtraState, this, std::placeholders::_1);
+	context_->changeExtraState = std::bind(&BaseClient::changeExtraState, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+
+	context_->addExtraToGui = [guitid, this](const std::string& id){
+		if (QThread::currentThreadId() == guitid) {
+			addExtraToGui(id);
+		}
+		else {
+			QMetaObject::invokeMethod(this, "addExtraToGui", Qt::BlockingQueuedConnection, Q_ARG(std::string, id));
+		}
+	};
+
+	context_->removeExtraFromGui = [guitid, this](const std::string& id){
+		if (QThread::currentThreadId() == guitid) {
+			removeExtraFromGui(id);
+		}
+		else {
+			QMetaObject::invokeMethod(this, "removeExtraFromGui", Qt::BlockingQueuedConnection, Q_ARG(std::string, id));
 		}
 	};
 
@@ -180,6 +207,15 @@ BaseClient::BaseClient(Rpc::SessionPrx session)
 		}
 	};
 
+	context_->promptExtraState = [guitid, this](const std::string& title, int state){
+		if (QThread::currentThreadId() == guitid) {
+			promptExtraState(title, state);
+		}
+		else {
+			QMetaObject::invokeMethod(this, "promptExtraState", Qt::BlockingQueuedConnection, Q_ARG(std::string, title), Q_ARG(int, state));
+		}
+	};
+
 	if (!fs::exists(cachePath()) && !fs::create_directories(cachePath())) {
 		throw std::runtime_error("Failed to create directory");
 	}
@@ -196,6 +232,7 @@ BaseClient::BaseClient(Rpc::SessionPrx session)
 	initDb();
 	loadDownloadedContentsFromDb();
 	loadInstalledEnginesFromDb();
+	loadDownloadedExtrasFromDb();
 	loadProjectsFromDb();
 
 	taskManagerDialog_ = new ASyncTaskManagerDialog;
@@ -229,6 +266,8 @@ BaseClient::BaseClient(Rpc::SessionPrx session)
 	}
 
 	tabWidget_->addTab(new PageEngineWidget(context_, "Engine"), "Engine");
+
+	tabWidget_->addTab(new PageExtraWidget(context_, "Extra"), "Extra");
 
 	library_ = new LibraryWidget(context_);
 	tabWidget_->addTab(library_, "Library");
@@ -312,6 +351,14 @@ std::string BaseClient::contentPath(const std::string& id)
 	return path.string();
 }
 
+std::string BaseClient::extraPath(const std::string& id)
+{
+	fs::path path = libraryPath();
+	path /= "Extras";
+	path /= id;
+	return path.string();
+}
+
 void BaseClient::installEngine(const EngineVersion& v)
 {
 	int state = EngineState::not_installed;
@@ -366,6 +413,15 @@ void BaseClient::setupEngine(const EngineVersion& v)
 	p.setProcessChannelMode(QProcess::MergedChannels);
 	p.setStandardOutputFile(QString::fromLocal8Bit(stdOutputFilename.string().c_str()));
 	p.start(program, args);
+
+	if (!p.waitForStarted(-1)) {
+		context_->prompt(2, "Setup program of " + v.first + " " + v.second + " has failed to start.\n"
+			+ toLocal8bit(p.errorString()) + "\n" +
+			"As a result, this Engine may not function correctly.\n"
+			"Please contact administrator for help.");
+		return;
+	}
+
 	p.waitForFinished(-1);
 
 	if (p.exitStatus() != QProcess::NormalExit) {
@@ -567,6 +623,160 @@ bool BaseClient::changeContentState(const std::string& id, int& oldState, int ne
 	return true;
 }
 
+void BaseClient::getDownloadedExtraList(std::vector<std::string>& outList)
+{
+	outList.clear();
+	boost::recursive_mutex::scoped_lock lock(downloadedExtraTabelSync_);
+	for (const std::string& id : downloadedExtraTabel_) {
+		outList.push_back(id);
+	}
+}
+
+void BaseClient::installExtra(const std::string& id)
+{
+	Rpc::ErrorCode ec;
+
+	Rpc::ExtraInfo info;
+	if ((ec = context_->session->getExtraInfo(id, info)) != Rpc::ec_success) {
+		promptRpcError(ec);
+		return;
+	}
+
+	int state = ExtraState::not_downloaded;
+
+	if (!changeExtraState(id, state, ExtraState::downloading)) {
+		promptExtraState(toLocal8bit(info.title), state);
+		return;
+	}
+
+	Rpc::DownloaderPrx downloader;
+	if ((ec = context_->session->downloadExtra(id, downloader)) != Rpc::ec_success) {
+		promptRpcError(ec);
+		return;
+	}
+
+	boost::shared_ptr<ASyncInstallExtraTask> task(new ASyncInstallExtraTask(context_, downloader));
+
+	task->setInfoHead("Install " + toLocal8bit(info.title));
+	task->setId(id);
+	task->setPath(extraPath(id));
+
+	addTask(task);
+}
+
+void BaseClient::setupExtra(const std::string& id)
+{
+	Rpc::ErrorCode ec;
+
+	Rpc::ExtraInfo info;
+	if ((ec = context_->session->getExtraInfo(id, info)) != Rpc::ec_success) {
+		context_->promptRpcError(ec);
+		return;
+	}
+
+	std::string setup = toLocal8bit(info.setup);
+	boost::replace_all(setup, "$(ExtraDir)", context_->extraPath(id));
+
+	QStringList args = parseCombinedArgString(QString::fromLocal8Bit(setup.c_str()));
+	if (args.isEmpty()) {
+		return;
+	}
+
+	QString program = args.first();
+	args.removeFirst();
+
+	fs::path stdOutputFilename = fs::path(outputPath()) / (toLocal8bit(info.title) + "-Setup.txt");
+
+	QProcess p;
+
+	p.setWorkingDirectory(QString::fromLocal8Bit(extraPath(id).c_str()));
+	p.setProcessChannelMode(QProcess::MergedChannels);
+	p.setStandardOutputFile(QString::fromLocal8Bit(stdOutputFilename.string().c_str()));
+	p.start(program, args);
+
+	if (!p.waitForStarted(-1)) {
+		context_->prompt(2, "Setup program of " + toLocal8bit(info.title) + " has failed to start.\n"
+			+ toLocal8bit(p.errorString()) + "\n" +
+			"As a result, this Extra may not function correctly.\n"
+			"Please contact administrator for help.");
+		return;
+	}
+
+	p.waitForFinished(-1);
+
+	if (p.exitStatus() != QProcess::NormalExit) {
+		context_->prompt(1, "Setup program of " + toLocal8bit(info.title) + " not exited normally.\n"
+			"As a result, this Extra may not function correctly.\n"
+			"Please contact administrator for help.");
+		return;
+	}
+
+	if (p.exitCode() != 0) {
+		context_->prompt(1, "Setup program of " + toLocal8bit(info.title) + " returned non-zero exit code.\n"
+			"As a result, this Extra may not function correctly.\n"
+			"Please contact administrator for help.");
+		return;
+	}
+}
+
+int BaseClient::getExtraState(const std::string& id)
+{
+	boost::recursive_mutex::scoped_lock lock(extraStateTabelSync_);
+
+	if (extraStateTabel_.count(id) == 0) {
+		extraStateTabel_.insert(std::make_pair(id, ExtraState::not_downloaded));
+	}
+
+	return extraStateTabel_[id];
+}
+
+bool BaseClient::changeExtraState(const std::string& id, int& oldState, int newState)
+{
+	boost::recursive_mutex::scoped_lock lock(extraStateTabelSync_);
+
+	const int state = getExtraState(id);
+	if (state != oldState) {
+		oldState = state;
+		return false;
+	}
+
+	if (newState == oldState) {
+		return true;
+	}
+
+	if (newState == ExtraState::downloaded)
+	{
+		std::ostringstream oss;
+		oss << "INSERT INTO DownloadedExtras VALUES (";
+		oss << sqlText(id) << ")";
+
+		SQLite::Transaction t(*db_);
+		db_->exec(oss.str());
+		t.commit();
+
+		boost::recursive_mutex::scoped_lock lock(downloadedExtraTabelSync_);
+		downloadedExtraTabel_.insert(id);
+	}
+	else if (newState == ExtraState::not_downloaded)
+	{
+		std::ostringstream oss;
+		oss << "DELETE FROM DownloadedExtras";
+		oss << " WHERE Id=";
+		oss << sqlText(id);
+
+		SQLite::Transaction t(*db_);
+		db_->exec(oss.str());
+		t.commit();
+
+		boost::recursive_mutex::scoped_lock lock(downloadedExtraTabelSync_);
+		downloadedExtraTabel_.erase(id);
+	}
+
+	extraStateTabel_[id] = newState;
+
+	return true;
+}
+
 void BaseClient::createProject(const std::string& contentId, const std::string& title, const std::string& location)
 {
 	Rpc::ContentInfo ci;
@@ -730,6 +940,16 @@ void BaseClient::removeProjectFromGui(const std::string& projectId)
 	library_->removeProject(projectId.c_str());
 }
 
+void BaseClient::addExtraToGui(const std::string& id)
+{
+	library_->addExtra(id.c_str());
+}
+
+void BaseClient::removeExtraFromGui(const std::string& id)
+{
+	library_->removeExtra(id.c_str());
+}
+
 void BaseClient::prompt(int level, const std::string& message)
 {
 	if (level <= 0) {
@@ -777,6 +997,27 @@ void BaseClient::promptEngineState(const EngineVersion& v, int state)
 	QMessageBox::information(this, "Base", message);
 }
 
+void BaseClient::promptExtraState(const std::string& title, int state)
+{
+	QString extra = QString::fromLocal8Bit(title.c_str());
+	QString message;
+
+	if (state == ExtraState::not_downloaded) {
+		message = extra + " is not downloaded";
+	}
+	else if (state == ExtraState::downloading) {
+		message = extra + " is now downloading.";
+	}
+	else if (state == ExtraState::downloaded) {
+		message = extra + " is downloaded.";
+	}
+	else if (state == ExtraState::configuring) {
+		message = extra + " is now configuring.";
+	}
+
+	QMessageBox::information(this, "Base", message);
+}
+
 void BaseClient::onShowTaskManager()
 {
 	if (taskManagerDialog_->isHidden()) {
@@ -797,6 +1038,9 @@ void BaseClient::initDb()
 		"Name TEXT COLLATE NOCASE, Version TEXT COLLATE NOCASE)");
 
 	db_->exec("CREATE TABLE IF NOT EXISTS DownloadedContents ("
+		"Id TEXT)");
+
+	db_->exec("CREATE TABLE IF NOT EXISTS DownloadedExtras ("
 		"Id TEXT)");
 
 	db_->exec("CREATE TABLE IF NOT EXISTS Projects ("
@@ -840,6 +1084,25 @@ void BaseClient::loadInstalledEnginesFromDb()
 
 	for (const EngineVersion& v : installedEngineTabel_) {
 		engineStateTabel_[v] = EngineState::installed;
+	}
+}
+
+void BaseClient::loadDownloadedExtrasFromDb()
+{
+	std::ostringstream oss;
+	oss << "SELECT * FROM DownloadedExtras";
+
+	boost::recursive_mutex::scoped_lock lock(downloadedExtraTabelSync_);
+
+	SQLite::Statement s(*db_, oss.str());
+	while (s.executeStep()) {
+		downloadedExtraTabel_.insert(s.getColumn("Id").getText());
+	}
+
+	boost::recursive_mutex::scoped_lock lock2(extraStateTabelSync_);
+
+	for (const std::string& id : downloadedExtraTabel_) {
+		extraStateTabel_[id] = ExtraState::downloaded;
 	}
 }
 

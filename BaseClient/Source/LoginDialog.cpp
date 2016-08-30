@@ -22,7 +22,7 @@ LoginDialog::LoginDialog(Rpc::StartPrx startPrx, QWidget* parent) : QDialog(pare
 	ui_.signupUsernameEdit->setValidator(new QRegExpValidator(usernameExp));
 	ui_.resetUsernameEdit->setValidator(new QRegExpValidator(usernameExp));
 
-	QObject::connect(ui_.rememberPasswordCheckBox, &QCheckBox::clicked, this, [this](bool checked){
+	QObject::connect(ui_.rememberPasswordCheckBox, &QCheckBox::clicked, [this](bool checked){
 		if (checked) {
 			ui_.rememberUsernameCheckBox->setChecked(true);
 		}

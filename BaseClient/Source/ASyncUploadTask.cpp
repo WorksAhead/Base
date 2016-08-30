@@ -93,16 +93,16 @@ void ASyncUploadTask::run()
 		}
 	};
 
-	std::string filename = normalizePath(filename_);
+	std::string safeFilename = makeSafePath(filename_);
 
 	sync_.lock();
 	state_ = ASyncTask::state_running;
 	sync_.unlock();
 
-	std::fstream is(filename.c_str(), std::ios::in|std::ios::binary);
+	std::fstream is(safeFilename.c_str(), std::ios::in|std::ios::binary);
 	if (!is.is_open()) {
 		boost::mutex::scoped_lock lock(sync_);
-		infoBody_ = "Failed to open file \"" + filename + "\"";
+		infoBody_ = "Failed to open file \"" + filename_ + "\"";
 		state_ = ASyncTask::state_failed;
 		return;
 	}
@@ -169,7 +169,7 @@ void ASyncUploadTask::run()
 
 			if (!is.read(&buf.first[0], n)) {
 				boost::mutex::scoped_lock lock(sync_);
-				infoBody_ = "Failed to read file \"" + filename + "\"";
+				infoBody_ = "Failed to read file \"" + filename_ + "\"";
 				state_ = ASyncTask::state_failed;
 				return;
 			}

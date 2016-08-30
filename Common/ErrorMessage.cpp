@@ -42,6 +42,14 @@ const char* errorMessage(Rpc::ErrorCode ec)
 		return "Parent does not exist";
 	case Rpc::ec_content_does_not_exist:
 		return "Content does not exists";
+	case Rpc::ec_operation_failed:
+		return "Operation Failed";
+	case Rpc::ec_incomplete_engine_version:
+		return "Incomplete Engine version";
+	case Rpc::ec_extra_does_not_exist:
+		return "Extra does not exist";
+	case Rpc::ec_incomplete_extra:
+		return "Incomplete Extra";
 	default:
 		return "";
 	}

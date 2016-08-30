@@ -4,6 +4,8 @@
 #include "RpcEngineVersionDownloaderImpl.h"
 #include "RpcContentSubmitterImpl.h"
 #include "RpcContentBrowserImpl.h"
+#include "RpcExtraBrowserImpl.h"
+#include "RpcExtraSubmitterImpl.h"
 #include "RpcUserBrowserImpl.h"
 #include "PathUtils.h"
 
@@ -325,10 +327,10 @@ Rpc::ErrorCode RpcSessionImpl::removeEngineVersion(const std::string& name, cons
 
 	context_->center()->changeEngineVersionState(name, version, "Removed");
 
-	std::string fn = normalizePath(context_->center()->getEnginePath(name, version));
+	std::string safeFilename = makeSafePath(context_->center()->getEnginePath(name, version));
 
 	boost::system::error_code ec;
-	fs::remove(fn, ec);
+	fs::remove(safeFilename, ec);
 
 	return Rpc::ec_success;
 }
@@ -402,6 +404,136 @@ Rpc::ErrorCode RpcSessionImpl::getEngineVersion(const std::string& name, const s
 	info.uptime = form.at("UpTime");
 	info.info = form.at("Info");
 	info.state = form.at("State");
+
+	return Rpc::ec_success;
+}
+
+Rpc::ErrorCode RpcSessionImpl::browseExtra(Rpc::ExtraBrowserPrx& browserPrx, const Ice::Current& c)
+{
+	boost::recursive_mutex::scoped_lock lock(sync_);
+	checkIsDestroyed();
+
+	RpcExtraBrowserImplPtr browser = new RpcExtraBrowserImpl(context_->center());
+
+	Rpc::ErrorCode ec = browser->init();
+	if (ec != Rpc::ec_success) {
+		return ec;
+	}
+
+	browserPrx = Rpc::ExtraBrowserPrx::uncheckedCast(c.adapter->addWithUUID(browser));
+
+	if (!context_->objectManager()->addObject(browserPrx)) {
+		browserPrx->destroy();
+		return Rpc::ec_server_busy;
+	}
+
+	return Rpc::ec_success;
+}
+
+
+Rpc::ErrorCode RpcSessionImpl::getExtraInfo(const std::string& id, Rpc::ExtraInfo& info, const Ice::Current&)
+{
+	boost::recursive_mutex::scoped_lock lock(sync_);
+	checkIsDestroyed();
+
+	std::map<std::string, std::string> form;
+	if (!context_->center()->getExtra(form, id)) {
+		return Rpc::ec_extra_does_not_exist;
+	}
+
+	info.id = form.at("Id");
+	info.title = form.at("Title");
+	info.setup = form.at("Setup");
+	info.user = form.at("User");
+	info.uptime = form.at("UpTime");
+	info.info = form.at("Info");
+	info.state = form.at("State");
+
+	return Rpc::ec_success;
+}
+
+Rpc::ErrorCode RpcSessionImpl::downloadExtra(const std::string& id, Rpc::DownloaderPrx& downloaderPrx, const Ice::Current& c)
+{
+	boost::recursive_mutex::scoped_lock lock(sync_);
+	checkIsDestroyed();
+
+	std::map<std::string, std::string> form;
+	if (!context_->center()->getExtra(form, id)) {
+		return Rpc::ec_extra_does_not_exist;
+	}
+
+	RpcFileDownloaderImplPtr downloader = new RpcFileDownloaderImpl;
+
+	fs::path path = context_->center()->getExtraPath(id);
+	path /= "extra";
+
+	Rpc::ErrorCode ec = downloader->init(path.string());
+	if (ec != Rpc::ec_success) {
+		return ec;
+	}
+
+	downloaderPrx = Rpc::DownloaderPrx::uncheckedCast(c.adapter->addWithUUID(downloader));
+
+	if (!context_->objectManager()->addObject(downloaderPrx)) {
+		downloaderPrx->destroy();
+		return Rpc::ec_server_busy;
+	}
+
+	return Rpc::ec_success;
+}
+
+Rpc::ErrorCode RpcSessionImpl::submitExtra(Rpc::ExtraSubmitterPrx& submitterPrx, const Ice::Current& c)
+{
+	boost::recursive_mutex::scoped_lock lock(sync_);
+	checkIsDestroyed();
+
+	RpcExtraSubmitterImplPtr submitter = new RpcExtraSubmitterImpl(context_);
+
+	Rpc::ErrorCode ec = submitter->init(RpcExtraSubmitterImpl::submit_mode);
+	if (ec != Rpc::ec_success) {
+		return ec;
+	}
+
+	submitterPrx = Rpc::ExtraSubmitterPrx::uncheckedCast(c.adapter->addWithUUID(submitter));
+
+	if (!context_->objectManager()->addObject(submitterPrx)) {
+		submitterPrx->destroy();
+		return Rpc::ec_server_busy;
+	}
+
+	return Rpc::ec_success;
+}
+
+Rpc::ErrorCode RpcSessionImpl::updateExtra(const std::string& id, Rpc::ExtraSubmitterPrx& submitterPrx, const Ice::Current& c)
+{
+	boost::recursive_mutex::scoped_lock lock(sync_);
+	checkIsDestroyed();
+
+	RpcExtraSubmitterImplPtr submitter = new RpcExtraSubmitterImpl(context_);
+
+	Rpc::ErrorCode ec = submitter->init(RpcExtraSubmitterImpl::update_mode, id);
+	if (ec != Rpc::ec_success) {
+		return ec;
+	}
+
+	submitterPrx = Rpc::ExtraSubmitterPrx::uncheckedCast(c.adapter->addWithUUID(submitter));
+
+	if (!context_->objectManager()->addObject(submitterPrx)) {
+		submitterPrx->destroy();
+		return Rpc::ec_server_busy;
+	}
+
+	return Rpc::ec_success;
+}
+
+Rpc::ErrorCode RpcSessionImpl::removeExtra(const std::string& id, const Ice::Current&)
+{
+	boost::recursive_mutex::scoped_lock lock(sync_);
+	checkIsDestroyed();
+
+	if (!context_->center()->changeExtraState(id, "Removed")) {
+		return Rpc::ec_operation_failed;
+	}
 
 	return Rpc::ec_success;
 }

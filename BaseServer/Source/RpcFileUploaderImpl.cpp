@@ -20,22 +20,22 @@ RpcFileUploaderImpl::~RpcFileUploaderImpl()
 	}
 	if (!finished_ && !filename_.empty()) {
 		boost::system::error_code ec;
-		fs::remove(normalizePath(filename_), ec);
+		fs::remove(makeSafePath(filename_), ec);
 	}
 }
 
 Rpc::ErrorCode RpcFileUploaderImpl::init(const std::string& filename)
 {
-	std::string fn = normalizePath(filename);
+	std::string safeFilename = makeSafePath(filename);
 
-	if (!fs::exists(fs::path(fn).parent_path())) {
+	if (!fs::exists(fs::path(safeFilename).parent_path())) {
 		boost::system::error_code ec;
-		if (!fs::create_directories(fs::path(fn).parent_path(), ec)) {
+		if (!fs::create_directories(fs::path(safeFilename).parent_path(), ec)) {
 			return Rpc::ec_file_io_error;
 		}
 	}
 
-	stream_.reset(new std::fstream(fn.c_str(), std::ios::out|std::ios::binary));
+	stream_.reset(new std::fstream(safeFilename.c_str(), std::ios::out|std::ios::binary));
 	if (!stream_->is_open()) {
 		return Rpc::ec_file_io_error;
 	}
@@ -110,9 +110,9 @@ Rpc::ErrorCode RpcFileUploaderImpl::finish(Ice::Int crc32, const Ice::Current& c
 		return Rpc::ec_file_io_error;
 	}
 
-	std::string fn = normalizePath(filename_);
+	std::string safeFilename = makeSafePath(filename_);
 
-	stream_.reset(new std::fstream(fn.c_str(), std::ios::in|std::ios::binary));
+	stream_.reset(new std::fstream(safeFilename.c_str(), std::ios::in|std::ios::binary));
 
 	if (!stream_->is_open()) {
 		return Rpc::ec_file_io_error;

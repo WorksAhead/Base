@@ -13,7 +13,7 @@ public:
 	typedef boost::filesystem::directory_iterator DirectoryIterator;
 
 public:
-	FileScanner(const Path& path, boost::system::error_code& ec) : stack_(1, DirectoryIterator(normalizePath(path), ec))
+	FileScanner(const Path& path, boost::system::error_code& ec) : stack_(1, DirectoryIterator(makeSafePath(path), ec))
 	{
 	}
 
@@ -23,19 +23,19 @@ public:
 
 		if (current != DirectoryIterator())
 		{
-			const Path& path = normalizePath(current->path());
+			const Path& safePath = makeSafePath(current->path());
 
-			if (boost::filesystem::is_regular_file(path, ec))
+			if (boost::filesystem::is_regular_file(safePath, ec))
 			{
-				outPath = base_ / path.filename();
+				outPath = base_ / safePath.filename();
 				++current;
 				return 1;
 			}
-			else if (boost::filesystem::is_directory(path, ec))
+			else if (boost::filesystem::is_directory(safePath, ec))
 			{
-				stack_.push_back(DirectoryIterator(normalizePath(path)));
+				stack_.push_back(DirectoryIterator(makeSafePath(safePath)));
 				try {
-					base_ = base_ / path.leaf();
+					base_ = base_ / safePath.leaf();
 				}
 				catch (...) {
 					stack_.pop_back();

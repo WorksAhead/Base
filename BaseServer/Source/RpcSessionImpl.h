@@ -44,6 +44,13 @@ public:
 	virtual Rpc::ErrorCode updateEngineVersion(const std::string&, const std::string&, Rpc::EngineVersionSubmitterPrx&, const Ice::Current&);
 	virtual Rpc::ErrorCode getEngineVersion(const std::string&, const std::string&, Rpc::EngineVersionInfo&, const Ice::Current&);
 
+	virtual Rpc::ErrorCode browseExtra(Rpc::ExtraBrowserPrx&, const Ice::Current&);
+	virtual Rpc::ErrorCode getExtraInfo(const std::string&, Rpc::ExtraInfo&, const Ice::Current&);
+	virtual Rpc::ErrorCode downloadExtra(const std::string&, Rpc::DownloaderPrx&, const Ice::Current&);
+	virtual Rpc::ErrorCode submitExtra(Rpc::ExtraSubmitterPrx&, const Ice::Current&);
+	virtual Rpc::ErrorCode updateExtra(const std::string&, Rpc::ExtraSubmitterPrx&, const Ice::Current&);
+	virtual Rpc::ErrorCode removeExtra(const std::string&, const Ice::Current&);
+
 	virtual Rpc::ErrorCode browseUsers(Rpc::UserBrowserPrx&, const Ice::Current&);
 	virtual Rpc::ErrorCode setUserGroup(const std::string&, const std::string&, const Ice::Current&);
 	virtual Rpc::ErrorCode resetUserPassword(const std::string&, const std::string&, const Ice::Current&);
