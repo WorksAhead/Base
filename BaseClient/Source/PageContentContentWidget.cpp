@@ -20,6 +20,8 @@ PageContentContentWidget::PageContentContentWidget(ContextPtr context, QWidget* 
 {
 	ui_.setupUi(this);
 
+	ui_.screenshotViewer->setAspectRatio(16.0 / 9.0);
+
 	thumbnailLayout_ = new QBoxLayout(QBoxLayout::LeftToRight);
 	thumbnailLayout_->setMargin(2);
 	thumbnailLayout_->setSpacing(5);
@@ -29,8 +31,6 @@ PageContentContentWidget::PageContentContentWidget(ContextPtr context, QWidget* 
 	ui_.thumbnailScrollArea->setWidget(thumbnailWidget_);
 
 	QObject::connect(ui_.downloadButton, &QPushButton::clicked, this, &PageContentContentWidget::onDownload);
-	QObject::connect(ui_.copySummaryButton, &QPushButton::clicked, this, &PageContentContentWidget::onCopySummary);
-	QObject::connect(ui_.copyIdButton, &QPushButton::clicked, this, &PageContentContentWidget::onCopyId);
 }
 
 PageContentContentWidget::~PageContentContentWidget()
@@ -69,39 +69,10 @@ void PageContentContentWidget::setDescription(const QString& text)
 	ui_.descriptionLabel->setText(text);
 }
 
-void PageContentContentWidget::setEngineVersion(int index, const QString& name, const QString& version)
+void PageContentContentWidget::setSupportedEngineVersion(const QString& name, const QString& version)
 {
-	if (index == 0) {
-		ui_.installEngineButton->setText(QString("Install %1 %2").arg(name).arg(version));
-		QObject::connect(ui_.installEngineButton, &QToolButton::clicked, [this, name, version](){
-			context_->installEngine(EngineVersion(name.toStdString(), version.toStdString()));
-		});
-		firstEngineVersion_.first = name;
-		firstEngineVersion_.second = version;
-	}
-	else {
-		QMenu* menu = ui_.installEngineButton->menu();
-		QAction* action = menu->addAction(QString("Install %1 %2").arg(name).arg(version));
-		QObject::connect(action, &QAction::triggered, [this, name, version](){
-			context_->installEngine(EngineVersion(name.toStdString(), version.toStdString()));
-		});
-	}
-}
-
-void PageContentContentWidget::setEngineVersionCount(int count)
-{
-	ui_.installEngineButton->disconnect();
-
-	QMenu* menu = ui_.installEngineButton->menu();
-	if (menu) {
-		menu->deleteLater();
-		menu = 0;
-	}
-
-	if (count > 1) {
-		menu = new QMenu;
-		ui_.installEngineButton->setMenu(menu);
-	}
+	supportedEngineVersion_.first = name;
+	supportedEngineVersion_.second = version;
 }
 
 void PageContentContentWidget::setImage(int index, const QPixmap& pixmap)
@@ -144,14 +115,17 @@ void PageContentContentWidget::setImageCount(int count)
 	}
 
 	if (count == 0) {
-		ui_.screenshotViewer->setVisible(false);
-		ui_.thumbnailScrollArea->setVisible(false);
+		ui_.screenshotWidget->setVisible(false);
+		ui_.screenshotViewer->setVisible(true);
+		ui_.thumbnailScrollArea->setVisible(true);
 	}
 	else if (count == 1) {
+		ui_.screenshotWidget->setVisible(true);
 		ui_.screenshotViewer->setVisible(true);
 		ui_.thumbnailScrollArea->setVisible(false);
 	}
 	else {
+		ui_.screenshotWidget->setVisible(true);
 		ui_.screenshotViewer->setVisible(true);
 		ui_.thumbnailScrollArea->setVisible(true);
 	}
@@ -181,7 +155,7 @@ void PageContentContentWidget::mousePressEvent(QMouseEvent* e)
 
 void PageContentContentWidget::resizeEvent(QResizeEvent* e)
 {
-	ui_.screenshotViewer->setFixedHeight(ui_.screenshotViewer->width() / 1.7777777777);
+	QWidget::resizeEvent(e);
 }
 
 void PageContentContentWidget::paintEvent(QPaintEvent* e)
@@ -207,8 +181,8 @@ void PageContentContentWidget::onDownload()
 		return;
 	}
 
-	QString engineName = firstEngineVersion_.first;
-	QString engineVersion = firstEngineVersion_.second;
+	QString engineName = supportedEngineVersion_.first;
+	QString engineVersion = supportedEngineVersion_.second;
 
 	bool installEngine = false;
 
@@ -247,16 +221,3 @@ void PageContentContentWidget::onDownload()
 		context_->installEngine(EngineVersion(engineName.toStdString(), engineVersion.toStdString()));
 	}
 }
-
-void PageContentContentWidget::onCopyId()
-{
-	QClipboard* clipboard = QApplication::clipboard();
-	clipboard->setText(contentId_);
-}
-
-void PageContentContentWidget::onCopySummary()
-{
-	QClipboard* clipboard = QApplication::clipboard();
-	clipboard->setText(ui_.titleLabel->text() + "\n" + ui_.summaryLabel->text());
-}
-

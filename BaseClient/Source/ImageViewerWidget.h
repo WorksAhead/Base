@@ -16,12 +16,16 @@ public:
 	void setPixmap(const QPixmap&);
 	QPixmap pixmap() const;
 
+	void setAspectRatio(float);
+
 protected:
 	virtual void resizeEvent(QResizeEvent*);
 
 private:
 	QLabel* label_;
 	QPixmap pixmap_;
+
+	float aspectRatio_;
 };
 
 #endif // IMAGEVIEWERWIDGET_HEADER_

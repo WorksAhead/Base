@@ -99,10 +99,8 @@ void PageContentWidget::mousePressEvent(QMouseEvent* e)
 				content_->setSummary(summary.str().c_str());
 				content_->setDescription(ci.desc.c_str());
 
-				content_->setEngineVersionCount(versions.size());
-
-				for (int i = 0; i < versions.size(); ++i) {
-					content_->setEngineVersion(i, ci.engineName.c_str(), versions[i].c_str());
+				if (versions.size()) {
+					content_->setSupportedEngineVersion(ci.engineName.c_str(), versions[0].c_str());
 				}
 
 				content_->setImageCount(ci.imageCount - 1);

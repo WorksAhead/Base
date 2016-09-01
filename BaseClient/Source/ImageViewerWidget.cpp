@@ -2,6 +2,7 @@
 
 #include <QGridLayout>
 #include <QResizeEvent>
+#include <QDebug>
 
 ImageViewerWidget::ImageViewerWidget(QWidget* parent) : QFrame(parent)
 {
@@ -13,6 +14,8 @@ ImageViewerWidget::ImageViewerWidget(QWidget* parent) : QFrame(parent)
 	layout->setSpacing(0);
 	layout->addWidget(label_);
 	setLayout(layout);
+
+	aspectRatio_ = 0.0;
 }
 
 ImageViewerWidget::~ImageViewerWidget()
@@ -30,8 +33,21 @@ QPixmap ImageViewerWidget::pixmap() const
 	return pixmap_;
 }
 
+void ImageViewerWidget::setAspectRatio(float aspectRatio)
+{
+	aspectRatio_ = aspectRatio;
+}
+
 void ImageViewerWidget::resizeEvent(QResizeEvent* e)
 {
-	label_->setPixmap(pixmap_.scaled(e->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+	QSize size = e->size();
+	if (aspectRatio_ != 0.0f) {
+		int height = size.width() / aspectRatio_;
+		if (size.height() != height) {
+			size.setHeight(height);
+			setFixedHeight(height);
+		}
+	}
+	label_->setPixmap(pixmap_.scaled(size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 }
 

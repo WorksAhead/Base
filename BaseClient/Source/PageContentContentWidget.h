@@ -26,8 +26,7 @@ public:
 	void setSummary(const QString& text);
 	void setDescription(const QString& text);
 
-	void setEngineVersion(int index, const QString& name, const QString& version);
-	void setEngineVersionCount(int count);
+	void setSupportedEngineVersion(const QString& name, const QString& version);
 
 	void setImage(int index, const QPixmap&);
 	void setImageCount(int count);
@@ -39,8 +38,6 @@ protected:
 
 private Q_SLOTS:
 	void onDownload();
-	void onCopyId();
-	void onCopySummary();
 
 private:
 	ContextPtr context_;
@@ -48,7 +45,7 @@ private:
 	QBoxLayout* thumbnailLayout_;
 	QWidget* thumbnailWidget_;
 	QString contentId_;
-	QPair<QString, QString> firstEngineVersion_;
+	QPair<QString, QString> supportedEngineVersion_;
 	QVector<QPixmap> screenshots_;
 };
 
