@@ -20,6 +20,7 @@ ManageContentWidget::ManageContentWidget(ContextPtr context, QWidget* parent) : 
 	QObject::connect(ui_.showMoreButton, &QPushButton::clicked, this, &ManageContentWidget::onShowMore);
 	QObject::connect(ui_.showAllButton, &QPushButton::clicked, this, &ManageContentWidget::onShowAll);
 	QObject::connect(ui_.refreshButton, &QPushButton::clicked, this, &ManageContentWidget::onRefresh);
+	QObject::connect(ui_.submitButton, &QPushButton::clicked, this, &ManageContentWidget::onSubmit);
 	QObject::connect(ui_.editButton, &QPushButton::clicked, this, &ManageContentWidget::onEdit);
 	QObject::connect(ui_.removeButton, &QPushButton::clicked, this, &ManageContentWidget::onRemove);
 
@@ -71,6 +72,12 @@ void ManageContentWidget::onRefresh()
 	if (browser_) {
 		showMore(ITEMS_PER_REQUEST);
 	}
+}
+
+void ManageContentWidget::onSubmit()
+{
+	SubmitContentDialog d(context_, this);
+	d.exec();
 }
 
 void ManageContentWidget::onEdit()

@@ -43,7 +43,6 @@ private Q_SLOTS:
 
 private:
 	void showMore(int);
-	void submit();
 	void clear();
 
 private:

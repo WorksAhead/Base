@@ -1,13 +1,13 @@
 #include "PageContentWidget.h"
 #include "PageContentItemWidget.h"
 #include "FlowLayout.h"
-#include "SubmitContentDialog.h"
 #include "ASyncDownloadTask.h"
 #include "PageContentContentWidget.h"
 #include "ContentImageLoader.h"
 
 #include <QPainter>
 #include <QScrollBar>
+#include <QMouseEvent>
 #include <QTime>
 
 #include <boost/algorithm/string.hpp>
@@ -49,8 +49,6 @@ PageContentWidget::PageContentWidget(ContextPtr context, const QString& name, QW
 	QObject::connect(ui_.backButton, &QPushButton::clicked, this, &PageContentWidget::onBack);
 	QObject::connect(ui_.categoryBox, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &PageContentWidget::onRefresh);
 	QObject::connect(ui_.refreshButton, &QPushButton::clicked, this, &PageContentWidget::onRefresh);
-
-	QObject::connect(ui_.submitButton, &QPushButton::clicked, this, &PageContentWidget::submit);
 
 	QObject::connect(context_->contentImageLoader, &ContentImageLoader::loaded, this, &PageContentWidget::onImageLoaded);
 
@@ -114,7 +112,6 @@ void PageContentWidget::mousePressEvent(QMouseEvent* e)
 				ui_.backButton->setVisible(true);
 				ui_.categoryBox->setVisible(false);
 				ui_.refreshButton->setVisible(false);
-				ui_.submitButton->setVisible(false);
 				ui_.stackedWidget->setCurrentIndex(1);
 			}
 		}
@@ -151,7 +148,6 @@ void PageContentWidget::onBack()
 	ui_.backButton->setVisible(false);
 	ui_.categoryBox->setVisible(true);
 	ui_.refreshButton->setVisible(true);
-	ui_.submitButton->setVisible(true);
 
 	ui_.stackedWidget->setCurrentIndex(0);
 }
@@ -223,13 +219,6 @@ void PageContentWidget::showMore(int count)
 			break;
 		}
 	}
-}
-
-void PageContentWidget::submit()
-{
-	SubmitContentDialog d(context_, this);
-	d.setPage(name_);
-	d.exec();
 }
 
 void PageContentWidget::clear()

@@ -23,6 +23,7 @@ private Q_SLOTS:
 	void onShowMore();
 	void onShowAll();
 	void onRefresh();
+	void onSubmit();
 	void onEdit();
 	void onRemove();
 
