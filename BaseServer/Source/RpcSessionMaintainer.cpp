@@ -13,7 +13,6 @@ void RpcSessionMaintainer::add(const Session& session)
 	 Lock sync(*this);
 	 sessions_.push_back(session);
 	 session.first->refresh();
-	 std::cout << "create " << session.first->ice_getIdentity().name << std::endl;
 }
 
 void RpcSessionMaintainer::runTimerTask()
@@ -29,7 +28,6 @@ void RpcSessionMaintainer::runTimerTask()
 		try {
 			if ((IceUtil::Time::now(IceUtil::Time::Monotonic) - p->second->timestamp()) > timeout)
 			{
-				std::cout << "destory " << p->first->ice_getIdentity().name << std::endl;
 				p->first->destroy();
 				p = sessions_.erase(p);
 			}
