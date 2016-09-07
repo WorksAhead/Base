@@ -22,6 +22,7 @@
 #include <map>
 
 // forward declaration
+class HTabWidget;
 class LibraryWidget;
 class ManageWidget;
 
@@ -84,6 +85,7 @@ private Q_SLOTS:
 	void promptRpcError(Rpc::ErrorCode);
 	void promptEngineState(const EngineVersion&, int);
 	void promptExtraState(const std::string& title, int);
+	void addLibraryNotification();
 	void onShowTaskManager();
 
 private:
@@ -105,7 +107,7 @@ private:
 	ASyncTaskManagerDialog* taskManagerDialog_;
 
 	LowerPaneWidget* lowerPane_;
-	QTabWidget* tabWidget_;
+	HTabWidget* tabWidget_;
 	LibraryWidget* library_;
 	ManageWidget* manage_;
 

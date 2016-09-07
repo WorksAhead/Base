@@ -236,6 +236,26 @@ QTabBar#MainTabBar::tab:!selected {
 	
 }
 
+HTabBarTabWidget {
+	margin: 0;
+	padding: 0;
+}
+HTabBarTabWidget[active="false"] {
+	background: rgb(40, 40, 40);
+}
+HTabBarTabWidget[active="true"] {
+	border-top: 2px solid rgb(246, 96, 0);
+	background: rgb(30, 30, 30);
+}
+
+QLabel#Notification {
+	font-size: 9px;
+	margin: 0;
+	padding: 1px 2px 1px 2px;
+	background: rgb(246, 96, 0);
+	border-radius: 7px;
+}
+
 QLineEdit, QTextEdit, QPlainTextEdit {
 	background: rgb(20, 20, 20);
 	border: 1px solid rgb(50, 50, 50);

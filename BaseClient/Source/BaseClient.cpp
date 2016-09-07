@@ -2,6 +2,7 @@
 #include "PageContentWidget.h"
 #include "PageEngineWidget.h"
 #include "PageExtraWidget.h"
+#include "HTabWidget.h"
 #include "LibraryWidget.h"
 #include "ManageWidget.h"
 #include "ASyncInstallEngineTask.h"
@@ -244,14 +245,14 @@ BaseClient::BaseClient(Rpc::SessionPrx session)
 
 	lowerPane_ = new LowerPaneWidget(context_);
 
-	tabWidget_ = new QTabWidget;
+	tabWidget_ = new HTabWidget;
 	tabWidget_->setAutoFillBackground(true);
 	tabWidget_->setObjectName("MainTab");
 	tabWidget_->tabBar()->setObjectName("MainTabBar");
 
-	QFont font = tabWidget_->tabBar()->font();
+	QFont font = tabWidget_->labelFont();
 	font.setPixelSize(16);
-	tabWidget_->tabBar()->setFont(font);
+	tabWidget_->setLabelFont(font);
 
 	Rpc::StringSeq pages;
 	Rpc::ErrorCode ec = session->getPages(pages);
@@ -262,18 +263,18 @@ BaseClient::BaseClient(Rpc::SessionPrx session)
 
 	for (const std::string& page : pages) {
 		std::string name = boost::erase_last_copy(page, "*");
-		tabWidget_->addTab(new PageContentWidget(context_, page.c_str()), name.c_str());
+		tabWidget_->addTab(name.c_str(), new PageContentWidget(context_, page.c_str()));
 	}
 
-	tabWidget_->addTab(new PageEngineWidget(context_, "Engine"), "Engine");
+	tabWidget_->addTab("Engine", new PageEngineWidget(context_, "Engine"));
 
-	tabWidget_->addTab(new PageExtraWidget(context_, "Extra"), "Extra");
+	tabWidget_->addTab("Extra", new PageExtraWidget(context_, "Extra"));
 
 	library_ = new LibraryWidget(context_);
-	tabWidget_->addTab(library_, "Library");
+	tabWidget_->addTab("Library", library_);
 
 	manage_ = new ManageWidget(context_);
-	tabWidget_->addTab(manage_, "Manage");
+	tabWidget_->addTab("Manage", manage_);
 
 	QBoxLayout* layout = new QBoxLayout(QBoxLayout::TopToBottom);
 	layout->setMargin(0);
@@ -913,6 +914,7 @@ void BaseClient::getProjectList(std::vector<ProjectInfo>& outList)
 void BaseClient::addEngineToGui(const EngineVersion& v)
 {
 	library_->addEngine(v.first.c_str(), v.second.c_str());
+	addLibraryNotification();
 }
 
 void BaseClient::removeEngineFromGui(const EngineVersion& v)
@@ -923,6 +925,7 @@ void BaseClient::removeEngineFromGui(const EngineVersion& v)
 void BaseClient::addContentToGui(const std::string& contentId)
 {
 	library_->addContent(contentId.c_str());
+	addLibraryNotification();
 }
 
 void BaseClient::removeContentFromGui(const std::string& contentId)
@@ -933,6 +936,7 @@ void BaseClient::removeContentFromGui(const std::string& contentId)
 void BaseClient::addProjectToGui(const std::string& projectId)
 {
 	library_->addProject(projectId.c_str());
+	addLibraryNotification();
 }
 
 void BaseClient::removeProjectFromGui(const std::string& projectId)
@@ -943,6 +947,7 @@ void BaseClient::removeProjectFromGui(const std::string& projectId)
 void BaseClient::addExtraToGui(const std::string& id)
 {
 	library_->addExtra(id.c_str());
+	addLibraryNotification();
 }
 
 void BaseClient::removeExtraFromGui(const std::string& id)
@@ -1016,6 +1021,14 @@ void BaseClient::promptExtraState(const std::string& title, int state)
 	}
 
 	QMessageBox::information(this, "Base", message);
+}
+
+void BaseClient::addLibraryNotification()
+{
+	int index = tabWidget_->indexOf(library_);
+	if (tabWidget_->currentIndex() != index) {
+		tabWidget_->addNotification(index);
+	}
 }
 
 void BaseClient::onShowTaskManager()
