@@ -38,6 +38,7 @@ private:
 	void addTask(ASyncTaskPtr);
 	
 	std::string uniquePath();
+	std::string workPath();
 	std::string cachePath();
 	std::string userPath();
 	std::string libraryPath();
@@ -69,6 +70,7 @@ private:
 	void addProject(const std::string& id, const std::string& contentId, const std::string& location, const std::map<std::string, std::string>& properties);
 	void removeProject(const std::string& id, bool removeDir);
 	void renameProject(const std::string& id, const std::string& newName);
+	void changeProjectDefaultEngineVersion(const std::string& id, const EngineVersion&);
 	bool getProject(ProjectInfo&, const std::string& id);
 	void getProjectList(std::vector<ProjectInfo>&);
 

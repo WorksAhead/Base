@@ -160,6 +160,7 @@ BaseClient::BaseClient(Rpc::SessionPrx session)
 	context_->addProject = std::bind(&BaseClient::addProject, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4);
 	context_->removeProject = std::bind(&BaseClient::removeProject, this, std::placeholders::_1, std::placeholders::_2);
 	context_->renameProject = std::bind(&BaseClient::renameProject, this, std::placeholders::_1, std::placeholders::_2);
+	context_->changeProjectDefaultEngineVersion = std::bind(&BaseClient::changeProjectDefaultEngineVersion, this, std::placeholders::_1, std::placeholders::_2);
 	context_->getProject = std::bind(&BaseClient::getProject, this, std::placeholders::_1, std::placeholders::_2);
 	context_->getProjectList = std::bind(&BaseClient::getProjectList, this, std::placeholders::_1);
 
@@ -308,15 +309,20 @@ std::string BaseClient::uniquePath()
 	return p.string();
 }
 
+std::string BaseClient::workPath()
+{
+	return fs::canonical(fs::current_path()).parent_path().string();
+}
+
 std::string BaseClient::cachePath()
 {
-	fs::path p = fs::current_path().parent_path() / "Cache";
+	fs::path p = fs::path(workPath()) / "Cache";
 	return p.string();
 }
 
 std::string BaseClient::userPath()
 {
-	fs::path p = fs::current_path().parent_path() / "Users" / context_->currentUser;
+	fs::path p = fs::path(workPath()) / "Users" / context_->currentUser;
 	return p.string();
 }
 
@@ -879,6 +885,25 @@ void BaseClient::renameProject(const std::string& id, const std::string& newName
 	auto it = projectTabel_.find(id);
 	if (it != projectTabel_.end()) {
 		it->second.name = newName;
+	}
+}
+
+void BaseClient::changeProjectDefaultEngineVersion(const std::string& id, const EngineVersion& v)
+{
+	std::ostringstream oss;
+	oss << "UPDATE Projects SET DefaultEngineVersion=";
+	oss << sqlText(v.first + "\n" + v.second);
+	oss << " WHERE Id=";
+	oss << sqlText(id);
+
+	SQLite::Transaction t(*db_);
+	db_->exec(oss.str());
+	t.commit();
+
+	boost::recursive_mutex::scoped_lock lock(projectTabelSync_);
+	auto it = projectTabel_.find(id);
+	if (it != projectTabel_.end()) {
+		it->second.defaultEngineVersion = v.first + "\n" + v.second;
 	}
 }
 

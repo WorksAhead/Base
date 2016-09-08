@@ -1,5 +1,6 @@
 #include "LoginDialog.h"
 #include "BaseClient.h"
+#include "QtUtils.h"
 
 #include "RpcStart.h"
 
@@ -12,6 +13,10 @@
 
 #include <IceUtil/IceUtil.h>
 #include <Ice/Ice.h>
+
+#include <boost/filesystem.hpp>
+
+namespace fs = boost::filesystem;
 
 int main(int argc, char* argv[])
 {
@@ -38,7 +43,31 @@ int main(int argc, char* argv[])
 	//font.setPointSize(9);
 	app.setFont(font);
 
-	int ret = 1;
+	if (fs::canonical(fs::current_path()).string().size() > 24)
+	{
+		QFile file("IgnorePath");
+		if (!file.open(QIODevice::ReadOnly)) {
+			int ret = QMessageBox::warning(
+				0,
+				"Base",
+				"Because some Engines/SDKs/Tools do not support extended-length path (beyond 260 characters), "
+				"please put BaseClient in a shorter path (within 24 characters) location to avoid possible errors.",
+				QMessageBox::Ignore,
+				QMessageBox::Close|QMessageBox::Default);
+
+			if (ret == QMessageBox::Close) {
+				return 0;
+			}
+			else if (ret == QMessageBox::Ignore) {
+				QFile file("IgnorePath");
+				if (file.open(QIODevice::WriteOnly)) {
+					file.close();
+				}
+			}
+		}
+	}
+
+	int returnCode = 1;
 
 	Ice::CommunicatorPtr ic;
 
@@ -66,7 +95,7 @@ int main(int argc, char* argv[])
 		w.resize(1280, 800);
 		w.show();
 
-		ret = app.exec();
+		returnCode = app.exec();
 	}
 	catch (const Ice::Exception& e) {
 		QMessageBox::information(0, "Base", e.what());
@@ -84,6 +113,6 @@ int main(int argc, char* argv[])
 		ic->destroy();
 	}
 
-	return ret;
+	return returnCode;
 }
 

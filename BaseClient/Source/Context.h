@@ -129,6 +129,7 @@ struct Context
 	std::function<void(const std::string&, const std::string&, const std::string&, const std::map<std::string, std::string>& properties)> addProject;
 	std::function<void(const std::string&, bool)> removeProject;
 	std::function<void(const std::string&, const std::string&)> renameProject;
+	std::function<void(const std::string&, const EngineVersion&)> changeProjectDefaultEngineVersion;
 	std::function<bool(ProjectInfo&, const std::string& id)> getProject;
 	std::function<void(std::vector<ProjectInfo>&)> getProjectList;
 	std::function<void(const std::string&)> addProjectToGui;

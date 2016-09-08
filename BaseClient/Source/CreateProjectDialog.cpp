@@ -53,7 +53,7 @@ void CreateProjectDialog::onCreate()
 	}
 
 	QFileInfo fileInfo(ui_.locationEdit->text());
-	if (!fileInfo.exists() || !fileInfo.isDir() || fileInfo.isRoot()) {
+	if (!fileInfo.exists() || !fileInfo.isDir()) {
 		QMessageBox::information(this, "Base", tr("The specified location is not valid"));
 		return;
 	}

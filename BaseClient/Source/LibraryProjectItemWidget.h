@@ -32,6 +32,8 @@ protected:
 
 private Q_SLOTS:
 	void onOpen();
+	void onSwitchEngineVersion();
+	void onBrowse();
 	void onRemove();
 
 private:

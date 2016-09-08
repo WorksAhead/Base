@@ -11,6 +11,8 @@
 #include <QPushButton>
 #include <QFileDialog>
 #include <QProcess>
+#include <QDesktopServices>
+#include <QInputDialog>
 #include <QMessageBox>
 
 #include <boost/algorithm/string.hpp>
@@ -30,9 +32,13 @@ LibraryProjectItemWidget::LibraryProjectItemWidget(ContextPtr context, QWidget* 
 	QMenu* menu = new QMenu;
 	ui_.openButton->setMenu(menu);
 
+	QAction* switchEngineVerAction = menu->addAction("Switch Engine version");
+	QAction* browserAction = menu->addAction("Browse");
 	QAction* removeAction = menu->addAction("Remove");
 
 	QObject::connect(ui_.openButton, &QPushButton::clicked, this, &LibraryProjectItemWidget::onOpen);
+	QObject::connect(switchEngineVerAction, &QAction::triggered, this, &LibraryProjectItemWidget::onSwitchEngineVersion);
+	QObject::connect(browserAction, &QAction::triggered, this, &LibraryProjectItemWidget::onBrowse);
 	QObject::connect(removeAction, &QAction::triggered, this, &LibraryProjectItemWidget::onRemove);
 
 	updateTips();
@@ -185,6 +191,62 @@ void LibraryProjectItemWidget::onOpen()
 
 		return;
 	}
+}
+
+void LibraryProjectItemWidget::onSwitchEngineVersion()
+{
+	ProjectInfo pi;
+	if (!context_->getProject(pi, projectId_.toStdString())) {
+		return;
+	}
+
+	std::string defaultEngineName;
+	std::string defaultEngineVersion;
+	{
+		std::istringstream stream(pi.defaultEngineVersion);
+		std::getline(stream, defaultEngineName);
+		std::getline(stream, defaultEngineVersion);
+	}
+
+	Rpc::ContentInfo ci;
+	if (context_->session->getContentInfo(contentId_.toStdString(), ci) != Rpc::ec_success) {
+		return;
+	}
+
+	std::vector<std::string> versions;
+	boost::split(versions, ci.engineVersion, boost::is_any_of("|"));
+
+	if (versions.empty()) {
+		return;
+	}
+
+	QStringList list;
+
+	int current = 0;
+
+	for (int i = 0; i < versions.size(); ++i) {
+		list << versions[i].c_str();
+		if (defaultEngineVersion == versions[i]) {
+			current = i;
+		}
+	}
+
+	bool ok;
+
+	QString item = QInputDialog::getItem(this, tr("Switch Engine version"), ci.engineName.c_str(), list, current, false, &ok, Qt::WindowTitleHint);
+	if (ok && !item.isEmpty()) {
+		context_->changeProjectDefaultEngineVersion(projectId_.toStdString(), EngineVersion(ci.engineName, item.toStdString()));
+	}
+}
+
+void LibraryProjectItemWidget::onBrowse()
+{
+	ProjectInfo pi;
+	if (!context_->getProject(pi, projectId_.toStdString())) {
+		return;
+	}
+
+	QDesktopServices::openUrl(QUrl::fromLocalFile(QString::fromLocal8Bit(pi.location.c_str())));
 }
 
 void LibraryProjectItemWidget::onRemove()
