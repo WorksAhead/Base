@@ -6,6 +6,7 @@
 #include <QWidget>
 
 // forward declaration
+class VTabWidget;
 class LibraryContentWidget;
 class LibraryEngineWidget;
 class LibraryExtraWidget;
@@ -33,6 +34,8 @@ protected:
 
 private:
 	ContextPtr context_;
+
+	VTabWidget* layout_;
 
 	LibraryContentWidget* libraryContent_;
 	LibraryEngineWidget* libraryEngine_;

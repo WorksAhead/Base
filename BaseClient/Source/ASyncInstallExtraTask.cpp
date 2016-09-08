@@ -38,7 +38,26 @@ void ASyncInstallExtraTask::setPath(const std::string& path)
 
 void ASyncInstallExtraTask::start()
 {
-	t_.reset(new std::thread(std::bind(&ASyncInstallExtraTask::run, this)));
+	t_.reset(new std::thread([this](){
+		try {
+			run();
+		}
+		catch (Ice::Exception& e) {
+			boost::mutex::scoped_lock lock(sync_);
+			info_ = infoHead_ + " - " + "Rpc: " + e.what();
+			state_ = ASyncTask::state_failed;
+		}
+		catch (std::exception& e) {
+			boost::mutex::scoped_lock lock(sync_);
+			info_ = infoHead_ + " - " + e.what();
+			state_ = ASyncTask::state_failed;
+		}
+		catch (...) {
+			boost::mutex::scoped_lock lock(sync_);
+			info_ = infoHead_ + " - " + "unknown exception";
+			state_ = ASyncTask::state_failed;
+		}
+	}));
 }
 
 void ASyncInstallExtraTask::cancel()
@@ -73,10 +92,11 @@ std::string ASyncInstallExtraTask::information()
 
 void ASyncInstallExtraTask::run()
 {
-	sync_.lock();
-	state_ = ASyncTask::state_running;
-	info_ = infoHead_;
-	sync_.unlock();
+	{
+		boost::mutex::scoped_lock lock(sync_);
+		state_ = ASyncTask::state_running;
+		info_ = infoHead_;
+	}
 
 	int state = context_->getExtraState(id_);
 	if (state != ExtraState::downloading) {
@@ -157,10 +177,11 @@ void ASyncInstallExtraTask::run()
 
 	context_->addExtraToGui(id_);
 
-	sync_.lock();
-	info_ = infoHead_;
-	state_ = ASyncTask::state_finished;
-	sync_.unlock();
+	{
+		boost::mutex::scoped_lock lock(sync_);
+		info_ = infoHead_;
+		state_ = ASyncTask::state_finished;
+	}
 }
 
 int ASyncInstallExtraTask::update(ASyncTask* task, int a, double b)

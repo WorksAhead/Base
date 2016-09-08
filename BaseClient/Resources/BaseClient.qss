@@ -248,6 +248,21 @@ HTabBarTabWidget[active="true"] {
 	background: rgb(30, 30, 30);
 }
 
+VTabBarWidget {
+	background: rgb(40, 40, 40);
+}
+VTabBarTabWidget {
+	min-width: 120px;
+	margin: 0;
+	padding: 0;
+}
+VTabBarTabWidget[active="false"] {
+	background: rgb(40, 40, 40);
+}
+VTabBarTabWidget[active="true"] {
+	background: rgb(30, 30, 30);
+}
+
 QLabel#Notification {
 	font-size: 9px;
 	margin: 0;

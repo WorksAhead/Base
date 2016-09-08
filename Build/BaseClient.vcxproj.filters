@@ -52,6 +52,26 @@
     <Filter Include="SQLite">
       <UniqueIdentifier>{f3cf594c-7821-4ae0-892a-18fd89e07d08}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Generated Files\DebugConsole_Win32">
+      <UniqueIdentifier>{ef43b5ed-171b-4d28-9f80-afb0c3ede918}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\DebugConsole_x64">
+      <UniqueIdentifier>{803bbb27-0a0c-41ea-b435-68aff0893a35}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\ReleaseConsole_x64">
+      <UniqueIdentifier>{27473336-f345-4259-8b00-57458f3673d5}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\ReleaseConsole_Win32">
+      <UniqueIdentifier>{dade30f2-2b2c-4167-b766-0797ef53fd63}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\BaseClient\Source\BaseClient.h">
@@ -274,6 +294,12 @@
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="..\BaseClient\Source\HTabBarWidget.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\VTabBarTabWidget.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\VTabBarWidget.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>
@@ -1066,6 +1092,60 @@
     </ClCompile>
     <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_HTabBarWidget.cpp">
       <Filter>Generated Files\Release_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\Source\VTabBarTabWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_VTabBarTabWidget.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\DebugConsole\moc_VTabBarTabWidget.cpp">
+      <Filter>Generated Files\DebugConsole_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Debug\moc_VTabBarTabWidget.cpp">
+      <Filter>Generated Files\Debug_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Debug\moc_VTabBarTabWidget.cpp">
+      <Filter>Generated Files\Debug_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_VTabBarTabWidget.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_VTabBarTabWidget.cpp">
+      <Filter>Generated Files\Release_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\ReleaseConsole\moc_VTabBarTabWidget.cpp">
+      <Filter>Generated Files\ReleaseConsole_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_VTabBarTabWidget.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\Source\VTabBarWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_VTabBarWidget.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\DebugConsole\moc_VTabBarWidget.cpp">
+      <Filter>Generated Files\DebugConsole_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Debug\moc_VTabBarWidget.cpp">
+      <Filter>Generated Files\Debug_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Debug\moc_VTabBarWidget.cpp">
+      <Filter>Generated Files\Debug_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_VTabBarWidget.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_VTabBarWidget.cpp">
+      <Filter>Generated Files\Release_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\ReleaseConsole\moc_VTabBarWidget.cpp">
+      <Filter>Generated Files\ReleaseConsole_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_VTabBarWidget.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -38,7 +38,26 @@ void ASyncInstallEngineTask::setPath(const std::string& path)
 
 void ASyncInstallEngineTask::start()
 {
-	t_.reset(new std::thread(std::bind(&ASyncInstallEngineTask::run, this)));
+	t_.reset(new std::thread([this](){
+		try {
+			run();
+		}
+		catch (Ice::Exception& e) {
+			boost::mutex::scoped_lock lock(sync_);
+			info_ = infoHead_ + " - " + "Rpc: " + e.what();
+			state_ = ASyncTask::state_failed;
+		}
+		catch (std::exception& e) {
+			boost::mutex::scoped_lock lock(sync_);
+			info_ = infoHead_ + " - " + e.what();
+			state_ = ASyncTask::state_failed;
+		}
+		catch (...) {
+			boost::mutex::scoped_lock lock(sync_);
+			info_ = infoHead_ + " - " + "unknown exception";
+			state_ = ASyncTask::state_failed;
+		}
+	}));
 }
 
 void ASyncInstallEngineTask::cancel()
@@ -73,10 +92,11 @@ std::string ASyncInstallEngineTask::information()
 
 void ASyncInstallEngineTask::run()
 {
-	sync_.lock();
-	state_ = ASyncTask::state_running;
-	info_ = infoHead_;
-	sync_.unlock();
+	{
+		boost::mutex::scoped_lock lock(sync_);
+		state_ = ASyncTask::state_running;
+		info_ = infoHead_;
+	}
 
 	int state = context_->getEngineState(engineVersion_);
 	if (state != EngineState::installing) {
@@ -157,10 +177,11 @@ void ASyncInstallEngineTask::run()
 
 	context_->addEngineToGui(engineVersion_);
 
-	sync_.lock();
-	info_ = infoHead_;
-	state_ = ASyncTask::state_finished;
-	sync_.unlock();
+	{
+		boost::mutex::scoped_lock lock(sync_);
+		info_ = infoHead_;
+		state_ = ASyncTask::state_finished;
+	}
 }
 
 int ASyncInstallEngineTask::update(ASyncTask* task, int a, double b)

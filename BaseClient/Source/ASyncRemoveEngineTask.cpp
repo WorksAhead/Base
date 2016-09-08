@@ -32,7 +32,26 @@ void ASyncRemoveEngineTask::setEngineVersion(const EngineVersion& v)
 
 void ASyncRemoveEngineTask::start()
 {
-	t_.reset(new std::thread(std::bind(&ASyncRemoveEngineTask::run, this)));
+	t_.reset(new std::thread([this](){
+		try {
+			run();
+		}
+		catch (Ice::Exception& e) {
+			boost::mutex::scoped_lock lock(sync_);
+			info_ = infoHead_ + " - " + "Rpc: " + e.what();
+			state_ = ASyncTask::state_failed;
+		}
+		catch (std::exception& e) {
+			boost::mutex::scoped_lock lock(sync_);
+			info_ = infoHead_ + " - " + e.what();
+			state_ = ASyncTask::state_failed;
+		}
+		catch (...) {
+			boost::mutex::scoped_lock lock(sync_);
+			info_ = infoHead_ + " - " + "unknown exception";
+			state_ = ASyncTask::state_failed;
+		}
+	}));
 }
 
 void ASyncRemoveEngineTask::cancel()
@@ -67,10 +86,11 @@ std::string ASyncRemoveEngineTask::information()
 
 void ASyncRemoveEngineTask::run()
 {
-	sync_.lock();
-	state_ = ASyncTask::state_running;
-	info_ = infoHead_;
-	sync_.unlock();
+	{
+		boost::mutex::scoped_lock lock(sync_);
+		state_ = ASyncTask::state_running;
+		info_ = infoHead_;
+	}
 
 	int state = context_->getEngineState(engineVersion_);
 	if (state != EngineState::removing) {
@@ -104,10 +124,11 @@ void ASyncRemoveEngineTask::run()
 		return;
 	}
 
-	sync_.lock();
-	info_ = infoHead_;
-	state_ = ASyncTask::state_finished;
-	sync_.unlock();
+	{
+		boost::mutex::scoped_lock lock(sync_);
+		info_ = infoHead_;
+		state_ = ASyncTask::state_finished;
+	}
 }
 
 int ASyncRemoveEngineTask::update(ASyncTask* task, int a, double b)

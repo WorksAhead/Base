@@ -42,7 +42,26 @@ std::string ASyncPackTask::package()
 
 void ASyncPackTask::start()
 {
-	t_.reset(new std::thread(std::bind(&ASyncPackTask::run, this)));
+	t_.reset(new std::thread([this](){
+		try {
+			run();
+		}
+		catch (Ice::Exception& e) {
+			boost::mutex::scoped_lock lock(sync_);
+			infoBody_ = std::string("Rpc: ") + e.what();
+			state_ = ASyncTask::state_failed;
+		}
+		catch (std::exception& e) {
+			boost::mutex::scoped_lock lock(sync_);
+			infoBody_ = e.what();
+			state_ = ASyncTask::state_failed;
+		}
+		catch (...) {
+			boost::mutex::scoped_lock lock(sync_);
+			infoBody_ = "unknown exception";
+			state_ = ASyncTask::state_failed;
+		}
+	}));
 }
 
 void ASyncPackTask::cancel()
@@ -94,9 +113,10 @@ void ASyncPackTask::run()
 
 	bool commit = false;
 
-	sync_.lock();
-	state_ = ASyncTask::state_running;
-	sync_.unlock();
+	{
+		boost::mutex::scoped_lock lock(sync_);
+		state_ = ASyncTask::state_running;
+	}
 
 	boost::system::error_code ec;	
 
@@ -105,20 +125,21 @@ void ASyncPackTask::run()
 	FileScanner scanner(path_, ec);
 	CHECK_EC(ec);
 
-	sync_.lock();
-	infoBody_ = "Scanning";
-	sync_.unlock();
+	{
+		boost::mutex::scoped_lock lock(sync_);
+		infoBody_ = "Scanning";
+	}
 
 	for (;;)
 	{
-		sync_.lock();
-		if (cancelled_) {
-			infoBody_.clear();
-			state_ = ASyncTask::state_cancelled;
-			sync_.unlock();
-			return;
+		{
+			boost::mutex::scoped_lock lock(sync_);
+			if (cancelled_) {
+				infoBody_.clear();
+				state_ = ASyncTask::state_cancelled;
+				return;
+			}
 		}
-		sync_.unlock();
 
 		FileScanner::Path path;
 		int ret = scanner.nextFile(path, ec);
@@ -146,26 +167,27 @@ void ASyncPackTask::run()
 
 	std::shared_ptr<Packer> packer(new Packer(package_, path_, srcFiles, level));
 
-	sync_.lock();
-	infoBody_ = "Packing";
-	sync_.unlock();
+	{
+		boost::mutex::scoped_lock lock(sync_);
+		infoBody_ = "Packing";
+	}
 
 	size_t lastIndex = -1;
 	Packer::Path lastPackingFile;
 
 	for (;;)
 	{
-		sync_.lock();
-		if (cancelled_) {
-			packer.reset();
-			boost::system::error_code ec;
-			fs::remove(package_, ec);
-			infoBody_.clear();
-			state_ = ASyncTask::state_cancelled;
-			sync_.unlock();
-			return;
+		{
+			boost::mutex::scoped_lock lock(sync_);
+			if (cancelled_) {
+				packer.reset();
+				boost::system::error_code ec;
+				fs::remove(package_, ec);
+				infoBody_.clear();
+				state_ = ASyncTask::state_cancelled;
+				return;
+			}
 		}
-		sync_.unlock();
 
 		const int ret = packer->executeStep();
 
@@ -198,11 +220,12 @@ void ASyncPackTask::run()
 
 	commit = true;
 
-	sync_.lock();
-	infoBody_.clear();
-	state_ = ASyncTask::state_finished;
-	progress_ = 100;
-	sync_.unlock();
+	{
+		boost::mutex::scoped_lock lock(sync_);
+		infoBody_.clear();
+		state_ = ASyncTask::state_finished;
+		progress_ = 100;
+	}
 
 #undef CHECK_EC
 }

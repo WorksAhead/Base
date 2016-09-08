@@ -43,7 +43,26 @@ void ASyncRemoveTask::setPath(const std::string& path)
 
 void ASyncRemoveTask::start()
 {
-	t_.reset(new std::thread(std::bind(&ASyncRemoveTask::run, this)));
+	t_.reset(new std::thread([this](){
+		try {
+			run();
+		}
+		catch (Ice::Exception& e) {
+			boost::mutex::scoped_lock lock(sync_);
+			infoBody_ = std::string("Rpc: ") + e.what();
+			state_ = ASyncTask::state_failed;
+		}
+		catch (std::exception& e) {
+			boost::mutex::scoped_lock lock(sync_);
+			infoBody_ = e.what();
+			state_ = ASyncTask::state_failed;
+		}
+		catch (...) {
+			boost::mutex::scoped_lock lock(sync_);
+			infoBody_ = "unknown exception";
+			state_ = ASyncTask::state_failed;
+		}
+	}));
 }
 
 void ASyncRemoveTask::cancel()
@@ -91,9 +110,10 @@ void ASyncRemoveTask::run()
 		return;										\
 	}
 
-	sync_.lock();
-	state_ = ASyncTask::state_running;
-	sync_.unlock();
+	{
+		boost::mutex::scoped_lock lock(sync_);
+		state_ = ASyncTask::state_running;
+	}
 
 	boost::system::error_code ec;
 
@@ -105,14 +125,14 @@ void ASyncRemoveTask::run()
 
 	for (;;)
 	{
-		sync_.lock();
-		if (cancelled_) {
-			infoBody_.clear();
-			state_ = ASyncTask::state_cancelled;
-			sync_.unlock();
-			return;
+		{
+			boost::mutex::scoped_lock lock(sync_);
+			if (cancelled_) {
+				infoBody_.clear();
+				state_ = ASyncTask::state_cancelled;
+				return;
+			}
 		}
-		sync_.unlock();
 
 		fs::directory_iterator& it = stack.back();
 
@@ -130,9 +150,10 @@ void ASyncRemoveTask::run()
 			else
 			{
 				CHECK_EC(ec);
-				sync_.lock();
-				infoBody_ = "Removing " + (base / safeCurrentPath.leaf()).string();
-				sync_.unlock();
+				{
+					boost::mutex::scoped_lock lock(sync_);
+					infoBody_ = "Removing " + (base / safeCurrentPath.leaf()).string();
+				}
 				fs::remove(safeCurrentPath, ec);
 				CHECK_EC(ec);
 				++it;
@@ -148,9 +169,10 @@ void ASyncRemoveTask::run()
 			}
 
 			fs::path safeCurrentPath = makeSafePath(stack.back()->path());
-			sync_.lock();
-			infoBody_ = "Removing " + (base / safeCurrentPath.leaf()).string();
-			sync_.unlock();
+			{
+				boost::mutex::scoped_lock lock(sync_);
+				infoBody_ = "Removing " + (base / safeCurrentPath.leaf()).string();
+			}
 			fs::remove(safeCurrentPath, ec);
 			CHECK_EC(ec);
 
@@ -158,17 +180,19 @@ void ASyncRemoveTask::run()
 		}
 	}
 
-	sync_.lock();
-	infoBody_ = "Removing " + safePath.leaf().string();
-	sync_.unlock();
+	{
+		boost::mutex::scoped_lock lock(sync_);
+		infoBody_ = "Removing " + safePath.leaf().string();
+	}
 	fs::remove(safePath, ec);
 	CHECK_EC(ec);
 
-	sync_.lock();
-	infoBody_.clear();
-	state_ = ASyncTask::state_finished;
-	progress_ = 100;
-	sync_.unlock();
+	{
+		boost::mutex::scoped_lock lock(sync_);
+		infoBody_.clear();
+		state_ = ASyncTask::state_finished;
+		progress_ = 100;
+	}
 
 #undef CHECK_EC
 }

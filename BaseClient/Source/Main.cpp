@@ -38,6 +38,8 @@ int main(int argc, char* argv[])
 	//font.setPointSize(9);
 	app.setFont(font);
 
+	int ret = 1;
+
 	Ice::CommunicatorPtr ic;
 
 	try {
@@ -64,7 +66,7 @@ int main(int argc, char* argv[])
 		w.resize(1280, 800);
 		w.show();
 
-		return app.exec();
+		ret = app.exec();
 	}
 	catch (const Ice::Exception& e) {
 		QMessageBox::information(0, "Base", e.what());
@@ -81,5 +83,7 @@ int main(int argc, char* argv[])
 	if (ic) {
 		ic->destroy();
 	}
+
+	return ret;
 }
 

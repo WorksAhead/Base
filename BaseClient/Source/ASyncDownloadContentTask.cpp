@@ -37,7 +37,26 @@ void ASyncDownloadContentTask::setContentId(const std::string& id)
 
 void ASyncDownloadContentTask::start()
 {
-	t_.reset(new std::thread(std::bind(&ASyncDownloadContentTask::run, this)));
+	t_.reset(new std::thread([this](){
+		try {
+			run();
+		}
+		catch (Ice::Exception& e) {
+			boost::mutex::scoped_lock lock(sync_);
+			info_ = infoHead_ + " - " + "Rpc: " + e.what();
+			state_ = ASyncTask::state_failed;
+		}
+		catch (std::exception& e) {
+			boost::mutex::scoped_lock lock(sync_);
+			info_ = infoHead_ + " - " + e.what();
+			state_ = ASyncTask::state_failed;
+		}
+		catch (...) {
+			boost::mutex::scoped_lock lock(sync_);
+			info_ = infoHead_ + " - " + "unknown exception";
+			state_ = ASyncTask::state_failed;
+		}
+	}));
 }
 
 void ASyncDownloadContentTask::cancel()
@@ -72,10 +91,11 @@ std::string ASyncDownloadContentTask::information()
 
 void ASyncDownloadContentTask::run()
 {
-	sync_.lock();
-	state_ = ASyncTask::state_running;
-	info_ = infoHead_;
-	sync_.unlock();
+	{
+		boost::mutex::scoped_lock lock(sync_);
+		state_ = ASyncTask::state_running;
+		info_ = infoHead_;
+	}
 
 	int state = context_->getContentState(contentId_);
 	if (state != ContentState::downloading) {
@@ -126,10 +146,11 @@ void ASyncDownloadContentTask::run()
 
 	context_->addContentToGui(contentId_);
 
-	sync_.lock();
-	info_ = infoHead_;
-	state_ = ASyncTask::state_finished;
-	sync_.unlock();
+	{
+		boost::mutex::scoped_lock lock(sync_);
+		info_ = infoHead_;
+		state_ = ASyncTask::state_finished;
+	}
 }
 
 int ASyncDownloadContentTask::update(ASyncTask* task, int a, double b)

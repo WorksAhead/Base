@@ -42,7 +42,26 @@ void ASyncUploadTask::setFilename(const std::string& filename)
 
 void ASyncUploadTask::start()
 {
-	t_.reset(new std::thread(std::bind(&ASyncUploadTask::run, this)));
+	t_.reset(new std::thread([this](){
+		try {
+			run();
+		}
+		catch(Ice::Exception& e) {
+			boost::mutex::scoped_lock lock(sync_);
+			infoBody_ = std::string("Rpc: ") + e.what();
+			state_ = ASyncTask::state_failed;
+		}
+		catch(std::exception& e) {
+			boost::mutex::scoped_lock lock(sync_);
+			infoBody_ = e.what();
+			state_ = ASyncTask::state_failed;
+		}
+		catch(...) {
+			boost::mutex::scoped_lock lock(sync_);
+			infoBody_ = "unknown exception";
+			state_ = ASyncTask::state_failed;
+		}
+	}));
 }
 
 void ASyncUploadTask::cancel()
@@ -95,9 +114,10 @@ void ASyncUploadTask::run()
 
 	std::string safeFilename = makeSafePath(filename_);
 
-	sync_.lock();
-	state_ = ASyncTask::state_running;
-	sync_.unlock();
+	{
+		boost::mutex::scoped_lock lock(sync_);
+		state_ = ASyncTask::state_running;
+	}
 
 	std::fstream is(safeFilename.c_str(), std::ios::in|std::ios::binary);
 	if (!is.is_open()) {
@@ -126,9 +146,10 @@ void ASyncUploadTask::run()
 
 		std::streamoff offset = 0;
 
-		sync_.lock();
-		infoBody_ = "Transferring";
-		sync_.unlock();
+		{
+			boost::mutex::scoped_lock lock(sync_);
+			infoBody_ = "Transferring";
+		}
 
 		BOOST_SCOPE_EXIT_ALL(&buffers)
 		{
@@ -142,15 +163,15 @@ void ASyncUploadTask::run()
 
 		while (remain)
 		{
-			sync_.lock();
-			if (cancelled_) {
-				infoBody_.clear();
-				state_ = ASyncTask::state_cancelled;
-				sync_.unlock();
-				return;
+			{
+				boost::mutex::scoped_lock lock(sync_);
+				if (cancelled_) {
+					infoBody_.clear();
+					state_ = ASyncTask::state_cancelled;
+					return;
+				}
+				progress_ = (int)(double(offset) / (double)(offset + remain) * 100.0);
 			}
-			progress_ = (int)(double(offset) / (double)(offset + remain) * 100.0);
-			sync_.unlock();
 
 			Buffer& buf = buffers[current];
 
@@ -200,16 +221,16 @@ void ASyncUploadTask::run()
 		}
 	}
 
-	sync_.lock();
-	if (cancelled_) {
-		infoBody_.clear();
-		state_ = ASyncTask::state_cancelled;
-		sync_.unlock();
-		return;
+	{
+		boost::mutex::scoped_lock lock(sync_);
+		if (cancelled_) {
+			infoBody_.clear();
+			state_ = ASyncTask::state_cancelled;
+			return;
+		}
+		progress_ = 100;
+		infoBody_ = "Verifying";
 	}
-	progress_ = 100;
-	infoBody_ = "Verifying";
-	sync_.unlock();
 
 	Rpc::ErrorCode ec = uploader_->finish(crc.value());
 	if (ec != Rpc::ec_success) {
@@ -221,9 +242,10 @@ void ASyncUploadTask::run()
 
 	commit = true;
 
-	sync_.lock();
-	infoBody_.clear();
-	state_ = ASyncTask::state_finished;
-	sync_.unlock();
+	{
+		boost::mutex::scoped_lock lock(sync_);
+		infoBody_.clear();
+		state_ = ASyncTask::state_finished;
+	}
 }
 

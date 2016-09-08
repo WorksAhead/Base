@@ -48,7 +48,26 @@ std::string ASyncDownloadTask::filename()
 
 void ASyncDownloadTask::start()
 {
-	t_.reset(new std::thread(std::bind(&ASyncDownloadTask::run, this)));
+	t_.reset(new std::thread([this](){
+		try {
+			run();
+		}
+		catch (Ice::Exception& e) {
+			boost::mutex::scoped_lock lock(sync_);
+			infoBody_ = std::string("Rpc: ") + e.what();
+			state_ = ASyncTask::state_failed;
+		}
+		catch (std::exception& e) {
+			boost::mutex::scoped_lock lock(sync_);
+			infoBody_ = e.what();
+			state_ = ASyncTask::state_failed;
+		}
+		catch (...) {
+			boost::mutex::scoped_lock lock(sync_);
+			infoBody_ = "unknown exception";
+			state_ = ASyncTask::state_failed;
+		}
+	}));
 }
 
 void ASyncDownloadTask::cancel()
@@ -103,9 +122,10 @@ void ASyncDownloadTask::run()
 		}
 	};
 
-	sync_.lock();
-	state_ = ASyncTask::state_running;
-	sync_.unlock();
+	{
+		boost::mutex::scoped_lock lock(sync_);
+		state_ = ASyncTask::state_running;
+	}
 
 	const fs::path& parentPath = fs::path(filename_).parent_path();
 	const fs::path& safeParentPath = fs::path(safeFilename).parent_path();
@@ -152,9 +172,10 @@ void ASyncDownloadTask::run()
 			}
 		};
 
-		sync_.lock();
-		infoBody_ = "Transferring";
-		sync_.unlock();
+		{
+			boost::mutex::scoped_lock lock(sync_);
+			infoBody_ = "Transferring";
+		}
 
 		int current = 0;
 		Ice::Long remain = length;
@@ -163,15 +184,15 @@ void ASyncDownloadTask::run()
 
 		while (wrote < length)
 		{
-			sync_.lock();
-			if (cancelled_) {
-				infoBody_.clear();
-				state_ = ASyncTask::state_cancelled;
-				sync_.unlock();
-				return;
+			{
+				boost::mutex::scoped_lock lock(sync_);
+				if (cancelled_) {
+					infoBody_.clear();
+					state_ = ASyncTask::state_cancelled;
+					return;
+				}
+				progress_ = (int)(double(offset) / (double)(offset + remain) * 100.0);
 			}
-			progress_ = (int)(double(offset) / (double)(offset + remain) * 100.0);
-			sync_.unlock();
 
 			Ice::AsyncResultPtr& result = asyncResults[current];
 
@@ -209,21 +230,22 @@ void ASyncDownloadTask::run()
 		}
 	}
 
-	sync_.lock();
-	if (cancelled_) {
-		infoBody_.clear();
-		state_ = ASyncTask::state_cancelled;
-		sync_.unlock();
-		return;
+	{
+		boost::mutex::scoped_lock lock(sync_);
+		if (cancelled_) {
+			infoBody_.clear();
+			state_ = ASyncTask::state_cancelled;
+			return;
+		}
 	}
-	sync_.unlock();
 
 	commit = true;
 
-	sync_.lock();
-	infoBody_.clear();
-	state_ = ASyncTask::state_finished;
-	progress_ = 100;
-	sync_.unlock();
+	{
+		boost::mutex::scoped_lock lock(sync_);
+		infoBody_.clear();
+		state_ = ASyncTask::state_finished;
+		progress_ = 100;
+	}
 }
 

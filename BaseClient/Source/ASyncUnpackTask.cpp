@@ -41,7 +41,26 @@ void ASyncUnpackTask::setPath(const std::string& path)
 
 void ASyncUnpackTask::start()
 {
-	t_.reset(new std::thread(std::bind(&ASyncUnpackTask::run, this)));
+	t_.reset(new std::thread([this](){
+		try {
+			run();
+		}
+		catch (Ice::Exception& e) {
+			boost::mutex::scoped_lock lock(sync_);
+			infoBody_ = std::string("Rpc: ") + e.what();
+			state_ = ASyncTask::state_failed;
+		}
+		catch (std::exception& e) {
+			boost::mutex::scoped_lock lock(sync_);
+			infoBody_ = e.what();
+			state_ = ASyncTask::state_failed;
+		}
+		catch (...) {
+			boost::mutex::scoped_lock lock(sync_);
+			infoBody_ = "unknown exception";
+			state_ = ASyncTask::state_failed;
+		}
+	}));
 }
 
 void ASyncUnpackTask::cancel()
@@ -83,30 +102,32 @@ void ASyncUnpackTask::run()
 {
 	const int level = 0;
 
-	sync_.lock();
-	state_ = ASyncTask::state_running;
-	sync_.unlock();
+	{
+		boost::mutex::scoped_lock lock(sync_);
+		state_ = ASyncTask::state_running;
+	}
 
 	std::shared_ptr<Unpacker> unpacker(new Unpacker(package_, path_));
 
-	sync_.lock();
-	infoBody_ = "Unpacking";
-	sync_.unlock();
+	{
+		boost::mutex::scoped_lock lock(sync_);
+		infoBody_ = "Unpacking";
+	}
 
 	size_t lastIndex = -1;
 	Packer::Path lastUnpackingFile;
 
 	for (;;)
 	{
-		sync_.lock();
-		if (cancelled_) {
-			unpacker.reset();
-			infoBody_.clear();
-			state_ = ASyncTask::state_cancelled;
-			sync_.unlock();
-			return;
+		{
+			boost::mutex::scoped_lock lock(sync_);
+			if (cancelled_) {
+				unpacker.reset();
+				infoBody_.clear();
+				state_ = ASyncTask::state_cancelled;
+				return;
+			}
 		}
-		sync_.unlock();
 
 		const int ret = unpacker->executeStep();
 
@@ -135,10 +156,11 @@ void ASyncUnpackTask::run()
 		}
 	}
 
-	sync_.lock();
-	infoBody_.clear();
-	state_ = ASyncTask::state_finished;
-	progress_ = 100;
-	sync_.unlock();
+	{
+		boost::mutex::scoped_lock lock(sync_);
+		infoBody_.clear();
+		state_ = ASyncTask::state_finished;
+		progress_ = 100;
+	}
 }
 

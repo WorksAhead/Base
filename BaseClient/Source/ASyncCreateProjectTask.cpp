@@ -47,7 +47,26 @@ void ASyncCreateProjectTask::setLocation(const std::string& location)
 
 void ASyncCreateProjectTask::start()
 {
-	t_.reset(new std::thread(std::bind(&ASyncCreateProjectTask::run, this)));
+	t_.reset(new std::thread([this](){
+		try {
+			run();
+		}
+		catch (Ice::Exception& e) {
+			boost::mutex::scoped_lock lock(sync_);
+			info_ = infoHead_ + " - " + "Rpc: " + e.what();
+			state_ = ASyncTask::state_failed;
+		}
+		catch (std::exception& e) {
+			boost::mutex::scoped_lock lock(sync_);
+			info_ = infoHead_ + " - " + e.what();
+			state_ = ASyncTask::state_failed;
+		}
+		catch (...) {
+			boost::mutex::scoped_lock lock(sync_);
+			info_ = infoHead_ + " - " + "unknown exception";
+			state_ = ASyncTask::state_failed;
+		}
+	}));
 }
 
 void ASyncCreateProjectTask::cancel()
@@ -82,10 +101,11 @@ std::string ASyncCreateProjectTask::information()
 
 void ASyncCreateProjectTask::run()
 {
-	sync_.lock();
-	state_ = ASyncTask::state_running;
-	info_ = infoHead_;
-	sync_.unlock();
+	{
+		boost::mutex::scoped_lock lock(sync_);
+		state_ = ASyncTask::state_running;
+		info_ = infoHead_;
+	}
 
 	const std::string& package = (fs::path(context_->contentPath(contentId_)) / "content").string();
 
@@ -130,10 +150,11 @@ void ASyncCreateProjectTask::run()
 
 	commit = true;
 
-	sync_.lock();
-	info_ = infoHead_;
-	state_ = ASyncTask::state_finished;
-	sync_.unlock();
+	{
+		boost::mutex::scoped_lock lock(sync_);
+		info_ = infoHead_;
+		state_ = ASyncTask::state_finished;
+	}
 }
 
 int ASyncCreateProjectTask::update(ASyncTask* task, int a, double b)

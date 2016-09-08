@@ -1,29 +1,29 @@
 #include "VTabWidget.h"
 
-#include <QBoxLayout>
-
 VTabWidget::VTabWidget(QWidget* parent) : QWidget(parent)
 {
-	list_ = new QListWidget;
-	list_->setObjectName("VTabList");
-
-	list_->setFixedWidth(200);
-
+	tabBar_ = new VTabBarWidget;
 	stack_ = new QStackedLayout;
 
 	QBoxLayout* layout = new QBoxLayout(QBoxLayout::LeftToRight);
 	layout->setMargin(0);
 	layout->setSpacing(0);
-	layout->addWidget(list_);
+	layout->addWidget(tabBar_);
 	layout->addLayout(stack_);
 
 	setLayout(layout);
 
-	QObject::connect(list_, &QListWidget::currentRowChanged, stack_, &QStackedLayout::setCurrentIndex);
+	QObject::connect(tabBar_, &VTabBarWidget::currentIndexChanged, stack_, &QStackedLayout::setCurrentIndex);
 }
 
 VTabWidget::~VTabWidget()
 {
+
+}
+
+VTabBarWidget* VTabWidget::tabBar()
+{
+	return tabBar_;
 }
 
 void VTabWidget::addTab(const QString& label, QWidget* content)
@@ -37,13 +37,38 @@ void VTabWidget::insertTab(int index, const QString& label, QWidget* content)
 		index = stack_->count();
 	}
 
-	list_->insertItem(index, label);
+	tabBar_->insertTab(index, label);
 	stack_->insertWidget(index, content);
+}
+
+int VTabWidget::indexOf(QWidget* content)
+{
+	return stack_->indexOf(content);
+}
+
+void VTabWidget::addNotification(int index)
+{
+	tabBar_->addNotification(index);
+}
+
+int VTabWidget::currentIndex() const
+{
+	return stack_->currentIndex();
 }
 
 void VTabWidget::setCurrentIndex(int index)
 {
-	list_->setCurrentRow(index);
+	tabBar_->setCurrentIndex(index);
 	stack_->setCurrentIndex(index);
+}
+
+QFont VTabWidget::labelFont() const
+{
+	return tabBar_->labelFont();
+}
+
+void VTabWidget::setLabelFont(const QFont& font)
+{
+	tabBar_->setLabelFont(font);
 }
 

@@ -15,6 +15,10 @@ ManageWidget::ManageWidget(ContextPtr context, QWidget* parent) : QWidget(parent
 {
 	VTabWidget* p = new VTabWidget;
 
+	QFont font = p->labelFont();
+	font.setPixelSize(14);
+	p->setLabelFont(font);
+
 	manageContent_ = new ManageContentWidget(context_);
 	p->addTab("Content", manageContent_);
 
