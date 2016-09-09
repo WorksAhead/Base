@@ -43,7 +43,7 @@ int main(int argc, char* argv[])
 	//font.setPointSize(9);
 	app.setFont(font);
 
-	if (fs::canonical(fs::current_path()).string().size() > 24)
+	if (fs::canonical(fs::current_path()).parent_path().string().size() > 24)
 	{
 		QFile file("IgnorePath");
 		if (!file.open(QIODevice::ReadOnly)) {

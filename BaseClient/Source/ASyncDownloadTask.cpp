@@ -6,6 +6,8 @@
 
 #include <boost/filesystem.hpp>
 #include <boost/scope_exit.hpp>
+#include <boost/chrono.hpp>
+#include <boost/format.hpp>
 
 #include <fstream>
 #include <vector>
@@ -180,7 +182,10 @@ void ASyncDownloadTask::run()
 		int current = 0;
 		Ice::Long remain = length;
 		Ice::Long offset = 0;
+		Ice::Long lastOffset = 0;
 		std::streamsize wrote = 0;
+
+		boost::chrono::steady_clock::time_point lastTimePoint = boost::chrono::steady_clock::now();
 
 		while (wrote < length)
 		{
@@ -192,6 +197,31 @@ void ASyncDownloadTask::run()
 					return;
 				}
 				progress_ = (int)(double(offset) / (double)(offset + remain) * 100.0);
+			}
+
+			{
+				boost::chrono::steady_clock::time_point t = boost::chrono::steady_clock::now();
+				boost::chrono::milliseconds d = boost::chrono::duration_cast<boost::chrono::milliseconds>(t - lastTimePoint);
+				if (d.count() >= 1000)
+				{
+					double s = (offset - lastOffset) / (d.count() * 0.001);
+					if (s >= 1024.0*1024.0) {
+						s = s / (1024.0*1024.0);
+						boost::mutex::scoped_lock lock(sync_);
+						infoBody_ = (boost::format("Transferring %.2fMBytes/s") % s).str();
+					}
+					else if (s >= 1024.0) {
+						s = s / 1024.0;
+						boost::mutex::scoped_lock lock(sync_);
+						infoBody_ = (boost::format("Transferring %.2fKBytes/s") % s).str();
+					}
+					else {
+						boost::mutex::scoped_lock lock(sync_);
+						infoBody_ = (boost::format("Transferring %.2fBytes/s") % s).str();
+					}
+					lastOffset = offset;
+					lastTimePoint = t;
+				}
 			}
 
 			Ice::AsyncResultPtr& result = asyncResults[current];
