@@ -177,11 +177,13 @@
     <ClCompile Include="..\BaseServer\Source\RpcUserBrowserImpl.cpp" />
     <ClCompile Include="..\Common\Crc.cpp" />
     <ClCompile Include="..\Common\ErrorMessage.cpp" />
+    <ClCompile Include="..\Common\Rpc\RpcDownloader.cpp" />
     <ClCompile Include="..\Common\Rpc\RpcErrorCode.cpp" />
     <ClCompile Include="..\Common\Rpc\RpcManagedObject.cpp" />
     <ClCompile Include="..\Common\Rpc\RpcSession.cpp" />
     <ClCompile Include="..\Common\Rpc\RpcStart.cpp" />
     <ClCompile Include="..\Common\Rpc\RpcTypedefs.cpp" />
+    <ClCompile Include="..\Common\Rpc\RpcUploader.cpp" />
     <ClCompile Include="..\Ext\sqlite3\sqlite3.c" />
     <ClCompile Include="..\Ext\SQLiteCpp\src\Column.cpp" />
     <ClCompile Include="..\Ext\SQLiteCpp\src\Database.cpp" />
@@ -211,11 +213,13 @@
     <ClInclude Include="..\BaseServer\Source\SQLiteUtil.h" />
     <ClInclude Include="..\Common\Crc.h" />
     <ClInclude Include="..\Common\ErrorMessage.h" />
+    <ClInclude Include="..\Common\Rpc\RpcDownloader.h" />
     <ClInclude Include="..\Common\Rpc\RpcErrorCode.h" />
     <ClInclude Include="..\Common\Rpc\RpcManagedObject.h" />
     <ClInclude Include="..\Common\Rpc\RpcSession.h" />
     <ClInclude Include="..\Common\Rpc\RpcStart.h" />
     <ClInclude Include="..\Common\Rpc\RpcTypedefs.h" />
+    <ClInclude Include="..\Common\Rpc\RpcUploader.h" />
     <ClInclude Include="..\Ext\SQLiteCpp\include\SQLiteCpp\Assertion.h" />
     <ClInclude Include="..\Ext\SQLiteCpp\include\SQLiteCpp\Column.h" />
     <ClInclude Include="..\Ext\SQLiteCpp\include\SQLiteCpp\Database.h" />
@@ -225,11 +229,13 @@
     <ClInclude Include="..\Ext\SQLiteCpp\include\SQLiteCpp\Transaction.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\Common\Rpc\RpcDownloader.ice" />
     <None Include="..\Common\Rpc\RpcErrorCode.ice" />
     <None Include="..\Common\Rpc\RpcManagedObject.ice" />
     <None Include="..\Common\Rpc\RpcSession.ice" />
     <None Include="..\Common\Rpc\RpcStart.ice" />
     <None Include="..\Common\Rpc\RpcTypedefs.ice" />
+    <None Include="..\Common\Rpc\RpcUploader.ice" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

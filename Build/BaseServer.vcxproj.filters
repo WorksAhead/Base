@@ -114,6 +114,12 @@
     <ClCompile Include="..\BaseServer\Source\RpcExtraSubmitterImpl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\Common\Rpc\RpcDownloader.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\Rpc\RpcUploader.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Common\Rpc\RpcErrorCode.h">
@@ -218,6 +224,12 @@
     <ClInclude Include="..\BaseServer\Source\RpcExtraSubmitterImpl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\Common\Rpc\RpcDownloader.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\Rpc\RpcUploader.h">
+      <Filter>Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Common\Rpc\RpcErrorCode.ice">
@@ -233,6 +245,12 @@
       <Filter>Common</Filter>
     </None>
     <None Include="..\Common\Rpc\RpcManagedObject.ice">
+      <Filter>Common</Filter>
+    </None>
+    <None Include="..\Common\Rpc\RpcDownloader.ice">
+      <Filter>Common</Filter>
+    </None>
+    <None Include="..\Common\Rpc\RpcUploader.ice">
       <Filter>Common</Filter>
     </None>
   </ItemGroup>

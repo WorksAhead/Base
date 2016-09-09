@@ -3,6 +3,8 @@
 #include <RpcErrorCode.ice>
 #include <RpcTypedefs.ice>
 #include <RpcManagedObject.ice>
+#include <RpcDownloader.ice>
+#include <RpcUploader.ice>
 
 module Rpc
 {
@@ -85,21 +87,6 @@ module Rpc
 	interface UserBrowser extends ManagedObject
 	{
 		ErrorCode next(int n, out UserSeq items);
-	};
-
-	interface Uploader extends ManagedObject
-	{
-		ErrorCode write(long offset, ["cpp:array"] ByteSeq bytes);
-		ErrorCode finish(int crc32);
-		void cancel();
-	};
-
-	interface Downloader extends ManagedObject
-	{
-		ErrorCode getSize(out long size);
-		ErrorCode read(long offset, int size, out ByteSeq bytes);
-		void finish();
-		void cancel();
 	};
 
 	interface ContentSubmitter extends ManagedObject

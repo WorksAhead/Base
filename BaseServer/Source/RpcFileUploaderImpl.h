@@ -1,7 +1,7 @@
 #ifndef BASESERVER_RPCFILEUPLOADERIMPL_HEADER_
 #define BASESERVER_RPCFILEUPLOADERIMPL_HEADER_
 
-#include <RpcSession.h>
+#include <RpcUploader.h>
 
 #include <boost/thread/recursive_mutex.hpp>
 #include <boost/shared_ptr.hpp>

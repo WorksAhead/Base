@@ -4,6 +4,8 @@
 #include "Context.h"
 #include "RpcFileUploaderImpl.h"
 
+#include <RpcSession.h>
+
 #include <boost/thread/recursive_mutex.hpp>
 
 #include <map>

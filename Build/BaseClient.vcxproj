@@ -1918,11 +1918,13 @@
     <ClCompile Include="..\BaseClient\Source\Window.cpp" />
     <ClCompile Include="..\Common\Crc.cpp" />
     <ClCompile Include="..\Common\ErrorMessage.cpp" />
+    <ClCompile Include="..\Common\Rpc\RpcDownloader.cpp" />
     <ClCompile Include="..\Common\Rpc\RpcErrorCode.cpp" />
     <ClCompile Include="..\Common\Rpc\RpcManagedObject.cpp" />
     <ClCompile Include="..\Common\Rpc\RpcSession.cpp" />
     <ClCompile Include="..\Common\Rpc\RpcStart.cpp" />
     <ClCompile Include="..\Common\Rpc\RpcTypedefs.cpp" />
+    <ClCompile Include="..\Common\Rpc\RpcUploader.cpp" />
     <ClCompile Include="..\Ext\sqlite3\sqlite3.c" />
     <ClCompile Include="..\Ext\SQLiteCpp\src\Column.cpp" />
     <ClCompile Include="..\Ext\SQLiteCpp\src\Database.cpp" />
@@ -3332,8 +3334,10 @@
       <Command Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DWIN64 -DQT_DLL -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS -D_WINSOCK_DEPRECATED_NO_WARNINGS "-I.\..\Ext\sqlite3" "-I.\..\Ext\SQLiteCpp\include" "-I.\..\Ext\zlib" "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtWebEngine" "-I$(QTDIR)\include\QtWebEngineWidgets" "-I.\..\BaseClient\GeneratedFiles" "-I.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I.\..\Common" "-I.\..\Common\Rpc" "-IC:\Work\_lib\boost_1_59_0" "-IC:\Work\_lib\Ice-3.6.2\include"</Command>
     </CustomBuild>
     <ClInclude Include="..\Common\Crc.h" />
+    <ClInclude Include="..\Common\Rpc\RpcDownloader.h" />
     <ClInclude Include="..\Common\Rpc\RpcManagedObject.h" />
     <ClInclude Include="..\Common\Rpc\RpcTypedefs.h" />
+    <ClInclude Include="..\Common\Rpc\RpcUploader.h" />
     <ClInclude Include="..\Ext\SQLiteCpp\include\SQLiteCpp\Assertion.h" />
     <ClInclude Include="..\Ext\SQLiteCpp\include\SQLiteCpp\Column.h" />
     <ClInclude Include="..\Ext\SQLiteCpp\include\SQLiteCpp\Database.h" />
@@ -4590,11 +4594,13 @@
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\uic.exe" -o ".\..\BaseClient\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|x64'">"$(QTDIR)\bin\uic.exe" -o ".\..\BaseClient\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
     </CustomBuild>
+    <None Include="..\Common\Rpc\RpcDownloader.ice" />
     <None Include="..\Common\Rpc\RpcErrorCode.ice" />
     <None Include="..\Common\Rpc\RpcManagedObject.ice" />
     <None Include="..\Common\Rpc\RpcSession.ice" />
     <None Include="..\Common\Rpc\RpcStart.ice" />
     <None Include="..\Common\Rpc\RpcTypedefs.ice" />
+    <None Include="..\Common\Rpc\RpcUploader.ice" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

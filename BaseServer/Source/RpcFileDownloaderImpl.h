@@ -1,7 +1,7 @@
 #ifndef BASESERVER_RPCFILEDOWNLOADERIMPL_HEADER_
 #define BASESERVER_RPCFILEDOWNLOADERIMPL_HEADER_
 
-#include <RpcSession.h>
+#include <RpcDownloader.h>
 
 #include <boost/thread/recursive_mutex.hpp>
 #include <boost/shared_ptr.hpp>
