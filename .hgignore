@@ -1,0 +1,5 @@
+syntax: glob
+BaseClient/GeneratedFiles/
+Debug/
+Intermediate/
+Output/
