@@ -120,7 +120,7 @@ int Packer::executeStep()
 			zipFileInfo.tmz_date.tm_sec = ti->tm_sec;
 		}
 
-		if (zipOpenNewFileInZip(handle_, path.string().c_str(), &zipFileInfo, 0, 0, 0, 0, 0, Z_DEFLATED, level_) != ZIP_OK) {
+		if (zipOpenNewFileInZip64(handle_, path.string().c_str(), &zipFileInfo, 0, 0, 0, 0, 0, Z_DEFLATED, level_, 1) != ZIP_OK) {
 			errorMessage_ = "Write error";
 			state_ = state_failed;
 			return -1;

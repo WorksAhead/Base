@@ -111,7 +111,7 @@ void ASyncSubmitClientTask::run()
 	{
 		fs::path safePath = makeSafePath(path_);
 
-		std::fstream is((safePath / "update").string().c_str(), std::ios::in);
+		std::fstream is((safePath / "Update").string().c_str(), std::ios::in);
 		if (!is.is_open()) {
 			boost::mutex::scoped_lock lock(sync_);
 			info_ = infoHead_ + " - " + "Update file not exists";

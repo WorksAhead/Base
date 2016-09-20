@@ -24,7 +24,7 @@
 #include <vector>
 #include <string>
 
-#define BASE_CURRENT_VERSION "1.0.0.11"
+#define BASE_CURRENT_VERSION "1.0.0.12"
 
 namespace fs = boost::filesystem;
 
@@ -88,7 +88,7 @@ int main(int argc, char* argv[])
 	if (!arguments.empty())
 	{
 		if (arguments[0] == "ver") {
-			std::fstream os((fs::current_path().parent_path() / "version").string().c_str(), std::ios::out);
+			std::fstream os((fs::current_path().parent_path() / "Version").string().c_str(), std::ios::out);
 			os << BASE_CURRENT_VERSION << "\n";
 			os.flush();
 			return 0;

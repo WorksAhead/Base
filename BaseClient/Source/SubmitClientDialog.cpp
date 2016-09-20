@@ -95,7 +95,7 @@ void SubmitClientDialog::selectLocation()
 
 		std::string version;
 
-		std::fstream is((path / "version").string().c_str(), std::ios::in);
+		std::fstream is((path / "Version").string().c_str(), std::ios::in);
 		if (!is.is_open() || !std::getline(is, version)) {
 			context_->prompt(1, "Client version information not exists.");
 			return;

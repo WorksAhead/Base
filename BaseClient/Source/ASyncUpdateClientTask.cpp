@@ -126,7 +126,7 @@ void ASyncUpdateClientTask::run()
 	fs::path safeSrcPath = makeSafePath(sourcePath_);
 	fs::path safeTgtPath = makeSafePath(targetPath_);
 
-	std::fstream is((safeSrcPath / "update").string().c_str(), std::ios::in);
+	std::fstream is((safeSrcPath / "Update").string().c_str(), std::ios::in);
 
 	if (!is.is_open()) {
 		boost::mutex::scoped_lock lock(sync_);
