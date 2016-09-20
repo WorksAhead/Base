@@ -1,4 +1,6 @@
 #include "LoginDialog.h"
+#include "DownloadClientDialog.h"
+#include "UpdateDialog.h"
 #include "BaseClient.h"
 #include "QtUtils.h"
 
@@ -14,9 +16,41 @@
 #include <IceUtil/IceUtil.h>
 #include <Ice/Ice.h>
 
+#include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/scope_exit.hpp>
+
+#include <fstream>
+#include <vector>
+#include <string>
+
+#define BASE_CURRENT_VERSION "1.0.0.11"
 
 namespace fs = boost::filesystem;
+
+bool versionLess(const std::string& lhs, const std::string& rhs)
+{
+	std::vector<std::string> v1;
+	boost::split(v1, lhs, boost::is_any_of("."));
+
+	std::vector<std::string> v2;
+	boost::split(v2, rhs, boost::is_any_of("."));
+
+	for (int i = 0; i < 4; ++i)
+	{
+		int a = std::stoi(v1.at(i));
+		int b = std::stoi(v2.at(i));
+
+		if (a < b) {
+			return true;
+		}
+		else if (a > b) {
+			return false;
+		}
+	}
+
+	return false;
+}
 
 int main(int argc, char* argv[])
 {
@@ -42,6 +76,36 @@ int main(int argc, char* argv[])
 	font.setFamily(QStringLiteral("Microsoft YaHei UI"));
 	//font.setPointSize(9);
 	app.setFont(font);
+
+	std::vector<std::string> arguments;
+
+	for (int i = 1; i < argc; ++i) {
+		arguments.push_back(argv[i]);
+	}
+
+	bool dev = false;
+
+	if (!arguments.empty())
+	{
+		if (arguments[0] == "ver") {
+			std::fstream os((fs::current_path().parent_path() / "version").string().c_str(), std::ios::out);
+			os << BASE_CURRENT_VERSION << "\n";
+			os.flush();
+			return 0;
+		}
+		else if (arguments[0] == "update" && arguments.size() == 3) {
+			UpdateDialog d(QString::fromLocal8Bit(arguments[1].c_str()), QString::fromLocal8Bit(arguments[2].c_str()));
+			d.exec();
+			return 0;
+		}
+		else if (arguments[0] == "dev") {
+			dev = true;
+		}
+		else {
+			QMessageBox::information(0, "Base", "Bad command line syntax.");
+			return 0;
+		}
+	}
 
 	if (fs::canonical(fs::current_path()).parent_path().string().size() > 24)
 	{
@@ -71,15 +135,36 @@ int main(int argc, char* argv[])
 
 	Ice::CommunicatorPtr ic;
 
+	BOOST_SCOPE_EXIT_ALL(&ic)
+	{
+		if (ic) {
+			ic->destroy();
+		}
+	};
+
 	try {
 		ic = Ice::initialize(Ice::StringSeq{"--Ice.Config=BaseClient.cfg"});
 
 		Rpc::StartPrx startPrx = Rpc::StartPrx::checkedCast(ic->propertyToProxy("Start"));
 
-		std::string serverVersion = startPrx->getServerVersion();
-		if (serverVersion != "1.0.0.2") {
-			QMessageBox::information(0, "Base", QString("Unmatched server version (%1).").arg(serverVersion.c_str()));
-			return 0;
+		std::string clientVersion = startPrx->getClientVersion();
+
+		if (clientVersion.empty())
+		{
+			QMessageBox::warning(0, "Base", "No active Client version.");
+		}
+		else if (BASE_CURRENT_VERSION != clientVersion)
+		{
+			if (versionLess(BASE_CURRENT_VERSION, clientVersion)) {
+				DownloadClientDialog d(startPrx);
+				d.exec();
+				return 0;
+			}
+			else if (!dev) {
+				QMessageBox::information(0, "Base",
+					QString("Current version (%1) is newer than required version (%2).").arg(BASE_CURRENT_VERSION).arg(clientVersion.c_str()));
+				return 0;
+			}
 		}
 
 		LoginDialog ld(startPrx);
@@ -89,7 +174,7 @@ int main(int argc, char* argv[])
 			return 0;
 		}
 
-		BaseClient w(ld.session());
+		BaseClient w(BASE_CURRENT_VERSION, ld.session());
 
 		w.setMinimumSize(800, 500);
 		w.resize(1280, 800);
@@ -107,10 +192,6 @@ int main(int argc, char* argv[])
 		//std::cout << msg << std::endl;
 	}
 	catch (...) {
-	}
-
-	if (ic) {
-		ic->destroy();
 	}
 
 	return returnCode;

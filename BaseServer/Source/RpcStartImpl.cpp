@@ -1,5 +1,6 @@
 #include "RpcStartImpl.h"
 #include "RpcSessionImpl.h"
+#include "RpcClientDownloaderImpl.h"
 #include "Datetime.h"
 #include "Context.h"
 
@@ -8,7 +9,11 @@
 #include <SQLiteCpp/Database.h>
 #include <SQLiteCpp/Transaction.h>
 
+#include <boost/filesystem.hpp>
+
 #include <sstream>
+
+namespace fs = boost::filesystem;
 
 RpcStartImpl::RpcStartImpl(CenterPtr center) : center_(center)
 {
@@ -19,7 +24,25 @@ RpcStartImpl::RpcStartImpl(CenterPtr center) : center_(center)
 
 std::string RpcStartImpl::getServerVersion(const Ice::Current&)
 {
-	return "1.0.0.2";
+	return "1.0.0.3";
+}
+
+std::string RpcStartImpl::getClientVersion(const Ice::Current&)
+{
+	return center_->getNewestClientVersion();
+}
+
+Rpc::ErrorCode RpcStartImpl::downloadClient(Rpc::DownloaderPrx& downloaderPrx, const Ice::Current& c)
+{
+	RpcClientDownloaderImplPtr downloader = new RpcClientDownloaderImpl(center_);
+
+	downloader->init(center_->getNewestClientVersion());
+
+	downloaderPrx = Rpc::DownloaderPrx::uncheckedCast(c.adapter->addWithUUID(downloader));
+
+	maintainer_->add(std::make_pair(downloaderPrx, downloader));
+
+	return Rpc::ec_success;
 }
 
 Rpc::ErrorCode RpcStartImpl::signup(const std::string& username, const std::string& password, const Ice::Current&)

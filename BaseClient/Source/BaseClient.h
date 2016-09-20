@@ -31,7 +31,7 @@ private:
 	Q_OBJECT
 
 public:
-	explicit BaseClient(Rpc::SessionPrx);
+	BaseClient(const QString& version, Rpc::SessionPrx);
 	~BaseClient();
 
 private:

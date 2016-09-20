@@ -23,26 +23,6 @@
       <Extensions>moc;h;cpp</Extensions>
       <SourceControlFiles>False</SourceControlFiles>
     </Filter>
-    <Filter Include="Generated Files\Debug_Win32">
-      <UniqueIdentifier>{ab7382a1-49ea-4875-8118-d60948bedbb5}</UniqueIdentifier>
-      <Extensions>cpp;moc</Extensions>
-      <SourceControlFiles>False</SourceControlFiles>
-    </Filter>
-    <Filter Include="Generated Files\Debug_x64">
-      <UniqueIdentifier>{cf852aed-2ff1-473c-a92e-ff4d56df2226}</UniqueIdentifier>
-      <Extensions>cpp;moc</Extensions>
-      <SourceControlFiles>False</SourceControlFiles>
-    </Filter>
-    <Filter Include="Generated Files\Release_Win32">
-      <UniqueIdentifier>{ef594800-5f17-4407-9c3d-c963f7fdb580}</UniqueIdentifier>
-      <Extensions>cpp;moc</Extensions>
-      <SourceControlFiles>False</SourceControlFiles>
-    </Filter>
-    <Filter Include="Generated Files\Release_x64">
-      <UniqueIdentifier>{ac5c47fc-c12c-41a4-8903-c044e7cf6c39}</UniqueIdentifier>
-      <Extensions>cpp;moc</Extensions>
-      <SourceControlFiles>False</SourceControlFiles>
-    </Filter>
     <Filter Include="Common">
       <UniqueIdentifier>{0c84e15c-d59a-411e-973f-e023cb2f662d}</UniqueIdentifier>
     </Filter>
@@ -53,61 +33,116 @@
       <UniqueIdentifier>{f3cf594c-7821-4ae0-892a-18fd89e07d08}</UniqueIdentifier>
     </Filter>
     <Filter Include="Generated Files\DebugConsole_Win32">
-      <UniqueIdentifier>{ef43b5ed-171b-4d28-9f80-afb0c3ede918}</UniqueIdentifier>
+      <UniqueIdentifier>{00e8970e-380f-4140-a64f-b130ee929396}</UniqueIdentifier>
       <Extensions>cpp;moc</Extensions>
       <SourceControlFiles>False</SourceControlFiles>
     </Filter>
-    <Filter Include="Generated Files\DebugConsole_x64">
-      <UniqueIdentifier>{803bbb27-0a0c-41ea-b435-68aff0893a35}</UniqueIdentifier>
-      <Extensions>cpp;moc</Extensions>
-      <SourceControlFiles>False</SourceControlFiles>
-    </Filter>
-    <Filter Include="Generated Files\ReleaseConsole_x64">
-      <UniqueIdentifier>{27473336-f345-4259-8b00-57458f3673d5}</UniqueIdentifier>
+    <Filter Include="Generated Files\Release_Win32">
+      <UniqueIdentifier>{5a4439e4-51c0-47c5-933a-4bf2bb9889ef}</UniqueIdentifier>
       <Extensions>cpp;moc</Extensions>
       <SourceControlFiles>False</SourceControlFiles>
     </Filter>
     <Filter Include="Generated Files\ReleaseConsole_Win32">
-      <UniqueIdentifier>{dade30f2-2b2c-4167-b766-0797ef53fd63}</UniqueIdentifier>
+      <UniqueIdentifier>{3c717277-44ef-4b94-b2a5-c95471d39133}</UniqueIdentifier>
       <Extensions>cpp;moc</Extensions>
       <SourceControlFiles>False</SourceControlFiles>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="..\BaseClient\Source\BaseClient.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\Window.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Resources\BaseClient.qrc">
-      <Filter>Resource Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\LoginDialog.ui">
+    <CustomBuild Include="..\BaseClient\Source\ASyncTaskManagerDialog.ui">
       <Filter>Form Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\LoginDialog.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\VTabWidget.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\SubmitEngineDialog.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\SubmitEngineDialog.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\ASyncTaskWidget.h">
-      <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="..\BaseClient\Source\ASyncTaskWidget.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\ContentDownloadDialog.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\CreateProjectDialog.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
     <CustomBuild Include="..\BaseClient\Source\DecoratorWidget.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\ASyncTaskManagerDialog.ui">
+    <CustomBuild Include="..\BaseClient\Source\DownloadClientDialog.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\ImageCropperDialog.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\LibraryContentItemWidget.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\LibraryContentWidget.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\LibraryEngineItemWidget.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\LibraryEngineWidget.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\LibraryExtraItemWidget.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\LibraryExtraWidget.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\LibraryProjectItemWidget.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\LoginDialog.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\LowerPaneWidget.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\ManageCategoryWidget.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\ManageContentWidget.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\ManageEngineWidget.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\ManageExtraWidget.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\ManagePageWidget.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\ManageUserWidget.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\PageContentContentWidget.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\PageContentWidget.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\PageEngineItemWidget.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\PageEngineWidget.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\PageExtraItemWidget.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\PageExtraWidget.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\SubmitContentDialog.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\SubmitEngineDialog.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\SubmitExtraDialog.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\UpdateDialog.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
     <CustomBuild Include="..\BaseClient\Source\ASyncTaskListWidget.h">
@@ -116,178 +151,28 @@
     <CustomBuild Include="..\BaseClient\Source\ASyncTaskManagerDialog.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\ImageCropperWidget.h">
+    <CustomBuild Include="..\BaseClient\Source\ASyncTaskWidget.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\CroppingBoxWidget.h">
+    <CustomBuild Include="..\BaseClient\Source\BaseClient.h">
       <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\ImageCropperDialog.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\SubmitContentDialog.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\SubmitContentDialog.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\FlowLayout.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\ContentDownloadDialog.ui">
-      <Filter>Form Files</Filter>
     </CustomBuild>
     <CustomBuild Include="..\BaseClient\Source\ContentDownloadDialog.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\ManageWidget.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\ManagePageWidget.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\ManageEngineWidget.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\ManageCategoryWidget.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\LowerPaneWidget.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\ImageViewerWidget.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\LowerPaneWidget.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\ManageCategoryWidget.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\ManageEngineWidget.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\ManagePageWidget.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\LibraryWidget.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\LibraryContentWidget.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\LibraryContentWidget.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="..\BaseClient\Source\ContentImageLoader.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\CreateProjectDialog.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="..\BaseClient\Source\CreateProjectDialog.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\LibraryEngineWidget.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\LibraryEngineWidget.h">
+    <CustomBuild Include="..\BaseClient\Source\CroppingBoxWidget.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\ManageUserWidget.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\ManageUserWidget.h">
+    <CustomBuild Include="..\BaseClient\Source\DownloadClientDialog.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\ManageContentWidget.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\ManageContentWidget.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\PageContentWidget.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\PageContentWidget.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\PageContentItemWidget.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\LibraryEngineItemWidget.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\LibraryEngineItemWidget.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\LibraryContentItemWidget.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\LibraryContentItemWidget.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\LibraryProjectItemWidget.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\LibraryProjectItemWidget.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\PageContentContentWidget.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\PageContentContentWidget.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\PageEngineWidget.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\PageEngineWidget.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\PageEngineItemWidget.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\PageEngineItemWidget.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\ManageExtraWidget.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\ManageExtraWidget.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\SubmitExtraDialog.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\SubmitExtraDialog.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\PageExtraWidget.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\PageExtraItemWidget.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\PageExtraWidget.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\PageExtraItemWidget.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\LibraryExtraWidget.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\LibraryExtraItemWidget.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\LibraryExtraItemWidget.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\LibraryExtraWidget.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\HTabWidget.h">
+    <CustomBuild Include="..\BaseClient\Source\FlowLayout.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="..\BaseClient\Source\HTabBarTabWidget.h">
@@ -296,10 +181,124 @@
     <CustomBuild Include="..\BaseClient\Source\HTabBarWidget.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\HTabWidget.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\ImageCropperWidget.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\ImageViewerWidget.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\LibraryContentItemWidget.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\LibraryContentWidget.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\LibraryEngineItemWidget.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\LibraryEngineWidget.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\LibraryExtraItemWidget.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\LibraryExtraWidget.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\LibraryProjectItemWidget.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\LibraryWidget.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\LoginDialog.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\LowerPaneWidget.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\ManageCategoryWidget.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\ManageContentWidget.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\ManageEngineWidget.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\ManageExtraWidget.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\ManagePageWidget.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\ManageUserWidget.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\ManageWidget.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\PageContentContentWidget.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\PageContentItemWidget.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\PageContentWidget.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\PageEngineItemWidget.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\PageEngineWidget.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\PageExtraItemWidget.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\PageExtraWidget.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\SubmitContentDialog.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\SubmitEngineDialog.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\SubmitExtraDialog.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\UpdateDialog.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
     <CustomBuild Include="..\BaseClient\Source\VTabBarTabWidget.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="..\BaseClient\Source\VTabBarWidget.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\VTabWidget.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\Window.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Resources\BaseClient.qrc">
+      <Filter>Resource Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\ManageClientWidget.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\ManageClientWidget.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\SubmitClientDialog.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\SubmitClientDialog.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>
@@ -310,50 +309,11 @@
     <ClCompile Include="..\BaseClient\Source\BaseClient.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Debug\moc_BaseClient.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Debug\moc_BaseClient.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_BaseClient.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_BaseClient.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Debug\moc_Window.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Debug\moc_Window.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_Window.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_Window.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
-    </ClCompile>
     <ClCompile Include="..\BaseClient\Source\Window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\qrc_BaseClient.cpp">
-      <Filter>Generated Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\BaseClient\Source\LoginDialog.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Debug\moc_LoginDialog.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Debug\moc_LoginDialog.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_LoginDialog.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_LoginDialog.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
     </ClCompile>
     <ClCompile Include="..\Common\Rpc\RpcErrorCode.cpp">
       <Filter>Common</Filter>
@@ -370,32 +330,8 @@
     <ClCompile Include="..\BaseClient\Source\VTabWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Debug\moc_VTabWidget.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Debug\moc_VTabWidget.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_VTabWidget.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_VTabWidget.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
-    </ClCompile>
     <ClCompile Include="..\BaseClient\Source\SubmitEngineDialog.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Debug\moc_SubmitEngineDialog.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Debug\moc_SubmitEngineDialog.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_SubmitEngineDialog.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_SubmitEngineDialog.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
     </ClCompile>
     <ClCompile Include="..\Common\Rpc\RpcTypedefs.cpp">
       <Filter>Common</Filter>
@@ -460,47 +396,11 @@
     <ClCompile Include="..\BaseClient\Source\ASyncTaskWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Debug\moc_ASyncTaskWidget.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Debug\moc_ASyncTaskWidget.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_ASyncTaskWidget.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_ASyncTaskWidget.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Debug\moc_ASyncTaskListWidget.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Debug\moc_ASyncTaskListWidget.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_ASyncTaskListWidget.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_ASyncTaskListWidget.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
-    </ClCompile>
     <ClCompile Include="..\BaseClient\Source\ASyncTaskListWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\BaseClient\Source\ASyncTaskManagerDialog.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Debug\moc_ASyncTaskManagerDialog.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Debug\moc_ASyncTaskManagerDialog.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_ASyncTaskManagerDialog.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_ASyncTaskManagerDialog.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
     </ClCompile>
     <ClCompile Include="..\BaseClient\Source\Package.cpp">
       <Filter>Source Files</Filter>
@@ -508,50 +408,14 @@
     <ClCompile Include="..\BaseClient\Source\ImageCropperWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Debug\moc_ImageCropperWidget.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Debug\moc_ImageCropperWidget.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_ImageCropperWidget.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_ImageCropperWidget.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
-    </ClCompile>
     <ClCompile Include="..\BaseClient\Source\CroppingBoxWidget.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Debug\moc_CroppingBoxWidget.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Debug\moc_CroppingBoxWidget.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_CroppingBoxWidget.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_CroppingBoxWidget.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
     </ClCompile>
     <ClCompile Include="..\BaseClient\Source\ImageCropperDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\BaseClient\Source\SubmitContentDialog.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Debug\moc_SubmitContentDialog.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Debug\moc_SubmitContentDialog.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_SubmitContentDialog.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_SubmitContentDialog.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
     </ClCompile>
     <ClCompile Include="..\Common\Rpc\RpcManagedObject.cpp">
       <Filter>Common</Filter>
@@ -570,18 +434,6 @@
     </ClCompile>
     <ClCompile Include="..\BaseClient\Source\FlowLayout.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Debug\moc_FlowLayout.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Debug\moc_FlowLayout.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_FlowLayout.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_FlowLayout.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
     </ClCompile>
     <ClCompile Include="..\BaseClient\Source\ASyncDownloadTask.cpp">
       <Filter>Source Files</Filter>
@@ -604,18 +456,6 @@
     <ClCompile Include="..\BaseClient\Source\ContentDownloadDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Debug\moc_ContentDownloadDialog.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Debug\moc_ContentDownloadDialog.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_ContentDownloadDialog.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_ContentDownloadDialog.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
-    </ClCompile>
     <ClCompile Include="..\BaseClient\Source\ASyncUnpackTask.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -625,107 +465,23 @@
     <ClCompile Include="..\BaseClient\Source\ManageWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Debug\moc_ManageWidget.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Debug\moc_ManageWidget.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_ManageWidget.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_ManageWidget.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
-    </ClCompile>
     <ClCompile Include="..\BaseClient\Source\ManagePageWidget.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Debug\moc_ManagePageWidget.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Debug\moc_ManagePageWidget.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_ManagePageWidget.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_ManagePageWidget.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
     </ClCompile>
     <ClCompile Include="..\BaseClient\Source\ManageEngineWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Debug\moc_ManageEngineWidget.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Debug\moc_ManageEngineWidget.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_ManageEngineWidget.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_ManageEngineWidget.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
-    </ClCompile>
     <ClCompile Include="..\BaseClient\Source\ManageCategoryWidget.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Debug\moc_ManageCategoryWidget.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Debug\moc_ManageCategoryWidget.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_ManageCategoryWidget.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_ManageCategoryWidget.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
     </ClCompile>
     <ClCompile Include="..\BaseClient\Source\LowerPaneWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Debug\moc_LowerPaneWidget.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Debug\moc_LowerPaneWidget.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_LowerPaneWidget.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_LowerPaneWidget.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
-    </ClCompile>
     <ClCompile Include="..\BaseClient\Source\ImageViewerWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Debug\moc_ImageViewerWidget.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Debug\moc_ImageViewerWidget.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_ImageViewerWidget.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_ImageViewerWidget.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
-    </ClCompile>
     <ClCompile Include="..\BaseClient\Source\LibraryWidget.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Debug\moc_LibraryWidget.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Debug\moc_LibraryWidget.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_LibraryWidget.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_LibraryWidget.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
     </ClCompile>
     <ClCompile Include="..\BaseClient\Source\ASyncDownloadContentTask.cpp">
       <Filter>Source Files</Filter>
@@ -736,32 +492,8 @@
     <ClCompile Include="..\BaseClient\Source\LibraryContentWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Debug\moc_LibraryContentWidget.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Debug\moc_LibraryContentWidget.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_LibraryContentWidget.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_LibraryContentWidget.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
-    </ClCompile>
     <ClCompile Include="..\BaseClient\Source\ContentImageLoader.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Debug\moc_ContentImageLoader.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Debug\moc_ContentImageLoader.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_ContentImageLoader.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_ContentImageLoader.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
     </ClCompile>
     <ClCompile Include="..\BaseClient\Source\ASyncCreateProjectTask.cpp">
       <Filter>Source Files</Filter>
@@ -769,32 +501,8 @@
     <ClCompile Include="..\BaseClient\Source\CreateProjectDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Debug\moc_CreateProjectDialog.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Debug\moc_CreateProjectDialog.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_CreateProjectDialog.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_CreateProjectDialog.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
-    </ClCompile>
     <ClCompile Include="..\BaseClient\Source\LibraryEngineWidget.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Debug\moc_LibraryEngineWidget.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Debug\moc_LibraryEngineWidget.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_LibraryEngineWidget.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_LibraryEngineWidget.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
     </ClCompile>
     <ClCompile Include="..\BaseClient\Source\ASyncRemoveEngineTask.cpp">
       <Filter>Source Files</Filter>
@@ -802,167 +510,35 @@
     <ClCompile Include="..\BaseClient\Source\ManageUserWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Debug\moc_ManageUserWidget.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Debug\moc_ManageUserWidget.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_ManageUserWidget.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_ManageUserWidget.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
-    </ClCompile>
     <ClCompile Include="..\BaseClient\Source\ManageContentWidget.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Debug\moc_ManageContentWidget.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Debug\moc_ManageContentWidget.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_ManageContentWidget.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_ManageContentWidget.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
     </ClCompile>
     <ClCompile Include="..\BaseClient\Source\PageContentWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Debug\moc_PageContentWidget.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Debug\moc_PageContentWidget.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_PageContentWidget.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_PageContentWidget.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
-    </ClCompile>
     <ClCompile Include="..\BaseClient\Source\PageContentItemWidget.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Debug\moc_PageContentItemWidget.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Debug\moc_PageContentItemWidget.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_PageContentItemWidget.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_PageContentItemWidget.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
     </ClCompile>
     <ClCompile Include="..\BaseClient\Source\LibraryEngineItemWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Debug\moc_LibraryEngineItemWidget.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Debug\moc_LibraryEngineItemWidget.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_LibraryEngineItemWidget.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_LibraryEngineItemWidget.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
-    </ClCompile>
     <ClCompile Include="..\BaseClient\Source\LibraryContentItemWidget.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Debug\moc_LibraryContentItemWidget.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Debug\moc_LibraryContentItemWidget.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_LibraryContentItemWidget.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_LibraryContentItemWidget.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
     </ClCompile>
     <ClCompile Include="..\BaseClient\Source\LibraryProjectItemWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Debug\moc_LibraryProjectItemWidget.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Debug\moc_LibraryProjectItemWidget.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_LibraryProjectItemWidget.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_LibraryProjectItemWidget.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
-    </ClCompile>
     <ClCompile Include="..\BaseClient\Source\PageContentContentWidget.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Debug\moc_PageContentContentWidget.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Debug\moc_PageContentContentWidget.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_PageContentContentWidget.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_PageContentContentWidget.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
     </ClCompile>
     <ClCompile Include="..\BaseClient\Source\PageEngineWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Debug\moc_PageEngineWidget.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Debug\moc_PageEngineWidget.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_PageEngineWidget.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_PageEngineWidget.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
-    </ClCompile>
     <ClCompile Include="..\BaseClient\Source\PageEngineItemWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Debug\moc_PageEngineItemWidget.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Debug\moc_PageEngineItemWidget.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_PageEngineItemWidget.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_PageEngineItemWidget.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
-    </ClCompile>
     <ClCompile Include="..\BaseClient\Source\PathUtils.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Debug\moc_ManageExtraWidget.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Debug\moc_ManageExtraWidget.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_ManageExtraWidget.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_ManageExtraWidget.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
     </ClCompile>
     <ClCompile Include="..\BaseClient\Source\ManageExtraWidget.cpp">
       <Filter>Source Files</Filter>
@@ -970,50 +546,14 @@
     <ClCompile Include="..\BaseClient\Source\SubmitExtraDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Debug\moc_SubmitExtraDialog.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Debug\moc_SubmitExtraDialog.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_SubmitExtraDialog.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_SubmitExtraDialog.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
-    </ClCompile>
     <ClCompile Include="..\BaseClient\Source\ASyncSubmitExtraTask.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\BaseClient\Source\PageExtraWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Debug\moc_PageExtraWidget.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Debug\moc_PageExtraWidget.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_PageExtraWidget.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_PageExtraWidget.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
-    </ClCompile>
     <ClCompile Include="..\BaseClient\Source\PageExtraItemWidget.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Debug\moc_PageExtraItemWidget.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Debug\moc_PageExtraItemWidget.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_PageExtraItemWidget.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_PageExtraItemWidget.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
     </ClCompile>
     <ClCompile Include="..\BaseClient\Source\ASyncInstallExtraTask.cpp">
       <Filter>Source Files</Filter>
@@ -1021,47 +561,11 @@
     <ClCompile Include="..\BaseClient\Source\LibraryExtraItemWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Debug\moc_LibraryExtraItemWidget.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Debug\moc_LibraryExtraItemWidget.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_LibraryExtraItemWidget.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_LibraryExtraItemWidget.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
-    </ClCompile>
     <ClCompile Include="..\BaseClient\Source\LibraryExtraWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Debug\moc_LibraryExtraWidget.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Debug\moc_LibraryExtraWidget.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_LibraryExtraWidget.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_LibraryExtraWidget.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
-    </ClCompile>
     <ClCompile Include="..\BaseClient\Source\HTabWidget.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Debug\moc_HTabWidget.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Debug\moc_HTabWidget.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_HTabWidget.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_HTabWidget.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
     </ClCompile>
     <ClCompile Include="..\BaseClient\Source\HTabBarWidget.cpp">
       <Filter>Source Files</Filter>
@@ -1069,89 +573,482 @@
     <ClCompile Include="..\BaseClient\Source\HTabBarTabWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Debug\moc_HTabBarTabWidget.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Debug\moc_HTabBarTabWidget.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_HTabBarTabWidget.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_HTabBarTabWidget.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Debug\moc_HTabBarWidget.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Debug\moc_HTabBarWidget.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_HTabBarWidget.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_HTabBarWidget.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
-    </ClCompile>
     <ClCompile Include="..\BaseClient\Source\VTabBarTabWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_VTabBarTabWidget.cpp">
-      <Filter>Generated Files\DebugConsole_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\DebugConsole\moc_VTabBarTabWidget.cpp">
-      <Filter>Generated Files\DebugConsole_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Debug\moc_VTabBarTabWidget.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Debug\moc_VTabBarTabWidget.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_VTabBarTabWidget.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_VTabBarTabWidget.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\ReleaseConsole\moc_VTabBarTabWidget.cpp">
-      <Filter>Generated Files\ReleaseConsole_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_VTabBarTabWidget.cpp">
-      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
-    </ClCompile>
     <ClCompile Include="..\BaseClient\Source\VTabBarWidget.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_VTabBarWidget.cpp">
-      <Filter>Generated Files\DebugConsole_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\DebugConsole\moc_VTabBarWidget.cpp">
-      <Filter>Generated Files\DebugConsole_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Debug\moc_VTabBarWidget.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Debug\moc_VTabBarWidget.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_VTabBarWidget.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\Release\moc_VTabBarWidget.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\x64\ReleaseConsole\moc_VTabBarWidget.cpp">
-      <Filter>Generated Files\ReleaseConsole_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_VTabBarWidget.cpp">
-      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
     </ClCompile>
     <ClCompile Include="..\Common\Rpc\RpcDownloader.cpp">
       <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="..\Common\Rpc\RpcUploader.cpp">
       <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\Source\ASyncDownloadClientTask.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\Source\DownloadClientDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\Source\UpdateDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_ASyncTaskListWidget.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_ASyncTaskListWidget.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_ASyncTaskListWidget.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_ASyncTaskManagerDialog.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_ASyncTaskManagerDialog.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_ASyncTaskManagerDialog.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_ASyncTaskWidget.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_ASyncTaskWidget.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_ASyncTaskWidget.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_BaseClient.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_BaseClient.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_BaseClient.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_ContentDownloadDialog.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_ContentDownloadDialog.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_ContentDownloadDialog.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_ContentImageLoader.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_ContentImageLoader.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_ContentImageLoader.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_CreateProjectDialog.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_CreateProjectDialog.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_CreateProjectDialog.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_CroppingBoxWidget.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_CroppingBoxWidget.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_CroppingBoxWidget.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_DownloadClientDialog.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_DownloadClientDialog.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_DownloadClientDialog.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_FlowLayout.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_FlowLayout.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_FlowLayout.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_HTabBarTabWidget.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_HTabBarTabWidget.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_HTabBarTabWidget.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_HTabBarWidget.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_HTabBarWidget.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_HTabBarWidget.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_HTabWidget.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_HTabWidget.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_HTabWidget.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_ImageCropperWidget.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_ImageCropperWidget.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_ImageCropperWidget.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_ImageViewerWidget.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_ImageViewerWidget.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_ImageViewerWidget.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_LibraryContentItemWidget.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_LibraryContentItemWidget.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_LibraryContentItemWidget.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_LibraryContentWidget.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_LibraryContentWidget.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_LibraryContentWidget.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_LibraryEngineItemWidget.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_LibraryEngineItemWidget.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_LibraryEngineItemWidget.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_LibraryEngineWidget.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_LibraryEngineWidget.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_LibraryEngineWidget.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_LibraryExtraItemWidget.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_LibraryExtraItemWidget.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_LibraryExtraItemWidget.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_LibraryExtraWidget.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_LibraryExtraWidget.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_LibraryExtraWidget.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_LibraryProjectItemWidget.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_LibraryProjectItemWidget.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_LibraryProjectItemWidget.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_LibraryWidget.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_LibraryWidget.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_LibraryWidget.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_LoginDialog.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_LoginDialog.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_LoginDialog.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_LowerPaneWidget.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_LowerPaneWidget.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_LowerPaneWidget.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_ManageCategoryWidget.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_ManageCategoryWidget.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_ManageCategoryWidget.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_ManageContentWidget.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_ManageContentWidget.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_ManageContentWidget.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_ManageEngineWidget.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_ManageEngineWidget.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_ManageEngineWidget.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_ManageExtraWidget.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_ManageExtraWidget.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_ManageExtraWidget.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_ManagePageWidget.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_ManagePageWidget.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_ManagePageWidget.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_ManageUserWidget.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_ManageUserWidget.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_ManageUserWidget.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_ManageWidget.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_ManageWidget.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_ManageWidget.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_PageContentContentWidget.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_PageContentContentWidget.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_PageContentContentWidget.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_PageContentItemWidget.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_PageContentItemWidget.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_PageContentItemWidget.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_PageContentWidget.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_PageContentWidget.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_PageContentWidget.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_PageEngineItemWidget.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_PageEngineItemWidget.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_PageEngineItemWidget.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_PageEngineWidget.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_PageEngineWidget.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_PageEngineWidget.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_PageExtraItemWidget.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_PageExtraItemWidget.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_PageExtraItemWidget.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_PageExtraWidget.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_PageExtraWidget.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_PageExtraWidget.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_SubmitContentDialog.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_SubmitContentDialog.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_SubmitContentDialog.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_SubmitEngineDialog.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_SubmitEngineDialog.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_SubmitEngineDialog.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_SubmitExtraDialog.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_SubmitExtraDialog.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_SubmitExtraDialog.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_UpdateDialog.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_UpdateDialog.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_UpdateDialog.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_VTabBarTabWidget.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_VTabBarTabWidget.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_VTabBarTabWidget.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_VTabBarWidget.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_VTabBarWidget.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_VTabBarWidget.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_VTabWidget.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_VTabWidget.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_VTabWidget.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_Window.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_Window.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_Window.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\qrc_BaseClient.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\Source\ASyncUpdateClientTask.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\Source\ManageClientWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_ManageClientWidget.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_ManageClientWidget.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_ManageClientWidget.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\Source\SubmitClientDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_SubmitClientDialog.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_SubmitClientDialog.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_SubmitClientDialog.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\Source\ASyncSubmitClientTask.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1160,12 +1057,6 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\BaseClient\Source\EdgeDetector.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_LoginDialog.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\Common\Rpc\RpcErrorCode.h">
       <Filter>Common</Filter>
     </ClInclude>
@@ -1177,9 +1068,6 @@
     </ClInclude>
     <ClInclude Include="..\Common\ErrorMessage.h">
       <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_SubmitEngineDialog.h">
-      <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Common\Rpc\RpcTypedefs.h">
       <Filter>Common</Filter>
@@ -1232,56 +1120,8 @@
     <ClInclude Include="..\Common\Crc.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\BaseClient\Source\ASyncTask.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_ASyncTaskWidget.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_DecoratorWidget.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_ASyncTaskManagerDialog.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\BaseClient\Source\Context.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\BaseClient\Source\QtUtils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\BaseClient\Source\Package.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\BaseClient\Source\FileScanner.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_ImageCropperDialog.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\BaseClient\Source\ImageCropperDialog.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_SubmitContentDialog.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\Common\Rpc\RpcManagedObject.h">
       <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\BaseClient\Source\AsyncPackTask.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\BaseClient\Source\ASyncUploadTask.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\BaseClient\Source\ASyncSubmitContentTask.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\BaseClient\Source\ASyncSubmitEngineTask.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\BaseClient\Source\ASyncDownloadTask.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Ext\SQLiteCpp\include\SQLiteCpp\Assertion.h">
       <Filter>SQLite</Filter>
@@ -1304,14 +1144,56 @@
     <ClInclude Include="..\Ext\SQLiteCpp\include\SQLiteCpp\Transaction.h">
       <Filter>SQLite</Filter>
     </ClInclude>
+    <ClInclude Include="..\Common\Rpc\RpcDownloader.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\Rpc\RpcUploader.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_ASyncTaskManagerDialog.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_ASyncTaskWidget.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_ContentDownloadDialog.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\BaseClient\Source\AsyncUnpackTask.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_CreateProjectDialog.h">
+      <Filter>Generated Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\BaseClient\Source\ASyncInstallEngineTask.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_DecoratorWidget.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_DownloadClientDialog.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_ImageCropperDialog.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_LibraryContentItemWidget.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_LibraryContentWidget.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_LibraryEngineItemWidget.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_LibraryEngineWidget.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_LibraryExtraItemWidget.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_LibraryExtraWidget.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_LibraryProjectItemWidget.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_LoginDialog.h">
+      <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_LowerPaneWidget.h">
       <Filter>Generated Files</Filter>
@@ -1319,95 +1201,131 @@
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_ManageCategoryWidget.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_ManageContentWidget.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_ManageEngineWidget.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_ManageExtraWidget.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_ManagePageWidget.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\BaseClient\Source\ASyncDownloadContentTask.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\BaseClient\Source\ASyncRemoveTask.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_LibraryContentWidget.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\BaseClient\Source\ASyncCreateProjectTask.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_CreateProjectDialog.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_LibraryEngineWidget.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\BaseClient\Source\ASyncRemoveEngineTask.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_ManageUserWidget.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_ManageContentWidget.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_PageContentWidget.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_LibraryEngineItemWidget.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_LibraryContentItemWidget.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_LibraryProjectItemWidget.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_PageContentContentWidget.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_PageEngineWidget.h">
+    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_PageContentWidget.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_PageEngineItemWidget.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\BaseClient\Source\SQLiteUtils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\BaseClient\Source\PathUtils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_ManageExtraWidget.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_SubmitExtraDialog.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\BaseClient\Source\ASyncSubmitExtraTask.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_PageExtraWidget.h">
+    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_PageEngineWidget.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_PageExtraItemWidget.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_PageExtraWidget.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_SubmitContentDialog.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_SubmitEngineDialog.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_SubmitExtraDialog.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_UpdateDialog.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\Source\ASyncCreateProjectTask.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\Source\ASyncDownloadClientTask.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\Source\ASyncDownloadContentTask.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\Source\ASyncDownloadTask.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\Source\ASyncInstallEngineTask.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="..\BaseClient\Source\ASyncInstallExtraTask.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_LibraryExtraWidget.h">
+    <ClInclude Include="..\BaseClient\Source\AsyncPackTask.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\Source\ASyncRemoveEngineTask.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\Source\ASyncRemoveTask.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\Source\ASyncSubmitContentTask.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\Source\ASyncSubmitEngineTask.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\Source\ASyncSubmitExtraTask.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\Source\ASyncTask.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\Source\AsyncUnpackTask.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\Source\ASyncUploadTask.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\Source\Context.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\Source\EdgeDetector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\Source\FileScanner.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\Source\ImageCropperDialog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\Source\Package.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\Source\PathUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\Source\QtUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\Source\SQLiteUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\Source\ASyncUpdateClientTask.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_ManageClientWidget.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_LibraryExtraItemWidget.h">
+    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_SubmitClientDialog.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Common\Rpc\RpcDownloader.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Common\Rpc\RpcUploader.h">
-      <Filter>Common</Filter>
+    <ClInclude Include="..\BaseClient\Source\ASyncSubmitClientTask.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

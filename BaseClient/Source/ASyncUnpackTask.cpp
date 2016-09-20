@@ -10,7 +10,7 @@
 
 namespace fs = boost::filesystem;
 
-ASyncUnpackTask::ASyncUnpackTask(ContextPtr context) : context_(context)
+ASyncUnpackTask::ASyncUnpackTask()
 {
 	state_ = ASyncTask::state_idle;
 	progress_ = 0;

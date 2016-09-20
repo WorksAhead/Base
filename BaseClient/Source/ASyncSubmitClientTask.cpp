@@ -1,42 +1,41 @@
-#include "ASyncInstallEngineTask.h"
-#include "ASyncDownloadTask.h"
-#include "AsyncUnpackTask.h"
+#include "ASyncSubmitClientTask.h"
+#include "AsyncPackTask.h"
+#include "ASyncUploadTask.h"
+#include "PathUtils.h"
+#include "ErrorMessage.h"
 
 #include <boost/filesystem.hpp>
 #include <boost/scope_exit.hpp>
 
+#include <sstream>
+
 namespace fs = boost::filesystem;
 
-ASyncInstallEngineTask::ASyncInstallEngineTask(ContextPtr context, Rpc::DownloaderPrx downloader) : context_(context), downloader_(downloader)
+ASyncSubmitClientTask::ASyncSubmitClientTask(ContextPtr context, Rpc::ClientSubmitterPrx submitter) : context_(context), submitter_(submitter)
 {
 	state_ = ASyncTask::state_idle;
 	progress_ = 0;
 	cancelled_ = false;
 }
 
-ASyncInstallEngineTask::~ASyncInstallEngineTask()
+ASyncSubmitClientTask::~ASyncSubmitClientTask()
 {
 	if (t_.get() && t_->joinable()) {
 		t_->join();
 	}
 }
 
-void ASyncInstallEngineTask::setInfoHead(const std::string& infoHead)
+void ASyncSubmitClientTask::setInfoHead(const std::string& infoHead)
 {
 	infoHead_ = infoHead;
 }
 
-void ASyncInstallEngineTask::setEngineVersion(const EngineVersion& v)
-{
-	engineVersion_ = v;
-}
-
-void ASyncInstallEngineTask::setPath(const std::string& path)
+void ASyncSubmitClientTask::setPath(const std::string& path)
 {
 	path_ = path;
 }
 
-void ASyncInstallEngineTask::start()
+void ASyncSubmitClientTask::start()
 {
 	t_.reset(new std::thread([this](){
 		try {
@@ -60,7 +59,7 @@ void ASyncInstallEngineTask::start()
 	}));
 }
 
-void ASyncInstallEngineTask::cancel()
+void ASyncSubmitClientTask::cancel()
 {
 	boost::unique_lock<boost::mutex> lock(sync_);
 	if (cancelled_ || state_ != ASyncTask::state_running) {
@@ -72,25 +71,25 @@ void ASyncInstallEngineTask::cancel()
 	t_->join();
 }
 
-int ASyncInstallEngineTask::state()
+int ASyncSubmitClientTask::state()
 {
 	boost::mutex::scoped_lock lock(sync_);
 	return state_;
 }
 
-int ASyncInstallEngineTask::progress()
+int ASyncSubmitClientTask::progress()
 {
 	boost::mutex::scoped_lock lock(sync_);
 	return progress_;
 }
 
-std::string ASyncInstallEngineTask::information()
+std::string ASyncSubmitClientTask::information()
 {
 	boost::mutex::scoped_lock lock(sync_);
 	return info_;
 }
 
-void ASyncInstallEngineTask::run()
+void ASyncSubmitClientTask::run()
 {
 	{
 		boost::mutex::scoped_lock lock(sync_);
@@ -98,45 +97,54 @@ void ASyncInstallEngineTask::run()
 		info_ = infoHead_;
 	}
 
-	int state = context_->getEngineState(engineVersion_);
-	if (state != EngineState::installing) {
+	Rpc::UploaderPrx uploader;
+	Rpc::ErrorCode ec = submitter_->uploadClient(uploader);
+	if (ec != Rpc::ec_success) {
 		boost::mutex::scoped_lock lock(sync_);
-		info_ = infoHead_ + " - " + "Bad state";
+		info_ = infoHead_ + " - " + std::string("Rpc: ") + errorMessage(ec);
 		state_ = ASyncTask::state_failed;
 		return;
 	}
 
-	const std::string& packageFilename = context_->uniquePath() + ".package";
+	std::string srcFiles;
 
-	BOOST_SCOPE_EXIT_ALL(&packageFilename)
 	{
-		boost::system::error_code ec;
-		if (fs::exists(packageFilename, ec)) {
-			fs::remove(packageFilename, ec);
+		fs::path safePath = makeSafePath(path_);
+
+		std::fstream is((safePath / "update").string().c_str(), std::ios::in);
+		if (!is.is_open()) {
+			boost::mutex::scoped_lock lock(sync_);
+			info_ = infoHead_ + " - " + "Update file not exists";
+			state_ = ASyncTask::state_failed;
+			return;
 		}
-	};
 
-	bool commit = false;
+		std::ostringstream oss;
 
-	BOOST_SCOPE_EXIT_ALL(this, &commit)
-	{
-		int state = EngineState::installing;
-		if (!commit) {
-			context_->changeEngineState(engineVersion_, state, EngineState::not_installed);
+		std::string line;
+		while (std::getline(is, line)) {
+			if (boost::starts_with(line, "cp ")) {
+				oss << std::string(line.c_str() + 3) << "\n";
+			}
 		}
-	};
 
-	std::unique_ptr<ASyncDownloadTask> downloadTask(new ASyncDownloadTask(downloader_));
-	downloadTask->setInfoHead(infoHead_);
-	downloadTask->setFilename(packageFilename);
-	downloadTask->start();
+		oss << "update\n";
+
+		srcFiles = oss.str();
+	}
+
+	std::unique_ptr<ASyncPackTask> packTask(new ASyncPackTask(context_));
+	packTask->setInfoHead(infoHead_);
+	packTask->setPath(path_);
+	packTask->setSourceFiles(srcFiles);
+	packTask->start();
 
 	for (;;)
 	{
-		const int ret = update(downloadTask.get(), 0, 0.5);
+		const int ret = update(packTask.get(), 0, 0.5);
 		if (ret < 0) {
-			if (downloadTask->state() == ASyncTask::state_cancelled) {
-				downloader_->cancel();
+			if (packTask->state() == ASyncTask::state_cancelled) {
+				submitter_->cancel();
 			}
 			return;
 		}
@@ -146,15 +154,22 @@ void ASyncInstallEngineTask::run()
 		std::this_thread::sleep_for(std::chrono::milliseconds(100));
 	}
 
-	std::unique_ptr<ASyncUnpackTask> unpackTask(new ASyncUnpackTask());
-	unpackTask->setInfoHead(infoHead_);
-	unpackTask->setPackage(packageFilename);
-	unpackTask->setPath(path_);
-	unpackTask->start();
+	BOOST_SCOPE_EXIT_ALL(&packTask)
+	{
+		boost::system::error_code ec;
+		if (fs::exists(packTask->package(), ec)) {
+			fs::remove(packTask->package(), ec);
+		}
+	};
+
+	std::unique_ptr<ASyncUploadTask> uploadTask(new ASyncUploadTask(context_, uploader));
+	uploadTask->setInfoHead(infoHead_);
+	uploadTask->setFilename(packTask->package());
+	uploadTask->start();
 
 	for (;;)
 	{
-		const int ret = update(unpackTask.get(), 50, 0.5);
+		const int ret = update(uploadTask.get(), 50, 0.5);
 		if (ret < 0) {
 			return;
 		}
@@ -164,18 +179,13 @@ void ASyncInstallEngineTask::run()
 		std::this_thread::sleep_for(std::chrono::milliseconds(100));
 	}
 
-	context_->setupEngine(engineVersion_);
-
-	if (!context_->changeEngineState(engineVersion_, state, EngineState::installed)) {
+	ec = submitter_->finish();
+	if (ec != Rpc::ec_success) {
 		boost::mutex::scoped_lock lock(sync_);
-		info_ = infoHead_ + " - " + "Bad state";
+		info_ = infoHead_ + " - " + std::string("Rpc: ") + errorMessage(ec);
 		state_ = ASyncTask::state_failed;
 		return;
 	}
-
-	commit = true;
-
-	context_->addEngineToGui(engineVersion_);
 
 	{
 		boost::mutex::scoped_lock lock(sync_);
@@ -184,7 +194,7 @@ void ASyncInstallEngineTask::run()
 	}
 }
 
-int ASyncInstallEngineTask::update(ASyncTask* task, int a, double b)
+int ASyncSubmitClientTask::update(ASyncTask* task, int a, double b)
 {
 	boost::mutex::scoped_lock lock(sync_);
 

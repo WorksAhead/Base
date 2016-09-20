@@ -81,6 +81,12 @@ namespace Rpc
 class Callback_Start_getServerVersion_Base : virtual public ::IceInternal::CallbackBase { };
 typedef ::IceUtil::Handle< Callback_Start_getServerVersion_Base> Callback_Start_getServerVersionPtr;
 
+class Callback_Start_getClientVersion_Base : virtual public ::IceInternal::CallbackBase { };
+typedef ::IceUtil::Handle< Callback_Start_getClientVersion_Base> Callback_Start_getClientVersionPtr;
+
+class Callback_Start_downloadClient_Base : virtual public ::IceInternal::CallbackBase { };
+typedef ::IceUtil::Handle< Callback_Start_downloadClient_Base> Callback_Start_downloadClientPtr;
+
 class Callback_Start_signup_Base : virtual public ::IceInternal::CallbackBase { };
 typedef ::IceUtil::Handle< Callback_Start_signup_Base> Callback_Start_signupPtr;
 
@@ -175,6 +181,158 @@ private:
 
     ::std::string getServerVersion(const ::Ice::Context*);
     ::Ice::AsyncResultPtr begin_getServerVersion(const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
+    
+public:
+
+    ::std::string getClientVersion()
+    {
+        return getClientVersion(0);
+    }
+    ::std::string getClientVersion(const ::Ice::Context& __ctx)
+    {
+        return getClientVersion(&__ctx);
+    }
+#ifdef ICE_CPP11
+    ::Ice::AsyncResultPtr
+    begin_getClientVersion(const ::IceInternal::Function<void (const ::std::string&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return __begin_getClientVersion(0, __response, __exception, __sent);
+    }
+    ::Ice::AsyncResultPtr
+    begin_getClientVersion(const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_getClientVersion(0, ::Ice::newCallback(__completed, __sent), 0);
+    }
+    ::Ice::AsyncResultPtr
+    begin_getClientVersion(const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::std::string&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return __begin_getClientVersion(&__ctx, __response, __exception, __sent);
+    }
+    ::Ice::AsyncResultPtr
+    begin_getClientVersion(const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_getClientVersion(&__ctx, ::Ice::newCallback(__completed, __sent));
+    }
+    
+private:
+
+    ::Ice::AsyncResultPtr __begin_getClientVersion(const ::Ice::Context* __ctx, const ::IceInternal::Function<void (const ::std::string&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent);
+    
+public:
+#endif
+
+    ::Ice::AsyncResultPtr begin_getClientVersion()
+    {
+        return begin_getClientVersion(0, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_getClientVersion(const ::Ice::Context& __ctx)
+    {
+        return begin_getClientVersion(&__ctx, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_getClientVersion(const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_getClientVersion(0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_getClientVersion(const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_getClientVersion(&__ctx, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_getClientVersion(const ::Rpc::Callback_Start_getClientVersionPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_getClientVersion(0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_getClientVersion(const ::Ice::Context& __ctx, const ::Rpc::Callback_Start_getClientVersionPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_getClientVersion(&__ctx, __del, __cookie);
+    }
+
+    ::std::string end_getClientVersion(const ::Ice::AsyncResultPtr&);
+    
+private:
+
+    ::std::string getClientVersion(const ::Ice::Context*);
+    ::Ice::AsyncResultPtr begin_getClientVersion(const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
+    
+public:
+
+    ::Rpc::ErrorCode downloadClient(::Rpc::DownloaderPrx& __p_downloader)
+    {
+        return downloadClient(__p_downloader, 0);
+    }
+    ::Rpc::ErrorCode downloadClient(::Rpc::DownloaderPrx& __p_downloader, const ::Ice::Context& __ctx)
+    {
+        return downloadClient(__p_downloader, &__ctx);
+    }
+#ifdef ICE_CPP11
+    ::Ice::AsyncResultPtr
+    begin_downloadClient(const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::DownloaderPrx&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return __begin_downloadClient(0, __response, __exception, __sent);
+    }
+    ::Ice::AsyncResultPtr
+    begin_downloadClient(const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_downloadClient(0, ::Ice::newCallback(__completed, __sent), 0);
+    }
+    ::Ice::AsyncResultPtr
+    begin_downloadClient(const ::Ice::Context& __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::DownloaderPrx&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return __begin_downloadClient(&__ctx, __response, __exception, __sent);
+    }
+    ::Ice::AsyncResultPtr
+    begin_downloadClient(const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_downloadClient(&__ctx, ::Ice::newCallback(__completed, __sent));
+    }
+    
+private:
+
+    ::Ice::AsyncResultPtr __begin_downloadClient(const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::DownloaderPrx&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent);
+    
+public:
+#endif
+
+    ::Ice::AsyncResultPtr begin_downloadClient()
+    {
+        return begin_downloadClient(0, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_downloadClient(const ::Ice::Context& __ctx)
+    {
+        return begin_downloadClient(&__ctx, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_downloadClient(const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_downloadClient(0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_downloadClient(const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_downloadClient(&__ctx, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_downloadClient(const ::Rpc::Callback_Start_downloadClientPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_downloadClient(0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_downloadClient(const ::Ice::Context& __ctx, const ::Rpc::Callback_Start_downloadClientPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_downloadClient(&__ctx, __del, __cookie);
+    }
+
+    ::Rpc::ErrorCode end_downloadClient(::Rpc::DownloaderPrx& __p_downloader, const ::Ice::AsyncResultPtr&);
+    
+private:
+
+    ::Rpc::ErrorCode downloadClient(::Rpc::DownloaderPrx&, const ::Ice::Context*);
+    ::Ice::AsyncResultPtr begin_downloadClient(const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
     
 public:
 
@@ -539,6 +697,12 @@ public:
     virtual ::std::string getServerVersion(const ::Ice::Current& = ::Ice::Current()) = 0;
     ::Ice::DispatchStatus ___getServerVersion(::IceInternal::Incoming&, const ::Ice::Current&);
 
+    virtual ::std::string getClientVersion(const ::Ice::Current& = ::Ice::Current()) = 0;
+    ::Ice::DispatchStatus ___getClientVersion(::IceInternal::Incoming&, const ::Ice::Current&);
+
+    virtual ::Rpc::ErrorCode downloadClient(::Rpc::DownloaderPrx&, const ::Ice::Current& = ::Ice::Current()) = 0;
+    ::Ice::DispatchStatus ___downloadClient(::IceInternal::Incoming&, const ::Ice::Current&);
+
     virtual ::Rpc::ErrorCode signup(const ::std::string&, const ::std::string&, const ::Ice::Current& = ::Ice::Current()) = 0;
     ::Ice::DispatchStatus ___signup(::IceInternal::Incoming&, const ::Ice::Current&);
 
@@ -674,6 +838,216 @@ template<class T, typename CT> Callback_Start_getServerVersionPtr
 newCallback_Start_getServerVersion(T* instance, void (T::*cb)(const ::std::string&, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
 {
     return new Callback_Start_getServerVersion<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T>
+class CallbackNC_Start_getClientVersion : public Callback_Start_getClientVersion_Base, public ::IceInternal::TwowayCallbackNC<T>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception&);
+    typedef void (T::*Sent)(bool);
+    typedef void (T::*Response)(const ::std::string&);
+
+    CallbackNC_Start_getClientVersion(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::TwowayCallbackNC<T>(obj, cb != 0, excb, sentcb), _response(cb)
+    {
+    }
+
+    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+    {
+        ::Rpc::StartPrx __proxy = ::Rpc::StartPrx::uncheckedCast(__result->getProxy());
+        ::std::string __ret;
+        try
+        {
+            __ret = __proxy->end_getClientVersion(__result);
+        }
+        catch(const ::Ice::Exception& ex)
+        {
+            ::IceInternal::CallbackNC<T>::exception(__result, ex);
+            return;
+        }
+        if(_response)
+        {
+            (::IceInternal::CallbackNC<T>::_callback.get()->*_response)(__ret);
+        }
+    }
+
+    private:
+
+    Response _response;
+};
+
+template<class T> Callback_Start_getClientVersionPtr
+newCallback_Start_getClientVersion(const IceUtil::Handle<T>& instance, void (T::*cb)(const ::std::string&), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_Start_getClientVersion<T>(instance, cb, excb, sentcb);
+}
+
+template<class T> Callback_Start_getClientVersionPtr
+newCallback_Start_getClientVersion(T* instance, void (T::*cb)(const ::std::string&), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_Start_getClientVersion<T>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT>
+class Callback_Start_getClientVersion : public Callback_Start_getClientVersion_Base, public ::IceInternal::TwowayCallback<T, CT>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception& , const CT&);
+    typedef void (T::*Sent)(bool , const CT&);
+    typedef void (T::*Response)(const ::std::string&, const CT&);
+
+    Callback_Start_getClientVersion(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::TwowayCallback<T, CT>(obj, cb != 0, excb, sentcb), _response(cb)
+    {
+    }
+
+    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+    {
+        ::Rpc::StartPrx __proxy = ::Rpc::StartPrx::uncheckedCast(__result->getProxy());
+        ::std::string __ret;
+        try
+        {
+            __ret = __proxy->end_getClientVersion(__result);
+        }
+        catch(const ::Ice::Exception& ex)
+        {
+            ::IceInternal::Callback<T, CT>::exception(__result, ex);
+            return;
+        }
+        if(_response)
+        {
+            (::IceInternal::Callback<T, CT>::_callback.get()->*_response)(__ret, CT::dynamicCast(__result->getCookie()));
+        }
+    }
+
+    private:
+
+    Response _response;
+};
+
+template<class T, typename CT> Callback_Start_getClientVersionPtr
+newCallback_Start_getClientVersion(const IceUtil::Handle<T>& instance, void (T::*cb)(const ::std::string&, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_Start_getClientVersion<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT> Callback_Start_getClientVersionPtr
+newCallback_Start_getClientVersion(T* instance, void (T::*cb)(const ::std::string&, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_Start_getClientVersion<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T>
+class CallbackNC_Start_downloadClient : public Callback_Start_downloadClient_Base, public ::IceInternal::TwowayCallbackNC<T>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception&);
+    typedef void (T::*Sent)(bool);
+    typedef void (T::*Response)(::Rpc::ErrorCode, const ::Rpc::DownloaderPrx&);
+
+    CallbackNC_Start_downloadClient(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::TwowayCallbackNC<T>(obj, cb != 0, excb, sentcb), _response(cb)
+    {
+    }
+
+    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+    {
+        ::Rpc::StartPrx __proxy = ::Rpc::StartPrx::uncheckedCast(__result->getProxy());
+        ::Rpc::DownloaderPrx downloader;
+        ::Rpc::ErrorCode __ret;
+        try
+        {
+            __ret = __proxy->end_downloadClient(downloader, __result);
+        }
+        catch(const ::Ice::Exception& ex)
+        {
+            ::IceInternal::CallbackNC<T>::exception(__result, ex);
+            return;
+        }
+        if(_response)
+        {
+            (::IceInternal::CallbackNC<T>::_callback.get()->*_response)(__ret, downloader);
+        }
+    }
+
+    private:
+
+    Response _response;
+};
+
+template<class T> Callback_Start_downloadClientPtr
+newCallback_Start_downloadClient(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::DownloaderPrx&), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_Start_downloadClient<T>(instance, cb, excb, sentcb);
+}
+
+template<class T> Callback_Start_downloadClientPtr
+newCallback_Start_downloadClient(T* instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::DownloaderPrx&), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_Start_downloadClient<T>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT>
+class Callback_Start_downloadClient : public Callback_Start_downloadClient_Base, public ::IceInternal::TwowayCallback<T, CT>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception& , const CT&);
+    typedef void (T::*Sent)(bool , const CT&);
+    typedef void (T::*Response)(::Rpc::ErrorCode, const ::Rpc::DownloaderPrx&, const CT&);
+
+    Callback_Start_downloadClient(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::TwowayCallback<T, CT>(obj, cb != 0, excb, sentcb), _response(cb)
+    {
+    }
+
+    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+    {
+        ::Rpc::StartPrx __proxy = ::Rpc::StartPrx::uncheckedCast(__result->getProxy());
+        ::Rpc::DownloaderPrx downloader;
+        ::Rpc::ErrorCode __ret;
+        try
+        {
+            __ret = __proxy->end_downloadClient(downloader, __result);
+        }
+        catch(const ::Ice::Exception& ex)
+        {
+            ::IceInternal::Callback<T, CT>::exception(__result, ex);
+            return;
+        }
+        if(_response)
+        {
+            (::IceInternal::Callback<T, CT>::_callback.get()->*_response)(__ret, downloader, CT::dynamicCast(__result->getCookie()));
+        }
+    }
+
+    private:
+
+    Response _response;
+};
+
+template<class T, typename CT> Callback_Start_downloadClientPtr
+newCallback_Start_downloadClient(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::DownloaderPrx&, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_Start_downloadClient<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT> Callback_Start_downloadClientPtr
+newCallback_Start_downloadClient(T* instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::DownloaderPrx&, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_Start_downloadClient<T, CT>(instance, cb, excb, sentcb);
 }
 
 template<class T>

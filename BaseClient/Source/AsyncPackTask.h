@@ -19,6 +19,7 @@ public:
 
 	void setInfoHead(const std::string&);
 	void setPath(const std::string&);
+	void setSourceFiles(const std::string&);
 
 	std::string package();
 
@@ -36,6 +37,7 @@ private:
 	ContextPtr context_;
 
 	std::string path_;
+	std::string srcFiles_;
 	std::string package_;
 	std::string infoHead_;
 	std::string infoBody_;

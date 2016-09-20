@@ -5,6 +5,7 @@
 #include <unzip.h>
 
 #include <boost/filesystem.hpp>
+#include <boost/algorithm/string.hpp>
 
 #include <algorithm>
 #include <locale>
@@ -292,6 +293,29 @@ int Unpacker::executeStep()
 			}
 		}
 
+		if (isDirectory(path))
+		{
+			const int ret = unzGoToNextFile(handle_);
+
+			if (ret == UNZ_OK) {
+				++currentIdx_;
+				state_ = state_next_file;
+			}
+			if (ret == UNZ_END_OF_LIST_OF_FILE) {
+				unzClose(handle_);
+				handle_ = 0;
+				state_ = state_finished;
+				return 0;
+			}
+			else if (ret != UNZ_OK) {
+				errorMessage_ = "Bad package file \"" + packFile_.string() + "\"";
+				state_ = state_failed;
+				return -1;
+			}
+
+			return 1;
+		}
+
 		stream_.reset(new std::fstream(safeFullPath.string().c_str(), std::ios::out|std::ios::binary));
 		if (!stream_->is_open()) {
 			errorMessage_ = "Failed to open \"" + fullPath.string() + "\"";
@@ -360,5 +384,11 @@ int Unpacker::executeStep()
 	}
 
 	return 1;
+}
+
+bool Unpacker::isDirectory(const Path& p)
+{
+	const std::string& s = p.string();
+	return (boost::ends_with(s, "/") || boost::ends_with(s, "\\"));
 }
 

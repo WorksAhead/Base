@@ -1,41 +1,42 @@
-#include "ASyncDownloadContentTask.h"
+#include "ASyncDownloadClientTask.h"
 #include "ASyncDownloadTask.h"
+#include "AsyncUnpackTask.h"
 
 #include <boost/filesystem.hpp>
 #include <boost/scope_exit.hpp>
+#include <boost/uuid/uuid.hpp>
+#include <boost/uuid/uuid_io.hpp>
+#include <boost/uuid/random_generator.hpp>
 
 namespace fs = boost::filesystem;
 
-ASyncDownloadContentTask::ASyncDownloadContentTask(ContextPtr context, Rpc::DownloaderPrx downloader) : context_(context), downloader_(downloader)
+ASyncDownloadClientTask::ASyncDownloadClientTask(Rpc::DownloaderPrx downloader) : downloader_(downloader)
 {
 	state_ = ASyncTask::state_idle;
 	progress_ = 0;
 	cancelled_ = false;
+
+	path_ = uniquePath();
 }
 
-ASyncDownloadContentTask::~ASyncDownloadContentTask()
+ASyncDownloadClientTask::~ASyncDownloadClientTask()
 {
 	if (t_.get() && t_->joinable()) {
 		t_->join();
 	}
 }
 
-void ASyncDownloadContentTask::setInfoHead(const std::string& infoHead)
+void ASyncDownloadClientTask::setInfoHead(const std::string& infoHead)
 {
 	infoHead_ = infoHead;
 }
 
-void ASyncDownloadContentTask::setFilename(const std::string& filename)
+std::string ASyncDownloadClientTask::path()
 {
-	filename_ = filename;
+	return path_;
 }
 
-void ASyncDownloadContentTask::setContentId(const std::string& id)
-{
-	contentId_ = id;
-}
-
-void ASyncDownloadContentTask::start()
+void ASyncDownloadClientTask::start()
 {
 	t_.reset(new std::thread([this](){
 		try {
@@ -59,7 +60,7 @@ void ASyncDownloadContentTask::start()
 	}));
 }
 
-void ASyncDownloadContentTask::cancel()
+void ASyncDownloadClientTask::cancel()
 {
 	boost::unique_lock<boost::mutex> lock(sync_);
 	if (cancelled_ || state_ != ASyncTask::state_running) {
@@ -71,25 +72,25 @@ void ASyncDownloadContentTask::cancel()
 	t_->join();
 }
 
-int ASyncDownloadContentTask::state()
+int ASyncDownloadClientTask::state()
 {
 	boost::mutex::scoped_lock lock(sync_);
 	return state_;
 }
 
-int ASyncDownloadContentTask::progress()
+int ASyncDownloadClientTask::progress()
 {
 	boost::mutex::scoped_lock lock(sync_);
 	return progress_;
 }
 
-std::string ASyncDownloadContentTask::information()
+std::string ASyncDownloadClientTask::information()
 {
 	boost::mutex::scoped_lock lock(sync_);
 	return info_;
 }
 
-void ASyncDownloadContentTask::run()
+void ASyncDownloadClientTask::run()
 {
 	{
 		boost::mutex::scoped_lock lock(sync_);
@@ -97,32 +98,24 @@ void ASyncDownloadContentTask::run()
 		info_ = infoHead_;
 	}
 
-	int state = context_->getContentState(contentId_);
-	if (state != ContentState::downloading) {
-		boost::mutex::scoped_lock lock(sync_);
-		info_ = infoHead_ + " - " + "Bad state";
-		state_ = ASyncTask::state_failed;
-		return;
-	}
+	std::string packageFilename = uniquePath() + ".package";
 
-	bool commit = false;
-
-	BOOST_SCOPE_EXIT_ALL(this, &commit)
+	BOOST_SCOPE_EXIT_ALL(&packageFilename)
 	{
-		int state = ContentState::downloading;
-		if (!commit) {
-			context_->changeContentState(contentId_, state, ContentState::not_downloaded);
+		boost::system::error_code ec;
+		if (fs::exists(packageFilename, ec)) {
+			fs::remove(packageFilename, ec);
 		}
 	};
 
 	std::unique_ptr<ASyncDownloadTask> downloadTask(new ASyncDownloadTask(downloader_));
 	downloadTask->setInfoHead(infoHead_);
-	downloadTask->setFilename(filename_);
+	downloadTask->setFilename(packageFilename);
 	downloadTask->start();
 
 	for (;;)
 	{
-		const int ret = update(downloadTask.get(), 0, 1.0);
+		const int ret = update(downloadTask.get(), 0, 0.5);
 		if (ret < 0) {
 			if (downloadTask->state() == ASyncTask::state_cancelled) {
 				downloader_->cancel();
@@ -135,16 +128,23 @@ void ASyncDownloadContentTask::run()
 		std::this_thread::sleep_for(std::chrono::milliseconds(100));
 	}
 
-	if (!context_->changeContentState(contentId_, state, ContentState::downloaded)) {
-		boost::mutex::scoped_lock lock(sync_);
-		info_ = infoHead_ + " - " + "Bad state";
-		state_ = ASyncTask::state_failed;
-		return;
+	std::unique_ptr<ASyncUnpackTask> unpackTask(new ASyncUnpackTask());
+	unpackTask->setInfoHead(infoHead_);
+	unpackTask->setPackage(packageFilename);
+	unpackTask->setPath(path_);
+	unpackTask->start();
+
+	for (;;)
+	{
+		const int ret = update(unpackTask.get(), 50, 0.5);
+		if (ret < 0) {
+			return;
+		}
+		else if (ret > 0) {
+			break;
+		}
+		std::this_thread::sleep_for(std::chrono::milliseconds(100));
 	}
-
-	commit = true;
-
-	context_->addContentToGui(contentId_);
 
 	{
 		boost::mutex::scoped_lock lock(sync_);
@@ -153,7 +153,7 @@ void ASyncDownloadContentTask::run()
 	}
 }
 
-int ASyncDownloadContentTask::update(ASyncTask* task, int a, double b)
+int ASyncDownloadClientTask::update(ASyncTask* task, int a, double b)
 {
 	boost::mutex::scoped_lock lock(sync_);
 
@@ -183,5 +183,12 @@ int ASyncDownloadContentTask::update(ASyncTask* task, int a, double b)
 	}
 
 	return 0;
+}
+
+std::string ASyncDownloadClientTask::uniquePath()
+{
+	fs::path p = fs::temp_directory_path();
+	p = p / boost::uuids::to_string(boost::uuids::random_generator()());
+	return p.string();
 }
 

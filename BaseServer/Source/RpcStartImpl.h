@@ -12,6 +12,10 @@ public:
 
 	virtual std::string getServerVersion(const Ice::Current&);
 
+	virtual std::string getClientVersion(const Ice::Current&);
+
+	virtual Rpc::ErrorCode downloadClient(Rpc::DownloaderPrx& downloader, const Ice::Current&);
+
 	virtual Rpc::ErrorCode signup(const std::string&, const std::string&, const Ice::Current&);
 
 	virtual Rpc::ErrorCode login(const std::string&, const std::string&, Rpc::SessionPrx&, const Ice::Current&);

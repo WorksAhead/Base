@@ -124,6 +124,29 @@ module Rpc
 		ErrorCode finish();
 	};
 
+	struct ClientInfo
+	{
+		string version;
+		string uptime;
+		string info;
+		string state;
+	};
+
+	sequence<ClientInfo> ClientInfoSeq;
+
+	interface ClientBrowser extends ManagedObject
+	{
+		ErrorCode next(int n, out ClientInfoSeq items);
+	};
+
+	interface ClientSubmitter extends ManagedObject
+	{
+		ErrorCode setInfo(string info);
+		ErrorCode uploadClient(out Uploader* uploader);
+		void cancel();
+		ErrorCode finish();
+	};
+
 	interface Session extends ManagedObject
 	{
 		void refresh();
@@ -158,6 +181,12 @@ module Rpc
 		ErrorCode submitExtra(out ExtraSubmitter* submitter);
 		ErrorCode updateExtra(string id, out ExtraSubmitter* submitter);
 		ErrorCode removeExtra(string id);
+
+		ErrorCode browseClient(out ClientBrowser* browser);
+		ErrorCode getClientInfo(string version, out ClientInfo info);
+		ErrorCode submitClient(string version, out ClientSubmitter* submitter);
+		ErrorCode updateClient(string version, out ClientSubmitter* submitter);
+		ErrorCode removeClient(string version);
 
 		ErrorCode browseUsers(out UserBrowser* browser);
 		ErrorCode setUserGroup(string username, string group);

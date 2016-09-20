@@ -8,6 +8,7 @@
 #include <boost/scope_exit.hpp>
 
 #include <vector>
+#include <sstream>
 
 namespace fs = boost::filesystem;
 
@@ -33,6 +34,11 @@ void ASyncPackTask::setInfoHead(const std::string& infoHead)
 void ASyncPackTask::setPath(const std::string& path)
 {
 	path_ = path;
+}
+
+void ASyncPackTask::setSourceFiles(const std::string& srcFiles)
+{
+	srcFiles_ = srcFiles;
 }
 
 std::string ASyncPackTask::package()
@@ -122,34 +128,45 @@ void ASyncPackTask::run()
 
 	std::vector<FileScanner::Path> srcFiles;
 
-	FileScanner scanner(path_, ec);
-	CHECK_EC(ec);
-
+	if (srcFiles_.empty())
 	{
-		boost::mutex::scoped_lock lock(sync_);
-		infoBody_ = "Scanning";
-	}
-
-	for (;;)
-	{
-		{
-			boost::mutex::scoped_lock lock(sync_);
-			if (cancelled_) {
-				infoBody_.clear();
-				state_ = ASyncTask::state_cancelled;
-				return;
-			}
-		}
-
-		FileScanner::Path path;
-		int ret = scanner.nextFile(path, ec);
+		FileScanner scanner(path_, ec);
 		CHECK_EC(ec);
 
-		if (ret > 0) {
-			srcFiles.push_back(path);
+		{
+			boost::mutex::scoped_lock lock(sync_);
+			infoBody_ = "Scanning";
 		}
-		else if (ret < 0) {
-			break;
+
+		for (;;)
+		{
+			{
+				boost::mutex::scoped_lock lock(sync_);
+				if (cancelled_) {
+					infoBody_.clear();
+					state_ = ASyncTask::state_cancelled;
+					return;
+				}
+			}
+
+			FileScanner::Path path;
+			int ret = scanner.nextFile(path, ec);
+			CHECK_EC(ec);
+
+			if (ret > 0) {
+				srcFiles.push_back(path);
+			}
+			else if (ret < 0) {
+				break;
+			}
+		}
+	}
+	else {
+		std::istringstream is(srcFiles_);
+
+		std::string line;
+		while (std::getline(is, line)) {
+			srcFiles.push_back(line);
 		}
 	}
 

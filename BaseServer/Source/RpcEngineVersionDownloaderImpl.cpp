@@ -40,8 +40,6 @@ Rpc::ErrorCode RpcEngineVersionDownloaderImpl::init(const std::string& name, con
 void RpcEngineVersionDownloaderImpl::finish(const Ice::Current& c)
 {
 	boost::recursive_mutex::scoped_lock lock(sync_);
-	checkIsDestroyed();
-
 	RpcFileDownloaderImpl::finish(c);
 	unlockEngineVersionIfLocked();
 }
@@ -49,8 +47,6 @@ void RpcEngineVersionDownloaderImpl::finish(const Ice::Current& c)
 void RpcEngineVersionDownloaderImpl::cancel(const Ice::Current& c)
 {
 	boost::recursive_mutex::scoped_lock lock(sync_);
-	checkIsDestroyed();
-
 	RpcFileDownloaderImpl::cancel(c);
 	unlockEngineVersionIfLocked();
 }

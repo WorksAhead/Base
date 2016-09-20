@@ -126,7 +126,7 @@ void ASyncInstallExtraTask::run()
 		}
 	};
 
-	std::unique_ptr<ASyncDownloadTask> downloadTask(new ASyncDownloadTask(context_, downloader_));
+	std::unique_ptr<ASyncDownloadTask> downloadTask(new ASyncDownloadTask(downloader_));
 	downloadTask->setInfoHead(infoHead_);
 	downloadTask->setFilename(packageFilename);
 	downloadTask->start();
@@ -146,7 +146,7 @@ void ASyncInstallExtraTask::run()
 		std::this_thread::sleep_for(std::chrono::milliseconds(100));
 	}
 
-	std::unique_ptr<ASyncUnpackTask> unpackTask(new ASyncUnpackTask(context_));
+	std::unique_ptr<ASyncUnpackTask> unpackTask(new ASyncUnpackTask());
 	unpackTask->setInfoHead(infoHead_);
 	unpackTask->setPackage(packageFilename);
 	unpackTask->setPath(path_);

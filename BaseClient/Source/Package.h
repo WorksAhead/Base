@@ -71,6 +71,9 @@ public:
 	int executeStep();
 
 private:
+	bool isDirectory(const Path&);
+
+private:
 	Path packFile_;
 	Path outPath_;
 	void* handle_;

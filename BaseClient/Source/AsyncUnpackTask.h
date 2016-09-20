@@ -2,7 +2,6 @@
 #define ASYNCUNPACKTASK_HEADER_
 
 #include "ASyncTask.h"
-#include "Context.h"
 
 #include <RpcSession.h>
 
@@ -14,7 +13,7 @@
 
 class ASyncUnpackTask : public ASyncTask {
 public:
-	explicit ASyncUnpackTask(ContextPtr context);
+	ASyncUnpackTask();
 	~ASyncUnpackTask();
 
 	void setInfoHead(const std::string&);
@@ -32,8 +31,6 @@ private:
 	void run();
 
 private:
-	ContextPtr context_;
-
 	std::string package_;
 	std::string path_;
 	std::string infoHead_;

@@ -18,7 +18,7 @@
 
 namespace fs = boost::filesystem;
 
-ASyncDownloadTask::ASyncDownloadTask(ContextPtr context, Rpc::DownloaderPrx downloader) : context_(context), downloader_(downloader)
+ASyncDownloadTask::ASyncDownloadTask(Rpc::DownloaderPrx downloader) : downloader_(downloader)
 {
 	state_ = ASyncTask::state_idle;
 	progress_ = 0;

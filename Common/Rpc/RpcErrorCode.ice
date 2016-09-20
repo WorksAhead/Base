@@ -26,6 +26,12 @@ module Rpc
 		ec_incomplete_engine_version,
 		ec_extra_does_not_exist,
 		ec_incomplete_extra,
+		ec_incomplete_client_version,
+		ec_client_version_is_locked,
+		ec_client_version_already_exists,
+		ec_client_version_does_not_exist,
+		ec_client_version_is_removed,
+		ec_client_version_too_low,
 	};
 };
 

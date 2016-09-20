@@ -127,7 +127,7 @@ void ASyncCreateProjectTask::run()
 		}
 	};
 
-	std::unique_ptr<ASyncUnpackTask> unpackTask(new ASyncUnpackTask(context_));
+	std::unique_ptr<ASyncUnpackTask> unpackTask(new ASyncUnpackTask());
 	unpackTask->setInfoHead(infoHead_);
 	unpackTask->setPackage(package);
 	unpackTask->setPath(location_);

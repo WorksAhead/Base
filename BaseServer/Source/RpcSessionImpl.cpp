@@ -6,6 +6,8 @@
 #include "RpcContentBrowserImpl.h"
 #include "RpcExtraBrowserImpl.h"
 #include "RpcExtraSubmitterImpl.h"
+#include "RpcClientBrowserImpl.h"
+#include "RpcClientSubmitterImpl.h"
 #include "RpcUserBrowserImpl.h"
 #include "PathUtils.h"
 
@@ -560,6 +562,141 @@ Rpc::ErrorCode RpcSessionImpl::browseUsers(Rpc::UserBrowserPrx& browserPrx, cons
 		browserPrx->destroy();
 		return Rpc::ec_server_busy;
 	}
+
+	return Rpc::ec_success;
+}
+
+Rpc::ErrorCode RpcSessionImpl::browseClient(Rpc::ClientBrowserPrx& browserPrx, const Ice::Current& c)
+{
+	boost::recursive_mutex::scoped_lock lock(sync_);
+	checkIsDestroyed();
+
+	RpcClientBrowserImplPtr browser = new RpcClientBrowserImpl(context_->center());
+
+	Rpc::ErrorCode ec = browser->init();
+	if (ec != Rpc::ec_success) {
+		return ec;
+	}
+
+	browserPrx = Rpc::ClientBrowserPrx::uncheckedCast(c.adapter->addWithUUID(browser));
+
+	if (!context_->objectManager()->addObject(browserPrx)) {
+		browserPrx->destroy();
+		return Rpc::ec_server_busy;
+	}
+
+	return Rpc::ec_success;
+}
+
+Rpc::ErrorCode RpcSessionImpl::getClientInfo(const std::string& version, Rpc::ClientInfo& info, const Ice::Current&)
+{
+	boost::recursive_mutex::scoped_lock lock(sync_);
+	checkIsDestroyed();
+
+	std::map<std::string, std::string> form;
+	if (!context_->center()->getClientVersion(version, form)) {
+		return Rpc::ec_client_version_does_not_exist;
+	}
+
+	info.version = version;
+	info.uptime = form.at("UpTime");
+	info.info = form.at("Info");
+	info.state = form.at("State");
+
+	return Rpc::ec_success;
+}
+
+Rpc::ErrorCode RpcSessionImpl::submitClient(const std::string& version, Rpc::ClientSubmitterPrx& submitterPrx, const Ice::Current& c)
+{
+	boost::recursive_mutex::scoped_lock lock(sync_);
+	checkIsDestroyed();
+
+	if (context_->userGroup() != "Admin") {
+		return Rpc::ec_access_denied;
+	}
+
+	std::string currentVersion = context_->center()->getNewestClientVersion();
+
+	if (!currentVersion.empty() && !versionLess(currentVersion, version)) {
+		Rpc::ec_client_version_too_low;
+	}
+
+	RpcClientSubmitterImplPtr submitter = new RpcClientSubmitterImpl(context_);
+
+	Rpc::ErrorCode ec = submitter->init(version, RpcClientSubmitterImpl::submit_mode);
+	if (ec != Rpc::ec_success) {
+		return ec;
+	}
+
+	submitterPrx = Rpc::ClientSubmitterPrx::uncheckedCast(c.adapter->addWithUUID(submitter));
+
+	if (!context_->objectManager()->addObject(submitterPrx)) {
+		submitterPrx->destroy();
+		return Rpc::ec_server_busy;
+	}
+
+	return Rpc::ec_success;
+}
+
+Rpc::ErrorCode RpcSessionImpl::updateClient(const std::string& version, Rpc::ClientSubmitterPrx& submitterPrx, const Ice::Current& c)
+{
+	boost::recursive_mutex::scoped_lock lock(sync_);
+	checkIsDestroyed();
+
+	if (context_->userGroup() != "Admin") {
+		return Rpc::ec_access_denied;
+	}
+
+	RpcClientSubmitterImplPtr submitter = new RpcClientSubmitterImpl(context_);
+
+	Rpc::ErrorCode ec = submitter->init(version, RpcClientSubmitterImpl::update_mode);
+	if (ec != Rpc::ec_success) {
+		return ec;
+	}
+
+	submitterPrx = Rpc::ClientSubmitterPrx::uncheckedCast(c.adapter->addWithUUID(submitter));
+
+	if (!context_->objectManager()->addObject(submitterPrx)) {
+		submitterPrx->destroy();
+		return Rpc::ec_server_busy;
+	}
+
+	return Rpc::ec_success;
+}
+
+Rpc::ErrorCode RpcSessionImpl::removeClient(const std::string& version, const Ice::Current&)
+{
+	boost::recursive_mutex::scoped_lock lock(sync_);
+	checkIsDestroyed();
+
+	if (context_->userGroup() != "Admin") {
+		return Rpc::ec_access_denied;
+	}
+
+	ClientVersionLockGuard clientLock(context_->center().get(), version, Center::lock_write);
+
+	if (!clientLock.isLocked()) {
+		return Rpc::ec_client_version_is_locked;
+	}
+
+	std::string state;
+	if (!context_->center()->getClientVersionState(version, state)) {
+		return Rpc::ec_client_version_does_not_exist;
+	}
+
+	if (state != "Normal") {
+		if (state == "Removed") {
+			return Rpc::ec_client_version_is_removed;
+		}
+		assert(false);
+	}
+
+	context_->center()->changeClientVersionState(version, "Removed");
+
+	std::string safeFilename = makeSafePath(context_->center()->getClientPath(version));
+
+	boost::system::error_code ec;
+	fs::remove(safeFilename, ec);
 
 	return Rpc::ec_success;
 }

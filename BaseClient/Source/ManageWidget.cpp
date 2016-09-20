@@ -6,6 +6,7 @@
 #include "ManageUserWidget.h"
 #include "ManagePageWidget.h"
 #include "ManageCategoryWidget.h"
+#include "ManageClientWidget.h"
 
 #include <QBoxLayout>
 #include <QPainter>
@@ -29,12 +30,14 @@ ManageWidget::ManageWidget(ContextPtr context, QWidget* parent) : QWidget(parent
 		manageUser_ = new ManageUserWidget(context_);
 		managePage_ = new ManagePageWidget(context_);
 		manageCategory_ = new ManageCategoryWidget(context_);
+		manageClient_ = new ManageClientWidget(context_);
 
 		p->addTab("Engine", manageEngine_);
 		p->addTab("Extra", manageExtra_);
 		p->addTab("User", manageUser_);
 		p->addTab("Page", managePage_);
 		p->addTab("Category", manageCategory_);
+		p->addTab("Client", manageClient_);
 	}
 
 	p->setCurrentIndex(0);

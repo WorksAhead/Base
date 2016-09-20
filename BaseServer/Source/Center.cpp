@@ -18,9 +18,17 @@ namespace fs = boost::filesystem;
 
 Center::Center()
 {
+	clientDir_ = "Clients";
 	engineDir_ = "EngineVersions";
 	contentDir_ = "Contents";
 	extraDir_ = "Extras";
+
+	if (!fs::exists(clientDir_)) {
+		boost::system::error_code ec;
+		if (!fs::create_directories(makeSafePath(clientDir_), ec)) {
+			throw std::runtime_error("failed to create directory");
+		}
+	}
 
 	if (!fs::exists(engineDir_)) {
 		boost::system::error_code ec;
@@ -64,6 +72,10 @@ Center::Center()
 		"Id TEXT, Title TEXT, Setup TEXT, "
 		"User TEXT, UpTime DATETIME, Info TEXT, State TEXT)");
 
+	db_->exec("CREATE TABLE IF NOT EXISTS Clients ("
+		"Version TEXT COLLATE NOCASE, "
+		"UpTime DATETIME, Info TEXT, State TEXT)");
+
 	db_->exec("CREATE TABLE IF NOT EXISTS Info ("
 		"Key TEXT UNIQUE, Value TEXT)");
 
@@ -78,6 +90,9 @@ Center::Center()
 
 	db_->exec("CREATE INDEX IF NOT EXISTS IndexOfExtras ON Extras ("
 		"Id, Title, User, UpTime, State)");
+
+	db_->exec("CREATE INDEX IF NOT EXISTS IndexOfClients ON Clients ("
+		"Version, UpTime, State)");
 
 	loadPagesFromDb();
 	loadCategoriesFromDb();
@@ -181,6 +196,40 @@ void Center::unlockEngineVersion(const std::string& name, const std::string& ver
 	}
 }
 
+bool Center::lockClientVersion(const std::string& version, LockMode mode)
+{
+	const std::string& key = boost::to_lower_copy(version);
+	boost::mutex::scoped_lock lock(lockedClientVersionSetSync_);
+	int& n = lockedClientVersionSet_[key];
+	if (mode == lock_write && n == 0) {
+		n = -1;
+		return true;
+	}
+	else if (mode == lock_read && n >= 0) {
+		++n;
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+void Center::unlockClientVersion(const std::string& version, LockMode mode)
+{
+	const std::string& key = boost::to_lower_copy(version);
+	boost::mutex::scoped_lock lock(lockedClientVersionSetSync_);
+	assert(lockedClientVersionSet_.count(key) == 1);
+	int& n = lockedClientVersionSet_[key];
+	if (mode == lock_write) {
+		assert(n == -1);
+		n = 0;
+	}
+	else if (mode == lock_read) {
+		assert(n > 0);
+		--n;
+	}
+}
+
 std::string Center::generateUuid()
 {
 	return boost::uuids::to_string(uniquePathGen_());
@@ -221,6 +270,12 @@ std::string Center::getExtraPath(const std::string& id)
 		path /= part;
 	}
 
+	return path.string();
+}
+
+std::string Center::getClientPath(const std::string& version)
+{
+	fs::path path = fs::path(clientDir()) / ("client_" + version);
 	return path.string();
 }
 
@@ -478,6 +533,103 @@ bool Center::changeExtraState(const std::string& id, const std::string& state)
 	oss << sqlText(state);
 	oss << " WHERE Id=";
 	oss << sqlText(id);
+
+	SQLite::Transaction t(*db_);
+	int n = db_->exec(oss.str());
+	t.commit();
+
+	return (n > 0);
+}
+
+std::string Center::getNewestClientVersion()
+{
+	std::ostringstream oss;
+	oss << "SELECT * FROM Clients";
+	oss << " WHERE State=" << sqlText("Normal");
+	oss << " ORDER BY UpTime DESC";
+
+	SQLite::Statement s(*db_, oss.str());
+	if (!s.executeStep()) {
+		return "";
+	}
+
+	return s.getColumn("Version").getText();
+}
+
+bool Center::addClientVersion(const std::string& version, const Form& form)
+{
+	std::ostringstream oss;
+	oss << "INSERT INTO Clients VALUES (";
+	oss << sqlText(version) << ", ";
+	oss << sqlText(getCurrentTimeString()) << ", ";
+	oss << sqlText(form.at("Info")) << ", ";
+	oss << sqlText("Normal") << ")";
+
+	SQLite::Transaction t(*db_);
+	int n = db_->exec(oss.str());
+	t.commit();
+
+	return (n > 0);
+}
+
+bool Center::updateClientVersion(const std::string& version, const Form& form)
+{
+	std::ostringstream oss;
+	oss << "UPDATE Clients SET ";
+	oss << "Info=" << sqlText(form.at("Info"));
+	oss << " WHERE ";
+	oss << "Version=" << sqlText(version);
+
+	SQLite::Transaction t(*db_);
+	int n = db_->exec(oss.str());
+	t.commit();
+
+	return (n > 0);
+}
+
+bool Center::getClientVersion(const std::string& version, Form& form)
+{
+	std::ostringstream oss;
+	oss << "SELECT * FROM Clients";
+	oss << " WHERE ";
+	oss << "Version=" << sqlText(version);
+
+	SQLite::Statement s(*db_, oss.str());
+	if (!s.executeStep()) {
+		return false;
+	}
+
+	form["UpTime"] = s.getColumn("UpTime").getText();
+	form["Info"] = s.getColumn("Info").getText();
+	form["State"] = s.getColumn("State").getText();
+
+	return true;
+}
+
+bool Center::getClientVersionState(const std::string& version, std::string& outState)
+{
+	std::ostringstream oss;
+	oss << "SELECT State FROM Clients";
+	oss << " WHERE ";
+	oss << "Version=" << sqlText(version);
+
+	SQLite::Statement s(*db_, oss.str());
+	if (!s.executeStep()) {
+		return false;
+	}
+
+	outState = s.getColumn("State").getText();
+
+	return true;
+}
+
+bool Center::changeClientVersionState(const std::string& version, const std::string& state)
+{
+	std::ostringstream oss;
+	oss << "UPDATE Clients SET State=";
+	oss << sqlText(state);
+	oss << " WHERE Version=";
+	oss << sqlText(version);
 
 	SQLite::Transaction t(*db_);
 	int n = db_->exec(oss.str());

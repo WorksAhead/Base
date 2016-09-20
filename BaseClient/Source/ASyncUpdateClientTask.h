@@ -1,7 +1,8 @@
-#ifndef ASYNCDOWNLOADTASK_HEADER_
-#define ASYNCDOWNLOADTASK_HEADER_
+#ifndef ASYNCUPDATECLIENTTASK_HEADER_
+#define ASYNCUPDATECLIENTTASK_HEADER_
 
 #include "ASyncTask.h"
+#include "Context.h"
 
 #include <RpcSession.h>
 
@@ -11,15 +12,14 @@
 #include <thread>
 #include <string>
 
-class ASyncDownloadTask : public ASyncTask {
+class ASyncUpdateClientTask : public ASyncTask {
 public:
-	explicit ASyncDownloadTask(Rpc::DownloaderPrx downloader);
-	~ASyncDownloadTask();
+	ASyncUpdateClientTask();
+	~ASyncUpdateClientTask();
 
 	void setInfoHead(const std::string&);
-	void setFilename(const std::string&);
-
-	std::string filename();
+	void setSourcePath(const std::string&);
+	void setTargetPath(const std::string&);
 
 	virtual void start();
 	virtual void cancel();
@@ -32,11 +32,10 @@ private:
 	void run();
 
 private:
-	Rpc::DownloaderPrx downloader_;
-
-	std::string filename_;
 	std::string infoHead_;
 	std::string infoBody_;
+	std::string sourcePath_;
+	std::string targetPath_;
 
 	int state_;
 	int progress_;
@@ -46,5 +45,5 @@ private:
 	std::shared_ptr<std::thread> t_;
 };
 
-#endif // ASYNCDOWNLOADTASK_HEADER_
+#endif // ASYNCUPDATECLIENTTASK_HEADER_
 

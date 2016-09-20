@@ -9,8 +9,6 @@
 
 #include <boost/thread/recursive_mutex.hpp>
 
-#include <set>
-
 class RpcSessionImpl : public Rpc::Session {
 public:
 	explicit RpcSessionImpl(ContextPtr);
@@ -50,6 +48,12 @@ public:
 	virtual Rpc::ErrorCode submitExtra(Rpc::ExtraSubmitterPrx&, const Ice::Current&);
 	virtual Rpc::ErrorCode updateExtra(const std::string&, Rpc::ExtraSubmitterPrx&, const Ice::Current&);
 	virtual Rpc::ErrorCode removeExtra(const std::string&, const Ice::Current&);
+
+	virtual Rpc::ErrorCode browseClient(Rpc::ClientBrowserPrx&, const Ice::Current&);
+	virtual Rpc::ErrorCode getClientInfo(const std::string&, Rpc::ClientInfo&, const Ice::Current&);
+	virtual Rpc::ErrorCode submitClient(const std::string&, Rpc::ClientSubmitterPrx&, const Ice::Current&);
+	virtual Rpc::ErrorCode updateClient(const std::string&, Rpc::ClientSubmitterPrx&, const Ice::Current&);
+	virtual Rpc::ErrorCode removeClient(const std::string&, const Ice::Current&);
 
 	virtual Rpc::ErrorCode browseUsers(Rpc::UserBrowserPrx&, const Ice::Current&);
 	virtual Rpc::ErrorCode setUserGroup(const std::string&, const std::string&, const Ice::Current&);

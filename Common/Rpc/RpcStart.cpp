@@ -45,6 +45,10 @@ namespace
 
 const ::std::string __Rpc__Start__getServerVersion_name = "getServerVersion";
 
+const ::std::string __Rpc__Start__getClientVersion_name = "getClientVersion";
+
+const ::std::string __Rpc__Start__downloadClient_name = "downloadClient";
+
 const ::std::string __Rpc__Start__signup_name = "signup";
 
 const ::std::string __Rpc__Start__login_name = "login";
@@ -173,6 +177,225 @@ IceProxy::Rpc::Start::end_getServerVersion(const ::Ice::AsyncResultPtr& __result
         }
     }
     ::IceInternal::BasicStream* __is = __result->__startReadParams();
+    __is->read(__ret);
+    __result->__endReadParams();
+    return __ret;
+}
+
+::std::string
+IceProxy::Rpc::Start::getClientVersion(const ::Ice::Context* __ctx)
+{
+    __checkTwowayOnly(__Rpc__Start__getClientVersion_name);
+    ::IceInternal::Outgoing __og(this, __Rpc__Start__getClientVersion_name, ::Ice::Normal, __ctx);
+    __og.writeEmptyParams();
+    if(!__og.invoke())
+    {
+        try
+        {
+            __og.throwUserException();
+        }
+        catch(const ::Ice::UserException& __ex)
+        {
+            ::Ice::UnknownUserException __uue(__FILE__, __LINE__, __ex.ice_name());
+            throw __uue;
+        }
+    }
+    ::std::string __ret;
+    ::IceInternal::BasicStream* __is = __og.startReadParams();
+    __is->read(__ret);
+    __og.endReadParams();
+    return __ret;
+}
+
+::Ice::AsyncResultPtr
+IceProxy::Rpc::Start::begin_getClientVersion(const ::Ice::Context* __ctx, const ::IceInternal::CallbackBasePtr& __del, const ::Ice::LocalObjectPtr& __cookie)
+{
+    __checkAsyncTwowayOnly(__Rpc__Start__getClientVersion_name);
+    ::IceInternal::OutgoingAsyncPtr __result = new ::IceInternal::OutgoingAsync(this, __Rpc__Start__getClientVersion_name, __del, __cookie);
+    try
+    {
+        __result->prepare(__Rpc__Start__getClientVersion_name, ::Ice::Normal, __ctx);
+        __result->writeEmptyParams();
+        __result->invoke();
+    }
+    catch(const ::Ice::Exception& __ex)
+    {
+        __result->abort(__ex);
+    }
+    return __result;
+}
+
+#ifdef ICE_CPP11
+
+::Ice::AsyncResultPtr
+IceProxy::Rpc::Start::__begin_getClientVersion(const ::Ice::Context* __ctx, const ::IceInternal::Function<void (const ::std::string&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent)
+{
+    class Cpp11CB : public ::IceInternal::Cpp11FnCallbackNC
+    {
+    public:
+
+        Cpp11CB(const ::std::function<void (const ::std::string&)>& responseFunc, const ::std::function<void (const ::Ice::Exception&)>& exceptionFunc, const ::std::function<void (bool)>& sentFunc) :
+            ::IceInternal::Cpp11FnCallbackNC(exceptionFunc, sentFunc),
+            _response(responseFunc)
+        {
+            CallbackBase::checkCallback(true, responseFunc || exceptionFunc != nullptr);
+        }
+
+        virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+        {
+            ::Rpc::StartPrx __proxy = ::Rpc::StartPrx::uncheckedCast(__result->getProxy());
+            ::std::string __ret;
+            try
+            {
+                __ret = __proxy->end_getClientVersion(__result);
+            }
+            catch(const ::Ice::Exception& ex)
+            {
+                Cpp11FnCallbackNC::exception(__result, ex);
+                return;
+            }
+            if(_response != nullptr)
+            {
+                _response(__ret);
+            }
+        }
+    
+    private:
+        
+        ::std::function<void (const ::std::string&)> _response;
+    };
+    return begin_getClientVersion(__ctx, new Cpp11CB(__response, __exception, __sent));
+}
+#endif
+
+::std::string
+IceProxy::Rpc::Start::end_getClientVersion(const ::Ice::AsyncResultPtr& __result)
+{
+    ::Ice::AsyncResult::__check(__result, this, __Rpc__Start__getClientVersion_name);
+    ::std::string __ret;
+    if(!__result->__wait())
+    {
+        try
+        {
+            __result->__throwUserException();
+        }
+        catch(const ::Ice::UserException& __ex)
+        {
+            throw ::Ice::UnknownUserException(__FILE__, __LINE__, __ex.ice_name());
+        }
+    }
+    ::IceInternal::BasicStream* __is = __result->__startReadParams();
+    __is->read(__ret);
+    __result->__endReadParams();
+    return __ret;
+}
+
+::Rpc::ErrorCode
+IceProxy::Rpc::Start::downloadClient(::Rpc::DownloaderPrx& __p_downloader, const ::Ice::Context* __ctx)
+{
+    __checkTwowayOnly(__Rpc__Start__downloadClient_name);
+    ::IceInternal::Outgoing __og(this, __Rpc__Start__downloadClient_name, ::Ice::Normal, __ctx);
+    __og.writeEmptyParams();
+    if(!__og.invoke())
+    {
+        try
+        {
+            __og.throwUserException();
+        }
+        catch(const ::Ice::UserException& __ex)
+        {
+            ::Ice::UnknownUserException __uue(__FILE__, __LINE__, __ex.ice_name());
+            throw __uue;
+        }
+    }
+    ::Rpc::ErrorCode __ret;
+    ::IceInternal::BasicStream* __is = __og.startReadParams();
+    __is->read(__p_downloader);
+    __is->read(__ret);
+    __og.endReadParams();
+    return __ret;
+}
+
+::Ice::AsyncResultPtr
+IceProxy::Rpc::Start::begin_downloadClient(const ::Ice::Context* __ctx, const ::IceInternal::CallbackBasePtr& __del, const ::Ice::LocalObjectPtr& __cookie)
+{
+    __checkAsyncTwowayOnly(__Rpc__Start__downloadClient_name);
+    ::IceInternal::OutgoingAsyncPtr __result = new ::IceInternal::OutgoingAsync(this, __Rpc__Start__downloadClient_name, __del, __cookie);
+    try
+    {
+        __result->prepare(__Rpc__Start__downloadClient_name, ::Ice::Normal, __ctx);
+        __result->writeEmptyParams();
+        __result->invoke();
+    }
+    catch(const ::Ice::Exception& __ex)
+    {
+        __result->abort(__ex);
+    }
+    return __result;
+}
+
+#ifdef ICE_CPP11
+
+::Ice::AsyncResultPtr
+IceProxy::Rpc::Start::__begin_downloadClient(const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::DownloaderPrx&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent)
+{
+    class Cpp11CB : public ::IceInternal::Cpp11FnCallbackNC
+    {
+    public:
+
+        Cpp11CB(const ::std::function<void (::Rpc::ErrorCode, const ::Rpc::DownloaderPrx&)>& responseFunc, const ::std::function<void (const ::Ice::Exception&)>& exceptionFunc, const ::std::function<void (bool)>& sentFunc) :
+            ::IceInternal::Cpp11FnCallbackNC(exceptionFunc, sentFunc),
+            _response(responseFunc)
+        {
+            CallbackBase::checkCallback(true, responseFunc || exceptionFunc != nullptr);
+        }
+
+        virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+        {
+            ::Rpc::StartPrx __proxy = ::Rpc::StartPrx::uncheckedCast(__result->getProxy());
+            ::Rpc::DownloaderPrx __p_downloader;
+            ::Rpc::ErrorCode __ret;
+            try
+            {
+                __ret = __proxy->end_downloadClient(__p_downloader, __result);
+            }
+            catch(const ::Ice::Exception& ex)
+            {
+                Cpp11FnCallbackNC::exception(__result, ex);
+                return;
+            }
+            if(_response != nullptr)
+            {
+                _response(__ret, __p_downloader);
+            }
+        }
+    
+    private:
+        
+        ::std::function<void (::Rpc::ErrorCode, const ::Rpc::DownloaderPrx&)> _response;
+    };
+    return begin_downloadClient(__ctx, new Cpp11CB(__response, __exception, __sent));
+}
+#endif
+
+::Rpc::ErrorCode
+IceProxy::Rpc::Start::end_downloadClient(::Rpc::DownloaderPrx& __p_downloader, const ::Ice::AsyncResultPtr& __result)
+{
+    ::Ice::AsyncResult::__check(__result, this, __Rpc__Start__downloadClient_name);
+    ::Rpc::ErrorCode __ret;
+    if(!__result->__wait())
+    {
+        try
+        {
+            __result->__throwUserException();
+        }
+        catch(const ::Ice::UserException& __ex)
+        {
+            throw ::Ice::UnknownUserException(__FILE__, __LINE__, __ex.ice_name());
+        }
+    }
+    ::IceInternal::BasicStream* __is = __result->__startReadParams();
+    __is->read(__p_downloader);
     __is->read(__ret);
     __result->__endReadParams();
     return __ret;
@@ -612,6 +835,32 @@ Rpc::Start::___getServerVersion(::IceInternal::Incoming& __inS, const ::Ice::Cur
 }
 
 ::Ice::DispatchStatus
+Rpc::Start::___getClientVersion(::IceInternal::Incoming& __inS, const ::Ice::Current& __current)
+{
+    __checkMode(::Ice::Normal, __current.mode);
+    __inS.readEmptyParams();
+    ::std::string __ret = getClientVersion(__current);
+    ::IceInternal::BasicStream* __os = __inS.__startWriteParams(::Ice::DefaultFormat);
+    __os->write(__ret);
+    __inS.__endWriteParams(true);
+    return ::Ice::DispatchOK;
+}
+
+::Ice::DispatchStatus
+Rpc::Start::___downloadClient(::IceInternal::Incoming& __inS, const ::Ice::Current& __current)
+{
+    __checkMode(::Ice::Normal, __current.mode);
+    __inS.readEmptyParams();
+    ::Rpc::DownloaderPrx __p_downloader;
+    ::Rpc::ErrorCode __ret = downloadClient(__p_downloader, __current);
+    ::IceInternal::BasicStream* __os = __inS.__startWriteParams(::Ice::DefaultFormat);
+    __os->write(__p_downloader);
+    __os->write(__ret);
+    __inS.__endWriteParams(true);
+    return ::Ice::DispatchOK;
+}
+
+::Ice::DispatchStatus
 Rpc::Start::___signup(::IceInternal::Incoming& __inS, const ::Ice::Current& __current)
 {
     __checkMode(::Ice::Normal, __current.mode);
@@ -670,6 +919,8 @@ namespace
 {
 const ::std::string __Rpc__Start_all[] =
 {
+    "downloadClient",
+    "getClientVersion",
     "getServerVersion",
     "ice_id",
     "ice_ids",
@@ -685,7 +936,7 @@ const ::std::string __Rpc__Start_all[] =
 ::Ice::DispatchStatus
 Rpc::Start::__dispatch(::IceInternal::Incoming& in, const ::Ice::Current& current)
 {
-    ::std::pair< const ::std::string*, const ::std::string*> r = ::std::equal_range(__Rpc__Start_all, __Rpc__Start_all + 8, current.operation);
+    ::std::pair< const ::std::string*, const ::std::string*> r = ::std::equal_range(__Rpc__Start_all, __Rpc__Start_all + 10, current.operation);
     if(r.first == r.second)
     {
         throw ::Ice::OperationNotExistException(__FILE__, __LINE__, current.id, current.facet, current.operation);
@@ -695,33 +946,41 @@ Rpc::Start::__dispatch(::IceInternal::Incoming& in, const ::Ice::Current& curren
     {
         case 0:
         {
-            return ___getServerVersion(in, current);
+            return ___downloadClient(in, current);
         }
         case 1:
         {
-            return ___ice_id(in, current);
+            return ___getClientVersion(in, current);
         }
         case 2:
         {
-            return ___ice_ids(in, current);
+            return ___getServerVersion(in, current);
         }
         case 3:
         {
-            return ___ice_isA(in, current);
+            return ___ice_id(in, current);
         }
         case 4:
         {
-            return ___ice_ping(in, current);
+            return ___ice_ids(in, current);
         }
         case 5:
         {
-            return ___login(in, current);
+            return ___ice_isA(in, current);
         }
         case 6:
         {
-            return ___resetPassword(in, current);
+            return ___ice_ping(in, current);
         }
         case 7:
+        {
+            return ___login(in, current);
+        }
+        case 8:
+        {
+            return ___resetPassword(in, current);
+        }
+        case 9:
         {
             return ___signup(in, current);
         }

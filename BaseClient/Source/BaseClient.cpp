@@ -53,10 +53,10 @@ private:
 	Rpc::SessionPrx session_;
 };
 
-BaseClient::BaseClient(Rpc::SessionPrx session)
+BaseClient::BaseClient(const QString& version, Rpc::SessionPrx session)
 {
 	setWindowIcon(QIcon(":/Icons/Base20x20.png"));
-	setWindowTitle("Base");
+	setWindowTitle("Base " + version);
 
 	timer_ = new IceUtil::Timer;
 	timer_->scheduleRepeated(new RefreshTask(session), IceUtil::Time::seconds(5));

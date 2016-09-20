@@ -12,6 +12,7 @@ class ManageExtraWidget;
 class ManageUserWidget;
 class ManagePageWidget;
 class ManageCategoryWidget;
+class ManageClientWidget;
 
 class ManageWidget : public QWidget {
 private:
@@ -31,6 +32,7 @@ private:
 	ManageUserWidget* manageUser_;
 	ManagePageWidget* managePage_;
 	ManageCategoryWidget* manageCategory_;
+	ManageClientWidget* manageClient_;
 
 	ContextPtr context_;
 };

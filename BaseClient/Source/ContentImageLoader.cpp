@@ -94,7 +94,7 @@ void ContentImageLoader::onTick()
 				continue;
 			}
 
-			task = new ASyncDownloadTask(context_, downloader);
+			task = new ASyncDownloadTask(downloader);
 			task->setFilename(toLocal8bit(makeImageFilename(imageIndex)));
 			task->start();
 			imageLoadTasks_.insert(imageIndex, task);
