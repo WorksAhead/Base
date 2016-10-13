@@ -1,8 +1,8 @@
 #include "winres.h"
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,0,0,0
- PRODUCTVERSION 1,0,0,0
+ FILEVERSION 1,0,0,13
+ PRODUCTVERSION 1,0,0,13
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -19,12 +19,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "Cyou-Inc"
             VALUE "FileDescription", "BaseClient"
-            VALUE "FileVersion", "1.0.0.0"
+            VALUE "FileVersion", "1.0.0.13"
             VALUE "InternalName", "BaseClient.exe"
             VALUE "LegalCopyright", "Copyright (C) 2016 Cyou-Inc. All rights reserved."
             VALUE "OriginalFilename", "BaseClient.exe"
             VALUE "ProductName", "BaseClient"
-            VALUE "ProductVersion", "1.0.0.0"
+            VALUE "ProductVersion", "1.0.0.13"
         END
     END
     BLOCK "VarFileInfo"

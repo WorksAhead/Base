@@ -12,6 +12,9 @@
 #include <QMap>
 #include <QSet>
 #include <QTimer>
+#include <QScrollArea>
+
+#include <limits.h>
 
 // forward declaration
 class ASyncDownloadTask;
@@ -30,34 +33,38 @@ public:
 	PageContentWidget(ContextPtr context, const QString& name, QWidget* parent = 0);
 	~PageContentWidget();
 
+	bool openUrl(const QString& url);
+	bool openContent(const QString& id);
+
+	QString name();
+
+Q_SIGNALS:
+	void unresolvedUrl(const QString&);
+
 protected:
 	virtual void mousePressEvent(QMouseEvent*);
 	virtual void showEvent(QShowEvent*);
 	virtual void paintEvent(QPaintEvent*);
 
 private Q_SLOTS:
-	void onScroll(int);
+	void onCategoryClicked(const QString& category);
+	void onContentClicked(const QString& id);
 	void onBack();
+	void onForward();
 	void onRefresh();
-	void onImageLoaded(const QString& id, int index, const QPixmap&);
+	void onUrlEdited();
+	void onCopyUrl();
+	void onCopyHttpUrl();
 
 private:
-	void showMore(int);
-	void clear();
+	void openBrowser(const QString& category = "");
+	void clearOldAndForwardHistory();
 
 private:
 	ContextPtr context_;
 	QString name_;
-	FlowLayout* flowLayout_;
-
-	PageContentContentWidget* content_;
-
-	Rpc::ContentBrowserPrx browser_;
-
-	QMap<QString, PageContentItemWidget*> pageItems_;
 
 	Ui::PageContentWidget ui_;
-	bool firstShow_;
 };
 
 #endif // PAGECONTENTWIDGET_HEADER_

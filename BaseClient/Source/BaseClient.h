@@ -6,10 +6,12 @@
 
 #include "Window.h"
 #include "ui_DecoratorWidget.h"
+#include "ui_ExpressWidget.h"
 #include "LowerPaneWidget.h"
 #include "ASyncTaskManagerDialog.h"
 
 #include <QTabWidget>
+#include <QLocalServer>
 
 #include <IceUtil/IceUtil.h>
 #include <Ice/Ice.h>
@@ -31,7 +33,7 @@ private:
 	Q_OBJECT
 
 public:
-	BaseClient(const QString& version, Rpc::SessionPrx);
+	BaseClient(const QString& workPath, const QString& version, Rpc::SessionPrx, const QString& url);
 	~BaseClient();
 
 private:
@@ -75,6 +77,7 @@ private:
 	void getProjectList(std::vector<ProjectInfo>&);
 
 private Q_SLOTS:
+	void openUrl(const QString& url);
 	void addEngineToGui(const EngineVersion&);
 	void removeEngineFromGui(const EngineVersion&);
 	void addContentToGui(const std::string& contentId);
@@ -89,6 +92,7 @@ private Q_SLOTS:
 	void promptExtraState(const std::string& title, int);
 	void addLibraryNotification();
 	void onShowTaskManager();
+	void onNewConnection();
 
 private:
 	void initDb();
@@ -98,9 +102,14 @@ private:
 	void loadProjectsFromDb();
 
 private:
+	Ui::ExpressWidget expressWidgetUi_;
 	Ui::DecoratorWidget decoratorWidgetUi_;
 
+	std::string workPath_;
+
 	IceUtil::TimerPtr timer_;
+
+	QLocalServer* localServer_;
 
 	DatabasePtr db_;
 
@@ -112,6 +121,9 @@ private:
 	HTabWidget* tabWidget_;
 	LibraryWidget* library_;
 	ManageWidget* manage_;
+
+	QList<QString> urlList_;
+	int currentUrl_;
 
 	boost::uuids::random_generator rand_;
 

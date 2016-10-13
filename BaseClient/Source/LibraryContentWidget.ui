@@ -49,8 +49,11 @@
        <property name="minimumSize">
         <size>
          <width>200</width>
-         <height>0</height>
+         <height>24</height>
         </size>
+       </property>
+       <property name="placeholderText">
+        <string>Search</string>
        </property>
       </widget>
      </item>
@@ -100,8 +103,11 @@
        <property name="minimumSize">
         <size>
          <width>200</width>
-         <height>0</height>
+         <height>24</height>
         </size>
+       </property>
+       <property name="placeholderText">
+        <string>Search</string>
        </property>
       </widget>
      </item>

@@ -28,11 +28,14 @@ public:
 	void setWindowTitle(const QString&);
 	QString windowTitle() const;
 
-	void setCentralWidget(QWidget*, QWidget** outOldCentralWidget = 0);
-	QWidget* centralWidget() const;
+	void setExpressWidget(QWidget*, QWidget** oldExpressWidget = 0);
+	QWidget* expressWidget() const;
 
 	void setDecoratorWidget(QWidget*, QWidget** outOldDecoratorWidget = 0);
 	QWidget* decoratorWidget() const;
+
+	void setCentralWidget(QWidget*, QWidget** outOldCentralWidget = 0);
+	QWidget* centralWidget() const;
 
 	QRect frameGeometry() const;
 	const QRect& geometry() const;
@@ -109,6 +112,7 @@ private:
 private:
 	QLabel* iconWidget_;
 	QLabel* titleWidget_;
+	QWidget* expressWidget_;
 	QWidget* decoratorWidget_;
 	QWidget* centralWidget_;
 

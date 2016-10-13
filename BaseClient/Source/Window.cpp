@@ -19,6 +19,8 @@ Window::Window()
 
 	iconWidget_ = new QLabel;
 	titleWidget_ = new QLabel;
+	titleWidget_->setAlignment(Qt::AlignCenter);
+	expressWidget_ = new QWidget;
 	decoratorWidget_ = new QWidget;
 	centralWidget_ = new QWidget;
 
@@ -30,6 +32,7 @@ Window::Window()
 	topLayout_->setContentsMargins(10, 0, 0, 0);
 	topLayout_->setSpacing(5);
 	topLayout_->addWidget(iconWidget_, 0);
+	topLayout_->addWidget(expressWidget_, 0);
 	topLayout_->addWidget(titleWidget_, 1);
 	topLayout_->addWidget(decoratorWidget_, 0);
 	topLayout_->addWidget(minimizeButton_, 0, Qt::AlignTop);
@@ -79,30 +82,28 @@ QString Window::windowTitle() const
 	return titleWidget_->text();
 }
 
-void Window::setCentralWidget(QWidget* centralWidget, QWidget** outOldCentralWidget)
+void Window::setExpressWidget(QWidget* expressWidget, QWidget** outOldExpressWidget)
 {
-	QWidget* oldCentralWidget = centralWidget_;
+	QWidget* oldExpressWidget = expressWidget_;
 
-	QLayoutItem* li = layout_->replaceWidget(oldCentralWidget, centralWidget);
+	QLayoutItem* li = topLayout_->replaceWidget(oldExpressWidget, expressWidget);
 	delete li;
 
-	centralWidget->setVisible(true);
+	expressWidget->setVisible(true);
 
-	centralWidget_ = centralWidget;
+	expressWidget_ = expressWidget;
 
-	if (outOldCentralWidget) {
-		*outOldCentralWidget = oldCentralWidget;
+	if (outOldExpressWidget) {
+		*outOldExpressWidget = oldExpressWidget;
 	}
 	else {
-		delete oldCentralWidget;
+		delete oldExpressWidget;
 	}
-
-	setAttribute(Qt::WA_DeleteOnClose, centralWidget->testAttribute(Qt::WA_DeleteOnClose));
 }
 
-QWidget* Window::centralWidget() const
+QWidget* Window::expressWidget() const
 {
-	return centralWidget_;
+	return expressWidget_;
 }
 
 void Window::setDecoratorWidget(QWidget* decoratorWidget, QWidget** outOldDecoratorWidget)
@@ -127,6 +128,32 @@ void Window::setDecoratorWidget(QWidget* decoratorWidget, QWidget** outOldDecora
 QWidget* Window::decoratorWidget() const
 {
 	return decoratorWidget_;
+}
+
+void Window::setCentralWidget(QWidget* centralWidget, QWidget** outOldCentralWidget)
+{
+	QWidget* oldCentralWidget = centralWidget_;
+
+	QLayoutItem* li = layout_->replaceWidget(oldCentralWidget, centralWidget);
+	delete li;
+
+	centralWidget->setVisible(true);
+
+	centralWidget_ = centralWidget;
+
+	if (outOldCentralWidget) {
+		*outOldCentralWidget = oldCentralWidget;
+	}
+	else {
+		delete oldCentralWidget;
+	}
+
+	setAttribute(Qt::WA_DeleteOnClose, centralWidget->testAttribute(Qt::WA_DeleteOnClose));
+}
+
+QWidget* Window::centralWidget() const
+{
+	return centralWidget_;
 }
 
 QRect Window::frameGeometry() const

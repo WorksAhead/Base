@@ -6,12 +6,14 @@
 #include <RpcStart.h>
 #include <RpcSession.h>
 
+#include <string>
+
 class LoginDialog : public QDialog {
 private:
 	Q_OBJECT
 
 public:
-	LoginDialog(Rpc::StartPrx, QWidget* parent = 0);
+	LoginDialog(const QString& workPath, Rpc::StartPrx, QWidget* parent = 0);
 	~LoginDialog();
 
 	Rpc::SessionPrx session();
@@ -23,6 +25,7 @@ private Q_SLOTS:
 
 private:
 	Ui::LoginDialog ui_;
+	std::string workPath_;
 	Rpc::StartPrx startPrx_;
 	Rpc::SessionPrx sessionPrx_;
 	QString password_;

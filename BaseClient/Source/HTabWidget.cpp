@@ -26,6 +26,16 @@ HTabBarWidget* HTabWidget::tabBar()
 	return tabBar_;
 }
 
+int HTabWidget::count() const
+{
+	return stack_->count();
+}
+
+QWidget* HTabWidget::widget(int index) const
+{
+	return stack_->widget(index);
+}
+
 void HTabWidget::addTab(const QString& label, QWidget* content)
 {
 	insertTab(-1, label, content);

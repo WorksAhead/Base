@@ -16,6 +16,10 @@ public:
 
 	HTabBarWidget* tabBar();
 
+	int count() const;
+
+	QWidget* widget(int index) const;
+
 	void addTab(const QString& label, QWidget* content);
 	void insertTab(int index, const QString& label, QWidget* content);
 

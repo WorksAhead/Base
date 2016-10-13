@@ -2,23 +2,29 @@
 #include "ContentDownloadDialog.h"
 #include "ASyncInstallEngineTask.h"
 #include "ASyncDownloadContentTask.h"
+#include "ContentImageLoader.h"
 
 #include <QPainter>
-#include <QClipboard>
 #include <QMouseEvent>
+
 #include <QScrollBar>
 #include <QLabel>
-#include <QMenu>
-#include <QMessageBox>
+#include <QGridLayout>
 
 #include <boost/filesystem.hpp>
-#include <boost/scope_exit.hpp>
+#include <boost/algorithm/string.hpp>
+
+#include <vector>
+#include <sstream>
+#include <string>
 
 namespace fs = boost::filesystem;
 
-PageContentContentWidget::PageContentContentWidget(ContextPtr context, QWidget* parent) : QWidget(parent), context_(context)
+PageContentContentWidget::PageContentContentWidget(ContextPtr context, const QString& contentId, QWidget* parent)
+	: context_(context), contentId_(contentId), QWidget(parent)
 {
-	ui_.setupUi(this);
+	QWidget* w = new QWidget;
+	ui_.setupUi(w);
 
 	ui_.screenshotViewer->setAspectRatio(16.0 / 9.0);
 
@@ -30,110 +36,74 @@ PageContentContentWidget::PageContentContentWidget(ContextPtr context, QWidget* 
 	thumbnailWidget_->setLayout(thumbnailLayout_);
 	ui_.thumbnailScrollArea->setWidget(thumbnailWidget_);
 
+	scrollArea_ = new QScrollArea;
+	scrollArea_->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+	scrollArea_->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+	scrollArea_->setWidgetResizable(true);
+	scrollArea_->setWidget(w);
+
+	QLayout* layout = new QGridLayout;
+	layout->setMargin(0);
+	layout->setSpacing(0);
+	layout->addWidget(scrollArea_);
+	setLayout(layout);
+
+	QObject::connect(context_->contentImageLoader, &ContentImageLoader::loaded, this, &PageContentContentWidget::onImageLoaded);
 	QObject::connect(ui_.downloadButton, &QPushButton::clicked, this, &PageContentContentWidget::onDownload);
+
+	firstShow_ = true;
 }
 
 PageContentContentWidget::~PageContentContentWidget()
 {
 }
 
-void PageContentContentWidget::setContentId(const QString& id)
+void PageContentContentWidget::refresh()
 {
-	const int state = context_->getContentState(id.toStdString());
-	//if (state == ContentState::not_downloaded) {
-	//	ui_.downloadButton->setEnabled(true);
-	//}
-	//else {
-	//	ui_.downloadButton->setEnabled(false);
-	//}
-	contentId_ = id;
+	scrollArea_->verticalScrollBar()->setValue(0);
+
+	Rpc::ContentInfo ci;
+	Rpc::ErrorCode ec = context_->session->getContentInfo(contentId_.toStdString(), ci);
+	if (ec != Rpc::ec_success) {
+		ui_.titleLabel->setText("Content not found");
+		ui_.summaryLabel->setVisible(false);
+		ui_.screenshotWidget->setVisible(false);
+		ui_.downloadButton->setVisible(false);
+		ui_.descriptionLabel->setVisible(false);
+		return;
+	}
+
+	std::ostringstream summary;
+	summary << ci.user << " " << ci.upTime << "\n";
+	summary << "\nSupported Engine Versions:\n";
+	summary << ci.engineName << " " << ci.engineVersion << "\n";
+	summary << "\nID:\n" << ci.id << "\n";
+	if (!ci.parentId.empty()) {
+		summary << "\nParent Id:\n" << ci.parentId << "\n";
+	}
+
+	std::vector<std::string> versions;
+	boost::split(versions, ci.engineVersion, boost::is_any_of("|"));
+
+	ui_.titleLabel->setText(ci.title.c_str());
+	ui_.summaryLabel->setText(summary.str().c_str());
+	ui_.descriptionLabel->setText(ci.desc.c_str());
+
+	if (versions.size()) {
+		supportedEngineVersion_.first = ci.engineName.c_str();
+		supportedEngineVersion_.second = versions[0].c_str();
+	}
+	
+	setImageCount(ci.imageCount - 1);
+
+	for (int i = 1; i < ci.imageCount; ++i) {
+		context_->contentImageLoader->load(ci.id.c_str(), i, true);
+	}
 }
 
 const QString& PageContentContentWidget::contentId() const
 {
 	return contentId_;
-}
-
-void PageContentContentWidget::setTitle(const QString& text)
-{
-	ui_.titleLabel->setText(text);
-}
-
-void PageContentContentWidget::setSummary(const QString& text)
-{
-	ui_.summaryLabel->setText(text);
-}
-
-void PageContentContentWidget::setDescription(const QString& text)
-{
-	ui_.descriptionLabel->setText(text);
-}
-
-void PageContentContentWidget::setSupportedEngineVersion(const QString& name, const QString& version)
-{
-	supportedEngineVersion_.first = name;
-	supportedEngineVersion_.second = version;
-}
-
-void PageContentContentWidget::setImage(int index, const QPixmap& pixmap)
-{
-	QLayoutItem* li = thumbnailLayout_->itemAt(index);
-	if (li && li->widget()) {
-		QLabel* label = qobject_cast<QLabel*>(li->widget());
-		if (label) {
-			label->setPixmap(pixmap.scaled(192, 108, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-		}
-	}
-
-	screenshots_[index] = pixmap;
-
-	if (index == 0)
-	{
-		ui_.screenshotViewer->setPixmap(pixmap);
-	}
-}
-
-void PageContentContentWidget::setImageCount(int count)
-{
-	while (thumbnailLayout_->count()) {
-		QLayoutItem* li = thumbnailLayout_->takeAt(0);
-		li->widget()->deleteLater();
-		delete li;
-	}
-
-	if (count > 0)
-	{
-		for (int i = 0; i < count; ++i) {
-			QLabel* label = new QLabel;
-			label->setFixedSize(192, 108);
-			label->setText("Loading");
-			label->setAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
-			thumbnailLayout_->addWidget(label);
-		}
-
-		thumbnailLayout_->addStretch(1);
-	}
-
-	if (count == 0) {
-		ui_.screenshotWidget->setVisible(false);
-		ui_.screenshotViewer->setVisible(true);
-		ui_.thumbnailScrollArea->setVisible(true);
-	}
-	else if (count == 1) {
-		ui_.screenshotWidget->setVisible(true);
-		ui_.screenshotViewer->setVisible(true);
-		ui_.thumbnailScrollArea->setVisible(false);
-	}
-	else {
-		ui_.screenshotWidget->setVisible(true);
-		ui_.screenshotViewer->setVisible(true);
-		ui_.thumbnailScrollArea->setVisible(true);
-	}
-
-	ui_.screenshotViewer->setPixmap(QPixmap());
-
-	screenshots_.clear();
-	screenshots_.resize(count);
 }
 
 void PageContentContentWidget::mousePressEvent(QMouseEvent* e)
@@ -158,12 +128,27 @@ void PageContentContentWidget::resizeEvent(QResizeEvent* e)
 	QWidget::resizeEvent(e);
 }
 
+void PageContentContentWidget::showEvent(QShowEvent*)
+{
+	if (firstShow_) {
+		refresh();
+		firstShow_ = false;
+	}
+}
+
 void PageContentContentWidget::paintEvent(QPaintEvent* e)
 {
 	QStyleOption opt;
 	opt.init(this);
 	QPainter p(this);
 	style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+}
+
+void PageContentContentWidget::onImageLoaded(const QString& id, int index, const QPixmap& image)
+{
+	if (id == contentId_ && index > 0) {
+		setImage(index - 1, image);
+	}
 }
 
 void PageContentContentWidget::onDownload()
@@ -173,10 +158,10 @@ void PageContentContentWidget::onDownload()
 	if (!context_->changeContentState(contentId_.toStdString(), state, ContentState::downloading))
 	{
 		if (state == ContentState::downloading) {
-			QMessageBox::information(this, "Base", "This content is now downloading");
+			context_->prompt(0, "This content is now downloading");
 		}
 		else if (state == ContentState::downloaded) {
-			QMessageBox::information(this, "Base", "This content is already downloaded");
+			context_->prompt(0, "This content is already downloaded");
 		}
 		return;
 	}
@@ -207,7 +192,7 @@ void PageContentContentWidget::onDownload()
 	if (ec != Rpc::ec_success) {
 		state = ContentState::downloading;
 		context_->changeContentState(contentId_.toStdString(), state, ContentState::not_downloaded);
-		QMessageBox::information(this, "Base", "Unable to download this content");
+		context_->prompt(0, "Unable to download this content");
 		return;
 	}
 
@@ -221,3 +206,65 @@ void PageContentContentWidget::onDownload()
 		context_->installEngine(EngineVersion(engineName.toStdString(), engineVersion.toStdString()));
 	}
 }
+
+void PageContentContentWidget::setImageCount(int count)
+{
+	while (thumbnailLayout_->count()) {
+		QLayoutItem* li = thumbnailLayout_->takeAt(0);
+		li->widget()->deleteLater();
+		delete li;
+	}
+
+	if (count > 0)
+	{
+		for (int i = 0; i < count; ++i) {
+			QLabel* label = new QLabel;
+			label->setFixedSize(192, 108);
+			label->setText("Loading");
+			label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+			thumbnailLayout_->addWidget(label);
+		}
+
+		thumbnailLayout_->addStretch(1);
+	}
+
+	if (count == 0) {
+		ui_.screenshotWidget->setVisible(false);
+		ui_.screenshotViewer->setVisible(true);
+		ui_.thumbnailScrollArea->setVisible(true);
+	}
+	else if (count == 1) {
+		ui_.screenshotWidget->setVisible(true);
+		ui_.screenshotViewer->setVisible(true);
+		ui_.thumbnailScrollArea->setVisible(false);
+	}
+	else {
+		ui_.screenshotWidget->setVisible(true);
+		ui_.screenshotViewer->setVisible(true);
+		ui_.thumbnailScrollArea->setVisible(true);
+	}
+
+	ui_.screenshotViewer->setPixmap(QPixmap());
+
+	screenshots_.clear();
+	screenshots_.resize(count);
+}
+
+void PageContentContentWidget::setImage(int index, const QPixmap& pixmap)
+{
+	QLayoutItem* li = thumbnailLayout_->itemAt(index);
+	if (li && li->widget()) {
+		QLabel* label = qobject_cast<QLabel*>(li->widget());
+		if (label) {
+			label->setPixmap(pixmap.scaled(192, 108, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+		}
+	}
+
+	screenshots_[index] = pixmap;
+
+	if (index == 0)
+	{
+		ui_.screenshotViewer->setPixmap(pixmap);
+	}
+}
+

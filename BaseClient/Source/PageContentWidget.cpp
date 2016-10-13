@@ -1,129 +1,108 @@
 #include "PageContentWidget.h"
-#include "PageContentItemWidget.h"
-#include "FlowLayout.h"
-#include "ASyncDownloadTask.h"
+#include "PageContentBrowserWidget.h"
 #include "PageContentContentWidget.h"
-#include "ContentImageLoader.h"
+#include "URLUtils.h"
+#include "QtUtils.h"
 
 #include <QPainter>
-#include <QScrollBar>
 #include <QMouseEvent>
-#include <QTime>
+#include <QClipboard>
+#include <QMenu>
 
 #include <boost/algorithm/string.hpp>
-#include <boost/filesystem.hpp>
 
-#include <sstream>
 #include <string>
-#include <vector>
 
-namespace fs = boost::filesystem;
-
-#define ITEMS_PER_REQUEST 20
+#define MAX_HISTORY 64
 
 PageContentWidget::PageContentWidget(ContextPtr context, const QString& name, QWidget* parent) : QWidget(parent), context_(context), name_(name)
 {
 	ui_.setupUi(this);
 
-	ui_.backButton->setVisible(false);
+	QMenu* copyUrlMenu = new QMenu(this);
+	QAction* copyBaseUrlAction = copyUrlMenu->addAction("Copy URL");
+	QAction* copyHttpUrlAction = copyUrlMenu->addAction("Copy HTTP Redirection URL");
 
-	Rpc::StringSeq categories;
-	context_->session->getCategories(categories);
+	QAction* copyUrlAction = ui_.urlEdit->addAction(QIcon(":/Icons/CopyLink.png"), QLineEdit::TrailingPosition);
 
-	for (const std::string& category : categories) {
-		ui_.categoryBox->addItem(category.c_str());
-	}
+	QObject::connect(copyUrlAction, &QAction::triggered, [this, copyUrlMenu](){
+		copyUrlMenu->popup(QCursor::pos());
+	});
 
-	flowLayout_ = new FlowLayout(0, 10, 10);
-
-	content_ = new PageContentContentWidget(context_);
-
-	QWidget* flowWidget = new QWidget;
-	flowWidget->setObjectName("FlowWidget");
-	flowWidget->setLayout(flowLayout_);
-
-	ui_.scrollArea1->setWidget(flowWidget);
-	ui_.scrollArea2->setWidget(content_);
-
-	QObject::connect(ui_.scrollArea1->verticalScrollBar(), &QScrollBar::valueChanged, this, &PageContentWidget::onScroll);
 	QObject::connect(ui_.backButton, &QPushButton::clicked, this, &PageContentWidget::onBack);
-	QObject::connect(ui_.categoryBox, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &PageContentWidget::onRefresh);
+	QObject::connect(ui_.forwardButton, &QPushButton::clicked, this, &PageContentWidget::onForward);
 	QObject::connect(ui_.refreshButton, &QPushButton::clicked, this, &PageContentWidget::onRefresh);
+	QObject::connect(ui_.urlEdit, &QLineEdit::returnPressed, this, &PageContentWidget::onUrlEdited);
 
-	QObject::connect(context_->contentImageLoader, &ContentImageLoader::loaded, this, &PageContentWidget::onImageLoaded);
+	QObject::connect(copyBaseUrlAction, &QAction::triggered, this, &PageContentWidget::onCopyUrl);
+	QObject::connect(copyHttpUrlAction, &QAction::triggered, this, &PageContentWidget::onCopyHttpUrl);
 
-	firstShow_ = true;
+	openBrowser();
 }
 
 PageContentWidget::~PageContentWidget()
 {
 }
 
-void PageContentWidget::mousePressEvent(QMouseEvent* e)
+bool PageContentWidget::openUrl(const QString& url)
 {
-	if (e->button() == Qt::LeftButton)
-	{
-		if (ui_.stackedWidget->currentIndex() != 0) {
-			return;
-		}
-
-		QPoint pos = ui_.scrollArea1->mapFrom(this, e->pos());
-		if (ui_.scrollArea1->rect().contains(pos))
-		{
-			QWidget* w = ui_.scrollArea1->childAt(pos);
-			PageContentItemWidget* pi = qobject_cast<PageContentItemWidget*>(w);
-			if (pi)
-			{
-				Rpc::ContentInfo ci;
-				Rpc::ErrorCode ec = context_->session->getContentInfo(pi->id().toStdString(), ci);
-				if (ec != Rpc::ec_success) {
-					return;
-				}
-
-				std::ostringstream summary;
-				summary << ci.user << " " << ci.upTime << "\n";
-				summary << "\nSupported Engine Versions:\n";
-				summary << ci.engineName << " " << ci.engineVersion << "\n";
-				summary << "\nID:\n" << ci.id << "\n";
-				if (!ci.parentId.empty()) {
-					summary << "\nParent Id:\n" << ci.parentId << "\n";
-				}
-
-				std::vector<std::string> versions;
-				boost::split(versions, ci.engineVersion, boost::is_any_of("|"));
-
-				content_->setContentId(ci.id.c_str());
-				content_->setTitle(ci.title.c_str());
-				content_->setSummary(summary.str().c_str());
-				content_->setDescription(ci.desc.c_str());
-
-				if (versions.size()) {
-					content_->setSupportedEngineVersion(ci.engineName.c_str(), versions[0].c_str());
-				}
-
-				content_->setImageCount(ci.imageCount - 1);
-
-				for (int i = 1; i < ci.imageCount; ++i) {
-					context_->contentImageLoader->load(ci.id.c_str(), i, true);
-				}
-
-				ui_.scrollArea2->verticalScrollBar()->setValue(0);
-
-				ui_.backButton->setVisible(true);
-				ui_.categoryBox->setVisible(false);
-				ui_.refreshButton->setVisible(false);
-				ui_.stackedWidget->setCurrentIndex(1);
+	std::string path;
+	KVMap args;
+	if (parseUrl(url.toStdString(), path, args) && path == "base://content/") {
+		std::string page;
+		if (args.lookupValue(page, "page") && page == name_.toStdString()) {
+			std::string id;
+			if (args.lookupValue(id, "id")) {
+				return openContent(QString::fromStdString(id));
+			}
+			else {
+				std::string category;
+				args.lookupValue(category, "category");
+				openBrowser(category.c_str());
+				return true;
 			}
 		}
 	}
+
+	return false;
+}
+
+bool PageContentWidget::openContent(const QString& id)
+{
+	clearOldAndForwardHistory();
+
+	const QString& cachedUrl = ui_.stackedWidget->currentWidget()->property("cached_url").toString();
+
+	const QString& url = URLQuery("base://content/").arg("page", name_.toStdString()).arg("id", id.toStdString()).str().c_str();
+
+	if (url != cachedUrl)
+	{
+		PageContentContentWidget* w = new PageContentContentWidget(context_, id);
+		w->setProperty("cached_url", url);
+
+		ui_.stackedWidget->addWidget(w);
+		ui_.stackedWidget->setCurrentWidget(w);
+		ui_.urlEdit->setText(url);
+	}
+	else
+	{
+		onRefresh();
+	}
+
+	return true;
+}
+
+QString PageContentWidget::name()
+{
+	return name_;
+}
+
+void PageContentWidget::mousePressEvent(QMouseEvent* e)
+{
 }
 
 void PageContentWidget::showEvent(QShowEvent* e)
 {
-	if (firstShow_) {
-		onRefresh();
-		firstShow_ = false;
-	}
 }
 
 void PageContentWidget::paintEvent(QPaintEvent* e)
@@ -134,103 +113,112 @@ void PageContentWidget::paintEvent(QPaintEvent* e)
 	style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
-void PageContentWidget::onScroll(int position)
+void PageContentWidget::onCategoryClicked(const QString& category)
 {
-	if (position == ui_.scrollArea1->verticalScrollBar()->maximum()) {
-		if (browser_) {
-			showMore(ITEMS_PER_REQUEST);
-		}
-	}
+	openBrowser(category);
+}
+
+void PageContentWidget::onContentClicked(const QString& id)
+{
+	openContent(id);
 }
 
 void PageContentWidget::onBack()
 {
-	ui_.backButton->setVisible(false);
-	ui_.categoryBox->setVisible(true);
-	ui_.refreshButton->setVisible(true);
+	int index = ui_.stackedWidget->currentIndex();
+	if (index > 0) {
+		QWidget* w = ui_.stackedWidget->widget(index - 1);
+		ui_.stackedWidget->setCurrentWidget(w);
+		ui_.urlEdit->setText(w->property("cached_url").toString());
+	}
+}
 
-	ui_.stackedWidget->setCurrentIndex(0);
+void PageContentWidget::onForward()
+{
+	int index = ui_.stackedWidget->currentIndex();
+	if (index + 1 < ui_.stackedWidget->count()) {
+		QWidget* w = ui_.stackedWidget->widget(index + 1);
+		ui_.stackedWidget->setCurrentWidget(w);
+		ui_.urlEdit->setText(w->property("cached_url").toString());
+	}
 }
 
 void PageContentWidget::onRefresh()
 {
-	clear();
+	QWidget* w = ui_.stackedWidget->currentWidget();
 
-	ui_.scrollArea1->verticalScrollBar()->setValue(0);
-
-	QString category;
-	if (ui_.categoryBox->currentIndex() != 0) {
-		category = ui_.categoryBox->currentText();
+	if (qobject_cast<PageContentBrowserWidget*>(w)) {
+		((PageContentBrowserWidget*)w)->refresh();
 	}
-
-	if (name_.endsWith('*')) {
-		context_->session->browseContent("", category.toStdString(), browser_);
-	}
-	else {
-		context_->session->browseContent(name_.toStdString(), category.toStdString(), browser_);
-	}
-
-	if (browser_) {
-		showMore(ITEMS_PER_REQUEST);
+	else if (qobject_cast<PageContentContentWidget*>(w)) {
+		((PageContentContentWidget*)w)->refresh();
 	}
 }
 
-void PageContentWidget::onImageLoaded(const QString& id, int index, const QPixmap& image)
+void PageContentWidget::onUrlEdited()
 {
-	if (index == 0) {
-		PageContentItemWidget* pi = pageItems_.value(id, 0);
-		if (pi) {
-			pi->setBackground(image);
-		}
-	}
-	else if (index > 0) {
-		if (id == content_->contentId()) {
-			content_->setImage(index - 1, image);
+	ui_.urlEdit->clearFocus();
+
+	const QString& cachedUrl = ui_.stackedWidget->currentWidget()->property("cached_url").toString();
+
+	if (ui_.urlEdit->text() != cachedUrl) {
+		if (!openUrl(ui_.urlEdit->text())) {
+			const QString& url = ui_.urlEdit->text();
+			ui_.urlEdit->setText(cachedUrl);
+			Q_EMIT unresolvedUrl(url);
 		}
 	}
 }
 
-void PageContentWidget::showMore(int count)
+void PageContentWidget::onCopyUrl()
 {
-	while (count > 0)
-	{
-		const int n = qMin(count, ITEMS_PER_REQUEST);
+	ui_.urlEdit->clearFocus();
 
-		Rpc::ContentItemSeq items;
-		browser_->next(n, items);
-
-		for (int i = 0; i < items.size(); ++i)
-		{
-			const Rpc::ContentItem& item = items.at(i);
-
-			PageContentItemWidget* pi = new PageContentItemWidget(this);
-			pi->setFixedSize(QSize(300, 300));
-			pi->setId(item.id.c_str());
-			pi->setText(item.title.c_str());
-			pageItems_.insert(item.id.c_str(), pi);
-			flowLayout_->addWidget(pi);
-			context_->contentImageLoader->load(item.id.c_str(), 0);
-		}
-
-		count -= n;
-
-		if (items.size() < n) {
-			browser_ = 0;
-			break;
-		}
-	}
+	QClipboard* clipboard = QApplication::clipboard();
+	clipboard->setText(ui_.urlEdit->text());
 }
 
-void PageContentWidget::clear()
+void PageContentWidget::onCopyHttpUrl()
 {
-	pageItems_.clear();
+	ui_.urlEdit->clearFocus();
 
-	for (;;) {
-		QLayoutItem* li = flowLayout_->takeAt(0);
-		if (!li) {
-			break;
-		}
-		li->widget()->deleteLater();
-		delete li;
+	QString s = qApp->property("BaseClient.HttpUrlRedir").toString();
+
+	std::string url = ui_.urlEdit->text().toStdString();
+	percentEncode(url);
+
+	QClipboard* clipboard = QApplication::clipboard();
+	clipboard->setText(QString::fromStdString(s.toStdString() + "?q=" + url));
+}
+
+void PageContentWidget::openBrowser(const QString& category)
+{
+	clearOldAndForwardHistory();
+
+	PageContentBrowserWidget* w = new PageContentBrowserWidget(context_, name_, category);
+
+	QString url = URLQuery("base://content/").arg("page", name_.toStdString()).arg("category", category.toStdString()).str().c_str();
+	w->setProperty("cached_url", url);
+
+	ui_.stackedWidget->addWidget(w);
+	ui_.stackedWidget->setCurrentWidget(w);
+	ui_.urlEdit->setText(url);
+
+	QObject::connect(w, &PageContentBrowserWidget::categoryClicked, this, &PageContentWidget::onCategoryClicked);
+	QObject::connect(w, &PageContentBrowserWidget::contentClicked, this, &PageContentWidget::onContentClicked);
+}
+
+void PageContentWidget::clearOldAndForwardHistory()
+{
+	while (ui_.stackedWidget->currentIndex() + 1 < ui_.stackedWidget->count()) {
+		const int index = ui_.stackedWidget->currentIndex() + 1;
+		QWidget* w = ui_.stackedWidget->widget(index);
+		ui_.stackedWidget->removeWidget(w);
+	}
+
+	while (ui_.stackedWidget->count() > MAX_HISTORY) {
+		QWidget* w = ui_.stackedWidget->widget(0);
+		ui_.stackedWidget->removeWidget(w);
 	}
 }
+

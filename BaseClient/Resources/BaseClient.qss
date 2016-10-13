@@ -167,6 +167,9 @@ QMenu::item {
 QMenu::item:selected {
     background-color: rgb(246, 96, 0);
 }
+QMenu::item:disabled {
+	color: rgb(128, 128, 128);
+}
 
 QCheckBox::indicator {
 	width: 12px;
@@ -271,10 +274,17 @@ QLabel#Notification {
 	border-radius: 7px;
 }
 
+QLabel#Link {
+	font-size: 14px;
+	margin: 0 4px 4px 0;
+	padding: 0;
+}
+
 QLineEdit, QTextEdit, QPlainTextEdit {
 	background: rgb(20, 20, 20);
 	border: 1px solid rgb(50, 50, 50);
 	border-radius: 2px;
+	selection-background-color: rgb(246, 96, 0);
 }
 
 QLineEdit:focus, QTextEdit:focus, QPlainTextEdit:focus {

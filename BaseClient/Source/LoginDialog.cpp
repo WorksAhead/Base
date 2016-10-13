@@ -1,4 +1,5 @@
 #include "LoginDialog.h"
+#include "QtUtils.h"
 
 #include <ErrorMessage.h>
 
@@ -8,8 +9,14 @@
 #include <QFile>
 #include <QTextStream>
 
-LoginDialog::LoginDialog(Rpc::StartPrx startPrx, QWidget* parent) : QDialog(parent), startPrx_(startPrx)
+#include <boost/filesystem.hpp>
+
+namespace fs = boost::filesystem;
+
+LoginDialog::LoginDialog(const QString& workPath, Rpc::StartPrx startPrx, QWidget* parent) : QDialog(parent), startPrx_(startPrx)
 {
+	workPath_ = toLocal8bit(workPath);
+
 	setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
 	ui_.setupUi(this);
@@ -32,7 +39,7 @@ LoginDialog::LoginDialog(Rpc::StartPrx startPrx, QWidget* parent) : QDialog(pare
 	QObject::connect(ui_.signupButton, &QPushButton::clicked, this, &LoginDialog::onSignup);
 	QObject::connect(ui_.resetButton, &QPushButton::clicked, this, &LoginDialog::onReset);
 
-	QFile file("RememberMe");
+	QFile file(QString::fromLocal8Bit((fs::path(workPath_) / "RememberMe").string().c_str()));
 	if (file.open(QIODevice::ReadOnly|QIODevice::Text)) {
 		QTextStream in(&file);
 		QString username = in.readLine();
@@ -79,7 +86,7 @@ void LoginDialog::onLogin()
 	if (ec == Rpc::ec_success)
 	{
 		if (ui_.rememberUsernameCheckBox->isChecked()) {
-			QFile file("RememberMe");
+			QFile file(QString::fromLocal8Bit((fs::path(workPath_) / "RememberMe").string().c_str()));
 			if (file.open(QIODevice::WriteOnly|QIODevice::Text)) {
 				QTextStream out(&file);
 				out << username << "\n";
@@ -89,7 +96,7 @@ void LoginDialog::onLogin()
 			}
 		}
 		else {
-			QFile file("RememberMe");
+			QFile file(QString::fromLocal8Bit((fs::path(workPath_) / "RememberMe").string().c_str()));
 			file.remove();
 		}
 		done(1);

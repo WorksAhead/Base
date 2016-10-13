@@ -10,43 +10,48 @@
 #include <QVector>
 #include <QPixmap>
 #include <QBoxLayout>
+#include <QScrollArea>
 
 class PageContentContentWidget : public QWidget {
 private:
 	Q_OBJECT
 
 public:
-	PageContentContentWidget(ContextPtr context, QWidget* parent = 0);
+	PageContentContentWidget(ContextPtr context, const QString& contentId, QWidget* parent = 0);
 	~PageContentContentWidget();
 
-	void setContentId(const QString& id);
+	void refresh();
+
 	const QString& contentId() const;
-
-	void setTitle(const QString& text);
-	void setSummary(const QString& text);
-	void setDescription(const QString& text);
-
-	void setSupportedEngineVersion(const QString& name, const QString& version);
-
-	void setImage(int index, const QPixmap&);
-	void setImageCount(int count);
 
 protected:
 	virtual void mousePressEvent(QMouseEvent*);
 	virtual void resizeEvent(QResizeEvent*);
+	virtual void showEvent(QShowEvent*);
 	virtual void paintEvent(QPaintEvent*);
 
 private Q_SLOTS:
+	void onImageLoaded(const QString& id, int index, const QPixmap&);
 	void onDownload();
 
 private:
+	void setImageCount(int count);
+	void setImage(int index, const QPixmap&);
+
+private:
 	ContextPtr context_;
+	QString contentId_;
+
 	Ui::PageContentContentWidget ui_;
+
+	QScrollArea* scrollArea_;
 	QBoxLayout* thumbnailLayout_;
 	QWidget* thumbnailWidget_;
-	QString contentId_;
+	
 	QPair<QString, QString> supportedEngineVersion_;
 	QVector<QPixmap> screenshots_;
+
+	bool firstShow_;
 };
 
 #endif // PAGECONTENTCONTENTWIDGET_HEADER_

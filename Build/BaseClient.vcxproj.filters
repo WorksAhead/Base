@@ -301,6 +301,12 @@
     <CustomBuild Include="..\BaseClient\Source\SubmitClientDialog.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\ExpressWidget.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\PageContentBrowserWidget.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\BaseClient\Source\Main.cpp">
@@ -1050,6 +1056,18 @@
     <ClCompile Include="..\BaseClient\Source\ASyncSubmitClientTask.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\BaseClient\Source\PageContentBrowserWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_PageContentBrowserWidget.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_PageContentBrowserWidget.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_PageContentBrowserWidget.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\BaseClient\Resources\BaseClient.rc">
@@ -1327,6 +1345,15 @@
     <ClInclude Include="..\BaseClient\Source\ASyncSubmitClientTask.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_ExpressWidget.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\Source\KVMap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\Source\URLUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Common\Rpc\RpcErrorCode.ice">
@@ -1350,5 +1377,8 @@
     <None Include="..\Common\Rpc\RpcUploader.ice">
       <Filter>Common</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\BaseClient\Resources\BaseClient.ico" />
   </ItemGroup>
 </Project>

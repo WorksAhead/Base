@@ -13,6 +13,7 @@
 #include "ContentImageLoader.h"
 #include "ErrorMessage.h"
 #include "QtUtils.h"
+#include "URLUtils.h"
 
 #include <SQLiteCpp/Database.h>
 #include <SQLiteCpp/Transaction.h>
@@ -23,6 +24,8 @@
 #include <QThread>
 #include <QProcess>
 #include <QMessageBox>
+#include <QLocalSocket>
+#include <QSettings>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
@@ -31,6 +34,10 @@
 
 #include <sstream>
 #include <memory>
+
+#if WIN32
+#include <windows.h>
+#endif
 
 namespace fs = boost::filesystem;
 
@@ -53,13 +60,20 @@ private:
 	Rpc::SessionPrx session_;
 };
 
-BaseClient::BaseClient(const QString& version, Rpc::SessionPrx session)
+BaseClient::BaseClient(const QString& workPath, const QString& version, Rpc::SessionPrx session, const QString& url)
 {
+	workPath_ = toLocal8bit(workPath);
+
 	setWindowIcon(QIcon(":/Icons/Base20x20.png"));
 	setWindowTitle("Base " + version);
 
 	timer_ = new IceUtil::Timer;
 	timer_->scheduleRepeated(new RefreshTask(session), IceUtil::Time::seconds(5));
+
+	localServer_ = new QLocalServer(this);
+	if (!localServer_->listen("base_client_application_uri_server")) {
+		prompt(1, toLocal8bit(localServer_->errorString()));
+	}
 
 	Qt::HANDLE guitid = QThread::currentThreadId();
 
@@ -239,6 +253,11 @@ BaseClient::BaseClient(const QString& version, Rpc::SessionPrx session)
 
 	taskManagerDialog_ = new ASyncTaskManagerDialog;
 
+	QWidget* expressWidget = new QWidget;
+	expressWidgetUi_.setupUi(expressWidget);
+
+	setExpressWidget(expressWidget);
+
 	QWidget* decoratorWidget = new QWidget;
 	decoratorWidgetUi_.setupUi(decoratorWidget);
 
@@ -262,9 +281,12 @@ BaseClient::BaseClient(const QString& version, Rpc::SessionPrx session)
 		throw int(0);
 	}
 
-	for (const std::string& page : pages) {
+	for (const std::string& page : pages)
+	{
 		std::string name = boost::erase_last_copy(page, "*");
-		tabWidget_->addTab(name.c_str(), new PageContentWidget(context_, page.c_str()));
+		PageContentWidget* w = new PageContentWidget(context_, page.c_str());
+		tabWidget_->addTab(name.c_str(), w);
+		QObject::connect(w, &PageContentWidget::unresolvedUrl, this, &BaseClient::openUrl);
 	}
 
 	tabWidget_->addTab("Engine", new PageEngineWidget(context_, "Engine"));
@@ -286,8 +308,14 @@ BaseClient::BaseClient(const QString& version, Rpc::SessionPrx session)
 	w->setLayout(layout);
 	setCentralWidget(w);
 
+	QObject::connect(localServer_, &QLocalServer::newConnection, this, &BaseClient::onNewConnection);
+
 	QObject::connect(decoratorWidgetUi_.taskButton, &QPushButton::clicked, this, &BaseClient::onShowTaskManager);
 	QObject::connect(taskManagerDialog_, &ASyncTaskManagerDialog::cleared, lowerPane_, &LowerPaneWidget::clear);
+
+	if (!url.isEmpty()) {
+		QMetaObject::invokeMethod(this, "openUrl", Qt::QueuedConnection, Q_ARG(QString, url));
+	}
 }
 
 BaseClient::~BaseClient()
@@ -311,7 +339,7 @@ std::string BaseClient::uniquePath()
 
 std::string BaseClient::workPath()
 {
-	return fs::canonical(fs::current_path()).parent_path().string();
+	return workPath_;
 }
 
 std::string BaseClient::cachePath()
@@ -936,6 +964,29 @@ void BaseClient::getProjectList(std::vector<ProjectInfo>& outList)
 	outList = std::move(list);
 }
 
+void BaseClient::openUrl(const QString& url)
+{
+	std::string path;
+	KVMap args;
+	if (parseUrl(url.toStdString(), path, args)) {
+		if (path == "base://content/") {
+			std::string page;
+			if (args.lookupValue(page, "page")) {
+				for (int i = 0; i < tabWidget_->count(); ++i) {
+					PageContentWidget* w = qobject_cast<PageContentWidget*>(tabWidget_->widget(i));
+					if (w && w->name().toStdString() == page) {
+						if (w->openUrl(url)) {
+							const int index = tabWidget_->indexOf(w);
+							tabWidget_->setCurrentIndex(index);
+							activateWindow();
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
 void BaseClient::addEngineToGui(const EngineVersion& v)
 {
 	library_->addEngine(v.first.c_str(), v.second.c_str());
@@ -1064,6 +1115,26 @@ void BaseClient::onShowTaskManager()
 	else if (!taskManagerDialog_->isActiveWindow()) {
 		QApplication::setActiveWindow(taskManagerDialog_);
 	}
+}
+
+void BaseClient::onNewConnection()
+{
+	QLocalSocket* socket = localServer_->nextPendingConnection();
+
+	socket->setReadBufferSize(4096);
+
+	if (socket->waitForReadyRead(1000))
+	{
+		QDataStream in(socket);
+		in.setVersion(QDataStream::Qt_5_5);
+
+		QString url;
+		in >> url;
+
+		openUrl(url);
+	}
+
+	socket->deleteLater();
 }
 
 void BaseClient::initDb()
