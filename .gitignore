@@ -1,0 +1,10 @@
+/BaseClient/GeneratedFiles/
+
+/Debug/
+/Intermediate/
+/Output/
+
+*.opensdf
+*.sdf
+*.user
+*.suo
