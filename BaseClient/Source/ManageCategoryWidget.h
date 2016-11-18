@@ -22,11 +22,8 @@ protected:
 
 private Q_SLOTS:
 	void onRefresh();
-	void onMoveUp();
-	void onMoveDown();
-	void onAdd();
-	void onRemove();
 	void onSubmit();
+	void onEdit();
 
 private:
 	Ui::ManageCategoryWidget ui_;

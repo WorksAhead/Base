@@ -280,6 +280,24 @@ QLabel#Link {
 	padding: 0;
 }
 
+QLabel#Category {
+	color: rgb(250, 250, 250);
+	font-size: 14px;
+	margin: 0 4px 4px 0;
+	border: 1px solid rgb(60, 60, 60);
+	border-radius: 2px;
+	padding: 0;
+}
+
+QLabel#Category:hover {
+	border: 1px solid rgb(246, 96, 0);
+}
+
+QLabel#Category[selected="true"] {
+	background: rgb(246, 96, 0);
+	border: 1px solid rgb(246, 96, 0);
+}
+
 QLineEdit, QTextEdit, QPlainTextEdit {
 	background: rgb(20, 20, 20);
 	border: 1px solid rgb(50, 50, 50);
@@ -303,6 +321,11 @@ QLineEdit[readOnly="true"], QTextEdit[readOnly="true"], QPlainTextEdit[readOnly=
 	background: rgb(40, 40, 40);
 	border: 1px solid rgb(50, 50, 50);
 	border-radius: 2px;
+}
+
+QPlainTextEdit#categoryEdit {
+	background: rgb(30, 30, 30);
+	selection-background-color: rgb(246, 96, 0);
 }
 
 QListWidget#VTabList {

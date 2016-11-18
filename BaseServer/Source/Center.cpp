@@ -138,10 +138,8 @@ void Center::setCategories(const std::vector<std::string>& categories)
 
 	std::string s;
 	for (const std::string& category : categories) {
-		if (s.size()) {
-			s += ",";
-		}
 		s += category;
+		s += "\n";
 	}
 
 	std::ostringstream oss;
@@ -724,6 +722,10 @@ void Center::loadCategoriesFromDb()
 
 	SQLite::Column col = s.getColumn("Value");
 
-	boost::split(categories_, std::string(col.getText()), boost::is_any_of(","), boost::token_compress_on);
+	std::istringstream stream(col.getText());
+	std::string line;
+	while (std::getline(stream, line)) {
+		categories_.push_back(line);
+	}
 }
 
