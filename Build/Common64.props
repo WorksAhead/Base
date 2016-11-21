@@ -3,7 +3,7 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
-    <IntDir>..\Intermediate\$(ProjectName)_Win64_VC12_$(Configuration)\</IntDir>
+    <IntDir>..\Intermediate\$(ProjectName)_Win64_VC$(VisualStudioVersion)_$(Configuration)\</IntDir>
     <OutDir>..\Bin\Win64\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup>
@@ -16,7 +16,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Link>
-      <ProgramDatabaseFile>..\Debug\$(TargetName)_Win64_VC12_$(ConfigurationName)\$(TargetName).pdb</ProgramDatabaseFile>
+      <ProgramDatabaseFile>..\Debug\$(TargetName)_Win64_VC$(VisualStudioVersion)_$(ConfigurationName)\$(TargetName).pdb</ProgramDatabaseFile>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>

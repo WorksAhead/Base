@@ -1378,7 +1378,4 @@
       <Filter>Common</Filter>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Image Include="..\BaseClient\Resources\BaseClient.ico" />
-  </ItemGroup>
 </Project>

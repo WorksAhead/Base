@@ -8,3 +8,6 @@
 *.sdf
 *.user
 *.suo
+*.VC.db
+*.VC.opendb
+*.vs
