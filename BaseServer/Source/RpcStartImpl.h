@@ -6,6 +6,8 @@
 
 #include <RpcStart.h>
 
+#include "Security/Rijndael.h"
+
 class RpcStartImpl : public Rpc::Start {
 public:
 	RpcStartImpl(CenterPtr);
@@ -23,9 +25,15 @@ public:
 	virtual Rpc::ErrorCode resetPassword(const std::string&, const std::string&, const std::string&, const Ice::Current&);
 
 private:
+	std::string decrypt(const string& pwd);
+
+	bool loginToCYou(const std::string&, const std::string&);
+
+private:
 	CenterPtr center_;
 	IceUtil::TimerPtr timer_;
 	RpcSessionMaintainerPtr maintainer_;
+	CRijndael rijndael_;
 };
 
 #endif // BASESERVER_RPCSTARTIMPL_HEADER_

@@ -8,6 +8,8 @@
 
 #include <string>
 
+#include "Security/Rijndael.h"
+
 class LoginDialog : public QDialog {
 private:
 	Q_OBJECT
@@ -23,12 +25,15 @@ private Q_SLOTS:
 	void onSignup();
 	void onReset();
 
+	QByteArray encrypt(const QString& pwd);
+
 private:
 	Ui::LoginDialog ui_;
 	std::string workPath_;
 	Rpc::StartPrx startPrx_;
 	Rpc::SessionPrx sessionPrx_;
 	QString password_;
+	CRijndael rijndael_;
 };
 
 #endif // LOGINDIALOG_HEADER_

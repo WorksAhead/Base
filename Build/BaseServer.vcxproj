@@ -125,6 +125,9 @@
     <ClCompile Include="..\Common\Rpc\RpcStart.cpp" />
     <ClCompile Include="..\Common\Rpc\RpcTypedefs.cpp" />
     <ClCompile Include="..\Common\Rpc\RpcUploader.cpp" />
+    <ClCompile Include="..\Common\Security\Base64.cpp" />
+    <ClCompile Include="..\Common\Security\Md5.cpp" />
+    <ClCompile Include="..\Common\Security\Rijndael.cpp" />
     <ClCompile Include="..\Ext\sqlite3\sqlite3.c" />
     <ClCompile Include="..\Ext\SQLiteCpp\src\Column.cpp" />
     <ClCompile Include="..\Ext\SQLiteCpp\src\Database.cpp" />
@@ -164,6 +167,9 @@
     <ClInclude Include="..\Common\Rpc\RpcStart.h" />
     <ClInclude Include="..\Common\Rpc\RpcTypedefs.h" />
     <ClInclude Include="..\Common\Rpc\RpcUploader.h" />
+    <ClInclude Include="..\Common\Security\Base64.h" />
+    <ClInclude Include="..\Common\Security\Md5.h" />
+    <ClInclude Include="..\Common\Security\Rijndael.h" />
     <ClInclude Include="..\Ext\SQLiteCpp\include\SQLiteCpp\Assertion.h" />
     <ClInclude Include="..\Ext\SQLiteCpp\include\SQLiteCpp\Column.h" />
     <ClInclude Include="..\Ext\SQLiteCpp\include\SQLiteCpp\Database.h" />

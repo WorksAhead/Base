@@ -47,6 +47,9 @@
       <Extensions>cpp;moc</Extensions>
       <SourceControlFiles>False</SourceControlFiles>
     </Filter>
+    <Filter Include="Security">
+      <UniqueIdentifier>{e6484e81-42ec-43ee-868e-8b3c9a721ff9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\BaseClient\Source\ASyncTaskManagerDialog.ui">
@@ -1068,6 +1071,15 @@
     <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_PageContentBrowserWidget.cpp">
       <Filter>Generated Files\ReleaseConsole_Win32</Filter>
     </ClCompile>
+    <ClCompile Include="..\Common\Security\Base64.cpp">
+      <Filter>Security</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\Security\Md5.cpp">
+      <Filter>Security</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\Security\Rijndael.cpp">
+      <Filter>Security</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\BaseClient\Resources\BaseClient.rc">
@@ -1353,6 +1365,15 @@
     </ClInclude>
     <ClInclude Include="..\BaseClient\Source\URLUtils.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\Security\Base64.h">
+      <Filter>Security</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\Security\Md5.h">
+      <Filter>Security</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\Security\Rijndael.h">
+      <Filter>Security</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -11,6 +11,9 @@
 
 #include <boost/filesystem.hpp>
 
+#include "Security/Md5.h"
+#include "Security/Base64.h"
+
 namespace fs = boost::filesystem;
 
 LoginDialog::LoginDialog(const QString& workPath, Rpc::StartPrx startPrx, QWidget* parent) : QDialog(parent), startPrx_(startPrx)
@@ -58,6 +61,9 @@ LoginDialog::LoginDialog(const QString& workPath, Rpc::StartPrx startPrx, QWidge
 			}
 		}
 	}
+
+	char* key = "1qaz2wsx3edc4rfv";
+	rijndael_.MakeKey(key, CRijndael::sm_chain0, 16, 16);
 }
 
 LoginDialog::~LoginDialog()
@@ -69,29 +75,40 @@ Rpc::SessionPrx LoginDialog::session()
 	return sessionPrx_;
 }
 
+QByteArray LoginDialog::encrypt(const QString& pwd)
+{
+	char encrypted[16];
+	rijndael_.Encrypt(pwd.toStdString().c_str(), encrypted, 16);
+
+	return encrypted;
+}
+
 void LoginDialog::onLogin()
 {
 	QString username = ui_.loginUsernameEdit->text();
 	QString password = ui_.loginPasswordEdit->text();
+	QByteArray encryptedPwd;
 
 	if (password == "\r\r\r\r") {
-		password = password_;
+		QString clear_pwd = base64_decode(password_.toStdString()).c_str();
+		encryptedPwd = encrypt(clear_pwd);
 	}
 	else {
-		password = QCryptographicHash::hash(password.toUtf8(), QCryptographicHash::Md5).toBase64();
+		encryptedPwd = encrypt(password);
 	}
 
-	Rpc::ErrorCode ec = startPrx_->login(username.toStdString(), password.toStdString(), sessionPrx_);
+	Rpc::ErrorCode ec = startPrx_->login(username.toStdString(), (std::string)encryptedPwd, sessionPrx_);
 
 	if (ec == Rpc::ec_success)
 	{
+		QString base64Pwd = base64_encode(reinterpret_cast<const unsigned char*>(password.toStdString().c_str()), (unsigned int)password.toStdString().length()).c_str();
 		if (ui_.rememberUsernameCheckBox->isChecked()) {
 			QFile file(QString::fromLocal8Bit((fs::path(workPath_) / "RememberMe").string().c_str()));
 			if (file.open(QIODevice::WriteOnly|QIODevice::Text)) {
 				QTextStream out(&file);
 				out << username << "\n";
 				if (ui_.rememberPasswordCheckBox->isChecked()) {
-					out << password << "\n";
+					out << base64Pwd << "\n";
 				}
 			}
 		}
@@ -122,14 +139,19 @@ void LoginDialog::onSignup()
 		return;
 	}
 
+	if (password.size() > 16) {
+		QMessageBox::information(this, "Base", "Password is too long.");
+		return;
+	}
+
 	if (password2 != password) {
 		QMessageBox::information(this, "Base", "These passwords don't match.");
 		return;
 	}
 
-	password = QCryptographicHash::hash(password.toUtf8(), QCryptographicHash::Md5).toBase64();
+	QByteArray encryptedPwd = encrypt(password);
 
-	Rpc::ErrorCode ec = startPrx_->signup(username.toStdString(), password.toStdString());
+	Rpc::ErrorCode ec = startPrx_->signup(username.toStdString(), (std::string)encryptedPwd);
 
 	QMessageBox::information(this, "Base", errorMessage(ec));
 
