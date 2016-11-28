@@ -15,12 +15,6 @@
 PageContentBrowserWidget::PageContentBrowserWidget(ContextPtr context, const QString& name, const QString& category, QWidget* parent)
 	: context_(context), name_(name), category_(category), QWidget(parent)
 {
-	categoriesLayout_ = new FlowLayout(0, 0, 0);
-
-	QWidget* categoriesWidget = new QWidget;
-	categoriesWidget->setObjectName("FlowWidget");
-	categoriesWidget->setLayout(categoriesLayout_);
-
 	contentsLayout_ = new FlowLayout(0, 12, 12);
 
 	QWidget* contentsWidget = new QWidget;
@@ -36,7 +30,7 @@ PageContentBrowserWidget::PageContentBrowserWidget(ContextPtr context, const QSt
 	QBoxLayout* layout = new QBoxLayout(QBoxLayout::TopToBottom);
 	layout->setMargin(0);
 	layout->setSpacing(0);
-	layout->addWidget(categoriesWidget, 0);
+
 	layout->addWidget(scrollArea_, 1);
 	setLayout(layout);
 
@@ -56,33 +50,6 @@ void PageContentBrowserWidget::refresh()
 	clear();
 
 	scrollArea_->verticalScrollBar()->setValue(0);
-
-	QLabel* label = new QLabel;
-	label->setObjectName("Link");
-	label->setText("<a href=\"#\" style=\"text-decoration:none;\">All</a>");
-	label->setTextFormat(Qt::RichText);
-	categoriesLayout_->addWidget(label);
-	QObject::connect(label, &QLabel::linkActivated, [this](QString link){
-		link.remove(0, 1);
-		Q_EMIT categoryClicked(link);
-	});
-
-	Rpc::StringSeq categories;
-	context_->session->getCategories(categories);
-
-	for (const std::string& category : categories)
-	{
-		QString link = QString("<a href=\"#%1\" style=\"text-decoration:none;\">%2</a>").arg(category.c_str()).arg(category.c_str());
-		QLabel* label = new QLabel;
-		label->setObjectName("Link");
-		label->setText(link);
-		label->setTextFormat(Qt::RichText);
-		categoriesLayout_->addWidget(label);
-		QObject::connect(label, &QLabel::linkActivated, [this](QString link){
-			link.remove(0, 1);
-			Q_EMIT categoryClicked(link);
-		});
-	}
 
 	if (name_.endsWith('*')) {
 		context_->session->browseContent("", category_.toStdString(), browser_);
@@ -152,15 +119,6 @@ void PageContentBrowserWidget::clear()
 	items_.clear();
 
 	for (;;) {
-		QLayoutItem* li = categoriesLayout_->takeAt(0);
-		if (!li) {
-			break;
-		}
-		li->widget()->deleteLater();
-		delete li;
-	}
-
-	for (;;) {
 		QLayoutItem* li = contentsLayout_->takeAt(0);
 		if (!li) {
 			break;
@@ -184,7 +142,7 @@ void PageContentBrowserWidget::showMore(int count)
 			const Rpc::ContentItem& item = items.at(i);
 
 			PageContentItemWidget* pi = new PageContentItemWidget(this);
-			pi->setFixedSize(QSize(300, 300));
+			pi->setFixedSize(QSize(230, 230));
 			pi->setId(item.id.c_str());
 			pi->setText(item.title.c_str());
 			items_.insert(item.id.c_str(), pi);

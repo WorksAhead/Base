@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>CategorySelectorDialog</class>
- <widget class="QDialog" name="CategorySelectorDialog">
+ <class>LabelSelectorDialog</class>
+ <widget class="QDialog" name="LabelSelectorDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>760</width>
-    <height>590</height>
+    <width>600</width>
+    <height>600</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Base</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="CategorySelectorWidget" name="widget" native="true"/>
+    <widget class="LabelSelectorWidget" name="widget" native="true"/>
    </item>
    <item>
     <spacer name="verticalSpacer">
@@ -30,13 +30,26 @@
      </property>
     </spacer>
    </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok|QDialogButtonBox::Reset</set>
+     </property>
+     <property name="centerButtons">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <customwidgets>
   <customwidget>
-   <class>CategorySelectorWidget</class>
+   <class>LabelSelectorWidget</class>
    <extends>QWidget</extends>
-   <header>CategorySelectorWidget.h</header>
+   <header>LabelSelectorWidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

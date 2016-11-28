@@ -1,13 +1,16 @@
 #include "ManageCategoryWidget.h"
 #include "ErrorMessage.h"
 
-#include "CategorySelectorDialog.h"
+#include "LabelSelectorDialog.h"
 
 #include <QInputDialog>
 #include <QMessageBox>
 #include <QPainter>
+#include <QTextStream>
 
 #include <boost/algorithm/string.hpp>
+
+#include <string>
 
 ManageCategoryWidget::ManageCategoryWidget(ContextPtr context, QWidget* parent) : QWidget(parent), context_(context)
 {
@@ -17,7 +20,6 @@ ManageCategoryWidget::ManageCategoryWidget(ContextPtr context, QWidget* parent) 
 
 	QObject::connect(ui_.refreshButton, &QPushButton::clicked, this, &ManageCategoryWidget::onRefresh);
 	QObject::connect(ui_.submitButton, &QPushButton::clicked, this, &ManageCategoryWidget::onSubmit);
-	QObject::connect(ui_.editButton, &QPushButton::clicked, this, &ManageCategoryWidget::onEdit);
 }
 
 ManageCategoryWidget::~ManageCategoryWidget()
@@ -65,33 +67,30 @@ void ManageCategoryWidget::onSubmit()
 {
 	Rpc::StringSeq categories;
 
-	std::istringstream stream(ui_.categoryEdit->toPlainText().toStdString());
-	std::string line;
-	while (std::getline(stream, line)) {
-		categories.push_back(line);
+	QString text = ui_.categoryEdit->toPlainText();
+	QTextStream stream(&text, QIODevice::ReadOnly);
+
+	QString line;
+	qint64 lastPos = 0;
+
+	while (stream.readLineInto(&line))
+	{
+		int pos = line.indexOf(QRegularExpression("[,+()]"));
+		if (pos >= 0) {
+			pos = lastPos + pos;
+			QTextCursor c = ui_.categoryEdit->textCursor();
+			c.setPosition(pos);
+			c.setPosition(pos + 1, QTextCursor::KeepAnchor);
+			ui_.categoryEdit->setTextCursor(c);
+			ui_.categoryEdit->setFocus();
+			return;
+		}
+
+		lastPos = stream.pos();
+		categories.push_back(line.trimmed().toStdString());
 	}
 
 	Rpc::ErrorCode ec = context_->session->setCategories(categories);
 
 	context_->promptRpcError(ec);
 }
-
-void ManageCategoryWidget::onEdit()
-{
-	//ui_.categoryEdit->setReadOnly(false);
-	//ui_.categoryEdit->setFocus();
-
-	Rpc::StringSeq categories;
-	Rpc::ErrorCode ec = context_->session->getCategories(categories);
-
-	QStringList list;
-
-	for (const std::string& cat : categories) {
-		list << cat.c_str();
-	}
-
-	CategorySelectorDialog d;
-	d.categorySelectorWidget()->setCategories(list);
-	d.exec();
-}
-

@@ -140,17 +140,22 @@ Rpc::ErrorCode RpcContentSubmitterImpl::setCategory(const std::string& category,
 		return Rpc::ec_invalid_operation;
 	}
 
-	std::vector<std::string> categories;
-	context_->center()->getCategories(categories);
+	std::vector<std::string> list;
 
-	for (size_t i = 0; i < categories.size(); ++i) {
-		if (categories[i] == category) {
-			form_["Category"] = category;
-			return Rpc::ec_success;
+	boost::split(list, category, boost::is_any_of(","));
+
+	std::string formattedCategory;
+
+	for (std::string& s : list) {
+		boost::trim(s);
+		if (!formattedCategory.empty()) {
+			formattedCategory += ",";
 		}
+		formattedCategory += "(" + s + ")";
 	}
 
-	return Rpc::ec_category_does_not_exist;
+	form_["Category"] = formattedCategory;
+	return Rpc::ec_success;
 }
 
 Rpc::ErrorCode RpcContentSubmitterImpl::setEngine(const std::string& name, const std::string& version, const Ice::Current&)

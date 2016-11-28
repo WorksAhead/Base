@@ -307,14 +307,17 @@
     <CustomBuild Include="..\BaseClient\Source\PageContentBrowserWidget.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\CategorySelectorWidget.h">
+    <CustomBuild Include="..\BaseClient\Source\LabelSelectorWidget.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\CategorySelectorDialog.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\CategorySelectorDialog.ui">
+    <CustomBuild Include="..\BaseClient\Source\LabelSelectorDialog.ui">
       <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\LabelSelectorDialog.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\CategoryFilterWidget.h">
+      <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
@@ -1077,28 +1080,40 @@
     <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_PageContentBrowserWidget.cpp">
       <Filter>Generated Files\ReleaseConsole_Win32</Filter>
     </ClCompile>
-    <ClCompile Include="..\BaseClient\Source\CategorySelectorWidget.cpp">
+    <ClCompile Include="..\BaseClient\Source\LabelSelectorWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_CategorySelectorWidget.cpp">
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_LabelSelectorWidget.cpp">
       <Filter>Generated Files\DebugConsole_Win32</Filter>
     </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_CategorySelectorWidget.cpp">
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_LabelSelectorWidget.cpp">
       <Filter>Generated Files\Release_Win32</Filter>
     </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_CategorySelectorWidget.cpp">
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_LabelSelectorWidget.cpp">
       <Filter>Generated Files\ReleaseConsole_Win32</Filter>
     </ClCompile>
-    <ClCompile Include="..\BaseClient\Source\CategorySelectorDialog.cpp">
+    <ClCompile Include="..\BaseClient\Source\LabelSelectorDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_CategorySelectorDialog.cpp">
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_LabelSelectorDialog.cpp">
       <Filter>Generated Files\DebugConsole_Win32</Filter>
     </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_CategorySelectorDialog.cpp">
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_LabelSelectorDialog.cpp">
       <Filter>Generated Files\Release_Win32</Filter>
     </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_CategorySelectorDialog.cpp">
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_LabelSelectorDialog.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\Source\CategoryFilterWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_CategoryFilterWidget.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_CategoryFilterWidget.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_CategoryFilterWidget.cpp">
       <Filter>Generated Files\ReleaseConsole_Win32</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1387,7 +1402,7 @@
     <ClInclude Include="..\BaseClient\Source\URLUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_CategorySelectorDialog.h">
+    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_LabelSelectorDialog.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>

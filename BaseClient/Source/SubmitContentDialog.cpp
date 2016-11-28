@@ -1,4 +1,5 @@
 #include "SubmitContentDialog.h"
+#include "LabelSelectorDialog.h"
 #include "ImageCropperDialog.h"
 #include "ImageViewerWidget.h"
 #include "ASyncSubmitContentTask.h"
@@ -28,6 +29,9 @@ SubmitContentDialog::SubmitContentDialog(ContextPtr context, QWidget* parent) : 
 
 	ui_.setupUi(this);
 
+	QObject::connect(ui_.editPageButton, &QPushButton::clicked, this, &SubmitContentDialog::onEditPage);
+	QObject::connect(ui_.editCategoryButton, &QPushButton::clicked, this, &SubmitContentDialog::onEditCategory);
+
 	QMenu* menu1 = new QMenu;
 	QMenu* menu2 = new QMenu;
 
@@ -39,13 +43,6 @@ SubmitContentDialog::SubmitContentDialog(ContextPtr context, QWidget* parent) : 
 
 	QAction* addEngineDir2 = menu2->addAction("$(EngineDir)");
 	QAction* addProjectDir2 = menu2->addAction("$(ProjectDir)");
-
-	Rpc::StringSeq categories;
-	context_->session->getCategories(categories);
-
-	for (const std::string& category : categories) {
-		ui_.categoryBox->addItem(category.c_str());
-	}
 
 	QObject::connect(ui_.selectLocationButton, &QPushButton::clicked, this, &SubmitContentDialog::onSelectLocation);
 
@@ -119,7 +116,7 @@ void SubmitContentDialog::setPage(const QString& name)
 
 void SubmitContentDialog::setCategory(const QString& category)
 {
-	ui_.categoryBox->setCurrentText(category);
+	ui_.categoryEdit->setText(category);
 }
 
 void SubmitContentDialog::setEngineName(const QString& name)
@@ -145,6 +142,84 @@ void SubmitContentDialog::setWorkingDir(const QString& workDir)
 void SubmitContentDialog::setDesc(const QString& desc)
 {
 	ui_.descriptionEdit->setPlainText(desc);
+}
+
+void SubmitContentDialog::onEditPage()
+{
+	Rpc::StringSeq pages;
+	Rpc::ErrorCode ec = context_->session->getPages(pages);
+	if (ec != Rpc::ec_success) {
+		return;
+	}
+
+	QStringList list;
+
+	list << "=Content pages=";
+
+	for (const std::string& s : pages) {
+		if (!boost::ends_with(s, "*")) {
+			list << s.c_str();
+		}
+	}
+
+	LabelSelectorDialog d;
+
+	d.labelSelectorWidget()->setLabels(list);
+	d.labelSelectorWidget()->setSelectedLabels(ui_.pageEdit->text().split(','));
+
+	if (d.exec() == 0) {
+		return;
+	}
+
+	list = d.labelSelectorWidget()->getSelectedLabels();
+
+	QString text;
+
+	for (const QString& s : list) {
+		if (!text.isEmpty()) {
+			text += ", ";
+		}
+		text += s;
+	}
+
+	ui_.pageEdit->setText(text);
+}
+
+void SubmitContentDialog::onEditCategory()
+{
+	Rpc::StringSeq categories;
+	Rpc::ErrorCode ec = context_->session->getCategories(categories);
+	if (ec != Rpc::ec_success) {
+		return;
+	}
+
+	QStringList list;
+
+	for (const std::string& s : categories) {
+		list << s.c_str();
+	}
+
+	LabelSelectorDialog d;
+
+	d.labelSelectorWidget()->setLabels(list);
+	d.labelSelectorWidget()->setSelectedLabels(ui_.categoryEdit->text().split(','));
+
+	if (d.exec() == 0) {
+		return;
+	}
+
+	list = d.labelSelectorWidget()->getSelectedLabels();
+
+	QString text;
+
+	for (const QString& s : list) {
+		if (!text.isEmpty()) {
+			text += ", ";
+		}
+		text += s;
+	}
+
+	ui_.categoryEdit->setText(text);
 }
 
 void SubmitContentDialog::onSelectLocation()
@@ -186,7 +261,7 @@ void SubmitContentDialog::onSelectLocation()
 
 			ui_.titleEdit->setText(json.value("Title").toString());
 			ui_.pageEdit->setText(json.value("Page").toString());
-			ui_.categoryBox->setCurrentText(json.value("Category").toString());
+			ui_.categoryEdit->setText(json.value("Category").toString());
 			ui_.engineNameEdit->setText(json.value("EngineName").toString());
 			ui_.engineVersionEdit->setText(json.value("EngineVersion").toString());
 			ui_.parentIdEdit->setText(json.value("ParentId").toString());
@@ -375,12 +450,12 @@ void SubmitContentDialog::onSubmit()
 	ec = submitter->setPage(ui_.pageEdit->text().toStdString());
 	CHECK_ERROR_CODE(ec);
 
-	if (ui_.categoryBox->currentIndex() == 0) {
-		QMessageBox::information(this, "Base", tr("The Category is not specified."));
+	if (ui_.categoryEdit->text().isEmpty()) {
+		QMessageBox::information(this, "Base", tr("The Category field cannot be left empty."));
 		return;
 	}
 
-	ec = submitter->setCategory(ui_.categoryBox->currentText().toStdString());
+	ec = submitter->setCategory(ui_.categoryEdit->text().toStdString());
 	CHECK_ERROR_CODE(ec);
 
 	if (ui_.engineNameEdit->text().isEmpty()) {

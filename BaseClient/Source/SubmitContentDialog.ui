@@ -61,7 +61,7 @@
         <x>0</x>
         <y>0</y>
         <width>581</width>
-        <height>1473</height>
+        <height>1507</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -77,21 +77,85 @@
         </layout>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="2,1">
+        <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="2,0">
          <item>
           <widget class="QLineEdit" name="pageEdit">
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
            <property name="placeholderText">
-            <string>Page(Seperate pages with ',')</string>
+            <string>Page</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QComboBox" name="categoryBox">
-           <item>
-            <property name="text">
-             <string>Category</string>
-            </property>
-           </item>
+          <widget class="QPushButton" name="editPageButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>23</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>40</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Edit</string>
+           </property>
+           <property name="autoDefault">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_13" stretch="2,0">
+         <item>
+          <widget class="QLineEdit" name="categoryEdit">
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+           <property name="placeholderText">
+            <string>Category</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="editCategoryButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>23</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>40</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Edit</string>
+           </property>
+           <property name="autoDefault">
+            <bool>false</bool>
+           </property>
           </widget>
          </item>
         </layout>
@@ -182,7 +246,7 @@
             </size>
            </property>
            <property name="text">
-            <string>M</string>
+            <string>Var</string>
            </property>
            <property name="popupMode">
             <enum>QToolButton::InstantPopup</enum>
@@ -212,7 +276,7 @@
             </size>
            </property>
            <property name="text">
-            <string>M</string>
+            <string>Var</string>
            </property>
            <property name="popupMode">
             <enum>QToolButton::InstantPopup</enum>
@@ -543,7 +607,6 @@
  <tabstops>
   <tabstop>titleEdit</tabstop>
   <tabstop>pageEdit</tabstop>
-  <tabstop>categoryBox</tabstop>
   <tabstop>engineNameEdit</tabstop>
   <tabstop>engineVersionEdit</tabstop>
   <tabstop>locationEdit</tabstop>

@@ -2,6 +2,8 @@
 
 #include <Ice/Ice.h>
 
+#include <boost/algorithm/string.hpp>
+
 RpcContentBrowserImpl::RpcContentBrowserImpl(CenterPtr center) : center_(center), destroyed_(false)
 {
 }
@@ -20,8 +22,13 @@ Rpc::ErrorCode RpcContentBrowserImpl::init(const std::string& page, const std::s
 		oss << " AND Page LIKE " << sqlText("%(" + page + ")%");
 	}
 
-	if (!category.empty()) {
-		oss << " AND Category=" << sqlText(category);
+	if (!category.empty())
+	{
+		std::vector<std::string> list;
+		boost::split(list, category, boost::is_any_of(","));
+		for (const std::string& s : list) {
+			oss << " AND Category LIKE " << sqlText("%(" + s + ")%");
+		}
 	}
 
 	oss << " ORDER BY UpTime DESC";

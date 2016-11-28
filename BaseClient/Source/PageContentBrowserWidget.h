@@ -28,7 +28,8 @@ public:
 
 Q_SIGNALS:
 	void contentClicked(const QString& id);
-	void categoryClicked(const QString& category);
+	//void categoryClicked(const QString& category);
+	//void categorySelectorClicked();
 
 protected:
 	virtual void mousePressEvent(QMouseEvent*);
@@ -48,7 +49,7 @@ private:
 	QString name_;
 	QString category_;
 	QScrollArea* scrollArea_;
-	FlowLayout* categoriesLayout_;
+	//FlowLayout* categoriesLayout_;
 	FlowLayout* contentsLayout_;
 
 	Rpc::ContentBrowserPrx browser_;

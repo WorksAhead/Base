@@ -26,6 +26,8 @@ public:
 	void setDesc(const QString& desc);
 
 private Q_SLOTS:
+	void onEditPage();
+	void onEditCategory();
 	void onSelectLocation();
 	void onSetCover();
 	void onPrevScreenshot();

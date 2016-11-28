@@ -281,12 +281,38 @@ BaseClient::BaseClient(const QString& workPath, const QString& version, Rpc::Ses
 		throw int(0);
 	}
 
+	Rpc::StringSeq categories;
+	ec = session->getCategories(categories);
+	if (ec != Rpc::ec_success) {
+		promptRpcError(ec);
+		throw int(0);
+	}
+
+	QStringList categoryList;
+	for (const std::string& s : categories) {
+		categoryList << s.c_str();
+	}
+
+	QList<PageContentWidget*> pageContentWidgets;
+
 	for (const std::string& page : pages)
 	{
 		std::string name = boost::erase_last_copy(page, "*");
 		PageContentWidget* w = new PageContentWidget(context_, page.c_str());
+		w->categoryFilterWidget()->labelSelectorWidget()->setLabels(categoryList);
 		tabWidget_->addTab(name.c_str(), w);
+		pageContentWidgets.append(w);
 		QObject::connect(w, &PageContentWidget::unresolvedUrl, this, &BaseClient::openUrl);
+	}
+	for (int i = 0; i < pageContentWidgets.count(); ++i)
+	{
+		CategoryFilterWidget* w = pageContentWidgets[i]->categoryFilterWidget();
+		for (int j = 0; j < pageContentWidgets.count(); ++j)
+		{
+			CategoryFilterWidget* w2 = pageContentWidgets[j]->categoryFilterWidget();
+			QObject::connect(w, &CategoryFilterWidget::collapsed, w2, &CategoryFilterWidget::collapse);
+			QObject::connect(w, &CategoryFilterWidget::extended, w2, &CategoryFilterWidget::extend);
+		}
 	}
 
 	tabWidget_->addTab("Engine", new PageEngineWidget(context_, "Engine"));

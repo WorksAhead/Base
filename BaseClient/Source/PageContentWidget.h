@@ -38,6 +38,8 @@ public:
 
 	QString name();
 
+	CategoryFilterWidget* categoryFilterWidget();
+
 Q_SIGNALS:
 	void unresolvedUrl(const QString&);
 
@@ -47,7 +49,7 @@ protected:
 	virtual void paintEvent(QPaintEvent*);
 
 private Q_SLOTS:
-	void onCategoryClicked(const QString& category);
+	void onCategoryChanged();
 	void onContentClicked(const QString& id);
 	void onBack();
 	void onForward();
@@ -59,6 +61,7 @@ private Q_SLOTS:
 private:
 	void openBrowser(const QString& category = "");
 	void clearOldAndForwardHistory();
+	void restore(int);
 
 private:
 	ContextPtr context_;

@@ -156,7 +156,10 @@ Rpc::ErrorCode RpcSessionImpl::getContentInfo(const std::string& id, Rpc::Conten
 	page.erase(std::remove_if(page.begin(), page.end(), boost::is_any_of("()")), page.end());
 	info.page = page;
 
-	info.category = form.at("Category");
+	std::string category = form.at("Category");
+	category.erase(std::remove_if(category.begin(), category.end(), boost::is_any_of("()")), category.end());
+	info.category = category;
+
 	info.engineName = form.at("EngineName");
 	info.engineVersion = form.at("EngineVersion");
 	info.startup = form.at("Startup");

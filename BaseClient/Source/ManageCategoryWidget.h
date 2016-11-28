@@ -23,7 +23,6 @@ protected:
 private Q_SLOTS:
 	void onRefresh();
 	void onSubmit();
-	void onEdit();
 
 private:
 	Ui::ManageCategoryWidget ui_;

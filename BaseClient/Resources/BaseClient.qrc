@@ -16,5 +16,7 @@
         <file>Icons/WindowRestore.png</file>
         <file>Icons/Task.png</file>
         <file>Icons/CopyLink.png</file>
+        <file>Icons/CategoryFilterCollapse.png</file>
+        <file>Icons/CategoryFilterExtend.png</file>
     </qresource>
 </RCC>

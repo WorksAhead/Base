@@ -103,6 +103,34 @@ QPushButton:!flat:disabled {
 	color: rgb(127, 127, 127);
 }
 
+QWidget#CategoryFilterWidget {
+	margin: 0;
+	border: 0;
+	padding: 0;
+}
+
+QScrollArea#CategoryFilterArea {
+	margin: 0;
+	border: 0;
+	padding: 0;
+}
+
+QPushButton#CategoryFilterCollapse {
+	color: rgb(246, 96, 0);
+	background: rgb(40, 40, 40);
+	border: 0;
+	margin: 0;
+	padding: 0;
+}
+QPushButton#CategoryFilterCollapse:focus {
+	color: rgb(246, 96, 0);
+	background: rgb(40, 40, 40);
+}
+QPushButton#CategoryFilterCollapse:pressed {
+	color: rgb(246, 96, 0);
+	background: rgb(40, 40, 40);
+}
+
 QToolButton {
 	color: rgb(250, 250, 250);
 	background: rgb(60, 60, 60);
@@ -266,6 +294,16 @@ VTabBarTabWidget[active="true"] {
 	background: rgb(30, 30, 30);
 }
 
+QGroupBox#LabelGroup {
+    border: 1px solid transparent;
+    margin-top: 7ex;
+    padding: 0;
+}
+QGroupBox#LabelGroup::title {
+	font-size: 10px;
+	color: rgb(160, 160, 160);
+}
+
 QLabel#Notification {
 	font-size: 9px;
 	margin: 0;
@@ -280,20 +318,18 @@ QLabel#Link {
 	padding: 0;
 }
 
-QLabel#Category {
+QLabel#Label {
 	color: rgb(250, 250, 250);
-	font-size: 14px;
+	font-size: 12px;
 	margin: 0 4px 4px 0;
-	border: 1px solid rgb(60, 60, 60);
+	border: 1px solid rgb(80, 80, 80);
 	border-radius: 2px;
 	padding: 0;
 }
-
-QLabel#Category:hover {
+QLabel#Label:hover {
 	border: 1px solid rgb(246, 96, 0);
 }
-
-QLabel#Category[selected="true"] {
+QLabel#Label[selected="true"] {
 	background: rgb(246, 96, 0);
 	border: 1px solid rgb(246, 96, 0);
 }
