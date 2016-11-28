@@ -19,6 +19,9 @@
     <Filter Include="SQLite">
       <UniqueIdentifier>{4c9b483a-d352-432d-97ce-0ce05b0caa73}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Security">
+      <UniqueIdentifier>{dfe08440-1670-4ec0-8661-716b8cc7fa67}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\BaseServer\Source\Main.cpp">
@@ -128,6 +131,15 @@
     </ClCompile>
     <ClCompile Include="..\BaseServer\Source\RpcClientBrowserImpl.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\Security\Base64.cpp">
+      <Filter>Security</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\Security\Md5.cpp">
+      <Filter>Security</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\Security\Rijndael.cpp">
+      <Filter>Security</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -247,6 +259,15 @@
     </ClInclude>
     <ClInclude Include="..\BaseServer\Source\RpcClientBrowserImpl.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\Security\Base64.h">
+      <Filter>Security</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\Security\Md5.h">
+      <Filter>Security</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\Security\Rijndael.h">
+      <Filter>Security</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
