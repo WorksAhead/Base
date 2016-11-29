@@ -720,22 +720,6 @@ Rpc::ErrorCode RpcSessionImpl::setUserGroup(const std::string& username, const s
 	return Rpc::ec_operation_failed;
 }
 
-Rpc::ErrorCode RpcSessionImpl::resetUserPassword(const std::string& username, const std::string& password, const Ice::Current& c)
-{
-	boost::recursive_mutex::scoped_lock lock(sync_);
-	checkIsDestroyed();
-
-	if (context_->userGroup() != "Admin") {
-		return Rpc::ec_access_denied;
-	}
-
-	if (context_->center()->resetUserPassword(username, password)) {
-		return Rpc::ec_success;
-	}
-
-	return Rpc::ec_operation_failed;
-}
-
 Rpc::ErrorCode RpcSessionImpl::removeUser(const std::string& username, const Ice::Current& c)
 {
 	boost::recursive_mutex::scoped_lock lock(sync_);

@@ -1083,12 +1083,6 @@
     <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_PageContentBrowserWidget.cpp">
       <Filter>Generated Files\ReleaseConsole_Win32</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\Security\Base64.cpp">
-      <Filter>Security</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Common\Security\Md5.cpp">
-      <Filter>Security</Filter>
-    </ClCompile>
     <ClCompile Include="..\Common\Security\Rijndael.cpp">
       <Filter>Security</Filter>
     </ClCompile>
@@ -1416,12 +1410,6 @@
     </ClInclude>
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_LabelSelectorDialog.h">
       <Filter>Generated Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Common\Security\Base64.h">
-      <Filter>Security</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Common\Security\Md5.h">
-      <Filter>Security</Filter>
     </ClInclude>
     <ClInclude Include="..\Common\Security\Rijndael.h">
       <Filter>Security</Filter>

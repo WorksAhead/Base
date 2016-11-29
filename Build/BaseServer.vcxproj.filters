@@ -135,9 +135,6 @@
     <ClCompile Include="..\Common\Security\Base64.cpp">
       <Filter>Security</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\Security\Md5.cpp">
-      <Filter>Security</Filter>
-    </ClCompile>
     <ClCompile Include="..\Common\Security\Rijndael.cpp">
       <Filter>Security</Filter>
     </ClCompile>
@@ -261,9 +258,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Common\Security\Base64.h">
-      <Filter>Security</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Common\Security\Md5.h">
       <Filter>Security</Filter>
     </ClInclude>
     <ClInclude Include="..\Common\Security\Rijndael.h">

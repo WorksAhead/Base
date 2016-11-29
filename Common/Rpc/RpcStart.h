@@ -87,14 +87,8 @@ typedef ::IceUtil::Handle< Callback_Start_getClientVersion_Base> Callback_Start_
 class Callback_Start_downloadClient_Base : virtual public ::IceInternal::CallbackBase { };
 typedef ::IceUtil::Handle< Callback_Start_downloadClient_Base> Callback_Start_downloadClientPtr;
 
-class Callback_Start_signup_Base : virtual public ::IceInternal::CallbackBase { };
-typedef ::IceUtil::Handle< Callback_Start_signup_Base> Callback_Start_signupPtr;
-
 class Callback_Start_login_Base : virtual public ::IceInternal::CallbackBase { };
 typedef ::IceUtil::Handle< Callback_Start_login_Base> Callback_Start_loginPtr;
-
-class Callback_Start_resetPassword_Base : virtual public ::IceInternal::CallbackBase { };
-typedef ::IceUtil::Handle< Callback_Start_resetPassword_Base> Callback_Start_resetPasswordPtr;
 
 }
 
@@ -336,82 +330,6 @@ private:
     
 public:
 
-    ::Rpc::ErrorCode signup(const ::std::string& __p_username, const ::std::string& __p_password)
-    {
-        return signup(__p_username, __p_password, 0);
-    }
-    ::Rpc::ErrorCode signup(const ::std::string& __p_username, const ::std::string& __p_password, const ::Ice::Context& __ctx)
-    {
-        return signup(__p_username, __p_password, &__ctx);
-    }
-#ifdef ICE_CPP11
-    ::Ice::AsyncResultPtr
-    begin_signup(const ::std::string& __p_username, const ::std::string& __p_password, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
-    {
-        return __begin_signup(__p_username, __p_password, 0, __response, __exception, __sent);
-    }
-    ::Ice::AsyncResultPtr
-    begin_signup(const ::std::string& __p_username, const ::std::string& __p_password, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
-    {
-        return begin_signup(__p_username, __p_password, 0, ::Ice::newCallback(__completed, __sent), 0);
-    }
-    ::Ice::AsyncResultPtr
-    begin_signup(const ::std::string& __p_username, const ::std::string& __p_password, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
-    {
-        return __begin_signup(__p_username, __p_password, &__ctx, __response, __exception, __sent);
-    }
-    ::Ice::AsyncResultPtr
-    begin_signup(const ::std::string& __p_username, const ::std::string& __p_password, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
-    {
-        return begin_signup(__p_username, __p_password, &__ctx, ::Ice::newCallback(__completed, __sent));
-    }
-    
-private:
-
-    ::Ice::AsyncResultPtr __begin_signup(const ::std::string& __p_username, const ::std::string& __p_password, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent);
-    
-public:
-#endif
-
-    ::Ice::AsyncResultPtr begin_signup(const ::std::string& __p_username, const ::std::string& __p_password)
-    {
-        return begin_signup(__p_username, __p_password, 0, ::IceInternal::__dummyCallback, 0);
-    }
-
-    ::Ice::AsyncResultPtr begin_signup(const ::std::string& __p_username, const ::std::string& __p_password, const ::Ice::Context& __ctx)
-    {
-        return begin_signup(__p_username, __p_password, &__ctx, ::IceInternal::__dummyCallback, 0);
-    }
-
-    ::Ice::AsyncResultPtr begin_signup(const ::std::string& __p_username, const ::std::string& __p_password, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
-    {
-        return begin_signup(__p_username, __p_password, 0, __del, __cookie);
-    }
-
-    ::Ice::AsyncResultPtr begin_signup(const ::std::string& __p_username, const ::std::string& __p_password, const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
-    {
-        return begin_signup(__p_username, __p_password, &__ctx, __del, __cookie);
-    }
-
-    ::Ice::AsyncResultPtr begin_signup(const ::std::string& __p_username, const ::std::string& __p_password, const ::Rpc::Callback_Start_signupPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
-    {
-        return begin_signup(__p_username, __p_password, 0, __del, __cookie);
-    }
-
-    ::Ice::AsyncResultPtr begin_signup(const ::std::string& __p_username, const ::std::string& __p_password, const ::Ice::Context& __ctx, const ::Rpc::Callback_Start_signupPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
-    {
-        return begin_signup(__p_username, __p_password, &__ctx, __del, __cookie);
-    }
-
-    ::Rpc::ErrorCode end_signup(const ::Ice::AsyncResultPtr&);
-    
-private:
-
-    ::Rpc::ErrorCode signup(const ::std::string&, const ::std::string&, const ::Ice::Context*);
-    ::Ice::AsyncResultPtr begin_signup(const ::std::string&, const ::std::string&, const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
-    
-public:
-
     ::Rpc::ErrorCode login(const ::std::string& __p_username, const ::std::string& __p_password, ::Rpc::SessionPrx& __p_session)
     {
         return login(__p_username, __p_password, __p_session, 0);
@@ -485,82 +403,6 @@ private:
 
     ::Rpc::ErrorCode login(const ::std::string&, const ::std::string&, ::Rpc::SessionPrx&, const ::Ice::Context*);
     ::Ice::AsyncResultPtr begin_login(const ::std::string&, const ::std::string&, const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
-    
-public:
-
-    ::Rpc::ErrorCode resetPassword(const ::std::string& __p_username, const ::std::string& __p_oldPassword, const ::std::string& __p_newPassword)
-    {
-        return resetPassword(__p_username, __p_oldPassword, __p_newPassword, 0);
-    }
-    ::Rpc::ErrorCode resetPassword(const ::std::string& __p_username, const ::std::string& __p_oldPassword, const ::std::string& __p_newPassword, const ::Ice::Context& __ctx)
-    {
-        return resetPassword(__p_username, __p_oldPassword, __p_newPassword, &__ctx);
-    }
-#ifdef ICE_CPP11
-    ::Ice::AsyncResultPtr
-    begin_resetPassword(const ::std::string& __p_username, const ::std::string& __p_oldPassword, const ::std::string& __p_newPassword, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
-    {
-        return __begin_resetPassword(__p_username, __p_oldPassword, __p_newPassword, 0, __response, __exception, __sent);
-    }
-    ::Ice::AsyncResultPtr
-    begin_resetPassword(const ::std::string& __p_username, const ::std::string& __p_oldPassword, const ::std::string& __p_newPassword, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
-    {
-        return begin_resetPassword(__p_username, __p_oldPassword, __p_newPassword, 0, ::Ice::newCallback(__completed, __sent), 0);
-    }
-    ::Ice::AsyncResultPtr
-    begin_resetPassword(const ::std::string& __p_username, const ::std::string& __p_oldPassword, const ::std::string& __p_newPassword, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
-    {
-        return __begin_resetPassword(__p_username, __p_oldPassword, __p_newPassword, &__ctx, __response, __exception, __sent);
-    }
-    ::Ice::AsyncResultPtr
-    begin_resetPassword(const ::std::string& __p_username, const ::std::string& __p_oldPassword, const ::std::string& __p_newPassword, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
-    {
-        return begin_resetPassword(__p_username, __p_oldPassword, __p_newPassword, &__ctx, ::Ice::newCallback(__completed, __sent));
-    }
-    
-private:
-
-    ::Ice::AsyncResultPtr __begin_resetPassword(const ::std::string& __p_username, const ::std::string& __p_oldPassword, const ::std::string& __p_newPassword, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent);
-    
-public:
-#endif
-
-    ::Ice::AsyncResultPtr begin_resetPassword(const ::std::string& __p_username, const ::std::string& __p_oldPassword, const ::std::string& __p_newPassword)
-    {
-        return begin_resetPassword(__p_username, __p_oldPassword, __p_newPassword, 0, ::IceInternal::__dummyCallback, 0);
-    }
-
-    ::Ice::AsyncResultPtr begin_resetPassword(const ::std::string& __p_username, const ::std::string& __p_oldPassword, const ::std::string& __p_newPassword, const ::Ice::Context& __ctx)
-    {
-        return begin_resetPassword(__p_username, __p_oldPassword, __p_newPassword, &__ctx, ::IceInternal::__dummyCallback, 0);
-    }
-
-    ::Ice::AsyncResultPtr begin_resetPassword(const ::std::string& __p_username, const ::std::string& __p_oldPassword, const ::std::string& __p_newPassword, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
-    {
-        return begin_resetPassword(__p_username, __p_oldPassword, __p_newPassword, 0, __del, __cookie);
-    }
-
-    ::Ice::AsyncResultPtr begin_resetPassword(const ::std::string& __p_username, const ::std::string& __p_oldPassword, const ::std::string& __p_newPassword, const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
-    {
-        return begin_resetPassword(__p_username, __p_oldPassword, __p_newPassword, &__ctx, __del, __cookie);
-    }
-
-    ::Ice::AsyncResultPtr begin_resetPassword(const ::std::string& __p_username, const ::std::string& __p_oldPassword, const ::std::string& __p_newPassword, const ::Rpc::Callback_Start_resetPasswordPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
-    {
-        return begin_resetPassword(__p_username, __p_oldPassword, __p_newPassword, 0, __del, __cookie);
-    }
-
-    ::Ice::AsyncResultPtr begin_resetPassword(const ::std::string& __p_username, const ::std::string& __p_oldPassword, const ::std::string& __p_newPassword, const ::Ice::Context& __ctx, const ::Rpc::Callback_Start_resetPasswordPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
-    {
-        return begin_resetPassword(__p_username, __p_oldPassword, __p_newPassword, &__ctx, __del, __cookie);
-    }
-
-    ::Rpc::ErrorCode end_resetPassword(const ::Ice::AsyncResultPtr&);
-    
-private:
-
-    ::Rpc::ErrorCode resetPassword(const ::std::string&, const ::std::string&, const ::std::string&, const ::Ice::Context*);
-    ::Ice::AsyncResultPtr begin_resetPassword(const ::std::string&, const ::std::string&, const ::std::string&, const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
     
 public:
     
@@ -703,14 +545,8 @@ public:
     virtual ::Rpc::ErrorCode downloadClient(::Rpc::DownloaderPrx&, const ::Ice::Current& = ::Ice::Current()) = 0;
     ::Ice::DispatchStatus ___downloadClient(::IceInternal::Incoming&, const ::Ice::Current&);
 
-    virtual ::Rpc::ErrorCode signup(const ::std::string&, const ::std::string&, const ::Ice::Current& = ::Ice::Current()) = 0;
-    ::Ice::DispatchStatus ___signup(::IceInternal::Incoming&, const ::Ice::Current&);
-
     virtual ::Rpc::ErrorCode login(const ::std::string&, const ::std::string&, ::Rpc::SessionPrx&, const ::Ice::Current& = ::Ice::Current()) = 0;
     ::Ice::DispatchStatus ___login(::IceInternal::Incoming&, const ::Ice::Current&);
-
-    virtual ::Rpc::ErrorCode resetPassword(const ::std::string&, const ::std::string&, const ::std::string&, const ::Ice::Current& = ::Ice::Current()) = 0;
-    ::Ice::DispatchStatus ___resetPassword(::IceInternal::Incoming&, const ::Ice::Current&);
 
     virtual ::Ice::DispatchStatus __dispatch(::IceInternal::Incoming&, const ::Ice::Current&);
 
@@ -1051,110 +887,6 @@ newCallback_Start_downloadClient(T* instance, void (T::*cb)(::Rpc::ErrorCode, co
 }
 
 template<class T>
-class CallbackNC_Start_signup : public Callback_Start_signup_Base, public ::IceInternal::TwowayCallbackNC<T>
-{
-public:
-
-    typedef IceUtil::Handle<T> TPtr;
-
-    typedef void (T::*Exception)(const ::Ice::Exception&);
-    typedef void (T::*Sent)(bool);
-    typedef void (T::*Response)(::Rpc::ErrorCode);
-
-    CallbackNC_Start_signup(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
-        : ::IceInternal::TwowayCallbackNC<T>(obj, cb != 0, excb, sentcb), _response(cb)
-    {
-    }
-
-    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
-    {
-        ::Rpc::StartPrx __proxy = ::Rpc::StartPrx::uncheckedCast(__result->getProxy());
-        ::Rpc::ErrorCode __ret;
-        try
-        {
-            __ret = __proxy->end_signup(__result);
-        }
-        catch(const ::Ice::Exception& ex)
-        {
-            ::IceInternal::CallbackNC<T>::exception(__result, ex);
-            return;
-        }
-        if(_response)
-        {
-            (::IceInternal::CallbackNC<T>::_callback.get()->*_response)(__ret);
-        }
-    }
-
-    private:
-
-    Response _response;
-};
-
-template<class T> Callback_Start_signupPtr
-newCallback_Start_signup(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
-{
-    return new CallbackNC_Start_signup<T>(instance, cb, excb, sentcb);
-}
-
-template<class T> Callback_Start_signupPtr
-newCallback_Start_signup(T* instance, void (T::*cb)(::Rpc::ErrorCode), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
-{
-    return new CallbackNC_Start_signup<T>(instance, cb, excb, sentcb);
-}
-
-template<class T, typename CT>
-class Callback_Start_signup : public Callback_Start_signup_Base, public ::IceInternal::TwowayCallback<T, CT>
-{
-public:
-
-    typedef IceUtil::Handle<T> TPtr;
-
-    typedef void (T::*Exception)(const ::Ice::Exception& , const CT&);
-    typedef void (T::*Sent)(bool , const CT&);
-    typedef void (T::*Response)(::Rpc::ErrorCode, const CT&);
-
-    Callback_Start_signup(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
-        : ::IceInternal::TwowayCallback<T, CT>(obj, cb != 0, excb, sentcb), _response(cb)
-    {
-    }
-
-    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
-    {
-        ::Rpc::StartPrx __proxy = ::Rpc::StartPrx::uncheckedCast(__result->getProxy());
-        ::Rpc::ErrorCode __ret;
-        try
-        {
-            __ret = __proxy->end_signup(__result);
-        }
-        catch(const ::Ice::Exception& ex)
-        {
-            ::IceInternal::Callback<T, CT>::exception(__result, ex);
-            return;
-        }
-        if(_response)
-        {
-            (::IceInternal::Callback<T, CT>::_callback.get()->*_response)(__ret, CT::dynamicCast(__result->getCookie()));
-        }
-    }
-
-    private:
-
-    Response _response;
-};
-
-template<class T, typename CT> Callback_Start_signupPtr
-newCallback_Start_signup(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
-{
-    return new Callback_Start_signup<T, CT>(instance, cb, excb, sentcb);
-}
-
-template<class T, typename CT> Callback_Start_signupPtr
-newCallback_Start_signup(T* instance, void (T::*cb)(::Rpc::ErrorCode, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
-{
-    return new Callback_Start_signup<T, CT>(instance, cb, excb, sentcb);
-}
-
-template<class T>
 class CallbackNC_Start_login : public Callback_Start_login_Base, public ::IceInternal::TwowayCallbackNC<T>
 {
 public:
@@ -1258,110 +990,6 @@ template<class T, typename CT> Callback_Start_loginPtr
 newCallback_Start_login(T* instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::SessionPrx&, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
 {
     return new Callback_Start_login<T, CT>(instance, cb, excb, sentcb);
-}
-
-template<class T>
-class CallbackNC_Start_resetPassword : public Callback_Start_resetPassword_Base, public ::IceInternal::TwowayCallbackNC<T>
-{
-public:
-
-    typedef IceUtil::Handle<T> TPtr;
-
-    typedef void (T::*Exception)(const ::Ice::Exception&);
-    typedef void (T::*Sent)(bool);
-    typedef void (T::*Response)(::Rpc::ErrorCode);
-
-    CallbackNC_Start_resetPassword(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
-        : ::IceInternal::TwowayCallbackNC<T>(obj, cb != 0, excb, sentcb), _response(cb)
-    {
-    }
-
-    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
-    {
-        ::Rpc::StartPrx __proxy = ::Rpc::StartPrx::uncheckedCast(__result->getProxy());
-        ::Rpc::ErrorCode __ret;
-        try
-        {
-            __ret = __proxy->end_resetPassword(__result);
-        }
-        catch(const ::Ice::Exception& ex)
-        {
-            ::IceInternal::CallbackNC<T>::exception(__result, ex);
-            return;
-        }
-        if(_response)
-        {
-            (::IceInternal::CallbackNC<T>::_callback.get()->*_response)(__ret);
-        }
-    }
-
-    private:
-
-    Response _response;
-};
-
-template<class T> Callback_Start_resetPasswordPtr
-newCallback_Start_resetPassword(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
-{
-    return new CallbackNC_Start_resetPassword<T>(instance, cb, excb, sentcb);
-}
-
-template<class T> Callback_Start_resetPasswordPtr
-newCallback_Start_resetPassword(T* instance, void (T::*cb)(::Rpc::ErrorCode), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
-{
-    return new CallbackNC_Start_resetPassword<T>(instance, cb, excb, sentcb);
-}
-
-template<class T, typename CT>
-class Callback_Start_resetPassword : public Callback_Start_resetPassword_Base, public ::IceInternal::TwowayCallback<T, CT>
-{
-public:
-
-    typedef IceUtil::Handle<T> TPtr;
-
-    typedef void (T::*Exception)(const ::Ice::Exception& , const CT&);
-    typedef void (T::*Sent)(bool , const CT&);
-    typedef void (T::*Response)(::Rpc::ErrorCode, const CT&);
-
-    Callback_Start_resetPassword(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
-        : ::IceInternal::TwowayCallback<T, CT>(obj, cb != 0, excb, sentcb), _response(cb)
-    {
-    }
-
-    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
-    {
-        ::Rpc::StartPrx __proxy = ::Rpc::StartPrx::uncheckedCast(__result->getProxy());
-        ::Rpc::ErrorCode __ret;
-        try
-        {
-            __ret = __proxy->end_resetPassword(__result);
-        }
-        catch(const ::Ice::Exception& ex)
-        {
-            ::IceInternal::Callback<T, CT>::exception(__result, ex);
-            return;
-        }
-        if(_response)
-        {
-            (::IceInternal::Callback<T, CT>::_callback.get()->*_response)(__ret, CT::dynamicCast(__result->getCookie()));
-        }
-    }
-
-    private:
-
-    Response _response;
-};
-
-template<class T, typename CT> Callback_Start_resetPasswordPtr
-newCallback_Start_resetPassword(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
-{
-    return new Callback_Start_resetPassword<T, CT>(instance, cb, excb, sentcb);
-}
-
-template<class T, typename CT> Callback_Start_resetPasswordPtr
-newCallback_Start_resetPassword(T* instance, void (T::*cb)(::Rpc::ErrorCode, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
-{
-    return new Callback_Start_resetPassword<T, CT>(instance, cb, excb, sentcb);
 }
 
 }

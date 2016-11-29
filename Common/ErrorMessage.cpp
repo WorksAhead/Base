@@ -6,8 +6,8 @@ const char* errorMessage(Rpc::ErrorCode ec)
 	{
 	case Rpc::ec_success:
 		return "Success";
-	case Rpc::ec_username_already_exists:
-		return "Username already exists";
+	case Rpc::ec_username_does_not_exist:
+		return "Username does not exist";
 	case Rpc::ec_username_or_password_incorrect:
 		return "Username or password incorrect";
 	case Rpc::ec_engine_version_is_locked:

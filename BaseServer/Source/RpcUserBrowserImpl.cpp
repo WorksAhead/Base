@@ -51,7 +51,6 @@ Rpc::ErrorCode RpcUserBrowserImpl::next(Ice::Int n, Rpc::UserSeq& users, const I
 		Rpc::User u;
 		u.username = s_->getColumn("Username").getText();
 		u.group = s_->getColumn("Group").getText();
-		u.regTime = s_->getColumn("RegTime").getText();
 		u.info = s_->getColumn("Info").getText();
 
 		users.push_back(u);

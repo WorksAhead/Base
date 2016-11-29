@@ -22,10 +22,9 @@ public:
 
 private Q_SLOTS:
 	void onLogin();
-	void onSignup();
-	void onReset();
 
-	QByteArray encrypt(const QString& pwd);
+private:
+	QByteArray encrypt(const QString&);
 
 private:
 	Ui::LoginDialog ui_;

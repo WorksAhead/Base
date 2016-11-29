@@ -57,7 +57,6 @@ public:
 
 	virtual Rpc::ErrorCode browseUsers(Rpc::UserBrowserPrx&, const Ice::Current&);
 	virtual Rpc::ErrorCode setUserGroup(const std::string&, const std::string&, const Ice::Current&);
-	virtual Rpc::ErrorCode resetUserPassword(const std::string&, const std::string&, const Ice::Current&);
 	virtual Rpc::ErrorCode removeUser(const std::string&, const Ice::Current&);
 
 	IceUtil::Time timestamp();

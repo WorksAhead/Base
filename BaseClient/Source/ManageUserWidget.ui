@@ -55,11 +55,6 @@
      </column>
      <column>
       <property name="text">
-       <string>RegTime</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
        <string>Info</string>
       </property>
      </column>
@@ -126,13 +121,6 @@
        </property>
       </widget>
      </item>
-     <item>
-      <widget class="QPushButton" name="resetPasswordButton">
-       <property name="text">
-        <string>Reset Password</string>
-       </property>
-      </widget>
-     </item>
     </layout>
    </item>
   </layout>
@@ -143,7 +131,6 @@
   <tabstop>showAllButton</tabstop>
   <tabstop>refreshButton</tabstop>
   <tabstop>setGroupButton</tabstop>
-  <tabstop>resetPasswordButton</tabstop>
  </tabstops>
  <resources/>
  <connections/>

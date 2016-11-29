@@ -49,7 +49,7 @@ namespace Rpc
 enum ErrorCode
 {
     ec_success = 0,
-    ec_username_already_exists = 1,
+    ec_username_does_not_exist = 1,
     ec_username_or_password_incorrect = 2,
     ec_engine_version_is_locked = 3,
     ec_engine_version_already_exists = 4,

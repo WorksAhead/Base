@@ -78,7 +78,6 @@ module Rpc
 	{
 		string username;
 		string group;
-		string regTime;
 		string info;
 	};
 
@@ -190,7 +189,6 @@ module Rpc
 
 		ErrorCode browseUsers(out UserBrowser* browser);
 		ErrorCode setUserGroup(string username, string group);
-		ErrorCode resetUserPassword(string username, string password);
 		ErrorCode removeUser(string username);
 	};
 };

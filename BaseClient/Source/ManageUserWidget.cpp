@@ -58,7 +58,6 @@ ManageUserWidget::ManageUserWidget(ContextPtr context, QWidget* parent) : QWidge
 	QObject::connect(ui_.showMoreButton, &QPushButton::clicked, this, &ManageUserWidget::onShowMore);
 	QObject::connect(ui_.showAllButton, &QPushButton::clicked, this, &ManageUserWidget::onShowAll);
 	QObject::connect(ui_.refreshButton, &QPushButton::clicked, this, &ManageUserWidget::onRefresh);
-	QObject::connect(ui_.resetPasswordButton, &QPushButton::clicked, this, &ManageUserWidget::onResetPassword);
 	//QObject::connect(ui_.removeButton, &QPushButton::clicked, this, &ManageUserWidget::onRemove);
 
 	firstShow_ = true;
@@ -111,57 +110,6 @@ void ManageUserWidget::onRefresh()
 	}
 }
 
-void ManageUserWidget::onResetPassword()
-{
-	QList<QTreeWidgetItem*> items = ui_.userList->selectedItems();
-	if (items.count() == 0 || items.count() > 1) {
-		QMessageBox::information(0, "Base", tr("Please select a single User."));
-		return;
-	}
-
-	int ret = QMessageBox::question(
-		0, "Base",
-		tr("Are you sure you want to reset this User's password ?\nWarning: This operation cannot be undone."),
-		QMessageBox::Yes, QMessageBox::No | QMessageBox::Default);
-
-	if (ret != QMessageBox::Yes) {
-		return;
-	}
-
-	QString password;
-
-	QString table = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-	boost::random::mt19937_64 rng(boost::chrono::steady_clock::now().time_since_epoch().count());
-
-	for (int i = 0; i < 8; ++i) {
-		password += table.at(rng() % table.size());
-	}
-
-	QString encryptedPassword = QCryptographicHash::hash(password.toUtf8(), QCryptographicHash::Md5).toBase64();
-
-	Rpc::ErrorCode ec = context_->session->resetUserPassword(items[0]->text(0).toStdString(), encryptedPassword.toStdString());
-	if (ec != Rpc::ec_success) {
-		context_->promptRpcError(ec);
-		return;
-	}
-
-	QMessageBox mb(QMessageBox::Information, "Base",
-		QString(tr("User's password has been reset successfully.\nThe new password is: %1")).arg(password));
-
-	QPushButton* copyPasswordButton = mb.addButton("Copy", QMessageBox::ActionRole);
-	QPushButton* closeButton = mb.addButton(QMessageBox::Close);
-
-	mb.setDefaultButton(QMessageBox::Close);
-
-	mb.exec();
-
-	if (mb.clickedButton() == copyPasswordButton) {
-		QClipboard* clipboard = QApplication::clipboard();
-		clipboard->setText(password);
-	}
-}
-
 //void ManageUserWidget::onRemove()
 //{
 //	const int ret = QMessageBox::question(
@@ -198,7 +146,6 @@ void ManageUserWidget::showMore(int count)
 			QStringList list;
 			list << users[i].username.c_str();
 			list << users[i].group.c_str();
-			list << users[i].regTime.c_str();
 			boost::replace_all(users[i].info, "\n", "\r");
 			list << users[i].info.c_str();
 			QTreeWidgetItem* item = new QTreeWidgetItem(list);

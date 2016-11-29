@@ -49,11 +49,7 @@ const ::std::string __Rpc__Start__getClientVersion_name = "getClientVersion";
 
 const ::std::string __Rpc__Start__downloadClient_name = "downloadClient";
 
-const ::std::string __Rpc__Start__signup_name = "signup";
-
 const ::std::string __Rpc__Start__login_name = "login";
-
-const ::std::string __Rpc__Start__resetPassword_name = "resetPassword";
 
 }
 ::IceProxy::Ice::Object* ::IceProxy::Rpc::upCast(::IceProxy::Rpc::Start* p) { return p; }
@@ -402,127 +398,6 @@ IceProxy::Rpc::Start::end_downloadClient(::Rpc::DownloaderPrx& __p_downloader, c
 }
 
 ::Rpc::ErrorCode
-IceProxy::Rpc::Start::signup(const ::std::string& __p_username, const ::std::string& __p_password, const ::Ice::Context* __ctx)
-{
-    __checkTwowayOnly(__Rpc__Start__signup_name);
-    ::IceInternal::Outgoing __og(this, __Rpc__Start__signup_name, ::Ice::Normal, __ctx);
-    try
-    {
-        ::IceInternal::BasicStream* __os = __og.startWriteParams(::Ice::DefaultFormat);
-        __os->write(__p_username);
-        __os->write(__p_password);
-        __og.endWriteParams();
-    }
-    catch(const ::Ice::LocalException& __ex)
-    {
-        __og.abort(__ex);
-    }
-    if(!__og.invoke())
-    {
-        try
-        {
-            __og.throwUserException();
-        }
-        catch(const ::Ice::UserException& __ex)
-        {
-            ::Ice::UnknownUserException __uue(__FILE__, __LINE__, __ex.ice_name());
-            throw __uue;
-        }
-    }
-    ::Rpc::ErrorCode __ret;
-    ::IceInternal::BasicStream* __is = __og.startReadParams();
-    __is->read(__ret);
-    __og.endReadParams();
-    return __ret;
-}
-
-::Ice::AsyncResultPtr
-IceProxy::Rpc::Start::begin_signup(const ::std::string& __p_username, const ::std::string& __p_password, const ::Ice::Context* __ctx, const ::IceInternal::CallbackBasePtr& __del, const ::Ice::LocalObjectPtr& __cookie)
-{
-    __checkAsyncTwowayOnly(__Rpc__Start__signup_name);
-    ::IceInternal::OutgoingAsyncPtr __result = new ::IceInternal::OutgoingAsync(this, __Rpc__Start__signup_name, __del, __cookie);
-    try
-    {
-        __result->prepare(__Rpc__Start__signup_name, ::Ice::Normal, __ctx);
-        ::IceInternal::BasicStream* __os = __result->startWriteParams(::Ice::DefaultFormat);
-        __os->write(__p_username);
-        __os->write(__p_password);
-        __result->endWriteParams();
-        __result->invoke();
-    }
-    catch(const ::Ice::Exception& __ex)
-    {
-        __result->abort(__ex);
-    }
-    return __result;
-}
-
-#ifdef ICE_CPP11
-
-::Ice::AsyncResultPtr
-IceProxy::Rpc::Start::__begin_signup(const ::std::string& __p_username, const ::std::string& __p_password, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent)
-{
-    class Cpp11CB : public ::IceInternal::Cpp11FnCallbackNC
-    {
-    public:
-
-        Cpp11CB(const ::std::function<void (::Rpc::ErrorCode)>& responseFunc, const ::std::function<void (const ::Ice::Exception&)>& exceptionFunc, const ::std::function<void (bool)>& sentFunc) :
-            ::IceInternal::Cpp11FnCallbackNC(exceptionFunc, sentFunc),
-            _response(responseFunc)
-        {
-            CallbackBase::checkCallback(true, responseFunc || exceptionFunc != nullptr);
-        }
-
-        virtual void completed(const ::Ice::AsyncResultPtr& __result) const
-        {
-            ::Rpc::StartPrx __proxy = ::Rpc::StartPrx::uncheckedCast(__result->getProxy());
-            ::Rpc::ErrorCode __ret;
-            try
-            {
-                __ret = __proxy->end_signup(__result);
-            }
-            catch(const ::Ice::Exception& ex)
-            {
-                Cpp11FnCallbackNC::exception(__result, ex);
-                return;
-            }
-            if(_response != nullptr)
-            {
-                _response(__ret);
-            }
-        }
-    
-    private:
-        
-        ::std::function<void (::Rpc::ErrorCode)> _response;
-    };
-    return begin_signup(__p_username, __p_password, __ctx, new Cpp11CB(__response, __exception, __sent));
-}
-#endif
-
-::Rpc::ErrorCode
-IceProxy::Rpc::Start::end_signup(const ::Ice::AsyncResultPtr& __result)
-{
-    ::Ice::AsyncResult::__check(__result, this, __Rpc__Start__signup_name);
-    ::Rpc::ErrorCode __ret;
-    if(!__result->__wait())
-    {
-        try
-        {
-            __result->__throwUserException();
-        }
-        catch(const ::Ice::UserException& __ex)
-        {
-            throw ::Ice::UnknownUserException(__FILE__, __LINE__, __ex.ice_name());
-        }
-    }
-    ::IceInternal::BasicStream* __is = __result->__startReadParams();
-    __is->read(__ret);
-    __result->__endReadParams();
-    return __ret;
-}
-
-::Rpc::ErrorCode
 IceProxy::Rpc::Start::login(const ::std::string& __p_username, const ::std::string& __p_password, ::Rpc::SessionPrx& __p_session, const ::Ice::Context* __ctx)
 {
     __checkTwowayOnly(__Rpc__Start__login_name);
@@ -646,129 +521,6 @@ IceProxy::Rpc::Start::end_login(::Rpc::SessionPrx& __p_session, const ::Ice::Asy
     return __ret;
 }
 
-::Rpc::ErrorCode
-IceProxy::Rpc::Start::resetPassword(const ::std::string& __p_username, const ::std::string& __p_oldPassword, const ::std::string& __p_newPassword, const ::Ice::Context* __ctx)
-{
-    __checkTwowayOnly(__Rpc__Start__resetPassword_name);
-    ::IceInternal::Outgoing __og(this, __Rpc__Start__resetPassword_name, ::Ice::Normal, __ctx);
-    try
-    {
-        ::IceInternal::BasicStream* __os = __og.startWriteParams(::Ice::DefaultFormat);
-        __os->write(__p_username);
-        __os->write(__p_oldPassword);
-        __os->write(__p_newPassword);
-        __og.endWriteParams();
-    }
-    catch(const ::Ice::LocalException& __ex)
-    {
-        __og.abort(__ex);
-    }
-    if(!__og.invoke())
-    {
-        try
-        {
-            __og.throwUserException();
-        }
-        catch(const ::Ice::UserException& __ex)
-        {
-            ::Ice::UnknownUserException __uue(__FILE__, __LINE__, __ex.ice_name());
-            throw __uue;
-        }
-    }
-    ::Rpc::ErrorCode __ret;
-    ::IceInternal::BasicStream* __is = __og.startReadParams();
-    __is->read(__ret);
-    __og.endReadParams();
-    return __ret;
-}
-
-::Ice::AsyncResultPtr
-IceProxy::Rpc::Start::begin_resetPassword(const ::std::string& __p_username, const ::std::string& __p_oldPassword, const ::std::string& __p_newPassword, const ::Ice::Context* __ctx, const ::IceInternal::CallbackBasePtr& __del, const ::Ice::LocalObjectPtr& __cookie)
-{
-    __checkAsyncTwowayOnly(__Rpc__Start__resetPassword_name);
-    ::IceInternal::OutgoingAsyncPtr __result = new ::IceInternal::OutgoingAsync(this, __Rpc__Start__resetPassword_name, __del, __cookie);
-    try
-    {
-        __result->prepare(__Rpc__Start__resetPassword_name, ::Ice::Normal, __ctx);
-        ::IceInternal::BasicStream* __os = __result->startWriteParams(::Ice::DefaultFormat);
-        __os->write(__p_username);
-        __os->write(__p_oldPassword);
-        __os->write(__p_newPassword);
-        __result->endWriteParams();
-        __result->invoke();
-    }
-    catch(const ::Ice::Exception& __ex)
-    {
-        __result->abort(__ex);
-    }
-    return __result;
-}
-
-#ifdef ICE_CPP11
-
-::Ice::AsyncResultPtr
-IceProxy::Rpc::Start::__begin_resetPassword(const ::std::string& __p_username, const ::std::string& __p_oldPassword, const ::std::string& __p_newPassword, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent)
-{
-    class Cpp11CB : public ::IceInternal::Cpp11FnCallbackNC
-    {
-    public:
-
-        Cpp11CB(const ::std::function<void (::Rpc::ErrorCode)>& responseFunc, const ::std::function<void (const ::Ice::Exception&)>& exceptionFunc, const ::std::function<void (bool)>& sentFunc) :
-            ::IceInternal::Cpp11FnCallbackNC(exceptionFunc, sentFunc),
-            _response(responseFunc)
-        {
-            CallbackBase::checkCallback(true, responseFunc || exceptionFunc != nullptr);
-        }
-
-        virtual void completed(const ::Ice::AsyncResultPtr& __result) const
-        {
-            ::Rpc::StartPrx __proxy = ::Rpc::StartPrx::uncheckedCast(__result->getProxy());
-            ::Rpc::ErrorCode __ret;
-            try
-            {
-                __ret = __proxy->end_resetPassword(__result);
-            }
-            catch(const ::Ice::Exception& ex)
-            {
-                Cpp11FnCallbackNC::exception(__result, ex);
-                return;
-            }
-            if(_response != nullptr)
-            {
-                _response(__ret);
-            }
-        }
-    
-    private:
-        
-        ::std::function<void (::Rpc::ErrorCode)> _response;
-    };
-    return begin_resetPassword(__p_username, __p_oldPassword, __p_newPassword, __ctx, new Cpp11CB(__response, __exception, __sent));
-}
-#endif
-
-::Rpc::ErrorCode
-IceProxy::Rpc::Start::end_resetPassword(const ::Ice::AsyncResultPtr& __result)
-{
-    ::Ice::AsyncResult::__check(__result, this, __Rpc__Start__resetPassword_name);
-    ::Rpc::ErrorCode __ret;
-    if(!__result->__wait())
-    {
-        try
-        {
-            __result->__throwUserException();
-        }
-        catch(const ::Ice::UserException& __ex)
-        {
-            throw ::Ice::UnknownUserException(__FILE__, __LINE__, __ex.ice_name());
-        }
-    }
-    ::IceInternal::BasicStream* __is = __result->__startReadParams();
-    __is->read(__ret);
-    __result->__endReadParams();
-    return __ret;
-}
-
 const ::std::string&
 IceProxy::Rpc::Start::ice_staticId()
 {
@@ -861,23 +613,6 @@ Rpc::Start::___downloadClient(::IceInternal::Incoming& __inS, const ::Ice::Curre
 }
 
 ::Ice::DispatchStatus
-Rpc::Start::___signup(::IceInternal::Incoming& __inS, const ::Ice::Current& __current)
-{
-    __checkMode(::Ice::Normal, __current.mode);
-    ::IceInternal::BasicStream* __is = __inS.startReadParams();
-    ::std::string __p_username;
-    ::std::string __p_password;
-    __is->read(__p_username);
-    __is->read(__p_password);
-    __inS.endReadParams();
-    ::Rpc::ErrorCode __ret = signup(__p_username, __p_password, __current);
-    ::IceInternal::BasicStream* __os = __inS.__startWriteParams(::Ice::DefaultFormat);
-    __os->write(__ret);
-    __inS.__endWriteParams(true);
-    return ::Ice::DispatchOK;
-}
-
-::Ice::DispatchStatus
 Rpc::Start::___login(::IceInternal::Incoming& __inS, const ::Ice::Current& __current)
 {
     __checkMode(::Ice::Normal, __current.mode);
@@ -896,25 +631,6 @@ Rpc::Start::___login(::IceInternal::Incoming& __inS, const ::Ice::Current& __cur
     return ::Ice::DispatchOK;
 }
 
-::Ice::DispatchStatus
-Rpc::Start::___resetPassword(::IceInternal::Incoming& __inS, const ::Ice::Current& __current)
-{
-    __checkMode(::Ice::Normal, __current.mode);
-    ::IceInternal::BasicStream* __is = __inS.startReadParams();
-    ::std::string __p_username;
-    ::std::string __p_oldPassword;
-    ::std::string __p_newPassword;
-    __is->read(__p_username);
-    __is->read(__p_oldPassword);
-    __is->read(__p_newPassword);
-    __inS.endReadParams();
-    ::Rpc::ErrorCode __ret = resetPassword(__p_username, __p_oldPassword, __p_newPassword, __current);
-    ::IceInternal::BasicStream* __os = __inS.__startWriteParams(::Ice::DefaultFormat);
-    __os->write(__ret);
-    __inS.__endWriteParams(true);
-    return ::Ice::DispatchOK;
-}
-
 namespace
 {
 const ::std::string __Rpc__Start_all[] =
@@ -926,9 +642,7 @@ const ::std::string __Rpc__Start_all[] =
     "ice_ids",
     "ice_isA",
     "ice_ping",
-    "login",
-    "resetPassword",
-    "signup"
+    "login"
 };
 
 }
@@ -936,7 +650,7 @@ const ::std::string __Rpc__Start_all[] =
 ::Ice::DispatchStatus
 Rpc::Start::__dispatch(::IceInternal::Incoming& in, const ::Ice::Current& current)
 {
-    ::std::pair< const ::std::string*, const ::std::string*> r = ::std::equal_range(__Rpc__Start_all, __Rpc__Start_all + 10, current.operation);
+    ::std::pair< const ::std::string*, const ::std::string*> r = ::std::equal_range(__Rpc__Start_all, __Rpc__Start_all + 8, current.operation);
     if(r.first == r.second)
     {
         throw ::Ice::OperationNotExistException(__FILE__, __LINE__, current.id, current.facet, current.operation);
@@ -975,14 +689,6 @@ Rpc::Start::__dispatch(::IceInternal::Incoming& in, const ::Ice::Current& curren
         case 7:
         {
             return ___login(in, current);
-        }
-        case 8:
-        {
-            return ___resetPassword(in, current);
-        }
-        case 9:
-        {
-            return ___signup(in, current);
         }
     }
 

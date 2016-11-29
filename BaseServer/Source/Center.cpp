@@ -54,8 +54,7 @@ Center::Center()
 	db_.reset(new SQLite::Database("BaseServer.db", SQLITE_OPEN_READWRITE|SQLITE_OPEN_CREATE));
 
 	db_->exec("CREATE TABLE IF NOT EXISTS Users ("
-		"Username TEXT COLLATE NOCASE UNIQUE, Password TEXT, \"Group\" TEXT, "
-		"RegTime DATETIME, Info TEXT)");
+		"Username TEXT COLLATE NOCASE UNIQUE, \"Group\" TEXT, Info TEXT)");
 
 	db_->exec("CREATE TABLE IF NOT EXISTS EngineVersions ("
 		"Name TEXT COLLATE NOCASE, Version TEXT COLLATE NOCASE, "
@@ -641,38 +640,6 @@ bool Center::setUserGroup(const std::string& username, const std::string& group)
 	std::ostringstream oss;
 	oss << "UPDATE Users SET \"Group\"=";
 	oss << sqlText(group);
-	oss << " WHERE Username=";
-	oss << sqlText(username);
-
-	SQLite::Transaction t(*db_);
-	int n = db_->exec(oss.str());
-	t.commit();
-
-	return (n > 0);
-}
-
-bool Center::resetUserPassword(const std::string& username, const std::string& oldPassword, const std::string& newPassword)
-{
-	std::ostringstream oss;
-	oss << "UPDATE Users SET Password=";
-	oss << sqlText(newPassword);
-	oss << " WHERE Username=";
-	oss << sqlText(username);
-	oss << " AND Password=";
-	oss << sqlText(oldPassword);
-
-	SQLite::Transaction t(*db_);
-	int n = db_->exec(oss.str());
-	t.commit();
-
-	return (n > 0);
-}
-
-bool Center::resetUserPassword(const std::string& username, const std::string& password)
-{
-	std::ostringstream oss;
-	oss << "UPDATE Users SET Password=";
-	oss << sqlText(password);
 	oss << " WHERE Username=";
 	oss << sqlText(username);
 

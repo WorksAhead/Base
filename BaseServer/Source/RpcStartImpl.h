@@ -18,15 +18,9 @@ public:
 
 	virtual Rpc::ErrorCode downloadClient(Rpc::DownloaderPrx& downloader, const Ice::Current&);
 
-	virtual Rpc::ErrorCode signup(const std::string&, const std::string&, const Ice::Current&);
-
 	virtual Rpc::ErrorCode login(const std::string&, const std::string&, Rpc::SessionPrx&, const Ice::Current&);
 
-	virtual Rpc::ErrorCode resetPassword(const std::string&, const std::string&, const std::string&, const Ice::Current&);
-
 private:
-	std::string decrypt(const string& pwd);
-
 	bool loginToCYou(const std::string&, const std::string&);
 
 private:

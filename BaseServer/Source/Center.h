@@ -75,8 +75,6 @@ public:
 	bool changeClientVersionState(const std::string& version, const std::string& state);
 
 	bool setUserGroup(const std::string& username, const std::string& group);
-	bool resetUserPassword(const std::string& username, const std::string& oldPassword, const std::string& newPassword);
-	bool resetUserPassword(const std::string& username, const std::string& password);
 	bool removeUser(const std::string& username);
 
 	DatabasePtr db() const { return db_; }
