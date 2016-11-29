@@ -3,6 +3,7 @@
 #include "ImageCropperDialog.h"
 #include "ImageViewerWidget.h"
 #include "ASyncSubmitContentTask.h"
+#include "ContentImageLoader.h"
 #include "QtUtils.h"
 
 #include <ErrorMessage.h>
@@ -97,6 +98,15 @@ void SubmitContentDialog::switchToEditMode(const QString& contentId)
 
 	contentId_ = contentId;
 	editMode_ = true;
+}
+
+void SubmitContentDialog::loadImagesFrom(const QString& contentId, int count)
+{
+	QObject::connect(context_->contentImageLoader, &ContentImageLoader::loaded, this, &SubmitContentDialog::onImageLoaded);
+
+	for (int i = 0; i < count; ++i) {
+		context_->contentImageLoader->load(contentId, i);
+	}
 }
 
 void SubmitContentDialog::setParentId(const QString& parentId)
@@ -226,111 +236,8 @@ void SubmitContentDialog::onSelectLocation()
 {
 	QString s = QFileDialog::getExistingDirectory(this, "Select location");
 
-	if (!s.isEmpty())
-	{
-		fs::path location = s.toLocal8Bit().data();
-
-		ui_.locationEdit->setText(QString::fromLocal8Bit(location.string().c_str()));
-
-		QFile formFile;
-
-		formFile.setFileName(QString::fromLocal8Bit((location / "BaseAutoFormFilling.json").string().c_str()));
-
-		if (formFile.open(QIODevice::ReadOnly|QIODevice::Text))
-		{
-			QString s = formFile.readAll();
-			formFile.close();
-
-			QJsonParseError err;
-
-			QJsonDocument d = QJsonDocument::fromJson(s.toUtf8(), &err);
-			
-			if (err.error != QJsonParseError::NoError)
-			{
-				int line = 1;
-				for (int i = 0; i < err.offset; ++i) {
-					if (s[i] == '\n') {
-						++line;
-					}
-				}
-				context_->prompt(0, toLocal8bit(QString("Parse error on line %1 : %2").arg(line).arg(err.errorString())));
-				return;
-			}
-
-			QJsonObject json = d.object();
-
-			ui_.titleEdit->setText(json.value("Title").toString());
-			ui_.pageEdit->setText(json.value("Page").toString());
-			ui_.categoryEdit->setText(json.value("Category").toString());
-			ui_.engineNameEdit->setText(json.value("EngineName").toString());
-			ui_.engineVersionEdit->setText(json.value("EngineVersion").toString());
-			ui_.parentIdEdit->setText(json.value("ParentId").toString());
-			ui_.commandEdit->setText(json.value("Command").toString());
-			ui_.workDirEdit->setText(json.value("WorkDir").toString());
-
-			fs::path path = toLocal8bit(json.value("Cover").toString());
-			if (path.is_relative()) {
-				path = location / path;
-			}
-
-			QPixmap coverImage(QString::fromLocal8Bit(path.string().c_str()));
-
-			if (!coverImage.isNull())
-			{
-				if (coverImage.width() > coverImage.height()) {
-					coverImage = coverImage.copy(0, 0, coverImage.height(), coverImage.height());
-				}
-				else if (coverImage.height() > coverImage.width()) {
-					coverImage = coverImage.copy(0, 0, coverImage.width(), coverImage.width());
-				}
-
-				ui_.coverViewer->setPixmap(coverImage);
-			}
-
-			QJsonArray screenshots = json.value("Screenshots").toArray();
-
-			for (int i = 0; i < screenshots.count(); ++i)
-			{
-				fs::path path = toLocal8bit(screenshots.at(i).toString());
-				if (path.is_relative()) {
-					path = location / path;
-				}
-
-				QPixmap image(QString::fromLocal8Bit(path.string().c_str()));
-
-				if (!image.isNull())
-				{
-					int w = image.width();
-					int h = w / (16.0 / 9.0);
-
-					if (h > image.height()) {
-						h = image.height();
-						w = h * (16.0 / 9.0);
-					}
-
-					image = image.copy(0, 0, w, h);
-
-					ImageViewerWidget* viewer = new ImageViewerWidget;
-					viewer->setPixmap(image);
-
-					ui_.screenshotWidget->addWidget(viewer);
-
-					if (ui_.screenshotWidget->count() > 1) {
-						ui_.prevScreenshotButton->setEnabled(true);
-						ui_.nextScreenshotButton->setEnabled(true);
-					}
-					if (ui_.screenshotWidget->count() > 0) {
-						ui_.removeScreenshotButton->setEnabled(true);
-					}
-					if (ui_.screenshotWidget->count() >= 5) {
-						ui_.addScreenshotButton->setEnabled(false);
-						break;
-					}
-				}
-			}
-
-			ui_.descriptionEdit->setPlainText(json.value("Description").toString());
-		}
+	if (!s.isEmpty()) {
+		ui_.locationEdit->setText(s);
 	}
 }
 
@@ -559,6 +466,35 @@ void SubmitContentDialog::onSubmit()
 	done(1);
 
 #undef CHECK_ERROR_CODE
+}
+
+void SubmitContentDialog::onImageLoaded(const QString&, int index, const QPixmap& pixmap)
+{
+	if (index == 0) {
+		ui_.coverViewer->setPixmap(pixmap);
+	}
+	else if (index > 0)
+	{
+		ImageViewerWidget* imageViewer = new ImageViewerWidget;
+		imageViewer->setPixmap(pixmap);
+
+		ui_.screenshotWidget->insertWidget(index - 1, imageViewer);
+
+		const int count = ui_.screenshotWidget->count();
+
+		if (count > 1) {
+			ui_.prevScreenshotButton->setEnabled(true);
+			ui_.nextScreenshotButton->setEnabled(true);
+		}
+
+		if (count > 0) {
+			ui_.removeScreenshotButton->setEnabled(true);
+		}
+
+		if (count >= 5) {
+			ui_.addScreenshotButton->setEnabled(false);
+		}
+	}
 }
 
 void SubmitContentDialog::keyPressEvent(QKeyEvent* e)

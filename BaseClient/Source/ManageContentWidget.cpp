@@ -76,7 +76,50 @@ void ManageContentWidget::onRefresh()
 
 void ManageContentWidget::onSubmit()
 {
+	bool copyForm = false;
+
+	QList<QTreeWidgetItem*> items = ui_.contentList->selectedItems();
+	if (items.count() == 1) {
+		int ret = QMessageBox::question(this, "Base", tr("Do you want to copy form information from the selected Content ?"),
+			tr("Yes"), tr("No, I need a clean form"), tr("Cancel"), 0, 2);
+		if (ret == 2) {
+			return;
+		}
+		if (ret == 0) {
+			copyForm = true;
+		}
+	}
+
 	SubmitContentDialog d(context_, this);
+
+	if (copyForm)
+	{
+		Rpc::ErrorCode ec;
+		Rpc::ContentInfo ci;
+		if ((ec = context_->session->getContentInfo(items[0]->text(0).toStdString(), ci)) != Rpc::ec_success) {
+			context_->promptRpcError(ec);
+			return;
+		}
+
+		d.loadImagesFrom(ci.id.c_str(), ci.imageCount);
+
+		std::string command;
+		std::string workDir;
+		std::istringstream stream(ci.startup);
+		getline(stream, command);
+		getline(stream, workDir);
+
+		d.setParentId(ci.parentId.c_str());
+		d.setTitle(ci.title.c_str());
+		d.setPage(ci.page.c_str());
+		d.setCategory(ci.category.c_str());
+		d.setEngineName(ci.engineName.c_str());
+		d.setEngineVersion(ci.engineVersion.c_str());
+		d.setCommand(command.c_str());
+		d.setWorkingDir(workDir.c_str());
+		d.setDesc(ci.desc.c_str());
+	}
+
 	d.exec();
 }
 

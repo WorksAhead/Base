@@ -15,6 +15,8 @@ public:
 
 	void switchToEditMode(const QString& contentId);
 
+	void loadImagesFrom(const QString& contentId, int count);
+
 	void setParentId(const QString& parentId);
 	void setTitle(const QString& title);
 	void setPage(const QString& name);
@@ -35,6 +37,8 @@ private Q_SLOTS:
 	void onAddScreenshot();
 	void onRemoveScreenshot();
 	void onSubmit();
+
+	void onImageLoaded(const QString& id, int index, const QPixmap&);
 
 protected:
 	virtual void keyPressEvent(QKeyEvent*);
