@@ -75,7 +75,7 @@ void ManageCategoryWidget::onSubmit()
 
 	while (stream.readLineInto(&line))
 	{
-		int pos = line.indexOf(QRegularExpression("[,+()]"));
+		int pos = line.indexOf(QRegularExpression("[,()]"));
 		if (pos >= 0) {
 			pos = lastPos + pos;
 			QTextCursor c = ui_.categoryEdit->textCursor();
