@@ -57,6 +57,8 @@ private Q_SLOTS:
 	void onUrlEdited();
 	void onCopyUrl();
 	void onCopyHttpUrl();
+	void onSmallIcon();
+	void onLargeIcon();
 
 private:
 	void openBrowser(const QString& category = "");
@@ -68,6 +70,8 @@ private:
 	QString name_;
 
 	Ui::PageContentWidget ui_;
+
+	int coverSize_;
 };
 
 #endif // PAGECONTENTWIDGET_HEADER_

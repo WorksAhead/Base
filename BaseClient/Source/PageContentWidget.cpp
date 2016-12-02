@@ -38,7 +38,12 @@ PageContentWidget::PageContentWidget(ContextPtr context, const QString& name, QW
 	QObject::connect(copyBaseUrlAction, &QAction::triggered, this, &PageContentWidget::onCopyUrl);
 	QObject::connect(copyHttpUrlAction, &QAction::triggered, this, &PageContentWidget::onCopyHttpUrl);
 
+	QObject::connect(ui_.smallIconButton, &QPushButton::clicked, this, &PageContentWidget::onSmallIcon);
+	QObject::connect(ui_.largeIconButton, &QPushButton::clicked, this, &PageContentWidget::onLargeIcon);
+
 	QObject::connect(ui_.filterWidget->labelSelectorWidget(), &LabelSelectorWidget::clicked, this, &PageContentWidget::onCategoryChanged);
+
+	coverSize_ = 1;
 
 	openBrowser();
 }
@@ -208,11 +213,37 @@ void PageContentWidget::onCopyHttpUrl()
 	clipboard->setText(QString::fromStdString(s.toStdString() + "?q=" + url));
 }
 
+void PageContentWidget::onSmallIcon()
+{
+	coverSize_ = 0;
+
+	for (int i = 0; i < ui_.stackedWidget->count(); ++i) {
+		PageContentBrowserWidget* w = qobject_cast<PageContentBrowserWidget*>(ui_.stackedWidget->widget(i));
+		if (w) {
+			w->setCoverSize(coverSize_);
+		}
+	}
+}
+
+void PageContentWidget::onLargeIcon()
+{
+	coverSize_ = 1;
+
+	for (int i = 0; i < ui_.stackedWidget->count(); ++i) {
+		PageContentBrowserWidget* w = qobject_cast<PageContentBrowserWidget*>(ui_.stackedWidget->widget(i));
+		if (w) {
+			w->setCoverSize(coverSize_);
+		}
+	}
+}
+
 void PageContentWidget::openBrowser(const QString& category)
 {
 	clearOldAndForwardHistory();
 
 	PageContentBrowserWidget* w = new PageContentBrowserWidget(context_, name_, category);
+
+	w->setCoverSize(coverSize_);
 
 	QString url = URLQuery("base://content/").arg("page", name_.toStdString()).arg("category", category.toStdString()).str().c_str();
 	w->setProperty("cached_url", url);

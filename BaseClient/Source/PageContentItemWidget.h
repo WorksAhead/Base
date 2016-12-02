@@ -21,6 +21,8 @@ public:
 
 	void setBackground(const QPixmap&);
 
+	void setSize(int);
+
 protected:
 	virtual void paintEvent(QPaintEvent*);
 	virtual void resizeEvent(QResizeEvent*);
@@ -33,6 +35,7 @@ private:
 	QString text_;
 	QPixmap bg_;
 	QPixmap scaledBg_;
+	int size_;
 };
 
 #endif // PAGECONTENTITEMWIDGET_HEADER_

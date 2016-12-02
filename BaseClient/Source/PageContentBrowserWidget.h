@@ -25,11 +25,10 @@ public:
 
 public:
 	void refresh();
+	void setCoverSize(int);
 
 Q_SIGNALS:
 	void contentClicked(const QString& id);
-	//void categoryClicked(const QString& category);
-	//void categorySelectorClicked();
 
 protected:
 	virtual void mousePressEvent(QMouseEvent*);
@@ -49,7 +48,6 @@ private:
 	QString name_;
 	QString category_;
 	QScrollArea* scrollArea_;
-	//FlowLayout* categoriesLayout_;
 	FlowLayout* contentsLayout_;
 
 	Rpc::ContentBrowserPrx browser_;
@@ -57,6 +55,7 @@ private:
 	QMap<QString, PageContentItemWidget*> items_;
 
 	bool firstShow_;
+	int coverSize_;
 };
 
 #endif // PAGECONTENTBROWSERWIDGET_HEADER_

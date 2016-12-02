@@ -18,5 +18,7 @@
         <file>Icons/CopyLink.png</file>
         <file>Icons/CategoryFilterCollapse.png</file>
         <file>Icons/CategoryFilterExtend.png</file>
+        <file>Icons/BrowseLargeIcon.png</file>
+        <file>Icons/BrowseSmallIcon.png</file>
     </qresource>
 </RCC>

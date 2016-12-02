@@ -39,6 +39,8 @@ PageContentBrowserWidget::PageContentBrowserWidget(ContextPtr context, const QSt
 
 	browser_ = 0;
 	firstShow_ = true;
+
+	coverSize_ = 1;
 }
 
 PageContentBrowserWidget::~PageContentBrowserWidget()
@@ -60,6 +62,18 @@ void PageContentBrowserWidget::refresh()
 
 	if (browser_) {
 		showMore(ITEMS_PER_REQUEST);
+	}
+}
+
+void PageContentBrowserWidget::setCoverSize(int n)
+{
+	coverSize_ = n;
+
+	for (int i = 0; i < contentsLayout_->count(); ++i) {
+		PageContentItemWidget* pi = qobject_cast<PageContentItemWidget*>(contentsLayout_->itemAt(i)->widget());
+		if (pi) {
+			pi->setSize(n);
+		}
 	}
 }
 
@@ -142,7 +156,7 @@ void PageContentBrowserWidget::showMore(int count)
 			const Rpc::ContentItem& item = items.at(i);
 
 			PageContentItemWidget* pi = new PageContentItemWidget(this);
-			pi->setFixedSize(QSize(230, 230));
+			pi->setSize(coverSize_);
 			pi->setId(item.id.c_str());
 			pi->setText(item.title.c_str());
 			items_.insert(item.id.c_str(), pi);
