@@ -151,12 +151,20 @@ void Center::setCategories(const std::vector<std::string>& categories)
 	t.commit();
 
 	categories_ = categories;
+
+	updateCategoryGroup();
 }
 
 void Center::getCategories(std::vector<std::string>& categories)
 {
 	boost::mutex::scoped_lock lock(categoriesSync_);
 	categories = categories_;
+}
+
+void Center::getGroupedCategories(std::map<std::string, std::string>& groupedCategories)
+{
+	boost::mutex::scoped_lock lock(categoriesSync_);
+	groupedCategories = groupedCategories_;
 }
 
 bool Center::lockEngineVersion(const std::string& name, const std::string& version, LockMode mode)
@@ -693,6 +701,31 @@ void Center::loadCategoriesFromDb()
 	std::string line;
 	while (std::getline(stream, line)) {
 		categories_.push_back(line);
+	}
+
+	updateCategoryGroup();
+}
+
+void Center::updateCategoryGroup()
+{
+	groupedCategories_.clear();
+
+	std::string group;
+
+	for (std::string s : categories_)
+	{
+		boost::trim(s);
+
+		if (s.empty()) {
+			continue;
+		}
+
+		if (boost::starts_with(s, "=")) {
+			group = s;
+		}
+		else if (!group.empty()) {
+			groupedCategories_.insert(std::make_pair(s, group));
+		}
 	}
 }
 

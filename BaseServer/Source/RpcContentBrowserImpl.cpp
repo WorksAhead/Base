@@ -24,10 +24,27 @@ Rpc::ErrorCode RpcContentBrowserImpl::init(const std::string& page, const std::s
 
 	if (!category.empty())
 	{
+		std::map<std::string, std::string> categories;
+		center_->getGroupedCategories(categories);
+
 		std::vector<std::string> list;
 		boost::split(list, category, boost::is_any_of(","));
+
+		std::map<std::string, std::string> groupedExp;
+
 		for (const std::string& s : list) {
-			oss << " AND Category LIKE " << sqlText("%(" + s + ")%");
+			auto it = categories.find(s);
+			if (it != categories.end()) {
+				std::string& exp = groupedExp[it->second];
+				if (!exp.empty()) {
+					exp += " OR ";
+				}
+				exp += "Category LIKE " + sqlText("%(" + s + ")%");
+			}
+		}
+
+		for (auto& p : groupedExp) {
+			oss << " AND (" + p.second + ")";
 		}
 	}
 
