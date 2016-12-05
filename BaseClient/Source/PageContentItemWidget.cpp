@@ -41,7 +41,7 @@ void PageContentItemWidget::setSize(int size)
 	size_ = size;
 
 	if (size == 0) {
-		setFixedSize(108, 108);
+		setFixedSize(150, 150);
 	}
 	else {
 		setFixedSize(230, 230);
@@ -56,7 +56,7 @@ void PageContentItemWidget::paintEvent(QPaintEvent* e)
 	if (size_ == 0)
 	{
 		QFont f = font();
-		f.setPixelSize(10);
+		f.setPixelSize(12);
 
 		QFontMetrics fm(f);
 

@@ -438,7 +438,7 @@ void SubmitContentDialog::onSubmit()
 
 		imageFilename = context_->uniquePath() + ".jpg";
 
-		if (!ui_.coverViewer->pixmap().scaled(QSize(300, 300), Qt::KeepAspectRatio, Qt::SmoothTransformation).save(imageFilename.c_str(), "JPG")) {
+		if (!ui_.coverViewer->pixmap().scaled(QSize(300, 300), Qt::KeepAspectRatio, Qt::SmoothTransformation).save(imageFilename.c_str(), "JPG", 90)) {
 			QMessageBox::information(this, "Base", tr("Failed to save image"));
 			return;
 		}
@@ -448,7 +448,7 @@ void SubmitContentDialog::onSubmit()
 		for (int i = 0; i < ui_.screenshotWidget->count(); ++i) {
 			ImageViewerWidget* imageViewer = static_cast<ImageViewerWidget*>(ui_.screenshotWidget->widget(i));
 			imageFilename = context_->uniquePath() + ".jpg";
-			if (!imageViewer->pixmap().save(imageFilename.c_str(), "JPG")) {
+			if (!imageViewer->pixmap().save(imageFilename.c_str(), "JPG", 90)) {
 				QMessageBox::information(this, "Base", tr("Failed to save image"));
 				return;
 			}

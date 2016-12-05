@@ -10,6 +10,7 @@
 #include <QMouseEvent>
 #include <QLabel>
 
+#define ITEMS_FIRST_REQUEST 60
 #define ITEMS_PER_REQUEST 20
 
 PageContentBrowserWidget::PageContentBrowserWidget(ContextPtr context, const QString& name, const QString& category, QWidget* parent)
@@ -34,13 +35,18 @@ PageContentBrowserWidget::PageContentBrowserWidget(ContextPtr context, const QSt
 	layout->addWidget(scrollArea_, 1);
 	setLayout(layout);
 
+	timer_ = new QTimer(this);
+	timer_->setInterval(30);
+
 	QObject::connect(scrollArea_->verticalScrollBar(), &QScrollBar::valueChanged, this, &PageContentBrowserWidget::onScroll);
 	QObject::connect(context_->contentImageLoader, &ContentImageLoader::loaded, this, &PageContentBrowserWidget::onImageLoaded);
+	QObject::connect(timer_, &QTimer::timeout, this, &PageContentBrowserWidget::onTimeout);
 
 	browser_ = 0;
 	firstShow_ = true;
+	count_ = 0;
 
-	coverSize_ = 1;
+	coverSize_ = 1;	
 }
 
 PageContentBrowserWidget::~PageContentBrowserWidget()
@@ -61,7 +67,7 @@ void PageContentBrowserWidget::refresh()
 	}
 
 	if (browser_) {
-		showMore(ITEMS_PER_REQUEST);
+		showMore(ITEMS_FIRST_REQUEST);
 	}
 }
 
@@ -128,25 +134,11 @@ void PageContentBrowserWidget::onImageLoaded(const QString& id, int index, const
 	}
 }
 
-void PageContentBrowserWidget::clear()
+void PageContentBrowserWidget::onTimeout()
 {
-	items_.clear();
-
-	for (;;) {
-		QLayoutItem* li = contentsLayout_->takeAt(0);
-		if (!li) {
-			break;
-		}
-		li->widget()->deleteLater();
-		delete li;
-	}
-}
-
-void PageContentBrowserWidget::showMore(int count)
-{
-	while (count > 0)
+	if (count_ > 0 && browser_ != 0)
 	{
-		const int n = qMin(count, ITEMS_PER_REQUEST);
+		const int n = qMin(count_, 5);
 
 		Rpc::ContentItemSeq items;
 		browser_->next(n, items);
@@ -164,12 +156,33 @@ void PageContentBrowserWidget::showMore(int count)
 			context_->contentImageLoader->load(item.id.c_str(), 0);
 		}
 
-		count -= n;
+		count_ -= n;
 
 		if (items.size() < n) {
 			browser_ = 0;
-			break;
+			count_ = 0;
+			timer_->stop();
 		}
 	}
+}
+
+void PageContentBrowserWidget::clear()
+{
+	items_.clear();
+
+	for (;;) {
+		QLayoutItem* li = contentsLayout_->takeAt(0);
+		if (!li) {
+			break;
+		}
+		li->widget()->deleteLater();
+		delete li;
+	}
+}
+
+void PageContentBrowserWidget::showMore(int n)
+{
+	count_ += n;
+	timer_->start();
 }
 

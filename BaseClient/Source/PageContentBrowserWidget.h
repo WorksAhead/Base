@@ -11,6 +11,7 @@
 #include <QPixmap>
 #include <QString>
 #include <QMap>
+#include <QTimer>
 
 // forward declaration
 class PageContentItemWidget;
@@ -38,6 +39,7 @@ protected:
 private Q_SLOTS:
 	void onScroll(int);
 	void onImageLoaded(const QString& id, int index, const QPixmap&);
+	void onTimeout();
 
 private:
 	void clear();
@@ -54,7 +56,11 @@ private:
 
 	QMap<QString, PageContentItemWidget*> items_;
 
+	QTimer* timer_;
+
 	bool firstShow_;
+	int count_;
+	
 	int coverSize_;
 };
 
