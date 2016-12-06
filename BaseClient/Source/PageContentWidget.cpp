@@ -279,6 +279,8 @@ void PageContentWidget::openBrowser(const QString& category, const QString& sear
 	ui_.stackedWidget->setCurrentWidget(w);
 	ui_.urlEdit->setText(url);
 
+	ui_.filterWidget->setVisible(true);
+
 	QObject::connect(w, &PageContentBrowserWidget::contentClicked, this, &PageContentWidget::onContentClicked);
 }
 
