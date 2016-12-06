@@ -134,7 +134,7 @@ void PageContentWidget::paintEvent(QPaintEvent* e)
 
 void PageContentWidget::onCategoryChanged()
 {
-	openBrowser(currentCategory());
+	openBrowser(currentCategory(), ui_.searchEdit->text());
 }
 
 void PageContentWidget::onContentClicked(const QString& id)
@@ -234,13 +234,7 @@ void PageContentWidget::onSearch()
 {
 	ui_.searchEdit->clearFocus();
 
-	if (ui_.searchEdit->text().isEmpty()) {
-		return;
-	}
-
 	openBrowser(currentCategory(), ui_.searchEdit->text());
-
-	ui_.searchEdit->setText("");
 }
 
 void PageContentWidget::openBrowser(const QString& category, const QString& search)
@@ -255,12 +249,27 @@ void PageContentWidget::openBrowser(const QString& category, const QString& sear
 
 	q.arg("page", name_.toStdString());
 
-	if (!category.isEmpty()) {
+	if (!category.isEmpty())
+	{
 		q.arg("category", category.toStdString());
+
+		std::vector<std::string> v;
+		boost::split(v, category.toStdString(), boost::is_any_of(","));
+
+		QStringList list;
+
+		for (const std::string& s : v) {
+			list << s.c_str();
+		}
+
+		ui_.filterWidget->labelSelectorWidget()->setSelectedLabels(list);
 	}
 
-	if (!search.isEmpty()) {
+	if (!search.isEmpty())
+	{
 		q.arg("search", search.toStdString());
+
+		ui_.searchEdit->setText(search);
 	}
 
 	QString url = q.str().c_str();
