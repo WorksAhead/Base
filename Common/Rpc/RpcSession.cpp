@@ -4573,7 +4573,7 @@ IceProxy::Rpc::Session::end_getCategories(::Rpc::StringSeq& __p_categories, cons
 }
 
 ::Rpc::ErrorCode
-IceProxy::Rpc::Session::browseContent(const ::std::string& __p_page, const ::std::string& __p_category, ::Rpc::ContentBrowserPrx& __p_browser, const ::Ice::Context* __ctx)
+IceProxy::Rpc::Session::browseContent(const ::std::string& __p_page, const ::std::string& __p_category, const ::std::string& __p_search, ::Rpc::ContentBrowserPrx& __p_browser, const ::Ice::Context* __ctx)
 {
     __checkTwowayOnly(__Rpc__Session__browseContent_name);
     ::IceInternal::Outgoing __og(this, __Rpc__Session__browseContent_name, ::Ice::Normal, __ctx);
@@ -4582,6 +4582,7 @@ IceProxy::Rpc::Session::browseContent(const ::std::string& __p_page, const ::std
         ::IceInternal::BasicStream* __os = __og.startWriteParams(::Ice::DefaultFormat);
         __os->write(__p_page);
         __os->write(__p_category);
+        __os->write(__p_search);
         __og.endWriteParams();
     }
     catch(const ::Ice::LocalException& __ex)
@@ -4609,7 +4610,7 @@ IceProxy::Rpc::Session::browseContent(const ::std::string& __p_page, const ::std
 }
 
 ::Ice::AsyncResultPtr
-IceProxy::Rpc::Session::begin_browseContent(const ::std::string& __p_page, const ::std::string& __p_category, const ::Ice::Context* __ctx, const ::IceInternal::CallbackBasePtr& __del, const ::Ice::LocalObjectPtr& __cookie)
+IceProxy::Rpc::Session::begin_browseContent(const ::std::string& __p_page, const ::std::string& __p_category, const ::std::string& __p_search, const ::Ice::Context* __ctx, const ::IceInternal::CallbackBasePtr& __del, const ::Ice::LocalObjectPtr& __cookie)
 {
     __checkAsyncTwowayOnly(__Rpc__Session__browseContent_name);
     ::IceInternal::OutgoingAsyncPtr __result = new ::IceInternal::OutgoingAsync(this, __Rpc__Session__browseContent_name, __del, __cookie);
@@ -4619,6 +4620,7 @@ IceProxy::Rpc::Session::begin_browseContent(const ::std::string& __p_page, const
         ::IceInternal::BasicStream* __os = __result->startWriteParams(::Ice::DefaultFormat);
         __os->write(__p_page);
         __os->write(__p_category);
+        __os->write(__p_search);
         __result->endWriteParams();
         __result->invoke();
     }
@@ -4632,7 +4634,7 @@ IceProxy::Rpc::Session::begin_browseContent(const ::std::string& __p_page, const
 #ifdef ICE_CPP11
 
 ::Ice::AsyncResultPtr
-IceProxy::Rpc::Session::__begin_browseContent(const ::std::string& __p_page, const ::std::string& __p_category, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::ContentBrowserPrx&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent)
+IceProxy::Rpc::Session::__begin_browseContent(const ::std::string& __p_page, const ::std::string& __p_category, const ::std::string& __p_search, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::ContentBrowserPrx&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent)
 {
     class Cpp11CB : public ::IceInternal::Cpp11FnCallbackNC
     {
@@ -4669,7 +4671,7 @@ IceProxy::Rpc::Session::__begin_browseContent(const ::std::string& __p_page, con
         
         ::std::function<void (::Rpc::ErrorCode, const ::Rpc::ContentBrowserPrx&)> _response;
     };
-    return begin_browseContent(__p_page, __p_category, __ctx, new Cpp11CB(__response, __exception, __sent));
+    return begin_browseContent(__p_page, __p_category, __p_search, __ctx, new Cpp11CB(__response, __exception, __sent));
 }
 #endif
 
@@ -9628,11 +9630,13 @@ Rpc::Session::___browseContent(::IceInternal::Incoming& __inS, const ::Ice::Curr
     ::IceInternal::BasicStream* __is = __inS.startReadParams();
     ::std::string __p_page;
     ::std::string __p_category;
+    ::std::string __p_search;
     __is->read(__p_page);
     __is->read(__p_category);
+    __is->read(__p_search);
     __inS.endReadParams();
     ::Rpc::ContentBrowserPrx __p_browser;
-    ::Rpc::ErrorCode __ret = browseContent(__p_page, __p_category, __p_browser, __current);
+    ::Rpc::ErrorCode __ret = browseContent(__p_page, __p_category, __p_search, __p_browser, __current);
     ::IceInternal::BasicStream* __os = __inS.__startWriteParams(::Ice::DefaultFormat);
     __os->write(__p_browser);
     __os->write(__ret);

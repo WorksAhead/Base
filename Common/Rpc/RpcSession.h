@@ -5287,79 +5287,79 @@ private:
     
 public:
 
-    ::Rpc::ErrorCode browseContent(const ::std::string& __p_page, const ::std::string& __p_category, ::Rpc::ContentBrowserPrx& __p_browser)
+    ::Rpc::ErrorCode browseContent(const ::std::string& __p_page, const ::std::string& __p_category, const ::std::string& __p_search, ::Rpc::ContentBrowserPrx& __p_browser)
     {
-        return browseContent(__p_page, __p_category, __p_browser, 0);
+        return browseContent(__p_page, __p_category, __p_search, __p_browser, 0);
     }
-    ::Rpc::ErrorCode browseContent(const ::std::string& __p_page, const ::std::string& __p_category, ::Rpc::ContentBrowserPrx& __p_browser, const ::Ice::Context& __ctx)
+    ::Rpc::ErrorCode browseContent(const ::std::string& __p_page, const ::std::string& __p_category, const ::std::string& __p_search, ::Rpc::ContentBrowserPrx& __p_browser, const ::Ice::Context& __ctx)
     {
-        return browseContent(__p_page, __p_category, __p_browser, &__ctx);
+        return browseContent(__p_page, __p_category, __p_search, __p_browser, &__ctx);
     }
 #ifdef ICE_CPP11
     ::Ice::AsyncResultPtr
-    begin_browseContent(const ::std::string& __p_page, const ::std::string& __p_category, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::ContentBrowserPrx&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    begin_browseContent(const ::std::string& __p_page, const ::std::string& __p_category, const ::std::string& __p_search, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::ContentBrowserPrx&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
     {
-        return __begin_browseContent(__p_page, __p_category, 0, __response, __exception, __sent);
+        return __begin_browseContent(__p_page, __p_category, __p_search, 0, __response, __exception, __sent);
     }
     ::Ice::AsyncResultPtr
-    begin_browseContent(const ::std::string& __p_page, const ::std::string& __p_category, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    begin_browseContent(const ::std::string& __p_page, const ::std::string& __p_category, const ::std::string& __p_search, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
     {
-        return begin_browseContent(__p_page, __p_category, 0, ::Ice::newCallback(__completed, __sent), 0);
+        return begin_browseContent(__p_page, __p_category, __p_search, 0, ::Ice::newCallback(__completed, __sent), 0);
     }
     ::Ice::AsyncResultPtr
-    begin_browseContent(const ::std::string& __p_page, const ::std::string& __p_category, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::ContentBrowserPrx&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    begin_browseContent(const ::std::string& __p_page, const ::std::string& __p_category, const ::std::string& __p_search, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::ContentBrowserPrx&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
     {
-        return __begin_browseContent(__p_page, __p_category, &__ctx, __response, __exception, __sent);
+        return __begin_browseContent(__p_page, __p_category, __p_search, &__ctx, __response, __exception, __sent);
     }
     ::Ice::AsyncResultPtr
-    begin_browseContent(const ::std::string& __p_page, const ::std::string& __p_category, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    begin_browseContent(const ::std::string& __p_page, const ::std::string& __p_category, const ::std::string& __p_search, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
     {
-        return begin_browseContent(__p_page, __p_category, &__ctx, ::Ice::newCallback(__completed, __sent));
+        return begin_browseContent(__p_page, __p_category, __p_search, &__ctx, ::Ice::newCallback(__completed, __sent));
     }
     
 private:
 
-    ::Ice::AsyncResultPtr __begin_browseContent(const ::std::string& __p_page, const ::std::string& __p_category, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::ContentBrowserPrx&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent);
+    ::Ice::AsyncResultPtr __begin_browseContent(const ::std::string& __p_page, const ::std::string& __p_category, const ::std::string& __p_search, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::ContentBrowserPrx&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent);
     
 public:
 #endif
 
-    ::Ice::AsyncResultPtr begin_browseContent(const ::std::string& __p_page, const ::std::string& __p_category)
+    ::Ice::AsyncResultPtr begin_browseContent(const ::std::string& __p_page, const ::std::string& __p_category, const ::std::string& __p_search)
     {
-        return begin_browseContent(__p_page, __p_category, 0, ::IceInternal::__dummyCallback, 0);
+        return begin_browseContent(__p_page, __p_category, __p_search, 0, ::IceInternal::__dummyCallback, 0);
     }
 
-    ::Ice::AsyncResultPtr begin_browseContent(const ::std::string& __p_page, const ::std::string& __p_category, const ::Ice::Context& __ctx)
+    ::Ice::AsyncResultPtr begin_browseContent(const ::std::string& __p_page, const ::std::string& __p_category, const ::std::string& __p_search, const ::Ice::Context& __ctx)
     {
-        return begin_browseContent(__p_page, __p_category, &__ctx, ::IceInternal::__dummyCallback, 0);
+        return begin_browseContent(__p_page, __p_category, __p_search, &__ctx, ::IceInternal::__dummyCallback, 0);
     }
 
-    ::Ice::AsyncResultPtr begin_browseContent(const ::std::string& __p_page, const ::std::string& __p_category, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    ::Ice::AsyncResultPtr begin_browseContent(const ::std::string& __p_page, const ::std::string& __p_category, const ::std::string& __p_search, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
     {
-        return begin_browseContent(__p_page, __p_category, 0, __del, __cookie);
+        return begin_browseContent(__p_page, __p_category, __p_search, 0, __del, __cookie);
     }
 
-    ::Ice::AsyncResultPtr begin_browseContent(const ::std::string& __p_page, const ::std::string& __p_category, const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    ::Ice::AsyncResultPtr begin_browseContent(const ::std::string& __p_page, const ::std::string& __p_category, const ::std::string& __p_search, const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
     {
-        return begin_browseContent(__p_page, __p_category, &__ctx, __del, __cookie);
+        return begin_browseContent(__p_page, __p_category, __p_search, &__ctx, __del, __cookie);
     }
 
-    ::Ice::AsyncResultPtr begin_browseContent(const ::std::string& __p_page, const ::std::string& __p_category, const ::Rpc::Callback_Session_browseContentPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    ::Ice::AsyncResultPtr begin_browseContent(const ::std::string& __p_page, const ::std::string& __p_category, const ::std::string& __p_search, const ::Rpc::Callback_Session_browseContentPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
     {
-        return begin_browseContent(__p_page, __p_category, 0, __del, __cookie);
+        return begin_browseContent(__p_page, __p_category, __p_search, 0, __del, __cookie);
     }
 
-    ::Ice::AsyncResultPtr begin_browseContent(const ::std::string& __p_page, const ::std::string& __p_category, const ::Ice::Context& __ctx, const ::Rpc::Callback_Session_browseContentPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    ::Ice::AsyncResultPtr begin_browseContent(const ::std::string& __p_page, const ::std::string& __p_category, const ::std::string& __p_search, const ::Ice::Context& __ctx, const ::Rpc::Callback_Session_browseContentPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
     {
-        return begin_browseContent(__p_page, __p_category, &__ctx, __del, __cookie);
+        return begin_browseContent(__p_page, __p_category, __p_search, &__ctx, __del, __cookie);
     }
 
     ::Rpc::ErrorCode end_browseContent(::Rpc::ContentBrowserPrx& __p_browser, const ::Ice::AsyncResultPtr&);
     
 private:
 
-    ::Rpc::ErrorCode browseContent(const ::std::string&, const ::std::string&, ::Rpc::ContentBrowserPrx&, const ::Ice::Context*);
-    ::Ice::AsyncResultPtr begin_browseContent(const ::std::string&, const ::std::string&, const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
+    ::Rpc::ErrorCode browseContent(const ::std::string&, const ::std::string&, const ::std::string&, ::Rpc::ContentBrowserPrx&, const ::Ice::Context*);
+    ::Ice::AsyncResultPtr begin_browseContent(const ::std::string&, const ::std::string&, const ::std::string&, const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
     
 public:
 
@@ -7865,7 +7865,7 @@ public:
     virtual ::Rpc::ErrorCode getCategories(::Rpc::StringSeq&, const ::Ice::Current& = ::Ice::Current()) = 0;
     ::Ice::DispatchStatus ___getCategories(::IceInternal::Incoming&, const ::Ice::Current&);
 
-    virtual ::Rpc::ErrorCode browseContent(const ::std::string&, const ::std::string&, ::Rpc::ContentBrowserPrx&, const ::Ice::Current& = ::Ice::Current()) = 0;
+    virtual ::Rpc::ErrorCode browseContent(const ::std::string&, const ::std::string&, const ::std::string&, ::Rpc::ContentBrowserPrx&, const ::Ice::Current& = ::Ice::Current()) = 0;
     ::Ice::DispatchStatus ___browseContent(::IceInternal::Incoming&, const ::Ice::Current&);
 
     virtual ::Rpc::ErrorCode getContentInfo(const ::std::string&, ::Rpc::ContentInfo&, const ::Ice::Current& = ::Ice::Current()) = 0;

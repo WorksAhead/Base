@@ -59,11 +59,13 @@ private Q_SLOTS:
 	void onCopyHttpUrl();
 	void onSmallIcon();
 	void onLargeIcon();
+	void onSearch();
 
 private:
-	void openBrowser(const QString& category = "");
+	void openBrowser(const QString& category = "", const QString& search = "");
 	void clearOldAndForwardHistory();
 	void restore(int);
+	QString currentCategory();
 
 private:
 	ContextPtr context_;

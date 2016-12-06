@@ -41,6 +41,8 @@ PageContentWidget::PageContentWidget(ContextPtr context, const QString& name, QW
 	QObject::connect(ui_.smallIconButton, &QPushButton::clicked, this, &PageContentWidget::onSmallIcon);
 	QObject::connect(ui_.largeIconButton, &QPushButton::clicked, this, &PageContentWidget::onLargeIcon);
 
+	QObject::connect(ui_.searchEdit, &QLineEdit::returnPressed, this, &PageContentWidget::onSearch);
+
 	QObject::connect(ui_.filterWidget->labelSelectorWidget(), &LabelSelectorWidget::clicked, this, &PageContentWidget::onCategoryChanged);
 
 	coverSize_ = 1;
@@ -66,7 +68,9 @@ bool PageContentWidget::openUrl(const QString& url)
 			else {
 				std::string category;
 				args.lookupValue(category, "category");
-				openBrowser(category.c_str());
+				std::string search;
+				args.lookupValue(search, "search");
+				openBrowser(category.c_str(), search.c_str());
 				return true;
 			}
 		}
@@ -130,18 +134,7 @@ void PageContentWidget::paintEvent(QPaintEvent* e)
 
 void PageContentWidget::onCategoryChanged()
 {
-	QStringList list = ui_.filterWidget->labelSelectorWidget()->getSelectedLabels();
-
-	QString category;
-
-	for (const QString& s : list) {
-		if (!category.isEmpty()) {
-			category += ",";
-		}
-		category += s;
-	}
-
-	openBrowser(category);
+	openBrowser(currentCategory());
 }
 
 void PageContentWidget::onContentClicked(const QString& id)
@@ -237,15 +230,40 @@ void PageContentWidget::onLargeIcon()
 	}
 }
 
-void PageContentWidget::openBrowser(const QString& category)
+void PageContentWidget::onSearch()
+{
+	ui_.searchEdit->clearFocus();
+
+	if (ui_.searchEdit->text().isEmpty()) {
+		return;
+	}
+
+	openBrowser(currentCategory(), ui_.searchEdit->text());
+
+	ui_.searchEdit->setText("");
+}
+
+void PageContentWidget::openBrowser(const QString& category, const QString& search)
 {
 	clearOldAndForwardHistory();
 
-	PageContentBrowserWidget* w = new PageContentBrowserWidget(context_, name_, category);
+	PageContentBrowserWidget* w = new PageContentBrowserWidget(context_, name_, category, search);
 
 	w->setCoverSize(coverSize_);
 
-	QString url = URLQuery("base://content/").arg("page", name_.toStdString()).arg("category", category.toStdString()).str().c_str();
+	URLQuery q("base://content/");
+
+	q.arg("page", name_.toStdString());
+
+	if (!category.isEmpty()) {
+		q.arg("category", category.toStdString());
+	}
+
+	if (!search.isEmpty()) {
+		q.arg("search", search.toStdString());
+	}
+
+	QString url = q.str().c_str();
 	w->setProperty("cached_url", url);
 
 	ui_.stackedWidget->addWidget(w);
@@ -303,5 +321,21 @@ void PageContentWidget::restore(int index)
 	else if (qobject_cast<PageContentContentWidget*>(w)) {
 		ui_.filterWidget->setVisible(false);
 	}
+}
+
+QString PageContentWidget::currentCategory()
+{
+	QStringList list = ui_.filterWidget->labelSelectorWidget()->getSelectedLabels();
+
+	QString category;
+
+	for (const QString& s : list) {
+		if (!category.isEmpty()) {
+			category += ",";
+		}
+		category += s;
+	}
+
+	return category;
 }
 

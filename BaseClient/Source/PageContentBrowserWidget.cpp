@@ -13,8 +13,8 @@
 #define ITEMS_FIRST_REQUEST 60
 #define ITEMS_PER_REQUEST 20
 
-PageContentBrowserWidget::PageContentBrowserWidget(ContextPtr context, const QString& name, const QString& category, QWidget* parent)
-	: context_(context), name_(name), category_(category), QWidget(parent)
+PageContentBrowserWidget::PageContentBrowserWidget(ContextPtr context, const QString& name, const QString& category, const QString& search, QWidget* parent)
+	: context_(context), name_(name), category_(category), search_(search), QWidget(parent)
 {
 	contentsLayout_ = new FlowLayout(0, 12, 12);
 
@@ -60,10 +60,10 @@ void PageContentBrowserWidget::refresh()
 	scrollArea_->verticalScrollBar()->setValue(0);
 
 	if (name_.endsWith('*')) {
-		context_->session->browseContent("", category_.toStdString(), browser_);
+		context_->session->browseContent("", category_.toStdString(), search_.toStdString(), browser_);
 	}
 	else {
-		context_->session->browseContent(name_.toStdString(), category_.toStdString(), browser_);
+		context_->session->browseContent(name_.toStdString(), category_.toStdString(), search_.toStdString(), browser_);
 	}
 
 	if (browser_) {

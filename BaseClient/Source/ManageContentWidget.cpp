@@ -68,7 +68,7 @@ void ManageContentWidget::onShowAll()
 void ManageContentWidget::onRefresh()
 {
 	ui_.contentList->clear();
-	context_->session->browseContent("", "", browser_);
+	context_->session->browseContent("", "", "", browser_);
 	if (browser_) {
 		showMore(ITEMS_PER_REQUEST);
 	}

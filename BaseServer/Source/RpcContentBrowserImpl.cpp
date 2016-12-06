@@ -12,7 +12,7 @@ RpcContentBrowserImpl::~RpcContentBrowserImpl()
 {
 }
 
-Rpc::ErrorCode RpcContentBrowserImpl::init(const std::string& page, const std::string& category)
+Rpc::ErrorCode RpcContentBrowserImpl::init(const std::string& page, const std::string& category, const std::string& search)
 {
 	std::ostringstream oss;
 	oss << "SELECT Id, Title FROM Contents";
@@ -46,6 +46,14 @@ Rpc::ErrorCode RpcContentBrowserImpl::init(const std::string& page, const std::s
 		for (auto& p : groupedExp) {
 			oss << " AND (" + p.second + ")";
 		}
+	}
+
+	if (!search.empty())
+	{
+		oss << " AND (";
+		oss << "Title LIKE " << sqlText("%" + search + "%");
+		oss << " OR Desc LIKE " << sqlText("%" + search + "%");
+		oss << ")";
 	}
 
 	oss << " ORDER BY UpTime DESC";

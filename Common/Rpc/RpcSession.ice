@@ -159,7 +159,7 @@ module Rpc
 		ErrorCode setCategories(StringSeq categories);
 		ErrorCode getCategories(out StringSeq categories);
 
-		ErrorCode browseContent(string page, string category, out ContentBrowser* browser);
+		ErrorCode browseContent(string page, string category, string search, out ContentBrowser* browser);
 		ErrorCode getContentInfo(string id, out ContentInfo info);
 		ErrorCode downloadContentImage(string id, int index, out Downloader* downloader);
 		ErrorCode downloadContent(string id, out Downloader* downloader);

@@ -21,7 +21,7 @@ private:
 	Q_OBJECT
 
 public:
-	PageContentBrowserWidget(ContextPtr context, const QString& name, const QString& category, QWidget* parent = 0);
+	PageContentBrowserWidget(ContextPtr context, const QString& name, const QString& category, const QString& search, QWidget* parent = 0);
 	~PageContentBrowserWidget();
 
 public:
@@ -49,6 +49,7 @@ private:
 	ContextPtr context_;
 	QString name_;
 	QString category_;
+	QString search_;
 	QScrollArea* scrollArea_;
 	FlowLayout* contentsLayout_;
 

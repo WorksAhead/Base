@@ -27,7 +27,7 @@ public:
 	virtual Rpc::ErrorCode setCategories(const Rpc::StringSeq&, const Ice::Current&);
 	virtual Rpc::ErrorCode getCategories(Rpc::StringSeq&, const Ice::Current&);
 
-	virtual Rpc::ErrorCode browseContent(const std::string&, const std::string&, Rpc::ContentBrowserPrx&, const Ice::Current&);
+	virtual Rpc::ErrorCode browseContent(const std::string&, const std::string&, const std::string&, Rpc::ContentBrowserPrx&, const Ice::Current&);
 	virtual Rpc::ErrorCode getContentInfo(const std::string&, Rpc::ContentInfo&, const Ice::Current&);
 	virtual Rpc::ErrorCode downloadContentImage(const std::string&, Ice::Int, Rpc::DownloaderPrx&, const Ice::Current&);
 	virtual Rpc::ErrorCode downloadContent(const std::string&, Rpc::DownloaderPrx&, const Ice::Current&);

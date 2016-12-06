@@ -116,14 +116,14 @@ Rpc::ErrorCode RpcSessionImpl::getCategories(Rpc::StringSeq& categories, const I
 	return Rpc::ec_success;
 }
 
-Rpc::ErrorCode RpcSessionImpl::browseContent(const std::string& page, const std::string& category, Rpc::ContentBrowserPrx& browserPrx, const Ice::Current& c)
+Rpc::ErrorCode RpcSessionImpl::browseContent(const std::string& page, const std::string& category, const std::string& search, Rpc::ContentBrowserPrx& browserPrx, const Ice::Current& c)
 {
 	boost::recursive_mutex::scoped_lock lock(sync_);
 	checkIsDestroyed();
 
 	RpcContentBrowserImplPtr browser = new RpcContentBrowserImpl(context_->center());
 
-	Rpc::ErrorCode ec = browser->init(page, category);
+	Rpc::ErrorCode ec = browser->init(page, category, search);
 	if (ec != Rpc::ec_success) {
 		return ec;
 	}
