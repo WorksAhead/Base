@@ -6,6 +6,9 @@
 
 #include "RpcStart.h"
 
+#include <VLCQtCore/Common.h>
+#include <VLCQtCore/Instance.h>
+
 #include <QApplication>
 #include <QSharedMemory>
 #include <QStyleFactory>
@@ -32,7 +35,7 @@
 #include <windows.h>
 #endif
 
-#define BASE_CURRENT_VERSION "1.0.0.23"
+#define BASE_CURRENT_VERSION "1.0.0.24"
 
 namespace fs = boost::filesystem;
 
@@ -246,6 +249,12 @@ int main(int argc, char* argv[])
 	};
 
 	try {
+		QSharedPointer<VlcInstance> vlcInstance(new VlcInstance(VlcCommon::args(), 0));
+		if (!vlcInstance->core()) {
+			QMessageBox::warning(0, "Base", "Create VLC instance failed.");
+			return 0;
+		}
+
 		ic = Ice::initialize(Ice::StringSeq{"--Ice.Config=" + fromLocal8bit((workDir / "BaseClient.cfg").string())});
 
 		Rpc::StartPrx startPrx = Rpc::StartPrx::checkedCast(ic->propertyToProxy("Start"));

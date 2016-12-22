@@ -17,7 +17,7 @@
       <number>20</number>
      </property>
      <item>
-      <widget class="QWidget" name="screenshotWidget" native="true">
+      <widget class="QWidget" name="viewWidget" native="true">
        <layout class="QVBoxLayout" name="verticalLayout">
         <property name="leftMargin">
          <number>0</number>
@@ -32,14 +32,7 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="ImageViewerWidget" name="screenshotViewer" native="true">
-          <property name="minimumSize">
-           <size>
-            <width>320</width>
-            <height>180</height>
-           </size>
-          </property>
-         </widget>
+         <widget class="StackedWidget" name="stackedWidget"/>
         </item>
         <item>
          <widget class="QScrollArea" name="thumbnailScrollArea">
@@ -64,7 +57,7 @@
              <x>0</x>
              <y>0</y>
              <width>522</width>
-             <height>122</height>
+             <height>141</height>
             </rect>
            </property>
           </widget>
@@ -203,9 +196,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>ImageViewerWidget</class>
-   <extends>QWidget</extends>
-   <header>ImageViewerWidget.h</header>
+   <class>StackedWidget</class>
+   <extends>QStackedWidget</extends>
+   <header>StackedWidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

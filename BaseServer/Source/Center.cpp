@@ -64,7 +64,7 @@ Center::Center()
 	db_->exec("CREATE TABLE IF NOT EXISTS Contents ("
 		"Id TEXT, ParentId TEXT, "
 		"Title TEXT, Page TEXT, Category TEXT, EngineName TEXT, "
-		"EngineVersion TEXT, Startup TEXT, ImageCount INT, Desc TEXT, "
+		"EngineVersion TEXT, Startup TEXT, ImageCount INT, Video TEXT, Desc TEXT, "
 		"User TEXT, UpTime DATETIME, State TEXT)");
 
 	db_->exec("CREATE TABLE IF NOT EXISTS Extras ("
@@ -297,6 +297,7 @@ bool Center::addContent(const Form& form, const std::string& id)
 	oss << sqlText(form.at("EngineVersion")) << ", ";
 	oss << sqlText(form.at("Startup")) << ", ";
 	oss << sqlText(form.at("ImageCount")) << ", ";
+	oss << sqlText(form.at("Video")) << ", ";
 	oss << sqlText(form.at("Desc")) << ", ";
 	oss << sqlText(form.at("User")) << ", ";
 	oss << sqlText(getCurrentTimeString()) << ", ";
@@ -322,6 +323,7 @@ bool Center::updateContent(const Form& form, const std::string& id)
 	oss << "EngineName=" << sqlText(form.at("EngineName")) << ", ";
 	oss << "EngineVersion=" << sqlText(form.at("EngineVersion")) << ", ";
 	oss << "Startup=" << sqlText(form.at("Startup")) << ", ";
+	oss << "Video=" << sqlText(form.at("Video")) << ", ";
 	oss << "Desc=" << sqlText(form.at("Desc"));
 	oss << " WHERE Id=" << sqlText(id);
 
@@ -353,6 +355,7 @@ bool Center::getContent(Form& form, const std::string& id)
 	form["EngineVersion"] = s.getColumn("EngineVersion").getText();
 	form["Startup"] = s.getColumn("Startup").getText();
 	form["ImageCount"] = s.getColumn("ImageCount").getText();
+	form["Video"] = s.getColumn("Video").getText();
 	form["Desc"] = s.getColumn("Desc").getText();
 	form["User"] = s.getColumn("User").getText();
 	form["UpTime"] = s.getColumn("UpTime").getText();

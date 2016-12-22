@@ -8,6 +8,7 @@
 
 #include <list>
 #include <set>
+#include <limits>
 #include <assert.h>
 
 namespace fs = boost::filesystem;
@@ -227,6 +228,20 @@ Rpc::ErrorCode RpcContentSubmitterImpl::setParentId(const std::string& uid, cons
 	return Rpc::ec_success;
 }
 
+Rpc::ErrorCode RpcContentSubmitterImpl::setVideo(const std::string& video, const Ice::Current&)
+{
+	boost::recursive_mutex::scoped_lock lock(sync_);
+	checkIsDestroyed();
+
+	if (finished_ || cancelled_) {
+		return Rpc::ec_invalid_operation;
+	}
+
+	form_["Video"] = video;
+
+	return Rpc::ec_success;
+}
+
 Rpc::ErrorCode RpcContentSubmitterImpl::setDescription(const std::string& desc, const Ice::Current&)
 {
 	boost::recursive_mutex::scoped_lock lock(sync_);
@@ -254,7 +269,7 @@ Rpc::ErrorCode RpcContentSubmitterImpl::uploadImage(Ice::Int index, Rpc::Uploade
 		return Rpc::ec_invalid_operation;
 	}
 
-	if (index < 0 || index > 5) {
+	if (index < 0) {
 		return Rpc::ec_invalid_operation;
 	}
 
@@ -366,7 +381,7 @@ Rpc::ErrorCode RpcContentSubmitterImpl::finish(const Ice::Current&)
 	{
 		int imageCount = 0;
 
-		for (int i = 0; i <= 5; ++i) {
+		for (int i = 0; i <= std::numeric_limits<int>::max(); ++i) {
 			if (imageUploaders_.count(i) && imageUploaders_[i].second && imageUploaders_[i].second->isFinished()) {
 				++imageCount;
 			}
@@ -388,11 +403,13 @@ Rpc::ErrorCode RpcContentSubmitterImpl::finish(const Ice::Current&)
 		form_["User"] = context_->user();
 
 		setEmptyIfNotExist(form_, "ParentId");
+		setEmptyIfNotExist(form_, "Video");
 		context_->center()->addContent(form_, id_);
 	}
 	else
 	{
 		setEmptyIfNotExist(form_, "ParentId");
+		setEmptyIfNotExist(form_, "Video");
 		context_->center()->updateContent(form_, id_);
 	}
 

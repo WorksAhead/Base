@@ -9,12 +9,12 @@
 #define STATE_BUTTON_RESTORE 2
 #define STATE_BUTTON_CLOSE 3
 
-#define SIZEWINDOWFRAME 9
+#define SIZEWINDOWFRAME 4
 
 Window::Window()
 {
 	setWindowFlags(Qt::FramelessWindowHint|Qt::Window);
-	setAttribute(Qt::WA_TranslucentBackground);
+	//setAttribute(Qt::WA_TranslucentBackground);
 	setAttribute(Qt::WA_Hover);
 
 	iconWidget_ = new QLabel;

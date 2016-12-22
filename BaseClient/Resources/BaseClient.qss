@@ -334,6 +334,11 @@ QLabel#Label[selected="true"] {
 	border: 1px solid rgb(246, 96, 0);
 }
 
+QLabel#Thumbnail {
+	color: rgb(80, 80, 80);
+	background-color: rgb(20, 20, 20);
+}
+
 QLineEdit, QTextEdit, QPlainTextEdit {
 	background: rgb(20, 20, 20);
 	border: 1px solid rgb(50, 50, 50);
@@ -398,6 +403,26 @@ QProgressBar {
 
 QProgressBar::chunk {
     background-color: rgb(80, 80, 80);
+}
+
+ProgressBar {
+	color: rgb(80, 80, 80);
+	background-color: rgb(30, 30, 30);
+}
+
+QSlider::groove:horizontal#volumeSlider {
+	margin: 0;
+    border: 0;
+    height: 8px;
+    background-color: rgb(30, 30, 30);
+}
+
+QSlider::handle:horizontal#volumeSlider {
+    background-color: rgb(60, 60, 60);
+    border: 1px solid rgb(80, 80, 80);
+    width: 8px;
+    margin: -2px 0;
+    border-radius: 2px;
 }
 
 QTreeView,

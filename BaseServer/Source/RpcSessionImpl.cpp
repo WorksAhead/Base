@@ -164,6 +164,7 @@ Rpc::ErrorCode RpcSessionImpl::getContentInfo(const std::string& id, Rpc::Conten
 	info.engineVersion = form.at("EngineVersion");
 	info.startup = form.at("Startup");
 	info.imageCount = std::stoi(form.at("ImageCount"));
+	info.video = form.at("Video");
 	info.desc = form.at("Desc");
 	info.user = form.at("User");
 	info.upTime = form.at("UpTime");

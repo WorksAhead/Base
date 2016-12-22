@@ -15,7 +15,7 @@
 ManageContentWidget::ManageContentWidget(ContextPtr context, QWidget* parent) : QWidget(parent), context_(context)
 {
 	ui_.setupUi(this);
-	ui_.contentList->header()->setSortIndicator(11, Qt::DescendingOrder);
+	ui_.contentList->header()->setSortIndicator(12, Qt::DescendingOrder);
 
 	QObject::connect(ui_.showMoreButton, &QPushButton::clicked, this, &ManageContentWidget::onShowMore);
 	QObject::connect(ui_.showAllButton, &QPushButton::clicked, this, &ManageContentWidget::onShowAll);
@@ -117,6 +117,7 @@ void ManageContentWidget::onSubmit()
 		d.setEngineVersion(ci.engineVersion.c_str());
 		d.setCommand(command.c_str());
 		d.setWorkingDir(workDir.c_str());
+		d.setVideo(ci.video.c_str());
 		d.setDesc(ci.desc.c_str());
 	}
 
@@ -157,6 +158,7 @@ void ManageContentWidget::onEdit()
 	d.setEngineVersion(ci.engineVersion.c_str());
 	d.setCommand(command.c_str());
 	d.setWorkingDir(workDir.c_str());
+	d.setVideo(ci.video.c_str());
 	d.setDesc(ci.desc.c_str());
 
 	d.exec();
@@ -217,6 +219,7 @@ void ManageContentWidget::showMore(int count)
 			getline(stream, command);
 			getline(stream, workDir);
 
+			boost::replace_all(ci.video, "\n", "\r");
 			boost::replace_all(ci.desc, "\n", "\r");
 
 			QStringList list;
@@ -229,6 +232,7 @@ void ManageContentWidget::showMore(int count)
 			list << ci.engineVersion.c_str();
 			list << command.c_str();
 			list << workDir.c_str();
+			list << ci.video.c_str();
 			list << ci.desc.c_str();
 			list << ci.user.c_str();
 			list << ci.upTime.c_str();

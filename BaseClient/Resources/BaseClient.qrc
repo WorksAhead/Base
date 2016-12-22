@@ -20,5 +20,9 @@
         <file>Icons/CategoryFilterExtend.png</file>
         <file>Icons/BrowseLargeIcon.png</file>
         <file>Icons/BrowseSmallIcon.png</file>
+        <file>Icons/PlayPause.png</file>
+        <file>Icons/Stop.png</file>
+        <file>Icons/MuteOn.png</file>
+        <file>Icons/MuteOff.png</file>
     </qresource>
 </RCC>

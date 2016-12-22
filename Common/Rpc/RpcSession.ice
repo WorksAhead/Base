@@ -25,6 +25,7 @@ module Rpc
 		string engineVersion;
 		string startup;
 		int imageCount;
+		string video;
 		string desc;
 		string user;
 		string upTime;
@@ -96,6 +97,7 @@ module Rpc
 		ErrorCode setEngine(string name, string version);
 		ErrorCode setStartup(string startup);
 		ErrorCode setParentId(string id);
+		ErrorCode setVideo(string video);
 		ErrorCode setDescription(string description);
 		ErrorCode uploadImage(int index, out Uploader* uploader);
 		ErrorCode uploadContent(out Uploader* uploader);

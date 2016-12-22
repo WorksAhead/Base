@@ -90,6 +90,11 @@
      </column>
      <column>
       <property name="text">
+       <string>Video</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
        <string>Desc</string>
       </property>
      </column>

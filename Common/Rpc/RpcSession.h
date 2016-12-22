@@ -247,6 +247,7 @@ struct ContentInfo
     ::std::string engineVersion;
     ::std::string startup;
     ::Ice::Int imageCount;
+    ::std::string video;
     ::std::string desc;
     ::std::string user;
     ::std::string upTime;
@@ -291,6 +292,10 @@ struct ContentInfo
             return false;
         }
         if(imageCount != __rhs.imageCount)
+        {
+            return false;
+        }
+        if(video != __rhs.video)
         {
             return false;
         }
@@ -388,6 +393,14 @@ struct ContentInfo
             return true;
         }
         else if(__rhs.imageCount < imageCount)
+        {
+            return false;
+        }
+        if(video < __rhs.video)
+        {
+            return true;
+        }
+        else if(__rhs.video < video)
         {
             return false;
         }
@@ -919,7 +932,7 @@ template<>
 struct StreamableTraits< ::Rpc::ContentInfo>
 {
     static const StreamHelperCategory helper = StreamHelperCategoryStruct;
-    static const int minWireSize = 16;
+    static const int minWireSize = 17;
     static const bool fixedLength = false;
 };
 
@@ -937,6 +950,7 @@ struct StreamWriter< ::Rpc::ContentInfo, S>
         __os->write(v.engineVersion);
         __os->write(v.startup);
         __os->write(v.imageCount);
+        __os->write(v.video);
         __os->write(v.desc);
         __os->write(v.user);
         __os->write(v.upTime);
@@ -958,6 +972,7 @@ struct StreamReader< ::Rpc::ContentInfo, S>
         __is->read(v.engineVersion);
         __is->read(v.startup);
         __is->read(v.imageCount);
+        __is->read(v.video);
         __is->read(v.desc);
         __is->read(v.user);
         __is->read(v.upTime);
@@ -1137,6 +1152,9 @@ typedef ::IceUtil::Handle< Callback_ContentSubmitter_setStartup_Base> Callback_C
 
 class Callback_ContentSubmitter_setParentId_Base : virtual public ::IceInternal::CallbackBase { };
 typedef ::IceUtil::Handle< Callback_ContentSubmitter_setParentId_Base> Callback_ContentSubmitter_setParentIdPtr;
+
+class Callback_ContentSubmitter_setVideo_Base : virtual public ::IceInternal::CallbackBase { };
+typedef ::IceUtil::Handle< Callback_ContentSubmitter_setVideo_Base> Callback_ContentSubmitter_setVideoPtr;
 
 class Callback_ContentSubmitter_setDescription_Base : virtual public ::IceInternal::CallbackBase { };
 typedef ::IceUtil::Handle< Callback_ContentSubmitter_setDescription_Base> Callback_ContentSubmitter_setDescriptionPtr;
@@ -2535,6 +2553,82 @@ private:
 
     ::Rpc::ErrorCode setParentId(const ::std::string&, const ::Ice::Context*);
     ::Ice::AsyncResultPtr begin_setParentId(const ::std::string&, const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
+    
+public:
+
+    ::Rpc::ErrorCode setVideo(const ::std::string& __p_video)
+    {
+        return setVideo(__p_video, 0);
+    }
+    ::Rpc::ErrorCode setVideo(const ::std::string& __p_video, const ::Ice::Context& __ctx)
+    {
+        return setVideo(__p_video, &__ctx);
+    }
+#ifdef ICE_CPP11
+    ::Ice::AsyncResultPtr
+    begin_setVideo(const ::std::string& __p_video, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return __begin_setVideo(__p_video, 0, __response, __exception, __sent);
+    }
+    ::Ice::AsyncResultPtr
+    begin_setVideo(const ::std::string& __p_video, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_setVideo(__p_video, 0, ::Ice::newCallback(__completed, __sent), 0);
+    }
+    ::Ice::AsyncResultPtr
+    begin_setVideo(const ::std::string& __p_video, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return __begin_setVideo(__p_video, &__ctx, __response, __exception, __sent);
+    }
+    ::Ice::AsyncResultPtr
+    begin_setVideo(const ::std::string& __p_video, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_setVideo(__p_video, &__ctx, ::Ice::newCallback(__completed, __sent));
+    }
+    
+private:
+
+    ::Ice::AsyncResultPtr __begin_setVideo(const ::std::string& __p_video, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent);
+    
+public:
+#endif
+
+    ::Ice::AsyncResultPtr begin_setVideo(const ::std::string& __p_video)
+    {
+        return begin_setVideo(__p_video, 0, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_setVideo(const ::std::string& __p_video, const ::Ice::Context& __ctx)
+    {
+        return begin_setVideo(__p_video, &__ctx, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_setVideo(const ::std::string& __p_video, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_setVideo(__p_video, 0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_setVideo(const ::std::string& __p_video, const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_setVideo(__p_video, &__ctx, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_setVideo(const ::std::string& __p_video, const ::Rpc::Callback_ContentSubmitter_setVideoPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_setVideo(__p_video, 0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_setVideo(const ::std::string& __p_video, const ::Ice::Context& __ctx, const ::Rpc::Callback_ContentSubmitter_setVideoPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_setVideo(__p_video, &__ctx, __del, __cookie);
+    }
+
+    ::Rpc::ErrorCode end_setVideo(const ::Ice::AsyncResultPtr&);
+    
+private:
+
+    ::Rpc::ErrorCode setVideo(const ::std::string&, const ::Ice::Context*);
+    ::Ice::AsyncResultPtr begin_setVideo(const ::std::string&, const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
     
 public:
 
@@ -7623,6 +7717,9 @@ public:
     virtual ::Rpc::ErrorCode setParentId(const ::std::string&, const ::Ice::Current& = ::Ice::Current()) = 0;
     ::Ice::DispatchStatus ___setParentId(::IceInternal::Incoming&, const ::Ice::Current&);
 
+    virtual ::Rpc::ErrorCode setVideo(const ::std::string&, const ::Ice::Current& = ::Ice::Current()) = 0;
+    ::Ice::DispatchStatus ___setVideo(::IceInternal::Incoming&, const ::Ice::Current&);
+
     virtual ::Rpc::ErrorCode setDescription(const ::std::string&, const ::Ice::Current& = ::Ice::Current()) = 0;
     ::Ice::DispatchStatus ___setDescription(::IceInternal::Incoming&, const ::Ice::Current&);
 
@@ -9016,6 +9113,110 @@ template<class T, typename CT> Callback_ContentSubmitter_setParentIdPtr
 newCallback_ContentSubmitter_setParentId(T* instance, void (T::*cb)(::Rpc::ErrorCode, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
 {
     return new Callback_ContentSubmitter_setParentId<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T>
+class CallbackNC_ContentSubmitter_setVideo : public Callback_ContentSubmitter_setVideo_Base, public ::IceInternal::TwowayCallbackNC<T>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception&);
+    typedef void (T::*Sent)(bool);
+    typedef void (T::*Response)(::Rpc::ErrorCode);
+
+    CallbackNC_ContentSubmitter_setVideo(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::TwowayCallbackNC<T>(obj, cb != 0, excb, sentcb), _response(cb)
+    {
+    }
+
+    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+    {
+        ::Rpc::ContentSubmitterPrx __proxy = ::Rpc::ContentSubmitterPrx::uncheckedCast(__result->getProxy());
+        ::Rpc::ErrorCode __ret;
+        try
+        {
+            __ret = __proxy->end_setVideo(__result);
+        }
+        catch(const ::Ice::Exception& ex)
+        {
+            ::IceInternal::CallbackNC<T>::exception(__result, ex);
+            return;
+        }
+        if(_response)
+        {
+            (::IceInternal::CallbackNC<T>::_callback.get()->*_response)(__ret);
+        }
+    }
+
+    private:
+
+    Response _response;
+};
+
+template<class T> Callback_ContentSubmitter_setVideoPtr
+newCallback_ContentSubmitter_setVideo(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_ContentSubmitter_setVideo<T>(instance, cb, excb, sentcb);
+}
+
+template<class T> Callback_ContentSubmitter_setVideoPtr
+newCallback_ContentSubmitter_setVideo(T* instance, void (T::*cb)(::Rpc::ErrorCode), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_ContentSubmitter_setVideo<T>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT>
+class Callback_ContentSubmitter_setVideo : public Callback_ContentSubmitter_setVideo_Base, public ::IceInternal::TwowayCallback<T, CT>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception& , const CT&);
+    typedef void (T::*Sent)(bool , const CT&);
+    typedef void (T::*Response)(::Rpc::ErrorCode, const CT&);
+
+    Callback_ContentSubmitter_setVideo(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::TwowayCallback<T, CT>(obj, cb != 0, excb, sentcb), _response(cb)
+    {
+    }
+
+    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+    {
+        ::Rpc::ContentSubmitterPrx __proxy = ::Rpc::ContentSubmitterPrx::uncheckedCast(__result->getProxy());
+        ::Rpc::ErrorCode __ret;
+        try
+        {
+            __ret = __proxy->end_setVideo(__result);
+        }
+        catch(const ::Ice::Exception& ex)
+        {
+            ::IceInternal::Callback<T, CT>::exception(__result, ex);
+            return;
+        }
+        if(_response)
+        {
+            (::IceInternal::Callback<T, CT>::_callback.get()->*_response)(__ret, CT::dynamicCast(__result->getCookie()));
+        }
+    }
+
+    private:
+
+    Response _response;
+};
+
+template<class T, typename CT> Callback_ContentSubmitter_setVideoPtr
+newCallback_ContentSubmitter_setVideo(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_ContentSubmitter_setVideo<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT> Callback_ContentSubmitter_setVideoPtr
+newCallback_ContentSubmitter_setVideo(T* instance, void (T::*cb)(::Rpc::ErrorCode, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_ContentSubmitter_setVideo<T, CT>(instance, cb, excb, sentcb);
 }
 
 template<class T>

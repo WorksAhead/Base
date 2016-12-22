@@ -21,6 +21,8 @@ public:
 	~PageContentContentWidget();
 
 	void refresh();
+	void cancel();
+	void restore();
 
 	const QString& contentId() const;
 
@@ -35,8 +37,9 @@ private Q_SLOTS:
 	void onDownload();
 
 private:
-	void setImageCount(int count);
-	void setImage(int index, const QPixmap&);
+	void initView();
+	void presentImage(const QPixmap&);
+	void presentVideo(const QString&);
 
 private:
 	ContextPtr context_;
@@ -47,8 +50,10 @@ private:
 	QScrollArea* scrollArea_;
 	QBoxLayout* thumbnailLayout_;
 	QWidget* thumbnailWidget_;
-	
+
 	QPair<QString, QString> supportedEngineVersion_;
+
+	QVector<QString> videos_;
 	QVector<QPixmap> screenshots_;
 
 	bool firstShow_;

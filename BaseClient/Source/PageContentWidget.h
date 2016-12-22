@@ -64,6 +64,7 @@ private Q_SLOTS:
 private:
 	void openBrowser(const QString& category = "", const QString& search = "");
 	void clearOldAndForwardHistory();
+	void cancel(int);
 	void restore(int);
 	QString currentCategory();
 

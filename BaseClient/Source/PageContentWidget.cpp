@@ -89,6 +89,8 @@ bool PageContentWidget::openContent(const QString& id)
 
 	if (url != cachedUrl)
 	{
+		cancel(ui_.stackedWidget->currentIndex());
+
 		PageContentContentWidget* w = new PageContentContentWidget(context_, id);
 		w->setProperty("cached_url", url);
 
@@ -146,6 +148,7 @@ void PageContentWidget::onBack()
 {
 	int index = ui_.stackedWidget->currentIndex();
 	if (index > 0) {
+		cancel(index);
 		restore(index - 1);
 	}
 }
@@ -154,6 +157,7 @@ void PageContentWidget::onForward()
 {
 	int index = ui_.stackedWidget->currentIndex();
 	if (index + 1 < ui_.stackedWidget->count()) {
+		cancel(index);
 		restore(index + 1);
 	}
 }
@@ -241,6 +245,8 @@ void PageContentWidget::openBrowser(const QString& category, const QString& sear
 {
 	clearOldAndForwardHistory();
 
+	cancel(ui_.stackedWidget->currentIndex());
+
 	PageContentBrowserWidget* w = new PageContentBrowserWidget(context_, name_, category, search);
 
 	w->setCoverSize(coverSize_);
@@ -298,6 +304,17 @@ void PageContentWidget::clearOldAndForwardHistory()
 	}
 }
 
+void PageContentWidget::cancel(int index)
+{
+	QWidget* w = ui_.stackedWidget->widget(index);
+
+	if (qobject_cast<PageContentBrowserWidget*>(w)) {
+	}
+	else if (qobject_cast<PageContentContentWidget*>(w)) {
+		qobject_cast<PageContentContentWidget*>(w)->cancel();
+	}
+}
+
 void PageContentWidget::restore(int index)
 {
 	QWidget* w = ui_.stackedWidget->widget(index);
@@ -331,6 +348,7 @@ void PageContentWidget::restore(int index)
 	}
 	else if (qobject_cast<PageContentContentWidget*>(w)) {
 		ui_.filterWidget->setVisible(false);
+		qobject_cast<PageContentContentWidget*>(w)->restore();
 	}
 }
 

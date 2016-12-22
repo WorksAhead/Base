@@ -3,6 +3,8 @@
 #include "ASyncInstallEngineTask.h"
 #include "ASyncDownloadContentTask.h"
 #include "ContentImageLoader.h"
+#include "VideoPlayerWidget.h"
+#include "ImageViewerWidget.h"
 
 #include <QPainter>
 #include <QMouseEvent>
@@ -26,7 +28,7 @@ PageContentContentWidget::PageContentContentWidget(ContextPtr context, const QSt
 	QWidget* w = new QWidget;
 	ui_.setupUi(w);
 
-	ui_.screenshotViewer->setAspectRatio(16.0 / 9.0);
+	ui_.stackedWidget->setAspectRatio(16.0 / 9.0);
 
 	thumbnailLayout_ = new QBoxLayout(QBoxLayout::LeftToRight);
 	thumbnailLayout_->setMargin(2);
@@ -67,7 +69,6 @@ void PageContentContentWidget::refresh()
 	if (ec != Rpc::ec_success) {
 		ui_.titleLabel->setText("Content not found");
 		ui_.summaryLabel->setVisible(false);
-		ui_.screenshotWidget->setVisible(false);
 		ui_.downloadButton->setVisible(false);
 		ui_.descriptionLabel->setVisible(false);
 		return;
@@ -93,11 +94,51 @@ void PageContentContentWidget::refresh()
 		supportedEngineVersion_.first = ci.engineName.c_str();
 		supportedEngineVersion_.second = versions[0].c_str();
 	}
-	
-	setImageCount(ci.imageCount - 1);
+
+	videos_.clear();
+
+	if (!ci.video.empty()) {
+		std::istringstream is(ci.video);
+		std::string line;
+		while (std::getline(is, line)) {
+			boost::trim(line);
+			if (!line.empty()) {
+				videos_.append(line.c_str());
+			}
+		}
+	}
+
+	screenshots_.clear();
+	screenshots_.resize(ci.imageCount - 1);
+
+	initView();
 
 	for (int i = 1; i < ci.imageCount; ++i) {
-		context_->contentImageLoader->load(ci.id.c_str(), i, true);
+		context_->contentImageLoader->load(ci.id.c_str(), i);
+	}
+
+	if (videos_.count() > 0) {
+		presentVideo(videos_[0]);
+	}
+}
+
+void PageContentContentWidget::cancel()
+{
+	for (int i = 0; i < ui_.stackedWidget->count(); ++i) {
+		VideoPlayerWidget* player = qobject_cast<VideoPlayerWidget*>(ui_.stackedWidget->widget(i));
+		if (player) {
+			player->pause();
+		}
+	}
+}
+
+void PageContentContentWidget::restore()
+{
+	for (int i = 0; i < ui_.stackedWidget->count(); ++i) {
+		VideoPlayerWidget* player = qobject_cast<VideoPlayerWidget*>(ui_.stackedWidget->widget(i));
+		if (player) {
+			//player->play();
+		}
 	}
 }
 
@@ -111,13 +152,20 @@ void PageContentContentWidget::mousePressEvent(QMouseEvent* e)
 	if (e->button() == Qt::LeftButton)
 	{
 		QPoint pos = thumbnailWidget_->mapFrom(this, e->pos());
+
 		if (thumbnailWidget_->rect().contains(pos))
 		{
 			QWidget* w = thumbnailWidget_->childAt(pos);
 			const int index = thumbnailLayout_->indexOf(w);
-			if (index >= 0 && index < screenshots_.count())
+
+			if (index >= 0 && index < videos_.count() + screenshots_.count())
 			{
-				ui_.screenshotViewer->setPixmap(screenshots_.at(index));
+				if (index >= videos_.count()) {
+					presentImage(screenshots_.at(index - videos_.count()));
+				}
+				else if (index < videos_.count()) {
+					presentVideo(videos_.at(index));
+				}
 			}
 		}
 	}
@@ -144,10 +192,25 @@ void PageContentContentWidget::paintEvent(QPaintEvent* e)
 	style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
-void PageContentContentWidget::onImageLoaded(const QString& id, int index, const QPixmap& image)
+void PageContentContentWidget::onImageLoaded(const QString& id, int index, const QPixmap& pixmap)
 {
-	if (id == contentId_ && index > 0) {
-		setImage(index - 1, image);
+	if (id == contentId_ && index > 0)
+	{
+		index = index - 1;
+
+		QLayoutItem* li = thumbnailLayout_->itemAt(videos_.count() + index);
+		if (li && li->widget()) {
+			QLabel* label = qobject_cast<QLabel*>(li->widget());
+			if (label) {
+				label->setPixmap(pixmap.scaled(192, 108, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+			}
+		}
+
+		screenshots_[index] = pixmap;
+
+		if (index == 0 && videos_.count() == 0) {
+			presentImage(pixmap);
+		}
 	}
 }
 
@@ -207,64 +270,104 @@ void PageContentContentWidget::onDownload()
 	}
 }
 
-void PageContentContentWidget::setImageCount(int count)
+void PageContentContentWidget::initView()
 {
+	while (ui_.stackedWidget->count()) {
+		QWidget* w = ui_.stackedWidget->widget(0);
+		if (qobject_cast<VideoPlayerWidget*>(w)) {
+			VideoPlayerWidget* player = qobject_cast<VideoPlayerWidget*>(w);
+			player->stop();
+		}
+		w->deleteLater();
+		ui_.stackedWidget->removeWidget(w);
+	}
+
 	while (thumbnailLayout_->count()) {
 		QLayoutItem* li = thumbnailLayout_->takeAt(0);
 		li->widget()->deleteLater();
 		delete li;
 	}
 
-	if (count > 0)
+	if (videos_.count() > 0)
 	{
-		for (int i = 0; i < count; ++i) {
+		VideoPlayerWidget* player = new VideoPlayerWidget;
+		ui_.stackedWidget->addWidget(player);
+	}
+
+	if (screenshots_.count() > 0)
+	{
+		ImageViewerWidget* viewer = new ImageViewerWidget;
+		viewer->setPixmap(QPixmap());
+		ui_.stackedWidget->addWidget(viewer);
+	}
+
+	if (videos_.count() > 0 || screenshots_.count() > 0)
+	{
+		for (int i = 0; i < videos_.count(); ++i) {
 			QLabel* label = new QLabel;
+			label->setObjectName("Thumbnail");
+			label->setFixedSize(192, 108);
+			label->setText(QString("Video %1").arg(i + 1));
+			label->setAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
+			thumbnailLayout_->addWidget(label);
+		}
+
+		for (int i = 0; i < screenshots_.count(); ++i) {
+			QLabel* label = new QLabel;
+			label->setObjectName("Thumbnail");
 			label->setFixedSize(192, 108);
 			label->setText("Loading");
-			label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+			label->setAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
 			thumbnailLayout_->addWidget(label);
 		}
 
 		thumbnailLayout_->addStretch(1);
 	}
 
-	if (count == 0) {
-		ui_.screenshotWidget->setVisible(false);
-		ui_.screenshotViewer->setVisible(true);
-		ui_.thumbnailScrollArea->setVisible(true);
+	if (videos_.count() + screenshots_.count() == 0) {
+		ui_.viewWidget->setVisible(false);
 	}
-	else if (count == 1) {
-		ui_.screenshotWidget->setVisible(true);
-		ui_.screenshotViewer->setVisible(true);
+	else if (videos_.count() + screenshots_.count() == 1) {
+		ui_.viewWidget->setVisible(true);
+		ui_.stackedWidget->setVisible(true);
 		ui_.thumbnailScrollArea->setVisible(false);
 	}
-	else {
-		ui_.screenshotWidget->setVisible(true);
-		ui_.screenshotViewer->setVisible(true);
+	else if (videos_.count() + screenshots_.count() > 1) {
+		ui_.viewWidget->setVisible(true);
+		ui_.stackedWidget->setVisible(true);
 		ui_.thumbnailScrollArea->setVisible(true);
 	}
-
-	ui_.screenshotViewer->setPixmap(QPixmap());
-
-	screenshots_.clear();
-	screenshots_.resize(count);
 }
 
-void PageContentContentWidget::setImage(int index, const QPixmap& pixmap)
+void PageContentContentWidget::presentImage(const QPixmap& pixmap)
 {
-	QLayoutItem* li = thumbnailLayout_->itemAt(index);
-	if (li && li->widget()) {
-		QLabel* label = qobject_cast<QLabel*>(li->widget());
-		if (label) {
-			label->setPixmap(pixmap.scaled(192, 108, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+	for (int i = 0; i < ui_.stackedWidget->count(); ++i) {
+		VideoPlayerWidget* player = qobject_cast<VideoPlayerWidget*>(ui_.stackedWidget->widget(i));
+		if (player) {
+			player->stop();
+			break;
 		}
 	}
 
-	screenshots_[index] = pixmap;
+	for (int i = 0; i < ui_.stackedWidget->count(); ++i) {
+		ImageViewerWidget* viewer = qobject_cast<ImageViewerWidget*>(ui_.stackedWidget->widget(i));
+		if (viewer) {
+			ui_.stackedWidget->setCurrentWidget(viewer);
+			viewer->setPixmap(pixmap);
+			break;
+		}
+	}
+}
 
-	if (index == 0)
-	{
-		ui_.screenshotViewer->setPixmap(pixmap);
+void PageContentContentWidget::presentVideo(const QString& url)
+{
+	for (int i = 0; i < ui_.stackedWidget->count(); ++i) {
+		VideoPlayerWidget* player = qobject_cast<VideoPlayerWidget*>(ui_.stackedWidget->widget(i));
+		if (player) {
+			ui_.stackedWidget->setCurrentWidget(player);
+			player->openAndPlay(url);
+			break;
+		}
 	}
 }
 

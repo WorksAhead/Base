@@ -43,6 +43,8 @@ public:
 
 	virtual Rpc::ErrorCode setParentId(const std::string&, const Ice::Current&);
 
+	virtual Rpc::ErrorCode setVideo(const std::string&, const Ice::Current&);
+
 	virtual Rpc::ErrorCode setDescription(const std::string&, const Ice::Current&);
 
 	virtual Rpc::ErrorCode uploadImage(Ice::Int, Rpc::UploaderPrx&, const Ice::Current&);

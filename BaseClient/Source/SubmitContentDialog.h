@@ -25,6 +25,7 @@ public:
 	void setEngineVersion(const QString& version);
 	void setCommand(const QString& command);
 	void setWorkingDir(const QString& workDir);
+	void setVideo(const QString& video);
 	void setDesc(const QString& desc);
 
 private Q_SLOTS:

@@ -21,6 +21,7 @@
 #include <boost/filesystem.hpp>
 
 #include <memory>
+#include <math.h>
 
 namespace fs = boost::filesystem;
 
@@ -147,6 +148,11 @@ void SubmitContentDialog::setCommand(const QString& command)
 void SubmitContentDialog::setWorkingDir(const QString& workDir)
 {
 	ui_.workDirEdit->setText(workDir);
+}
+
+void SubmitContentDialog::setVideo(const QString& video)
+{
+	ui_.videoEdit->setPlainText(video);
 }
 
 void SubmitContentDialog::setDesc(const QString& desc)
@@ -291,9 +297,9 @@ void SubmitContentDialog::onAddScreenshot()
 		ui_.removeScreenshotButton->setEnabled(true);
 	}
 
-	if (count >= 5) {
-		ui_.addScreenshotButton->setEnabled(false);
-	}
+	//if (count >= 5) {
+	//	ui_.addScreenshotButton->setEnabled(false);
+	//}
 }
 
 void SubmitContentDialog::onRemoveScreenshot()
@@ -306,9 +312,9 @@ void SubmitContentDialog::onRemoveScreenshot()
 
 	const int count = ui_.screenshotWidget->count();
 
-	if (count < 5) {
+	/*if (count < 5) {
 		ui_.addScreenshotButton->setEnabled(true);
-	}
+	}*/
 
 	if (count <= 1) {
 		ui_.prevScreenshotButton->setEnabled(false);
@@ -424,6 +430,9 @@ void SubmitContentDialog::onSubmit()
 		return;
 	}
 
+	ec = submitter->setVideo(ui_.videoEdit->toPlainText().toStdString());
+	CHECK_ERROR_CODE(ec);
+
 	ec = submitter->setDescription(ui_.descriptionEdit->toPlainText().toStdString());
 	CHECK_ERROR_CODE(ec);
 
@@ -491,9 +500,9 @@ void SubmitContentDialog::onImageLoaded(const QString&, int index, const QPixmap
 			ui_.removeScreenshotButton->setEnabled(true);
 		}
 
-		if (count >= 5) {
+		/*if (count >= 5) {
 			ui_.addScreenshotButton->setEnabled(false);
-		}
+		}*/
 	}
 }
 
