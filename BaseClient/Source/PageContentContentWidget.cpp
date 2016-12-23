@@ -117,28 +117,28 @@ void PageContentContentWidget::refresh()
 		context_->contentImageLoader->load(ci.id.c_str(), i);
 	}
 
-	if (videos_.count() > 0) {
+	if (videos_.count() > 0)
+	{
+		videoSnapshot_ = 0;
+		takeVideoSnapshot();
+
 		presentVideo(videos_[0]);
 	}
 }
 
 void PageContentContentWidget::cancel()
 {
-	for (int i = 0; i < ui_.stackedWidget->count(); ++i) {
-		VideoPlayerWidget* player = qobject_cast<VideoPlayerWidget*>(ui_.stackedWidget->widget(i));
-		if (player) {
-			player->pause();
-		}
+	VideoPlayerWidget* player;
+	if ((player = findVideoPlayerWidget(0)) != 0) {
+		player->stop();
 	}
 }
 
 void PageContentContentWidget::restore()
 {
-	for (int i = 0; i < ui_.stackedWidget->count(); ++i) {
-		VideoPlayerWidget* player = qobject_cast<VideoPlayerWidget*>(ui_.stackedWidget->widget(i));
-		if (player) {
-			//player->play();
-		}
+	VideoPlayerWidget* player;
+	if ((player = findVideoPlayerWidget(0)) != 0) {
+		//player->play();
 	}
 }
 
@@ -212,6 +212,33 @@ void PageContentContentWidget::onImageLoaded(const QString& id, int index, const
 			presentImage(pixmap);
 		}
 	}
+}
+
+void PageContentContentWidget::onVideoSnapshot(const QString& filename)
+{
+	VideoPlayerWidget* player = findVideoPlayerWidget(1);
+	if (player) {
+		player->stop();
+	}
+
+	QPixmap pixmap = QPixmap(filename, "PNG").scaled(192, 108, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+	QPainter painter(&pixmap);
+	painter.drawPixmap(0, 0, QPixmap(":/Icons/VideoMark.png"));
+
+	boost::system::error_code ignore;
+	fs::remove(fs::path(filename.toStdString()), ignore);
+
+	QLayoutItem* li = thumbnailLayout_->itemAt(videoSnapshot_);
+	if (li && li->widget()) {
+		QLabel* label = qobject_cast<QLabel*>(li->widget());
+		if (label) {
+			label->setPixmap(pixmap);
+		}
+	}
+
+	videoSnapshot_++;
+	takeVideoSnapshot();
 }
 
 void PageContentContentWidget::onDownload()
@@ -290,8 +317,11 @@ void PageContentContentWidget::initView()
 
 	if (videos_.count() > 0)
 	{
-		VideoPlayerWidget* player = new VideoPlayerWidget;
-		ui_.stackedWidget->addWidget(player);
+		ui_.stackedWidget->addWidget(new VideoPlayerWidget);
+
+		VideoPlayerWidget* snapshotPlayer = new VideoPlayerWidget;
+		ui_.stackedWidget->addWidget(snapshotPlayer);
+		QObject::connect(snapshotPlayer, &VideoPlayerWidget::snapshot, this, &PageContentContentWidget::onVideoSnapshot);
 	}
 
 	if (screenshots_.count() > 0)
@@ -339,34 +369,63 @@ void PageContentContentWidget::initView()
 	}
 }
 
-void PageContentContentWidget::presentImage(const QPixmap& pixmap)
+VideoPlayerWidget* PageContentContentWidget::findVideoPlayerWidget(int n)
 {
+	int count = 0;
+
 	for (int i = 0; i < ui_.stackedWidget->count(); ++i) {
 		VideoPlayerWidget* player = qobject_cast<VideoPlayerWidget*>(ui_.stackedWidget->widget(i));
-		if (player) {
-			player->stop();
-			break;
+		if (player && count++ == n) {
+			return player;
 		}
 	}
 
+	return 0;
+}
+
+ImageViewerWidget* PageContentContentWidget::findImageViewerWidget()
+{
 	for (int i = 0; i < ui_.stackedWidget->count(); ++i) {
 		ImageViewerWidget* viewer = qobject_cast<ImageViewerWidget*>(ui_.stackedWidget->widget(i));
 		if (viewer) {
-			ui_.stackedWidget->setCurrentWidget(viewer);
-			viewer->setPixmap(pixmap);
-			break;
+			return viewer;
 		}
+	}
+
+	return 0;
+}
+
+void PageContentContentWidget::presentImage(const QPixmap& pixmap)
+{
+	VideoPlayerWidget* player;
+	if ((player = findVideoPlayerWidget(0)) != 0) {
+		player->stop();
+	}
+
+	ImageViewerWidget* viewer;
+	if ((viewer = findImageViewerWidget()) != 0) {
+		ui_.stackedWidget->setCurrentWidget(viewer);
+		viewer->setPixmap(pixmap);
 	}
 }
 
 void PageContentContentWidget::presentVideo(const QString& url)
 {
-	for (int i = 0; i < ui_.stackedWidget->count(); ++i) {
-		VideoPlayerWidget* player = qobject_cast<VideoPlayerWidget*>(ui_.stackedWidget->widget(i));
+	VideoPlayerWidget* player;
+	if ((player = findVideoPlayerWidget(0)) != 0) {
+		ui_.stackedWidget->setCurrentWidget(player);
+		player->openAndPlay(url);
+	}
+}
+
+void PageContentContentWidget::takeVideoSnapshot()
+{
+	if (videoSnapshot_ < videos_.count())
+	{
+		VideoPlayerWidget* player = findVideoPlayerWidget(1);
 		if (player) {
-			ui_.stackedWidget->setCurrentWidget(player);
-			player->openAndPlay(url);
-			break;
+			player->takeSnapshot(QString::fromStdString(context_->uniquePath() + ".png"), 0);
+			player->openAndPlay(videos_[videoSnapshot_]);
 		}
 	}
 }

@@ -1,6 +1,7 @@
 #include "VideoPlayerWidget.h"
 #include "ProgressBar.h"
 
+#include <VLCQtCore/Video.h>
 #include <VLCQtCore/Audio.h>
 
 #include <QBoxLayout>
@@ -52,6 +53,7 @@ VideoPlayerWidget::VideoPlayerWidget(QWidget* parent) : QWidget(parent)
 	timer_->start(10);
 
 	controlVisible_ = 0;
+	snapshotTimePoint_ = -1;
 }
 
 VideoPlayerWidget::~VideoPlayerWidget()
@@ -83,6 +85,12 @@ void VideoPlayerWidget::pause()
 void VideoPlayerWidget::stop()
 {
 	player_->stop();
+}
+
+void VideoPlayerWidget::takeSnapshot(const QString& filename, int timepoint)
+{
+	snapshotFilename_ = filename;
+	snapshotTimePoint_ = timepoint;
 }
 
 bool VideoPlayerWidget::event(QEvent* e)
@@ -189,6 +197,16 @@ void VideoPlayerWidget::onTimeChanged(int n)
 
 void VideoPlayerWidget::onTimeout()
 {
+	if (player_->state() == Vlc::Playing || player_->state() == Vlc::Paused || player_->state() == Vlc::Ended)
+	{
+		if (snapshotTimePoint_ >= 0 && player_->time() >= snapshotTimePoint_) {
+			if (player_->video()->takeSnapshot(snapshotFilename_)) {
+				snapshotTimePoint_ = -1;
+				Q_EMIT snapshot(snapshotFilename_);
+			}
+		}
+	}
+
 	if (controlVisible_ > 0) {
 		int y = controlWidget_->y();
 		int h = controlWidget_->sizeHint().height();

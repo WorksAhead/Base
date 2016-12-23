@@ -24,5 +24,6 @@
         <file>Icons/Stop.png</file>
         <file>Icons/MuteOn.png</file>
         <file>Icons/MuteOff.png</file>
+        <file>Icons/VideoMark.png</file>
     </qresource>
 </RCC>

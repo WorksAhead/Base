@@ -12,6 +12,10 @@
 #include <QBoxLayout>
 #include <QScrollArea>
 
+// forward declaration
+class VideoPlayerWidget;
+class ImageViewerWidget;
+
 class PageContentContentWidget : public QWidget {
 private:
 	Q_OBJECT
@@ -34,12 +38,16 @@ protected:
 
 private Q_SLOTS:
 	void onImageLoaded(const QString& id, int index, const QPixmap&);
+	void onVideoSnapshot(const QString& filename);
 	void onDownload();
 
 private:
 	void initView();
+	VideoPlayerWidget* findVideoPlayerWidget(int);
+	ImageViewerWidget* findImageViewerWidget();
 	void presentImage(const QPixmap&);
 	void presentVideo(const QString&);
+	void takeVideoSnapshot();
 
 private:
 	ContextPtr context_;
@@ -55,6 +63,8 @@ private:
 
 	QVector<QString> videos_;
 	QVector<QPixmap> screenshots_;
+
+	int videoSnapshot_;
 
 	bool firstShow_;
 };

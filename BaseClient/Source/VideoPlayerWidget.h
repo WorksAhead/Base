@@ -31,6 +31,10 @@ public Q_SLOTS:
 	void play();
 	void pause();
 	void stop();
+	void takeSnapshot(const QString& filename, int timepoint);
+
+Q_SIGNALS:
+	void snapshot(const QString&);
 
 protected:
 	virtual bool event(QEvent*);
@@ -60,6 +64,9 @@ private:
 	QTimer* timer_;
 
 	int controlVisible_;
+
+	QString snapshotFilename_;
+	int snapshotTimePoint_;
 };
 
 #endif // VIDEOPLAYERWIDGET_HEADER_
