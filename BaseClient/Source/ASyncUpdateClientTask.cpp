@@ -171,7 +171,14 @@ void ASyncUpdateClientTask::run()
 			infoBody_ = "Copying " + p.string();
 		}
 
-		fs::copy_file(safeSrcPath / p, safeTgtPath / p, fs::copy_option::overwrite_if_exists, ec);
+		fs::path safeTgtFullPath = safeTgtPath / p;
+		fs::path safeTgtParentPath = safeTgtFullPath.parent_path();
+
+		if (!fs::exists(safeTgtParentPath, ec)) {
+			fs::create_directories(safeTgtParentPath, ec);
+		}
+
+		fs::copy_file(safeSrcPath / p, safeTgtFullPath, fs::copy_option::overwrite_if_exists, ec);
 		CHECK_EC(ec);
 
 		++current;

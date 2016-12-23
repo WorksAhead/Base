@@ -59,7 +59,7 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>-677</y>
+        <y>-508</y>
         <width>581</width>
         <height>1275</height>
        </rect>
@@ -379,6 +379,9 @@
           <widget class="AutoExpandTextEdit" name="videoEdit">
            <property name="lineWrapMode">
             <enum>QPlainTextEdit::NoWrap</enum>
+           </property>
+           <property name="placeholderText">
+            <string>Video URLs (One URL per line)</string>
            </property>
           </widget>
          </item>
