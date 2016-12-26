@@ -151,20 +151,23 @@ void PageContentContentWidget::mousePressEvent(QMouseEvent* e)
 {
 	if (e->button() == Qt::LeftButton)
 	{
-		QPoint pos = thumbnailWidget_->mapFrom(this, e->pos());
-
-		if (thumbnailWidget_->rect().contains(pos))
+		if (ui_.viewWidget->rect().contains(ui_.viewWidget->mapFrom(this, e->pos())))
 		{
-			QWidget* w = thumbnailWidget_->childAt(pos);
-			const int index = thumbnailLayout_->indexOf(w);
+			QPoint pos = thumbnailWidget_->mapFrom(this, e->pos());
 
-			if (index >= 0 && index < videos_.count() + screenshots_.count())
+			if (thumbnailWidget_->rect().contains(pos))
 			{
-				if (index >= videos_.count()) {
-					presentImage(screenshots_.at(index - videos_.count()));
-				}
-				else if (index < videos_.count()) {
-					presentVideo(videos_.at(index));
+				QWidget* w = thumbnailWidget_->childAt(pos);
+				const int index = thumbnailLayout_->indexOf(w);
+
+				if (index >= 0 && index < videos_.count() + screenshots_.count())
+				{
+					if (index >= videos_.count()) {
+						presentImage(screenshots_.at(index - videos_.count()));
+					}
+					else if (index < videos_.count()) {
+						presentVideo(videos_.at(index));
+					}
 				}
 			}
 		}
