@@ -455,6 +455,10 @@ PageContentWidget {
 	background: rgb(30, 30, 30);
 }
 
+PageWebWidget {
+	background: rgb(30, 30, 30);
+}
+
 PageEngineWidget {
 	background: rgb(30, 30, 30);
 }

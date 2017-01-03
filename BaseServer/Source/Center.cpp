@@ -107,10 +107,8 @@ void Center::setPages(const std::vector<std::string>& pages)
 
 	std::string s;
 	for (const std::string& page : pages) {
-		if (s.size()) {
-			s += ",";
-		}
 		s += page;
+		s += "\n";
 	}
 
 	std::ostringstream oss;
@@ -686,7 +684,11 @@ void Center::loadPagesFromDb()
 
 	SQLite::Column col = s.getColumn("Value");
 
-	boost::split(pages_, std::string(col.getText()), boost::is_any_of(","), boost::token_compress_on);
+	std::istringstream stream(col.getText());
+	std::string line;
+	while (std::getline(stream, line)) {
+		pages_.push_back(line);
+	}
 }
 
 void Center::loadCategoriesFromDb()

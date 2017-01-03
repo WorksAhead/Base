@@ -18,6 +18,7 @@
 #include <QMessageBox>
 #include <QLocalSocket>
 #include <QSettings>
+#include <QWebEngineSettings>
 
 #include <IceUtil/IceUtil.h>
 #include <Ice/Ice.h>
@@ -35,7 +36,7 @@
 #include <windows.h>
 #endif
 
-#define BASE_CURRENT_VERSION "1.0.0.27"
+#define BASE_CURRENT_VERSION "1.0.0.28"
 
 namespace fs = boost::filesystem;
 
@@ -254,6 +255,8 @@ int main(int argc, char* argv[])
 			QMessageBox::warning(0, "Base", "Create VLC instance failed.");
 			return 0;
 		}
+
+		QWebEngineSettings::globalSettings()->setAttribute(QWebEngineSettings::PluginsEnabled, true);
 
 		ic = Ice::initialize(Ice::StringSeq{"--Ice.Config=" + fromLocal8bit((workDir / "BaseClient.cfg").string())});
 

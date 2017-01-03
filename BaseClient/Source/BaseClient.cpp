@@ -1,5 +1,6 @@
 #include "BaseClient.h"
 #include "PageContentWidget.h"
+#include "PageWebWidget.h"
 #include "PageEngineWidget.h"
 #include "PageExtraWidget.h"
 #include "HTabWidget.h"
@@ -297,13 +298,26 @@ BaseClient::BaseClient(const QString& workPath, const QString& version, Rpc::Ses
 
 	for (const std::string& page : pages)
 	{
-		std::string name = boost::erase_last_copy(page, "*");
-		PageContentWidget* w = new PageContentWidget(context_, page.c_str());
-		w->categoryFilterWidget()->labelSelectorWidget()->setLabels(categoryList);
-		tabWidget_->addTab(name.c_str(), w);
-		pageContentWidgets.append(w);
-		QObject::connect(w, &PageContentWidget::unresolvedUrl, this, &BaseClient::openUrl);
+		const std::string::size_type pos = page.find(',');
+
+		if (pos == std::string::npos)
+		{
+			std::string name = boost::erase_last_copy(page, "*");
+			PageContentWidget* w = new PageContentWidget(context_, page.c_str());
+			w->categoryFilterWidget()->labelSelectorWidget()->setLabels(categoryList);
+			tabWidget_->addTab(name.c_str(), w);
+			pageContentWidgets.append(w);
+			QObject::connect(w, &PageContentWidget::unresolvedUrl, this, &BaseClient::openUrl);
+		}
+		else {
+			std::string name = page.substr(0, pos);
+			std::string url = page.substr(pos + 1);
+			PageWebWidget* w = new PageWebWidget(context_, name.c_str());
+			w->setUrl(QString::fromStdString(url));
+			tabWidget_->addTab(name.c_str(), w);
+		}
 	}
+
 	for (int i = 0; i < pageContentWidgets.count(); ++i)
 	{
 		CategoryFilterWidget* w = pageContentWidgets[i]->categoryFilterWidget();

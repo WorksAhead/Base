@@ -20,12 +20,8 @@ protected:
 
 	virtual void paintEvent(QPaintEvent*);
 
-private Q_SLOTS:
+	private Q_SLOTS:
 	void onRefresh();
-	void onMoveUp();
-	void onMoveDown();
-	void onAdd();
-	void onRemove();
 	void onSubmit();
 
 private:

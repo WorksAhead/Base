@@ -1,9 +1,6 @@
 #include "ManageCategoryWidget.h"
 #include "ErrorMessage.h"
 
-#include "LabelSelectorDialog.h"
-
-#include <QInputDialog>
 #include <QMessageBox>
 #include <QPainter>
 #include <QTextStream>
