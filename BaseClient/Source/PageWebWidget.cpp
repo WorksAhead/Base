@@ -3,6 +3,8 @@
 #include <QStyleOption>
 #include <QPainter>
 
+#include <QDebug>
+
 PageWebWidget::PageWebWidget(ContextPtr context, const QString& name, QWidget* parent)
 	: context_(context), name_(name), QWidget(parent)
 {
@@ -55,6 +57,7 @@ void PageWebWidget::onUrlEntered()
 void PageWebWidget::onUrlChanged(const QUrl& url)
 {
 	ui_.urlEdit->setText(url.toDisplayString());
+	ui_.urlEdit->setCursorPosition(0);
 }
 
 void PageWebWidget::onLoadStarted()

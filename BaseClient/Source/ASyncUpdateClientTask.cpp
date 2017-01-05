@@ -199,11 +199,8 @@ void ASyncUpdateClientTask::run()
 		}
 
 		if (fs::exists(safeTgtPath / p, ec)) {
-			CHECK_EC(ec);
 			fs::remove(safeTgtPath / p, ec);
-			CHECK_EC(ec);
 		}
-		CHECK_EC(ec);
 
 		++current;
 
