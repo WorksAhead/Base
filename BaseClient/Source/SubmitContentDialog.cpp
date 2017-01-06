@@ -173,7 +173,7 @@ void SubmitContentDialog::onEditPage()
 	list << "=Content pages=";
 
 	for (const std::string& s : pages) {
-		if (!boost::ends_with(s, "*")) {
+		if (!boost::ends_with(s, "*") && !boost::contains(s, ",")) {
 			list << s.c_str();
 		}
 	}
