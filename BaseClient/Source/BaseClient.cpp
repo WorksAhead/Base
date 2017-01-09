@@ -329,15 +329,15 @@ BaseClient::BaseClient(const QString& workPath, const QString& version, Rpc::Ses
 		}
 	}
 
-	tabWidget_->addTab("Engine", new PageEngineWidget(context_, "Engine"));
+	tabWidget_->addTab(QString::fromLocal8Bit("引擎下载"), new PageEngineWidget(context_, "Engine"));
 
-	tabWidget_->addTab("Extra", new PageExtraWidget(context_, "Extra"));
+	tabWidget_->addTab(QString::fromLocal8Bit("外部工具"), new PageExtraWidget(context_, "Extra"));
 
 	library_ = new LibraryWidget(context_);
-	tabWidget_->addTab("Library", library_);
+	tabWidget_->addTab(QString::fromLocal8Bit("本地内容"), library_);
 
 	manage_ = new ManageWidget(context_);
-	tabWidget_->addTab("Manage", manage_);
+	tabWidget_->addTab(QString::fromLocal8Bit("管理"), manage_);
 
 	QBoxLayout* layout = new QBoxLayout(QBoxLayout::TopToBottom);
 	layout->setMargin(0);
