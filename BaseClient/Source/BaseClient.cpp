@@ -82,9 +82,18 @@ BaseClient::BaseClient(const QString& workPath, const QString& version, Rpc::Ses
 
 	context_->session = session;
 
-	if (session->getCurrentUser(context_->currentUser) != Rpc::ec_success) {
+	std::string currentUser;
+
+	if (session->getCurrentUser(currentUser) != Rpc::ec_success) {
 		throw std::runtime_error("Failed to get current User");
 	}
+
+	std::string::size_type pos = currentUser.find('@');
+	if (pos != std::string::npos) {
+		currentUser.erase(pos);
+	}
+
+	context_->currentUser = currentUser;
 
 	if (session->getCurrentUserGroup(context_->currentUserGroup) != Rpc::ec_success) {
 		throw std::runtime_error("Failed to get current User Group");
@@ -95,7 +104,6 @@ BaseClient::BaseClient(const QString& workPath, const QString& version, Rpc::Ses
 	context_->showTaskManager = std::bind(&BaseClient::onShowTaskManager, this);
 	context_->uniquePath = std::bind(&BaseClient::uniquePath, this);
 	context_->cachePath = std::bind(&BaseClient::cachePath, this);
-	context_->libraryPath = std::bind(&BaseClient::libraryPath, this);
 	context_->enginePath = std::bind(&BaseClient::enginePath, this, std::placeholders::_1);
 	context_->contentPath = std::bind(&BaseClient::contentPath, this, std::placeholders::_1);
 	context_->extraPath = std::bind(&BaseClient::extraPath, this, std::placeholders::_1);
@@ -236,10 +244,7 @@ BaseClient::BaseClient(const QString& workPath, const QString& version, Rpc::Ses
 	if (!fs::exists(cachePath()) && !fs::create_directories(cachePath())) {
 		throw std::runtime_error("Failed to create directory");
 	}
-	if (!fs::exists(userPath()) && !fs::create_directories(userPath())) {
-		throw std::runtime_error("Failed to create directory");
-	}
-	if (!fs::exists(libraryPath()) && !fs::create_directories(libraryPath())) {
+	if (!fs::exists(databasePath()) && !fs::create_directories(databasePath())) {
 		throw std::runtime_error("Failed to create directory");
 	}
 	if (!fs::exists(outputPath()) && !fs::create_directories(outputPath())) {
@@ -372,9 +377,9 @@ void BaseClient::addTask(ASyncTaskPtr task)
 
 std::string BaseClient::uniquePath()
 {
-	fs::path p = fs::temp_directory_path();
-	p = p / boost::uuids::to_string(rand_());
-	return p.string();
+	fs::path path = fs::temp_directory_path() / boost::uuids::to_string(rand_());
+
+	return path.string();
 }
 
 std::string BaseClient::workPath()
@@ -384,53 +389,49 @@ std::string BaseClient::workPath()
 
 std::string BaseClient::cachePath()
 {
-	fs::path p = fs::path(workPath()) / "Cache";
-	return p.string();
+	fs::path path = fs::path(workPath()) / "Cache";
+
+	return path.string();
 }
 
-std::string BaseClient::userPath()
+std::string BaseClient::databasePath()
 {
-	fs::path p = fs::path(workPath()) / "Users" / context_->currentUser;
-	return p.string();
-}
+	fs::path path = fs::path(workPath()) / "Databases" / context_->currentUser;
 
-std::string BaseClient::libraryPath()
-{
-	fs::path p = fs::path(userPath()) / "Library";
-	return p.string();
+	return path.string();
 }
 
 std::string BaseClient::outputPath()
 {
-	fs::path p = fs::path(userPath()) / "Output";
-	return p.string();
+	fs::path path = fs::path(workPath()) / "Outputs" / context_->currentUser;
+
+	return path.string();
 }
 
 std::string BaseClient::enginePath(const EngineVersion& v)
 {
-	fs::path path = libraryPath();
-	path /= "Engines";
+	fs::path path = fs::path(workPath()) / "Engines" / context_->currentUser;
+
 	path /= boost::to_lower_copy(
 		boost::replace_all_copy(v.first, " ", "_") +
 		"-" +
 		boost::replace_all_copy(v.second, " ", "_")
 		);
+
 	return path.string();
 }
 
 std::string BaseClient::contentPath(const std::string& id)
 {
-	fs::path path = libraryPath();
-	path /= "Contents";
-	path /= id;
+	fs::path path = fs::path(workPath()) / "Contents" / context_->currentUser / id;
+
 	return path.string();
 }
 
 std::string BaseClient::extraPath(const std::string& id)
 {
-	fs::path path = libraryPath();
-	path /= "Extras";
-	path /= id;
+	fs::path path = fs::path(workPath()) / "Extras" / context_->currentUser / id;
+
 	return path.string();
 }
 
@@ -1179,7 +1180,7 @@ void BaseClient::onNewConnection()
 
 void BaseClient::initDb()
 {
-	fs::path p = fs::path(userPath()) / "BaseClient.db";
+	fs::path p = fs::path(databasePath()) / "BaseClient.db";
 
 	db_.reset(new SQLite::Database(fromLocal8bit(p.string()).c_str(), SQLITE_OPEN_READWRITE|SQLITE_OPEN_CREATE));
 

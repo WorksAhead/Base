@@ -36,7 +36,7 @@
 #include <windows.h>
 #endif
 
-#define BASE_CURRENT_VERSION "1.0.0.30"
+#define BASE_CURRENT_VERSION "1.0.0.33"
 
 namespace fs = boost::filesystem;
 
@@ -256,7 +256,30 @@ int main(int argc, char* argv[])
 			return 0;
 		}
 
+		//QWebEngineSettings::globalSettings()->setAttribute(QWebEngineSettings::AutoLoadImages, true);
+		QWebEngineSettings::globalSettings()->setAttribute(QWebEngineSettings::JavascriptEnabled, true);
+		QWebEngineSettings::globalSettings()->setAttribute(QWebEngineSettings::JavascriptCanOpenWindows, true);
+		QWebEngineSettings::globalSettings()->setAttribute(QWebEngineSettings::JavascriptCanAccessClipboard, true);
+		//QWebEngineSettings::globalSettings()->setAttribute(QWebEngineSettings::LinksIncludedInFocusChain, true);
+		QWebEngineSettings::globalSettings()->setAttribute(QWebEngineSettings::LocalStorageEnabled, true);
+		QWebEngineSettings::globalSettings()->setAttribute(QWebEngineSettings::LocalContentCanAccessRemoteUrls, true);
+		//QWebEngineSettings::globalSettings()->setAttribute(QWebEngineSettings::XSSAuditingEnabled, true);
+		//QWebEngineSettings::globalSettings()->setAttribute(QWebEngineSettings::SpatialNavigationEnabled, true);
+		QWebEngineSettings::globalSettings()->setAttribute(QWebEngineSettings::LocalContentCanAccessFileUrls, true);
+		//QWebEngineSettings::globalSettings()->setAttribute(QWebEngineSettings::HyperlinkAuditingEnabled, true);
+		//QWebEngineSettings::globalSettings()->setAttribute(QWebEngineSettings::ScrollAnimatorEnabled, true);
+		QWebEngineSettings::globalSettings()->setAttribute(QWebEngineSettings::ErrorPageEnabled, true);
 		QWebEngineSettings::globalSettings()->setAttribute(QWebEngineSettings::PluginsEnabled, true);
+		QWebEngineSettings::globalSettings()->setAttribute(QWebEngineSettings::FullScreenSupportEnabled, true);
+		//QWebEngineSettings::globalSettings()->setAttribute(QWebEngineSettings::ScreenCaptureEnabled, true);
+		QWebEngineSettings::globalSettings()->setAttribute(QWebEngineSettings::WebGLEnabled, true);
+		QWebEngineSettings::globalSettings()->setAttribute(QWebEngineSettings::Accelerated2dCanvasEnabled, true);
+		//QWebEngineSettings::globalSettings()->setAttribute(QWebEngineSettings::AutoLoadIconsForPage, true);
+		//QWebEngineSettings::globalSettings()->setAttribute(QWebEngineSettings::TouchIconsEnabled, true);
+
+		QWebEngineSettings::globalSettings()->setFontFamily(QWebEngineSettings::StandardFont, "Microsoft YaHei");
+		QWebEngineSettings::globalSettings()->setFontFamily(QWebEngineSettings::SansSerifFont, "Microsoft YaHei");
+		QWebEngineSettings::globalSettings()->setFontFamily(QWebEngineSettings::FixedFont, "Consolas");
 
 		ic = Ice::initialize(Ice::StringSeq{"--Ice.Config=" + fromLocal8bit((workDir / "BaseClient.cfg").string())});
 

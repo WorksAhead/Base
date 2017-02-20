@@ -42,8 +42,7 @@ private:
 	std::string uniquePath();
 	std::string workPath();
 	std::string cachePath();
-	std::string userPath();
-	std::string libraryPath();
+	std::string databasePath();
 	std::string outputPath();
 
 	std::string enginePath(const EngineVersion&);

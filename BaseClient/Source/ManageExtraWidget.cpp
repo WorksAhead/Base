@@ -214,6 +214,11 @@ void ManageExtraWidget::showMore(int count)
 		{
 			Rpc::ExtraInfo& item = items[i];
 
+			std::string::size_type atPos = item.user.find('@');
+			if (atPos != std::string::npos) {
+				item.user.erase(atPos);
+			}
+
 			if (!boost::iequals(context_->currentUser, item.user) && context_->currentUserGroup != "Admin") {
 				continue;
 			}

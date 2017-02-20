@@ -95,7 +95,6 @@ struct Context
 
 	std::function<std::string()> uniquePath;
 	std::function<std::string()> cachePath;
-	std::function<std::string()> libraryPath;
 
 	std::function<std::string(const EngineVersion&)> enginePath;
 	std::function<std::string(const std::string&)> contentPath;

@@ -209,6 +209,11 @@ void ManageContentWidget::showMore(int count)
 				continue;
 			}
 
+			std::string::size_type atPos = ci.user.find('@');
+			if (atPos != std::string::npos) {
+				ci.user.erase(atPos);
+			}
+
 			if (!boost::iequals(context_->currentUser, ci.user) && context_->currentUserGroup != "Admin") {
 				continue;
 			}
