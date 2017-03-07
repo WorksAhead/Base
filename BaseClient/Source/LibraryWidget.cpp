@@ -14,20 +14,20 @@ LibraryWidget::LibraryWidget(ContextPtr context, QWidget* parent) : QWidget(pare
 	libraryEngine_ = new LibraryEngineWidget(context_);
 	libraryExtra_ = new LibraryExtraWidget(context_);
 
-	layout_ = new VTabWidget;
+	tabWidget_ = new VTabWidget;
 
-	QFont font = layout_->labelFont();
+	QFont font = tabWidget_->labelFont();
 	font.setPixelSize(14);
-	layout_->setLabelFont(font);
+	tabWidget_->setLabelFont(font);
 
-	layout_->addTab("Content", libraryContent_);
-	layout_->addTab("Engine", libraryEngine_);
-	layout_->addTab("Extra", libraryExtra_);
+	tabWidget_->addTab("Content", libraryContent_);
+	tabWidget_->addTab("Engine", libraryEngine_);
+	tabWidget_->addTab("Extra", libraryExtra_);
 
 	QBoxLayout* layout = new QBoxLayout(QBoxLayout::TopToBottom);
 	layout->setContentsMargins(0, 0, 6, 0);
 	layout->setSpacing(0);
-	layout->addWidget(layout_);
+	layout->addWidget(tabWidget_);
 	setLayout(layout);
 }
 
@@ -38,7 +38,7 @@ LibraryWidget::~LibraryWidget()
 void LibraryWidget::addContent(const QString& id)
 {
 	libraryContent_->addContent(id);
-	layout_->addNotification(layout_->indexOf(libraryContent_));
+	tabWidget_->addNotification(tabWidget_->indexOf(libraryContent_));
 }
 
 void LibraryWidget::removeContent(const QString& id)
@@ -49,7 +49,7 @@ void LibraryWidget::removeContent(const QString& id)
 void LibraryWidget::addProject(const QString& id)
 {
 	libraryContent_->addProject(id);
-	layout_->addNotification(layout_->indexOf(libraryContent_));
+	tabWidget_->addNotification(tabWidget_->indexOf(libraryContent_));
 }
 
 void LibraryWidget::removeProject(const QString& id)
@@ -60,7 +60,7 @@ void LibraryWidget::removeProject(const QString& id)
 void LibraryWidget::addEngine(const QString& engineName, const QString& engineVersion)
 {
 	libraryEngine_->addEngine(engineName, engineVersion);
-	layout_->addNotification(layout_->indexOf(libraryEngine_));
+	tabWidget_->addNotification(tabWidget_->indexOf(libraryEngine_));
 }
 
 void LibraryWidget::removeEngine(const QString& engineName, const QString& engineVersion)
@@ -71,7 +71,7 @@ void LibraryWidget::removeEngine(const QString& engineName, const QString& engin
 void LibraryWidget::addExtra(const QString& id)
 {
 	libraryExtra_->addExtra(id);
-	layout_->addNotification(layout_->indexOf(libraryExtra_));
+	tabWidget_->addNotification(tabWidget_->indexOf(libraryExtra_));
 }
 
 void LibraryWidget::removeExtra(const QString& id)

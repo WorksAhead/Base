@@ -127,9 +127,6 @@
     <CustomBuild Include="..\BaseClient\Source\PageEngineItemWidget.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\PageEngineWidget.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="..\BaseClient\Source\PageExtraItemWidget.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
@@ -1391,9 +1388,6 @@
       <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_PageEngineItemWidget.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_PageEngineWidget.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_PageExtraItemWidget.h">

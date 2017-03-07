@@ -371,14 +371,14 @@ void SubmitContentDialog::onSubmit()
 	ec = submitter->setCategory(ui_.categoryEdit->text().toStdString());
 	CHECK_ERROR_CODE(ec);
 
-	if (ui_.engineNameEdit->text().isEmpty()) {
-		QMessageBox::information(this, "Base", tr("The Engine Name field cannot be left empty."));
-		return;
-	}
-	else if (ui_.engineVersionEdit->text().isEmpty()) {
-		QMessageBox::information(this, "Base", tr("The Engine Version field cannot be left empty."));
-		return;
-	}
+	//if (ui_.engineNameEdit->text().isEmpty()) {
+	//	QMessageBox::information(this, "Base", tr("The Engine Name field cannot be left empty."));
+	//	return;
+	//}
+	//else if (ui_.engineVersionEdit->text().isEmpty()) {
+	//	QMessageBox::information(this, "Base", tr("The Engine Version field cannot be left empty."));
+	//	return;
+	//}
 
 	ec = submitter->setEngine(ui_.engineNameEdit->text().toStdString(), ui_.engineVersionEdit->text().toStdString());
 	CHECK_ERROR_CODE(ec);
@@ -398,10 +398,10 @@ void SubmitContentDialog::onSubmit()
 		}
 	}
 
-	if (ui_.commandEdit->text().isEmpty()) {
-		QMessageBox::information(this, "Base", tr("The Command field cannot be left empty."));
-		return;
-	}
+	//if (ui_.commandEdit->text().isEmpty()) {
+	//	QMessageBox::information(this, "Base", tr("The Command field cannot be left empty."));
+	//	return;
+	//}
 
 	QString startup = ui_.commandEdit->text();
 	if (!ui_.workDirEdit->text().isEmpty()) {

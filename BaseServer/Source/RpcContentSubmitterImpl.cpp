@@ -168,24 +168,27 @@ Rpc::ErrorCode RpcContentSubmitterImpl::setEngine(const std::string& name, const
 		return Rpc::ec_invalid_operation;
 	}
 
-	std::list<std::string> versions;
-	boost::split(versions, version, boost::is_any_of("|"));
-
-	if (versions.empty()) {
-		return Rpc::ec_engine_version_does_not_exist;
-	}
-
-	for (const std::string& v : versions)
+	if (!name.empty() || !version.empty())
 	{
-		std::string state;
-		if (!context_->center()->getEngineVersionState(name, v, state)) {
+		std::list<std::string> versions;
+		boost::split(versions, version, boost::is_any_of("|"));
+
+		if (versions.empty()) {
 			return Rpc::ec_engine_version_does_not_exist;
 		}
-		if (state != "Normal") {
-			if (state == "Removed") {
-				return Rpc::ec_engine_version_is_removed;
+
+		for (const std::string& v : versions)
+		{
+			std::string state;
+			if (!context_->center()->getEngineVersionState(name, v, state)) {
+				return Rpc::ec_engine_version_does_not_exist;
 			}
-			assert(false);
+			if (state != "Normal") {
+				if (state == "Removed") {
+					return Rpc::ec_engine_version_is_removed;
+				}
+				assert(false);
+			}
 		}
 	}
 

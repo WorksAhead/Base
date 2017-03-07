@@ -264,20 +264,23 @@ void PageContentContentWidget::onDownload()
 
 	bool installEngine = false;
 
-	int engineState = context_->getEngineState(EngineVersion(engineName.toStdString(), engineVersion.toStdString()));
-
-	if (engineState == EngineState::not_installed)
+	if (!engineName.isEmpty() && !engineVersion.isEmpty())
 	{
-		ContentDownloadDialog d;
-		d.setEngineVersionAboutToBeDownloaded(engineName, engineVersion);
-		int ret = d.exec();
-		if (ret != 1) {
-			state = ContentState::downloading;
-			context_->changeContentState(contentId_.toStdString(), state, ContentState::not_downloaded);
-			return;
-		}
+		int engineState = context_->getEngineState(EngineVersion(engineName.toStdString(), engineVersion.toStdString()));
 
-		installEngine = d.isInstallEngineChecked();
+		if (engineState == EngineState::not_installed)
+		{
+			ContentDownloadDialog d;
+			d.setEngineVersionAboutToBeDownloaded(engineName, engineVersion);
+			int ret = d.exec();
+			if (ret != 1) {
+				state = ContentState::downloading;
+				context_->changeContentState(contentId_.toStdString(), state, ContentState::not_downloaded);
+				return;
+			}
+
+			installEngine = d.isInstallEngineChecked();
+		}
 	}
 
 	Rpc::DownloaderPrx downloader;

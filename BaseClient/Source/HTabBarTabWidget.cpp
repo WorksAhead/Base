@@ -6,29 +6,9 @@
 
 HTabBarTabWidget::HTabBarTabWidget(QWidget* parent) : QWidget(parent)
 {
-	label_ = new QLabel;
+	font_ = font();
 
-	superscript_ = new QLabel(this);
-	QSizePolicy sp = superscript_->sizePolicy();
-	sp.setRetainSizeWhenHidden(true);
-	superscript_->setSizePolicy(sp);
-	superscript_->setObjectName("Notification");
-	superscript_->setVisible(false);
-	superscript_->setText("0");
-
-	QBoxLayout* l2 = new QBoxLayout(QBoxLayout::LeftToRight);
-	l2->setMargin(0);
-	l2->setSpacing(0);
-	l2->setAlignment(Qt::AlignVCenter|Qt::AlignRight);
-	l2->addWidget(superscript_);
-
-	layout_ = new QBoxLayout(QBoxLayout::TopToBottom);
-	layout_->setMargin(0);
-	layout_->setSpacing(0);
-	layout_->addLayout(l2);
-	layout_->addWidget(label_);
-
-	setLayout(layout_);
+	notification_ = 0;
 
 	setProperty("active", false);
 }
@@ -40,14 +20,16 @@ HTabBarTabWidget::~HTabBarTabWidget()
 
 void HTabBarTabWidget::setLabel(const QString& text)
 {
-	label_->setText(text);
+	text_ = text;
 }
 
 void HTabBarTabWidget::setLabelFont(const QFont& font)
 {
-	const int p = font.pixelSize();
-	label_->setContentsMargins(p * 1.2, 0, p * 1.2, p * 0.8);
-	label_->setFont(font);
+	font_ = font;
+
+	const int p = font_.pixelSize();
+
+	setFixedSize(p * 6, p * 3);
 }
 
 void HTabBarTabWidget::setActive(bool active)
@@ -59,21 +41,59 @@ void HTabBarTabWidget::setActive(bool active)
 
 void HTabBarTabWidget::addNotification()
 {
-	superscript_->setText(QString("%1").arg(superscript_->text().toInt() + 1));
-	superscript_->setVisible(true);
+	++notification_;
+
+	repaint();
 }
 
 void HTabBarTabWidget::clearNotification()
 {
-	superscript_->setText("0");
-	superscript_->setVisible(false);
+	notification_ = 0;
+
+	repaint();
 }
 
 void HTabBarTabWidget::paintEvent(QPaintEvent*)
 {
 	QStyleOption opt;
+
 	opt.init(this);
-	QPainter p(this);
-	style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+
+	QPainter painter(this);
+
+	painter.setRenderHint(QPainter::Antialiasing);
+
+	style()->drawPrimitive(QStyle::PE_Widget, &opt, &painter, this);
+
+	painter.setFont(font_);
+
+	painter.drawText(rect(), Qt::AlignCenter, text_);
+
+	if (notification_ > 0)
+	{
+		QFont f = font_;
+
+		f.setPixelSize(9);
+
+		painter.setFont(f);
+
+		QRect bound;
+
+		painter.drawText(rect().adjusted(0, 9, -9, 0), Qt::AlignRight|Qt::AlignTop, QString("%1").arg(notification_), &bound);
+
+		if (bound.width() < bound.height())
+		{
+			int d = bound.height() - bound.width();
+			bound.adjust(-d / 2, 0, d / 2, 0);
+		}
+
+		QPainterPath path;
+
+		path.addRoundedRect(bound, 6, 6);
+
+		painter.fillPath(path, QColor(246, 96, 0));
+
+		painter.drawText(rect().adjusted(0, 9, -9, 0), Qt::AlignRight|Qt::AlignTop, QString("%1").arg(notification_));
+	}
 }
 

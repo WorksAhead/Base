@@ -35,7 +35,7 @@ protected:
 private:
 	ContextPtr context_;
 
-	VTabWidget* layout_;
+	VTabWidget* tabWidget_;
 
 	LibraryContentWidget* libraryContent_;
 	LibraryEngineWidget* libraryEngine_;

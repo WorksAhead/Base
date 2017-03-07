@@ -1,21 +1,13 @@
 #ifndef PAGEENGINEWIDGET_HEADER_
 #define PAGEENGINEWIDGET_HEADER_
 
-#include "ui_PageEngineWidget.h"
-
 #include <RpcSession.h>
 
 #include "Context.h"
 
+#include <QWidget>
 #include <QString>
-#include <QList>
-#include <QMap>
-#include <QSet>
-#include <QTimer>
-
-// forward declaration
-class PageEngineItemWidget;
-class FlowLayout;
+#include <QBoxLayout>
 
 class PageEngineWidget : public QWidget {
 private:
@@ -30,21 +22,17 @@ protected:
 	virtual void paintEvent(QPaintEvent*);
 
 private Q_SLOTS:
-	void onScroll(int);
 	void onRefresh();
 
 private:
-	void showMore(int);
 	void clear();
 
 private:
 	ContextPtr context_;
 	QString name_;
-	FlowLayout* flowLayout_;
 
-	Rpc::EngineVersionBrowserPrx browser_;
+	QBoxLayout* layout_;
 
-	Ui::PageEngineWidget ui_;
 	bool firstShow_;
 };
 

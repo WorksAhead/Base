@@ -980,7 +980,6 @@
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_PageContentContentWidget.h" />
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_PageContentWidget.h" />
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_PageEngineItemWidget.h" />
-    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_PageEngineWidget.h" />
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_PageExtraItemWidget.h" />
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_PageExtraWidget.h" />
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_PageWebWidget.h" />
@@ -2214,20 +2213,6 @@
       <Command Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">"$(QTDIR)\bin\uic.exe" -o ".\..\BaseClient\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
     </CustomBuild>
     <CustomBuild Include="..\BaseClient\Source\PageEngineItemWidget.ui">
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">Uic%27ing %(Identity)...</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">.\..\BaseClient\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">"$(QTDIR)\bin\uic.exe" -o ".\..\BaseClient\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Uic%27ing %(Identity)...</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\..\BaseClient\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\uic.exe" -o ".\..\BaseClient\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">Uic%27ing %(Identity)...</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">.\..\BaseClient\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">"$(QTDIR)\bin\uic.exe" -o ".\..\BaseClient\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\PageEngineWidget.ui">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">Uic%27ing %(Identity)...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">.\..\BaseClient\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>

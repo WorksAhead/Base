@@ -4,6 +4,8 @@
 #include <QWidget>
 #include <QLabel>
 #include <QBoxLayout>
+#include <QString>
+#include <QFont>
 
 class VTabBarTabWidget : public QWidget {
 private:
@@ -25,11 +27,11 @@ protected:
 	virtual void paintEvent(QPaintEvent*);
 
 private:
-	QLabel* label_;
-	QLabel* superscript_;
+	QString text_;
 
-private:
-	QBoxLayout* layout_;
+	QFont font_;
+
+	int notification_;
 };
 
 #endif // VTABBARTABWIDGET_HEADER_
