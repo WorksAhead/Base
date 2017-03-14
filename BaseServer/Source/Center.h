@@ -30,9 +30,13 @@ public:
 	void setPages(const std::vector<std::string>&);
 	void getPages(std::vector<std::string>&);
 
-	void setCategories(const std::vector<std::string>&);
-	void getCategories(std::vector<std::string>&);
-	void getGroupedCategories(std::map<std::string, std::string>&);
+	void setContentCategories(const std::vector<std::string>&);
+	void getContentCategories(std::vector<std::string>&);
+	void getGroupedContentCategories(std::map<std::string, std::string>&);
+
+	void setExtraCategories(const std::vector<std::string>&);
+	void getExtraCategories(std::vector<std::string>&);
+	void getGroupedExtraCategories(std::map<std::string, std::string>&);
 
 	bool lockEngineVersion(const std::string& name, const std::string& version, LockMode);
 	void unlockEngineVersion(const std::string& name, const std::string& version, LockMode);
@@ -82,8 +86,10 @@ public:
 
 private:
 	void loadPagesFromDb();
-	void loadCategoriesFromDb();
-	void updateCategoryGroup();
+	void loadContentCategoriesFromDb();
+	void updateContentCategoryGroup();
+	void loadExtraCategoriesFromDb();
+	void updateExtraCategoryGroup();
 
 private:
 	std::string baseDir_;
@@ -99,9 +105,13 @@ private:
 	std::vector<std::string> pages_;
 	boost::mutex pagesSync_;
 
-	std::vector<std::string> categories_;
-	std::map<std::string, std::string> groupedCategories_;
-	boost::mutex categoriesSync_;
+	std::vector<std::string> contentCategories_;
+	std::map<std::string, std::string> groupedContentCategories_;
+	boost::mutex contentCategoriesSync_;
+
+	std::vector<std::string> extraCategories_;
+	std::map<std::string, std::string> groupedExtraCategories_;
+	boost::mutex extraCategoriesSync_;
 
 	std::unordered_map<std::string, int> lockedEngineVersionSet_;
 	boost::mutex lockedEngineVersionSetSync_;

@@ -86,6 +86,34 @@ Rpc::ErrorCode RpcExtraSubmitterImpl::setTitle(const std::string& title, const I
 	return Rpc::ec_success;
 }
 
+Rpc::ErrorCode RpcExtraSubmitterImpl::setCategory(const std::string& category, const Ice::Current&)
+{
+	boost::recursive_mutex::scoped_lock lock(sync_);
+	checkIsDestroyed();
+
+	if (finished_ || cancelled_) {
+		return Rpc::ec_invalid_operation;
+	}
+
+	std::vector<std::string> list;
+
+	boost::split(list, category, boost::is_any_of(","));
+
+	std::string formattedCategory;
+
+	for (std::string& s : list) {
+		boost::trim(s);
+		if (!formattedCategory.empty()) {
+			formattedCategory += ",";
+		}
+		formattedCategory += "(" + s + ")";
+	}
+
+	form_["Category"] = formattedCategory;
+
+	return Rpc::ec_success;
+}
+
 Rpc::ErrorCode RpcExtraSubmitterImpl::setSetup(const std::string& setup, const Ice::Current&)
 {
 	boost::recursive_mutex::scoped_lock lock(sync_);
@@ -114,6 +142,46 @@ Rpc::ErrorCode RpcExtraSubmitterImpl::setInfo(const std::string& info, const Ice
 	return Rpc::ec_success;
 }
 
+Rpc::ErrorCode RpcExtraSubmitterImpl::uploadImage(Rpc::UploaderPrx& uploaderPrx, const Ice::Current& c)
+{
+	boost::recursive_mutex::scoped_lock lock(sync_);
+	checkIsDestroyed();
+
+	if (mode_ == update_mode) {
+		return Rpc::ec_access_denied;
+	}
+
+	if (finished_ || cancelled_) {
+		return Rpc::ec_invalid_operation;
+	}
+
+	if (imageUploader_.first) {
+		return Rpc::ec_invalid_operation;
+	}
+
+	RpcFileUploaderImplPtr ptr = new RpcFileUploaderImpl;
+
+	fs::path filename = base_;
+	filename /= "image_0";
+
+	Rpc::ErrorCode ec = ptr->init(filename.string());
+	if (ec != Rpc::ec_success) {
+		return ec;
+	}
+
+	uploaderPrx = Rpc::UploaderPrx::uncheckedCast(c.adapter->addWithUUID(ptr));
+
+	if (!context_->objectManager()->addObject(uploaderPrx)) {
+		uploaderPrx->destroy();
+		return Rpc::ec_server_busy;
+	}
+
+	imageUploader_.first = uploaderPrx;
+	imageUploader_.second = ptr;
+
+	return Rpc::ec_success;
+}
+
 Rpc::ErrorCode RpcExtraSubmitterImpl::uploadExtra(Rpc::UploaderPrx& uploaderPrx, const Ice::Current& c)
 {
 	boost::recursive_mutex::scoped_lock lock(sync_);
@@ -127,7 +195,7 @@ Rpc::ErrorCode RpcExtraSubmitterImpl::uploadExtra(Rpc::UploaderPrx& uploaderPrx,
 		return Rpc::ec_invalid_operation;
 	}
 
-	if (uploader_.first) {
+	if (extraUploader_.first) {
 		return Rpc::ec_invalid_operation;
 	}
 
@@ -148,8 +216,8 @@ Rpc::ErrorCode RpcExtraSubmitterImpl::uploadExtra(Rpc::UploaderPrx& uploaderPrx,
 		return Rpc::ec_server_busy;
 	}
 
-	uploader_.first = uploaderPrx;
-	uploader_.second = ptr;
+	extraUploader_.first = uploaderPrx;
+	extraUploader_.second = ptr;
 
 	return Rpc::ec_success;
 }
@@ -164,8 +232,12 @@ void RpcExtraSubmitterImpl::cancel(const Ice::Current& c)
 		return;
 	}
 
-	if (uploader_.first) {
-		uploader_.first->cancel();
+	if (extraUploader_.first) {
+		extraUploader_.first->cancel();
+	}
+
+	if (imageUploader_.first) {
+		imageUploader_.first->cancel();
 	}
 
 	cancelled_ = true;
@@ -188,7 +260,11 @@ Rpc::ErrorCode RpcExtraSubmitterImpl::finish(const Ice::Current&)
 
 	if (mode_ == submit_mode)
 	{
-		if (!uploader_.second || !uploader_.second->isFinished()) {
+		if (!extraUploader_.second || !extraUploader_.second->isFinished()) {
+			return Rpc::ec_incomplete_extra;
+		}
+
+		if (!imageUploader_.second || !imageUploader_.second->isFinished()) {
 			return Rpc::ec_incomplete_extra;
 		}
 

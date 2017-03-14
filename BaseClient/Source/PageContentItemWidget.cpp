@@ -30,6 +30,11 @@ void PageContentItemWidget::setText(const QString& text)
 	text_ = text;
 }
 
+QString PageContentItemWidget::text() const
+{
+	return text_;
+}
+
 void PageContentItemWidget::setBackground(const QPixmap& bg)
 {
 	bg_ = bg;

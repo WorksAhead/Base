@@ -68,7 +68,7 @@ Center::Center()
 		"User TEXT, UpTime DATETIME, State TEXT)");
 
 	db_->exec("CREATE TABLE IF NOT EXISTS Extras ("
-		"Id TEXT, Title TEXT, Setup TEXT, "
+		"Id TEXT, Title TEXT, Category TEXT, Setup TEXT, "
 		"User TEXT, UpTime DATETIME, Info TEXT, State TEXT)");
 
 	db_->exec("CREATE TABLE IF NOT EXISTS Clients ("
@@ -88,13 +88,14 @@ Center::Center()
 		"Id, ParentId, Page, Category, EngineName, EngineVersion, User, UpTime, State)");
 
 	db_->exec("CREATE INDEX IF NOT EXISTS IndexOfExtras ON Extras ("
-		"Id, Title, User, UpTime, State)");
+		"Id, Title, Category, User, UpTime, State)");
 
 	db_->exec("CREATE INDEX IF NOT EXISTS IndexOfClients ON Clients ("
 		"Version, UpTime, State)");
 
 	loadPagesFromDb();
-	loadCategoriesFromDb();
+	loadContentCategoriesFromDb();
+	loadExtraCategoriesFromDb();
 }
 
 Center::~Center()
@@ -129,9 +130,9 @@ void Center::getPages(std::vector<std::string>& pages)
 	pages = pages_;
 }
 
-void Center::setCategories(const std::vector<std::string>& categories)
+void Center::setContentCategories(const std::vector<std::string>& categories)
 {
-	boost::mutex::scoped_lock lock(categoriesSync_);
+	boost::mutex::scoped_lock lock(contentCategoriesSync_);
 
 	std::string s;
 	for (const std::string& category : categories) {
@@ -140,7 +141,7 @@ void Center::setCategories(const std::vector<std::string>& categories)
 	}
 
 	std::ostringstream oss;
-	oss << "INSERT OR REPLACE INTO Info VALUES ('Categories', ";
+	oss << "INSERT OR REPLACE INTO Info VALUES ('ContentCategories', ";
 	oss << sqlText(s);
 	oss << ")";
 
@@ -148,21 +149,57 @@ void Center::setCategories(const std::vector<std::string>& categories)
 	db_->exec(oss.str());
 	t.commit();
 
-	categories_ = categories;
+	contentCategories_ = categories;
 
-	updateCategoryGroup();
+	updateContentCategoryGroup();
 }
 
-void Center::getCategories(std::vector<std::string>& categories)
+void Center::getContentCategories(std::vector<std::string>& categories)
 {
-	boost::mutex::scoped_lock lock(categoriesSync_);
-	categories = categories_;
+	boost::mutex::scoped_lock lock(contentCategoriesSync_);
+	categories = contentCategories_;
 }
 
-void Center::getGroupedCategories(std::map<std::string, std::string>& groupedCategories)
+void Center::getGroupedContentCategories(std::map<std::string, std::string>& groupedCategories)
 {
-	boost::mutex::scoped_lock lock(categoriesSync_);
-	groupedCategories = groupedCategories_;
+	boost::mutex::scoped_lock lock(contentCategoriesSync_);
+	groupedCategories = groupedContentCategories_;
+}
+
+void Center::setExtraCategories(const std::vector<std::string>& categories)
+{
+	boost::mutex::scoped_lock lock(extraCategoriesSync_);
+
+	std::string s;
+	for (const std::string& category : categories) {
+		s += category;
+		s += "\n";
+	}
+
+	std::ostringstream oss;
+	oss << "INSERT OR REPLACE INTO Info VALUES ('ExtraCategories', ";
+	oss << sqlText(s);
+	oss << ")";
+
+	SQLite::Transaction t(*db_);
+	db_->exec(oss.str());
+	t.commit();
+
+	extraCategories_ = categories;
+
+	updateExtraCategoryGroup();
+}
+
+void Center::getExtraCategories(std::vector<std::string>& categories)
+{
+	boost::mutex::scoped_lock lock(extraCategoriesSync_);
+	categories = extraCategories_;
+}
+
+void Center::getGroupedExtraCategories(std::map<std::string, std::string>& groupedCategories)
+{
+	boost::mutex::scoped_lock lock(extraCategoriesSync_);
+	groupedCategories = groupedExtraCategories_;
 }
 
 bool Center::lockEngineVersion(const std::string& name, const std::string& version, LockMode mode)
@@ -480,6 +517,7 @@ bool Center::addExtra(const Form& form, const std::string& id)
 	oss << "INSERT INTO Extras VALUES (";
 	oss << sqlText(id) << ", ";
 	oss << sqlText(form.at("Title")) << ", ";
+	oss << sqlText(form.at("Category")) << ", ";
 	oss << sqlText(form.at("Setup")) << ", ";
 	oss << sqlText(form.at("User")) << ", ";
 	oss << sqlText(getCurrentTimeString()) << ", ";
@@ -498,6 +536,7 @@ bool Center::updateExtra(const Form& form, const std::string& id)
 	std::ostringstream oss;
 	oss << "UPDATE Extras SET ";
 	oss << "Title=" << sqlText(form.at("Title")) << ", ";
+	oss << "Category=" << sqlText(form.at("Category")) << ", ";
 	oss << "Setup=" << sqlText(form.at("Setup")) << ", ";
 	oss << "Info=" << sqlText(form.at("Info"));
 	oss << " WHERE Id=" << sqlText(id);
@@ -523,6 +562,7 @@ bool Center::getExtra(Form& form, const std::string& id)
 
 	form["Id"] = s.getColumn("Id").getText();
 	form["Title"] = s.getColumn("Title").getText();
+	form["Category"] = s.getColumn("Category").getText();
 	form["Setup"] = s.getColumn("Setup").getText();
 	form["User"] = s.getColumn("User").getText();
 	form["UpTime"] = s.getColumn("UpTime").getText();
@@ -691,11 +731,11 @@ void Center::loadPagesFromDb()
 	}
 }
 
-void Center::loadCategoriesFromDb()
+void Center::loadContentCategoriesFromDb()
 {
-	boost::mutex::scoped_lock lock(categoriesSync_);
+	boost::mutex::scoped_lock lock(contentCategoriesSync_);
 
-	SQLite::Statement s(*db_, "SELECT Value FROM Info WHERE Key='Categories'");
+	SQLite::Statement s(*db_, "SELECT Value FROM Info WHERE Key='ContentCategories'");
 	if (!s.executeStep()) {
 		return;
 	}
@@ -705,19 +745,19 @@ void Center::loadCategoriesFromDb()
 	std::istringstream stream(col.getText());
 	std::string line;
 	while (std::getline(stream, line)) {
-		categories_.push_back(line);
+		contentCategories_.push_back(line);
 	}
 
-	updateCategoryGroup();
+	updateContentCategoryGroup();
 }
 
-void Center::updateCategoryGroup()
+void Center::updateContentCategoryGroup()
 {
-	groupedCategories_.clear();
+	groupedContentCategories_.clear();
 
 	std::string group;
 
-	for (std::string s : categories_)
+	for (std::string s : contentCategories_)
 	{
 		boost::trim(s);
 
@@ -729,7 +769,50 @@ void Center::updateCategoryGroup()
 			group = s;
 		}
 		else if (!group.empty()) {
-			groupedCategories_.insert(std::make_pair(s, group));
+			groupedContentCategories_.insert(std::make_pair(s, group));
+		}
+	}
+}
+
+void Center::loadExtraCategoriesFromDb()
+{
+	boost::mutex::scoped_lock lock(extraCategoriesSync_);
+
+	SQLite::Statement s(*db_, "SELECT Value FROM Info WHERE Key='ExtraCategories'");
+	if (!s.executeStep()) {
+		return;
+	}
+
+	SQLite::Column col = s.getColumn("Value");
+
+	std::istringstream stream(col.getText());
+	std::string line;
+	while (std::getline(stream, line)) {
+		extraCategories_.push_back(line);
+	}
+
+	updateExtraCategoryGroup();
+}
+
+void Center::updateExtraCategoryGroup()
+{
+	groupedExtraCategories_.clear();
+
+	std::string group;
+
+	for (std::string s : extraCategories_)
+	{
+		boost::trim(s);
+
+		if (s.empty()) {
+			continue;
+		}
+
+		if (boost::starts_with(s, "=")) {
+			group = s;
+		}
+		else if (!group.empty()) {
+			groupedExtraCategories_.insert(std::make_pair(s, group));
 		}
 	}
 }

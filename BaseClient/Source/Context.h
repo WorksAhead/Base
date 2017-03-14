@@ -14,6 +14,7 @@
 
 // forward declaration
 class ContentImageLoader;
+class ExtraImageLoader;
 
 namespace EngineState {
 	enum State {
@@ -88,6 +89,7 @@ struct Context
 	std::string currentUserGroup;
 
 	ContentImageLoader* contentImageLoader;
+	ExtraImageLoader* extraImageLoader;
 
 	std::function<void(ASyncTaskPtr)> addTask;
 

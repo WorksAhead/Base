@@ -18,6 +18,7 @@ public:
 	QString id() const;
 
 	void setText(const QString&);
+	QString text() const;
 
 	void setBackground(const QPixmap&);
 

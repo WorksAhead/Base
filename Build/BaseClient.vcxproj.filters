@@ -100,9 +100,6 @@
     <CustomBuild Include="..\BaseClient\Source\LowerPaneWidget.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\ManageCategoryWidget.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="..\BaseClient\Source\ManageContentWidget.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
@@ -110,9 +107,6 @@
       <Filter>Form Files</Filter>
     </CustomBuild>
     <CustomBuild Include="..\BaseClient\Source\ManageExtraWidget.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\ManagePageWidget.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
     <CustomBuild Include="..\BaseClient\Source\ManageUserWidget.ui">
@@ -125,9 +119,6 @@
       <Filter>Form Files</Filter>
     </CustomBuild>
     <CustomBuild Include="..\BaseClient\Source\PageEngineItemWidget.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\PageExtraItemWidget.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
     <CustomBuild Include="..\BaseClient\Source\PageExtraWidget.ui">
@@ -220,9 +211,6 @@
     <CustomBuild Include="..\BaseClient\Source\LowerPaneWidget.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\ManageCategoryWidget.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="..\BaseClient\Source\ManageContentWidget.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
@@ -230,9 +218,6 @@
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="..\BaseClient\Source\ManageExtraWidget.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\ManagePageWidget.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="..\BaseClient\Source\ManageUserWidget.h">
@@ -341,6 +326,27 @@
       <Filter>Form Files</Filter>
     </CustomBuild>
     <CustomBuild Include="..\BaseClient\Source\WebEngineView.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\ManageInfoWidget.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\ManageInfoWidget.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\PagesEditDialog.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\PagesEditDialog.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\CategoriesEditDialog.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\CategoriesEditDialog.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\ExtraImageLoader.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>
@@ -507,13 +513,7 @@
     <ClCompile Include="..\BaseClient\Source\ManageWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\BaseClient\Source\ManagePageWidget.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\BaseClient\Source\ManageEngineWidget.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\Source\ManageCategoryWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\BaseClient\Source\LowerPaneWidget.cpp">
@@ -861,15 +861,6 @@
     <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_LowerPaneWidget.cpp">
       <Filter>Generated Files\ReleaseConsole_Win32</Filter>
     </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_ManageCategoryWidget.cpp">
-      <Filter>Generated Files\DebugConsole_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_ManageCategoryWidget.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_ManageCategoryWidget.cpp">
-      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
-    </ClCompile>
     <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_ManageContentWidget.cpp">
       <Filter>Generated Files\DebugConsole_Win32</Filter>
     </ClCompile>
@@ -895,15 +886,6 @@
       <Filter>Generated Files\Release_Win32</Filter>
     </ClCompile>
     <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_ManageExtraWidget.cpp">
-      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_ManagePageWidget.cpp">
-      <Filter>Generated Files\DebugConsole_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_ManagePageWidget.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_ManagePageWidget.cpp">
       <Filter>Generated Files\ReleaseConsole_Win32</Filter>
     </ClCompile>
     <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_ManageUserWidget.cpp">
@@ -1215,6 +1197,54 @@
     <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_WebEngineView.cpp">
       <Filter>Generated Files\ReleaseConsole_Win32</Filter>
     </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_ManageInfoWidget.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_ManageInfoWidget.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_ManageInfoWidget.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\Source\ManageInfoWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\Source\PagesEditDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_PagesEditDialog.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_PagesEditDialog.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_PagesEditDialog.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\Source\CategoriesEditDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_CategoriesEditDialog.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_CategoriesEditDialog.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_CategoriesEditDialog.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\Source\ExtraImageLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_ExtraImageLoader.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_ExtraImageLoader.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_ExtraImageLoader.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\BaseClient\Resources\BaseClient.rc">
@@ -1363,9 +1393,6 @@
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_LowerPaneWidget.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_ManageCategoryWidget.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_ManageContentWidget.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
@@ -1373,9 +1400,6 @@
       <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_ManageExtraWidget.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_ManagePageWidget.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_ManageUserWidget.h">
@@ -1388,9 +1412,6 @@
       <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_PageEngineItemWidget.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_PageExtraItemWidget.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_PageExtraWidget.h">
@@ -1508,6 +1529,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_PageWebWidget.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_ManageInfoWidget.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_PagesEditDialog.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_CategoriesEditDialog.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>

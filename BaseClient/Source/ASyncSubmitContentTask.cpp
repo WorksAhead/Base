@@ -118,7 +118,7 @@ void ASyncSubmitContentTask::run()
 
 		for (;;)
 		{
-			const int ret = update(task.get(), i, 0.1);
+			const int ret = update(task.get(), i, 0.01);
 			if (ret < 0) {
 				if (task->state() == ASyncTask::state_cancelled) {
 					uploader->cancel();

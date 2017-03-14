@@ -32,9 +32,11 @@ public:
 	virtual void destroy(const Ice::Current&);
 
 	virtual Rpc::ErrorCode setTitle(const std::string&, const Ice::Current&);
+	virtual Rpc::ErrorCode setCategory(const std::string&, const Ice::Current&);
 	virtual Rpc::ErrorCode setSetup(const std::string&, const Ice::Current&);
 	virtual Rpc::ErrorCode setInfo(const std::string&, const Ice::Current&);
 
+	virtual Rpc::ErrorCode uploadImage(Rpc::UploaderPrx&, const Ice::Current&);
 	virtual Rpc::ErrorCode uploadExtra(Rpc::UploaderPrx&, const Ice::Current&);
 
 	virtual void cancel(const Ice::Current&);
@@ -52,7 +54,8 @@ public:
 	std::string id_;
 	std::string base_;
 	int mode_;
-	Uploader uploader_;
+	Uploader extraUploader_;
+	Uploader imageUploader_;
 	std::map<std::string, std::string> form_;
 	boost::recursive_mutex sync_;
 };

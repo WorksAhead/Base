@@ -25,7 +25,7 @@ Rpc::ErrorCode RpcContentBrowserImpl::init(const std::string& page, const std::s
 	if (!category.empty())
 	{
 		std::map<std::string, std::string> categories;
-		center_->getGroupedCategories(categories);
+		center_->getGroupedContentCategories(categories);
 
 		std::vector<std::string> list;
 		boost::split(list, category, boost::is_any_of(","));

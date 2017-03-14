@@ -25,17 +25,24 @@ public:
 	PageExtraWidget(ContextPtr context, const QString& name, QWidget* parent = 0);
 	~PageExtraWidget();
 
+	CategoryFilterWidget* categoryFilterWidget();
+
 protected:
+	virtual void mousePressEvent(QMouseEvent*);
 	virtual void showEvent(QShowEvent*);
 	virtual void paintEvent(QPaintEvent*);
 
 private Q_SLOTS:
+	void onCategoryChanged();
 	void onScroll(int);
 	void onRefresh();
+	void onImageLoaded(const QString& id, const QPixmap&);
+	void onTimeout();
 
 private:
 	void showMore(int);
 	void clear();
+	QString currentCategory();
 
 private:
 	ContextPtr context_;
@@ -44,8 +51,13 @@ private:
 
 	Rpc::ExtraBrowserPrx browser_;
 
+	QMap<QString, PageExtraItemWidget*> items_;
+
+	QTimer* timer_;
+
 	Ui::PageExtraWidget ui_;
 	bool firstShow_;
+	int count_;
 };
 
 #endif // PAGEEXTRAWIDGET_HEADER_

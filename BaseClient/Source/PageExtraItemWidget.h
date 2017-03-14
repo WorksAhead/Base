@@ -1,35 +1,42 @@
 #ifndef PAGEEXTRAITEMWIDGET_HEADER_
 #define PAGEEXTRAITEMWIDGET_HEADER_
 
-#include "Context.h"
-
-#include "ui_PageExtraItemWidget.h"
+#include <QWidget>
+#include <QImage>
+#include <QBoxLayout>
+#include <QString>
 
 class PageExtraItemWidget : public QWidget {
 private:
 	Q_OBJECT
 
 public:
-	PageExtraItemWidget(ContextPtr context, QWidget* parent = 0);
+	PageExtraItemWidget(QWidget* parent = 0);
 	~PageExtraItemWidget();
 
 	void setId(const QString& id);
-	void setTitle(const QString& title);
+	QString id() const;
+
+	void setText(const QString& title);
+	QString text() const;
+
+	void setBackground(const QPixmap&);
+
+	void setSize(int);
 
 protected:
-	virtual void mousePressEvent(QMouseEvent*);
-	virtual void mouseDoubleClickEvent(QMouseEvent*);
-	virtual void resizeEvent(QResizeEvent*);
 	virtual void paintEvent(QPaintEvent*);
-
-private Q_SLOTS:
-	void onInstall();
+	virtual void resizeEvent(QResizeEvent*);
 
 private:
-	ContextPtr context_;
-	Ui::PageExtraItemWidget ui_;
+	void updateBackground(const QSize&);
 
+private:
 	QString id_;
+	QString text_;
+	QPixmap bg_;
+	QPixmap scaledBg_;
+	int size_;
 };
 
 #endif // PAGEEXTRAITEMWIDGET_HEADER_

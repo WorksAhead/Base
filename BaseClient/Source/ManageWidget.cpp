@@ -4,8 +4,7 @@
 #include "ManageEngineWidget.h"
 #include "ManageExtraWidget.h"
 #include "ManageUserWidget.h"
-#include "ManagePageWidget.h"
-#include "ManageCategoryWidget.h"
+#include "ManageInfoWidget.h"
 #include "ManageClientWidget.h"
 
 #include <QBoxLayout>
@@ -28,15 +27,13 @@ ManageWidget::ManageWidget(ContextPtr context, QWidget* parent) : QWidget(parent
 		manageEngine_ = new ManageEngineWidget(context_);
 		manageExtra_ = new ManageExtraWidget(context_);
 		manageUser_ = new ManageUserWidget(context_);
-		managePage_ = new ManagePageWidget(context_);
-		manageCategory_ = new ManageCategoryWidget(context_);
+		manageInfoWidget_ = new ManageInfoWidget(context_);
 		manageClient_ = new ManageClientWidget(context_);
 
 		p->addTab("Engine", manageEngine_);
 		p->addTab("Extra", manageExtra_);
 		p->addTab("User", manageUser_);
-		p->addTab("Page", managePage_);
-		p->addTab("Category", manageCategory_);
+		p->addTab("Info", manageInfoWidget_);
 		p->addTab("Client", manageClient_);
 	}
 

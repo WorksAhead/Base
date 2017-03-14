@@ -15,7 +15,7 @@ public:
 	explicit RpcExtraBrowserImpl(CenterPtr);
 	~RpcExtraBrowserImpl();
 
-	Rpc::ErrorCode init();
+	Rpc::ErrorCode init(const std::string& category, const std::string& search);
 
 	virtual void destroy(const Ice::Current&);
 

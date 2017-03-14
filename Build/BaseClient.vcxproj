@@ -147,6 +147,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_CategoriesEditDialog.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_CategoryFilterWidget.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">true</ExcludedFromBuild>
@@ -168,6 +172,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_DownloadClientDialog.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_ExtraImageLoader.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">true</ExcludedFromBuild>
     </ClCompile>
@@ -243,10 +251,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_ManageCategoryWidget.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_ManageClientWidget.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">true</ExcludedFromBuild>
@@ -263,7 +267,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_ManagePageWidget.cpp">
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_ManageInfoWidget.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">true</ExcludedFromBuild>
     </ClCompile>
@@ -304,6 +308,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_PageExtraWidget.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_PagesEditDialog.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">true</ExcludedFromBuild>
     </ClCompile>
@@ -383,6 +391,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_CategoriesEditDialog.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_CategoryFilterWidget.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -404,6 +416,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_DownloadClientDialog.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_ExtraImageLoader.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
@@ -479,10 +495,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_ManageCategoryWidget.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_ManageClientWidget.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -499,7 +511,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_ManagePageWidget.cpp">
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_ManageInfoWidget.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
@@ -540,6 +552,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_PageExtraWidget.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_PagesEditDialog.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
@@ -619,6 +635,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_CategoriesEditDialog.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_CategoryFilterWidget.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">true</ExcludedFromBuild>
@@ -640,6 +660,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_DownloadClientDialog.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_ExtraImageLoader.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">true</ExcludedFromBuild>
     </ClCompile>
@@ -715,10 +739,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_ManageCategoryWidget.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_ManageClientWidget.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">true</ExcludedFromBuild>
@@ -735,7 +755,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_ManagePageWidget.cpp">
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_ManageInfoWidget.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">true</ExcludedFromBuild>
     </ClCompile>
@@ -776,6 +796,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_PageExtraWidget.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_PagesEditDialog.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">true</ExcludedFromBuild>
     </ClCompile>
@@ -852,7 +876,9 @@
     <ClCompile Include="..\BaseClient\Source\ASyncUnpackTask.cpp" />
     <ClCompile Include="..\BaseClient\Source\ASyncUpdateClientTask.cpp" />
     <ClCompile Include="..\BaseClient\Source\AutoExpandTextEdit.cpp" />
+    <ClCompile Include="..\BaseClient\Source\CategoriesEditDialog.cpp" />
     <ClCompile Include="..\BaseClient\Source\CategoryFilterWidget.cpp" />
+    <ClCompile Include="..\BaseClient\Source\ExtraImageLoader.cpp" />
     <ClCompile Include="..\BaseClient\Source\LabelSelectorDialog.cpp" />
     <ClCompile Include="..\BaseClient\Source\LabelSelectorWidget.cpp" />
     <ClCompile Include="..\BaseClient\Source\ContentDownloadDialog.cpp" />
@@ -864,6 +890,7 @@
     <ClCompile Include="..\BaseClient\Source\LibraryExtraWidget.cpp" />
     <ClCompile Include="..\BaseClient\Source\ManageClientWidget.cpp" />
     <ClCompile Include="..\BaseClient\Source\ManageExtraWidget.cpp" />
+    <ClCompile Include="..\BaseClient\Source\ManageInfoWidget.cpp" />
     <ClCompile Include="..\BaseClient\Source\PageContentBrowserWidget.cpp" />
     <ClCompile Include="..\BaseClient\Source\PageContentContentWidget.cpp" />
     <ClCompile Include="..\BaseClient\Source\CreateProjectDialog.cpp" />
@@ -877,9 +904,7 @@
     <ClCompile Include="..\BaseClient\Source\LibraryEngineWidget.cpp" />
     <ClCompile Include="..\BaseClient\Source\LibraryWidget.cpp" />
     <ClCompile Include="..\BaseClient\Source\LowerPaneWidget.cpp" />
-    <ClCompile Include="..\BaseClient\Source\ManageCategoryWidget.cpp" />
     <ClCompile Include="..\BaseClient\Source\ManageContentWidget.cpp" />
-    <ClCompile Include="..\BaseClient\Source\ManagePageWidget.cpp" />
     <ClCompile Include="..\BaseClient\Source\ManageUserWidget.cpp" />
     <ClCompile Include="..\BaseClient\Source\PageContentWidget.cpp" />
     <ClCompile Include="..\BaseClient\Source\PageContentItemWidget.cpp" />
@@ -888,6 +913,7 @@
     <ClCompile Include="..\BaseClient\Source\PageEngineWidget.cpp" />
     <ClCompile Include="..\BaseClient\Source\PageExtraItemWidget.cpp" />
     <ClCompile Include="..\BaseClient\Source\PageExtraWidget.cpp" />
+    <ClCompile Include="..\BaseClient\Source\PagesEditDialog.cpp" />
     <ClCompile Include="..\BaseClient\Source\PageWebWidget.cpp" />
     <ClCompile Include="..\BaseClient\Source\PathUtils.cpp" />
     <ClCompile Include="..\BaseClient\Source\ProgressBar.cpp" />
@@ -954,6 +980,7 @@
   <ItemGroup>
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_ASyncTaskManagerDialog.h" />
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_ASyncTaskWidget.h" />
+    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_CategoriesEditDialog.h" />
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_ContentDownloadDialog.h" />
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_CreateProjectDialog.h" />
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_DecoratorWidget.h" />
@@ -970,18 +997,17 @@
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_LibraryProjectItemWidget.h" />
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_LoginDialog.h" />
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_LowerPaneWidget.h" />
-    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_ManageCategoryWidget.h" />
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_ManageClientWidget.h" />
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_ManageContentWidget.h" />
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_ManageEngineWidget.h" />
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_ManageExtraWidget.h" />
-    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_ManagePageWidget.h" />
+    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_ManageInfoWidget.h" />
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_ManageUserWidget.h" />
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_PageContentContentWidget.h" />
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_PageContentWidget.h" />
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_PageEngineItemWidget.h" />
-    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_PageExtraItemWidget.h" />
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_PageExtraWidget.h" />
+    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_PagesEditDialog.h" />
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_PageWebWidget.h" />
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_SubmitClientDialog.h" />
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_SubmitContentDialog.h" />
@@ -1146,6 +1172,20 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DWIN64 -DQT_DLL -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DQT_NETWORK_LIB -D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS -D_WINSOCK_DEPRECATED_NO_WARNINGS "-I.\..\Ext\VLC-Qt\include" "-I.\..\Ext\sqlite3" "-I.\..\Ext\SQLiteCpp\include" "-I.\..\Ext\zlib" "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtWebEngine" "-I$(QTDIR)\include\QtWebEngineWidgets" "-I.\..\BaseClient\GeneratedFiles" "-I.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I$(QTDIR)\include\QtNetwork" "-I.\..\Common" "-I.\..\Common\Rpc" "-IC:\Work\_lib\boost_1_62_0" "-IC:\Work\_lib\Ice-3.6.3\include"</Command>
     </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\CategoriesEditDialog.h">
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);$(QTDIR)\bin\moc.exe;%(FullPath);$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">Moc%27ing CategoriesEditDialog.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DWIN64 -DQT_DLL -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DQT_NETWORK_LIB -D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS -D_WINSOCK_DEPRECATED_NO_WARNINGS "-I.\..\Ext\VLC-Qt\include" "-I.\..\Ext\sqlite3" "-I.\..\Ext\SQLiteCpp\include" "-I.\..\Ext\zlib" "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtWebEngine" "-I$(QTDIR)\include\QtWebEngineWidgets" "-I.\..\BaseClient\GeneratedFiles" "-I.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I$(QTDIR)\include\QtNetwork" "-I.\..\Common" "-I.\..\Common\Rpc" "-IC:\Work\_lib\boost_1_62_0" "-IC:\Work\_lib\Ice-3.6.3\include"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);$(QTDIR)\bin\moc.exe;%(FullPath);$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Moc%27ing CategoriesEditDialog.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DWIN64 -DQT_DLL -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DQT_NETWORK_LIB -D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS -D_WINSOCK_DEPRECATED_NO_WARNINGS "-I.\..\Ext\VLC-Qt\include" "-I.\..\Ext\sqlite3" "-I.\..\Ext\SQLiteCpp\include" "-I.\..\Ext\zlib" "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtWebEngine" "-I$(QTDIR)\include\QtWebEngineWidgets" "-I.\..\BaseClient\GeneratedFiles" "-I.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I$(QTDIR)\include\QtNetwork" "-I.\..\Common" "-I.\..\Common\Rpc" "-IC:\Work\_lib\boost_1_62_0" "-IC:\Work\_lib\Ice-3.6.3\include"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);$(QTDIR)\bin\moc.exe;%(FullPath);$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">Moc%27ing CategoriesEditDialog.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DWIN64 -DQT_DLL -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DQT_NETWORK_LIB -D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS -D_WINSOCK_DEPRECATED_NO_WARNINGS "-I.\..\Ext\VLC-Qt\include" "-I.\..\Ext\sqlite3" "-I.\..\Ext\SQLiteCpp\include" "-I.\..\Ext\zlib" "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtWebEngine" "-I$(QTDIR)\include\QtWebEngineWidgets" "-I.\..\BaseClient\GeneratedFiles" "-I.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I$(QTDIR)\include\QtNetwork" "-I.\..\Common" "-I.\..\Common\Rpc" "-IC:\Work\_lib\boost_1_62_0" "-IC:\Work\_lib\Ice-3.6.3\include"</Command>
+    </CustomBuild>
     <ClInclude Include="..\BaseClient\Source\Context.h" />
     <CustomBuild Include="..\BaseClient\Source\CreateProjectDialog.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
@@ -1190,6 +1230,20 @@
       <Command Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DWIN64 -DQT_DLL -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DQT_NETWORK_LIB -D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS -D_WINSOCK_DEPRECATED_NO_WARNINGS  "-I.\..\Ext\VLC-Qt\include" "-I.\..\Ext\sqlite3" "-I.\..\Ext\SQLiteCpp\include" "-I.\..\Ext\zlib" "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtWebEngine" "-I$(QTDIR)\include\QtWebEngineWidgets" "-I.\..\BaseClient\GeneratedFiles" "-I.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I$(QTDIR)\include\QtNetwork" "-I.\..\Common" "-I.\..\Common\Rpc" "-IC:\Work\_lib\boost_1_62_0" "-IC:\Work\_lib\Ice-3.6.3\include"</Command>
     </CustomBuild>
     <ClInclude Include="..\BaseClient\Source\EdgeDetector.h" />
+    <CustomBuild Include="..\BaseClient\Source\ExtraImageLoader.h">
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">Moc%27ing ExtraImageLoader.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DWIN64 -DQT_DLL -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DQT_NETWORK_LIB -D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS -D_WINSOCK_DEPRECATED_NO_WARNINGS "-I.\..\Ext\VLC-Qt\include" "-I.\..\Ext\sqlite3" "-I.\..\Ext\SQLiteCpp\include" "-I.\..\Ext\zlib" "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtWebEngine" "-I$(QTDIR)\include\QtWebEngineWidgets" "-I.\..\BaseClient\GeneratedFiles" "-I.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I$(QTDIR)\include\QtNetwork" "-I.\..\Common" "-I.\..\Common\Rpc" "-IC:\Work\_lib\boost_1_62_0" "-IC:\Work\_lib\Ice-3.6.3\include"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Moc%27ing ExtraImageLoader.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DWIN64 -DQT_DLL -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DQT_NETWORK_LIB -D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS -D_WINSOCK_DEPRECATED_NO_WARNINGS "-I.\..\Ext\VLC-Qt\include" "-I.\..\Ext\sqlite3" "-I.\..\Ext\SQLiteCpp\include" "-I.\..\Ext\zlib" "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtWebEngine" "-I$(QTDIR)\include\QtWebEngineWidgets" "-I.\..\BaseClient\GeneratedFiles" "-I.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I$(QTDIR)\include\QtNetwork" "-I.\..\Common" "-I.\..\Common\Rpc" "-IC:\Work\_lib\boost_1_62_0" "-IC:\Work\_lib\Ice-3.6.3\include"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">Moc%27ing ExtraImageLoader.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DWIN64 -DQT_DLL -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DQT_NETWORK_LIB -D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS -D_WINSOCK_DEPRECATED_NO_WARNINGS "-I.\..\Ext\VLC-Qt\include" "-I.\..\Ext\sqlite3" "-I.\..\Ext\SQLiteCpp\include" "-I.\..\Ext\zlib" "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtWebEngine" "-I$(QTDIR)\include\QtWebEngineWidgets" "-I.\..\BaseClient\GeneratedFiles" "-I.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I$(QTDIR)\include\QtNetwork" "-I.\..\Common" "-I.\..\Common\Rpc" "-IC:\Work\_lib\boost_1_62_0" "-IC:\Work\_lib\Ice-3.6.3\include"</Command>
+    </CustomBuild>
     <ClInclude Include="..\BaseClient\Source\FileScanner.h" />
     <CustomBuild Include="..\BaseClient\Source\FlowLayout.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
@@ -1416,20 +1470,6 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DWIN64 -DQT_DLL -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DQT_NETWORK_LIB -D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS -D_WINSOCK_DEPRECATED_NO_WARNINGS  "-I.\..\Ext\VLC-Qt\include" "-I.\..\Ext\sqlite3" "-I.\..\Ext\SQLiteCpp\include" "-I.\..\Ext\zlib" "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtWebEngine" "-I$(QTDIR)\include\QtWebEngineWidgets" "-I.\..\BaseClient\GeneratedFiles" "-I.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I$(QTDIR)\include\QtNetwork" "-I.\..\Common" "-I.\..\Common\Rpc" "-IC:\Work\_lib\boost_1_62_0" "-IC:\Work\_lib\Ice-3.6.3\include"</Command>
     </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\ManageCategoryWidget.h">
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">Moc%27ing ManageCategoryWidget.h...</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DWIN64 -DQT_DLL -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DQT_NETWORK_LIB -D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS -D_WINSOCK_DEPRECATED_NO_WARNINGS  "-I.\..\Ext\VLC-Qt\include" "-I.\..\Ext\sqlite3" "-I.\..\Ext\SQLiteCpp\include" "-I.\..\Ext\zlib" "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtWebEngine" "-I$(QTDIR)\include\QtWebEngineWidgets" "-I.\..\BaseClient\GeneratedFiles" "-I.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I$(QTDIR)\include\QtNetwork" "-I.\..\Common" "-I.\..\Common\Rpc" "-IC:\Work\_lib\boost_1_62_0" "-IC:\Work\_lib\Ice-3.6.3\include"</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Moc%27ing ManageCategoryWidget.h...</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DWIN64 -DQT_DLL -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DQT_NETWORK_LIB -D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS -D_WINSOCK_DEPRECATED_NO_WARNINGS  "-I.\..\Ext\VLC-Qt\include" "-I.\..\Ext\sqlite3" "-I.\..\Ext\SQLiteCpp\include" "-I.\..\Ext\zlib" "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtWebEngine" "-I$(QTDIR)\include\QtWebEngineWidgets" "-I.\..\BaseClient\GeneratedFiles" "-I.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I$(QTDIR)\include\QtNetwork" "-I.\..\Common" "-I.\..\Common\Rpc" "-IC:\Work\_lib\boost_1_62_0" "-IC:\Work\_lib\Ice-3.6.3\include"</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">Moc%27ing ManageCategoryWidget.h...</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DWIN64 -DQT_DLL -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DQT_NETWORK_LIB -D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS -D_WINSOCK_DEPRECATED_NO_WARNINGS  "-I.\..\Ext\VLC-Qt\include" "-I.\..\Ext\sqlite3" "-I.\..\Ext\SQLiteCpp\include" "-I.\..\Ext\zlib" "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtWebEngine" "-I$(QTDIR)\include\QtWebEngineWidgets" "-I.\..\BaseClient\GeneratedFiles" "-I.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I$(QTDIR)\include\QtNetwork" "-I.\..\Common" "-I.\..\Common\Rpc" "-IC:\Work\_lib\boost_1_62_0" "-IC:\Work\_lib\Ice-3.6.3\include"</Command>
-    </CustomBuild>
     <CustomBuild Include="..\BaseClient\Source\ManageContentWidget.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">Moc%27ing ManageContentWidget.h...</Message>
@@ -1469,20 +1509,6 @@
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DWIN64 -DQT_DLL -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DQT_NETWORK_LIB -D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS -D_WINSOCK_DEPRECATED_NO_WARNINGS  "-I.\..\Ext\VLC-Qt\include" "-I.\..\Ext\sqlite3" "-I.\..\Ext\SQLiteCpp\include" "-I.\..\Ext\zlib" "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtWebEngine" "-I$(QTDIR)\include\QtWebEngineWidgets" "-I.\..\BaseClient\GeneratedFiles" "-I.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I$(QTDIR)\include\QtNetwork" "-I.\..\Common" "-I.\..\Common\Rpc" "-IC:\Work\_lib\boost_1_62_0" "-IC:\Work\_lib\Ice-3.6.3\include"</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">Moc%27ing ManageExtraWidget.h...</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DWIN64 -DQT_DLL -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DQT_NETWORK_LIB -D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS -D_WINSOCK_DEPRECATED_NO_WARNINGS  "-I.\..\Ext\VLC-Qt\include" "-I.\..\Ext\sqlite3" "-I.\..\Ext\SQLiteCpp\include" "-I.\..\Ext\zlib" "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtWebEngine" "-I$(QTDIR)\include\QtWebEngineWidgets" "-I.\..\BaseClient\GeneratedFiles" "-I.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I$(QTDIR)\include\QtNetwork" "-I.\..\Common" "-I.\..\Common\Rpc" "-IC:\Work\_lib\boost_1_62_0" "-IC:\Work\_lib\Ice-3.6.3\include"</Command>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\ManagePageWidget.h">
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">Moc%27ing ManagePageWidget.h...</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DWIN64 -DQT_DLL -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DQT_NETWORK_LIB -D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS -D_WINSOCK_DEPRECATED_NO_WARNINGS  "-I.\..\Ext\VLC-Qt\include" "-I.\..\Ext\sqlite3" "-I.\..\Ext\SQLiteCpp\include" "-I.\..\Ext\zlib" "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtWebEngine" "-I$(QTDIR)\include\QtWebEngineWidgets" "-I.\..\BaseClient\GeneratedFiles" "-I.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I$(QTDIR)\include\QtNetwork" "-I.\..\Common" "-I.\..\Common\Rpc" "-IC:\Work\_lib\boost_1_62_0" "-IC:\Work\_lib\Ice-3.6.3\include"</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Moc%27ing ManagePageWidget.h...</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DWIN64 -DQT_DLL -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DQT_NETWORK_LIB -D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS -D_WINSOCK_DEPRECATED_NO_WARNINGS  "-I.\..\Ext\VLC-Qt\include" "-I.\..\Ext\sqlite3" "-I.\..\Ext\SQLiteCpp\include" "-I.\..\Ext\zlib" "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtWebEngine" "-I$(QTDIR)\include\QtWebEngineWidgets" "-I.\..\BaseClient\GeneratedFiles" "-I.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I$(QTDIR)\include\QtNetwork" "-I.\..\Common" "-I.\..\Common\Rpc" "-IC:\Work\_lib\boost_1_62_0" "-IC:\Work\_lib\Ice-3.6.3\include"</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">Moc%27ing ManagePageWidget.h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DWIN64 -DQT_DLL -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DQT_NETWORK_LIB -D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS -D_WINSOCK_DEPRECATED_NO_WARNINGS  "-I.\..\Ext\VLC-Qt\include" "-I.\..\Ext\sqlite3" "-I.\..\Ext\SQLiteCpp\include" "-I.\..\Ext\zlib" "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtWebEngine" "-I$(QTDIR)\include\QtWebEngineWidgets" "-I.\..\BaseClient\GeneratedFiles" "-I.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I$(QTDIR)\include\QtNetwork" "-I.\..\Common" "-I.\..\Common\Rpc" "-IC:\Work\_lib\boost_1_62_0" "-IC:\Work\_lib\Ice-3.6.3\include"</Command>
     </CustomBuild>
@@ -1529,6 +1555,20 @@
       <Command Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DWIN64 -DQT_DLL -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DQT_NETWORK_LIB -D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS -D_WINSOCK_DEPRECATED_NO_WARNINGS  "-I.\..\Ext\VLC-Qt\include" "-I.\..\Ext\sqlite3" "-I.\..\Ext\SQLiteCpp\include" "-I.\..\Ext\zlib" "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtWebEngine" "-I$(QTDIR)\include\QtWebEngineWidgets" "-I.\..\BaseClient\GeneratedFiles" "-I.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I$(QTDIR)\include\QtNetwork" "-I.\..\Common" "-I.\..\Common\Rpc" "-IC:\Work\_lib\boost_1_62_0" "-IC:\Work\_lib\Ice-3.6.3\include"</Command>
     </CustomBuild>
     <ClInclude Include="..\BaseClient\Source\KVMap.h" />
+    <CustomBuild Include="..\BaseClient\Source\ManageInfoWidget.h">
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">Moc%27ing ManageInfoWidget.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DWIN64 -DQT_DLL -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DQT_NETWORK_LIB -D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS -D_WINSOCK_DEPRECATED_NO_WARNINGS "-I.\..\Ext\VLC-Qt\include" "-I.\..\Ext\sqlite3" "-I.\..\Ext\SQLiteCpp\include" "-I.\..\Ext\zlib" "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtWebEngine" "-I$(QTDIR)\include\QtWebEngineWidgets" "-I.\..\BaseClient\GeneratedFiles" "-I.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I$(QTDIR)\include\QtNetwork" "-I.\..\Common" "-I.\..\Common\Rpc" "-IC:\Work\_lib\boost_1_62_0" "-IC:\Work\_lib\Ice-3.6.3\include"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Moc%27ing ManageInfoWidget.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DWIN64 -DQT_DLL -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DQT_NETWORK_LIB -D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS -D_WINSOCK_DEPRECATED_NO_WARNINGS "-I.\..\Ext\VLC-Qt\include" "-I.\..\Ext\sqlite3" "-I.\..\Ext\SQLiteCpp\include" "-I.\..\Ext\zlib" "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtWebEngine" "-I$(QTDIR)\include\QtWebEngineWidgets" "-I.\..\BaseClient\GeneratedFiles" "-I.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I$(QTDIR)\include\QtNetwork" "-I.\..\Common" "-I.\..\Common\Rpc" "-IC:\Work\_lib\boost_1_62_0" "-IC:\Work\_lib\Ice-3.6.3\include"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">Moc%27ing ManageInfoWidget.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DWIN64 -DQT_DLL -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DQT_NETWORK_LIB -D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS -D_WINSOCK_DEPRECATED_NO_WARNINGS "-I.\..\Ext\VLC-Qt\include" "-I.\..\Ext\sqlite3" "-I.\..\Ext\SQLiteCpp\include" "-I.\..\Ext\zlib" "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtWebEngine" "-I$(QTDIR)\include\QtWebEngineWidgets" "-I.\..\BaseClient\GeneratedFiles" "-I.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I$(QTDIR)\include\QtNetwork" "-I.\..\Common" "-I.\..\Common\Rpc" "-IC:\Work\_lib\boost_1_62_0" "-IC:\Work\_lib\Ice-3.6.3\include"</Command>
+    </CustomBuild>
     <ClInclude Include="..\BaseClient\Source\Package.h" />
     <CustomBuild Include="..\BaseClient\Source\PageContentContentWidget.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
@@ -1653,6 +1693,20 @@
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DWIN64 -DQT_DLL -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DQT_NETWORK_LIB -D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS -D_WINSOCK_DEPRECATED_NO_WARNINGS "-I.\..\Ext\VLC-Qt\include" "-I.\..\Ext\sqlite3" "-I.\..\Ext\SQLiteCpp\include" "-I.\..\Ext\zlib" "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtWebEngine" "-I$(QTDIR)\include\QtWebEngineWidgets" "-I.\..\BaseClient\GeneratedFiles" "-I.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I$(QTDIR)\include\QtNetwork" "-I.\..\Common" "-I.\..\Common\Rpc" "-IC:\Work\_lib\boost_1_62_0" "-IC:\Work\_lib\Ice-3.6.3\include"</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">Moc%27ing PageWebWidget.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DWIN64 -DQT_DLL -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DQT_NETWORK_LIB -D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS -D_WINSOCK_DEPRECATED_NO_WARNINGS "-I.\..\Ext\VLC-Qt\include" "-I.\..\Ext\sqlite3" "-I.\..\Ext\SQLiteCpp\include" "-I.\..\Ext\zlib" "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtWebEngine" "-I$(QTDIR)\include\QtWebEngineWidgets" "-I.\..\BaseClient\GeneratedFiles" "-I.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I$(QTDIR)\include\QtNetwork" "-I.\..\Common" "-I.\..\Common\Rpc" "-IC:\Work\_lib\boost_1_62_0" "-IC:\Work\_lib\Ice-3.6.3\include"</Command>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\PagesEditDialog.h">
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">Moc%27ing PagesEditDialog.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DWIN64 -DQT_DLL -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DQT_NETWORK_LIB -D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS -D_WINSOCK_DEPRECATED_NO_WARNINGS "-I.\..\Ext\VLC-Qt\include" "-I.\..\Ext\sqlite3" "-I.\..\Ext\SQLiteCpp\include" "-I.\..\Ext\zlib" "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtWebEngine" "-I$(QTDIR)\include\QtWebEngineWidgets" "-I.\..\BaseClient\GeneratedFiles" "-I.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I$(QTDIR)\include\QtNetwork" "-I.\..\Common" "-I.\..\Common\Rpc" "-IC:\Work\_lib\boost_1_62_0" "-IC:\Work\_lib\Ice-3.6.3\include"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Moc%27ing PagesEditDialog.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DWIN64 -DQT_DLL -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DQT_NETWORK_LIB -D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS -D_WINSOCK_DEPRECATED_NO_WARNINGS "-I.\..\Ext\VLC-Qt\include" "-I.\..\Ext\sqlite3" "-I.\..\Ext\SQLiteCpp\include" "-I.\..\Ext\zlib" "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtWebEngine" "-I$(QTDIR)\include\QtWebEngineWidgets" "-I.\..\BaseClient\GeneratedFiles" "-I.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I$(QTDIR)\include\QtNetwork" "-I.\..\Common" "-I.\..\Common\Rpc" "-IC:\Work\_lib\boost_1_62_0" "-IC:\Work\_lib\Ice-3.6.3\include"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">Moc%27ing PagesEditDialog.h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DWIN64 -DQT_DLL -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DQT_NETWORK_LIB -D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS -D_WINSOCK_DEPRECATED_NO_WARNINGS "-I.\..\Ext\VLC-Qt\include" "-I.\..\Ext\sqlite3" "-I.\..\Ext\SQLiteCpp\include" "-I.\..\Ext\zlib" "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtWebEngine" "-I$(QTDIR)\include\QtWebEngineWidgets" "-I.\..\BaseClient\GeneratedFiles" "-I.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I$(QTDIR)\include\QtNetwork" "-I.\..\Common" "-I.\..\Common\Rpc" "-IC:\Work\_lib\boost_1_62_0" "-IC:\Work\_lib\Ice-3.6.3\include"</Command>
     </CustomBuild>
@@ -2100,20 +2154,6 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">.\..\BaseClient\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">"$(QTDIR)\bin\uic.exe" -o ".\..\BaseClient\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
     </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\ManageCategoryWidget.ui">
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">Uic%27ing %(Identity)...</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">.\..\BaseClient\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">"$(QTDIR)\bin\uic.exe" -o ".\..\BaseClient\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Uic%27ing %(Identity)...</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\..\BaseClient\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\uic.exe" -o ".\..\BaseClient\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">Uic%27ing %(Identity)...</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">.\..\BaseClient\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">"$(QTDIR)\bin\uic.exe" -o ".\..\BaseClient\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
-    </CustomBuild>
     <CustomBuild Include="..\BaseClient\Source\ManageContentWidget.ui">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">Uic%27ing %(Identity)...</Message>
@@ -2143,20 +2183,6 @@
       <Command Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">"$(QTDIR)\bin\uic.exe" -o ".\..\BaseClient\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
     </CustomBuild>
     <CustomBuild Include="..\BaseClient\Source\ManageExtraWidget.ui">
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">Uic%27ing %(Identity)...</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">.\..\BaseClient\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">"$(QTDIR)\bin\uic.exe" -o ".\..\BaseClient\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Uic%27ing %(Identity)...</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\..\BaseClient\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\uic.exe" -o ".\..\BaseClient\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">Uic%27ing %(Identity)...</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">.\..\BaseClient\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">"$(QTDIR)\bin\uic.exe" -o ".\..\BaseClient\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\ManagePageWidget.ui">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">Uic%27ing %(Identity)...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">.\..\BaseClient\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
@@ -2213,20 +2239,6 @@
       <Command Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">"$(QTDIR)\bin\uic.exe" -o ".\..\BaseClient\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
     </CustomBuild>
     <CustomBuild Include="..\BaseClient\Source\PageEngineItemWidget.ui">
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">Uic%27ing %(Identity)...</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">.\..\BaseClient\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">"$(QTDIR)\bin\uic.exe" -o ".\..\BaseClient\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Uic%27ing %(Identity)...</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\..\BaseClient\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\uic.exe" -o ".\..\BaseClient\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">Uic%27ing %(Identity)...</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">.\..\BaseClient\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">"$(QTDIR)\bin\uic.exe" -o ".\..\BaseClient\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
-    </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\PageExtraItemWidget.ui">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">Uic%27ing %(Identity)...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">.\..\BaseClient\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
@@ -2395,6 +2407,48 @@
       <Command Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">"$(QTDIR)\bin\uic.exe" -o ".\..\BaseClient\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
     </CustomBuild>
     <CustomBuild Include="..\BaseClient\Source\PageWebWidget.ui">
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">Uic%27ing %(Identity)...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">.\..\BaseClient\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">"$(QTDIR)\bin\uic.exe" -o ".\..\BaseClient\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Uic%27ing %(Identity)...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\..\BaseClient\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\uic.exe" -o ".\..\BaseClient\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">Uic%27ing %(Identity)...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">.\..\BaseClient\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">"$(QTDIR)\bin\uic.exe" -o ".\..\BaseClient\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\ManageInfoWidget.ui">
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">Uic%27ing %(Identity)...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">.\..\BaseClient\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">"$(QTDIR)\bin\uic.exe" -o ".\..\BaseClient\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Uic%27ing %(Identity)...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\..\BaseClient\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\uic.exe" -o ".\..\BaseClient\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">Uic%27ing %(Identity)...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">.\..\BaseClient\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">"$(QTDIR)\bin\uic.exe" -o ".\..\BaseClient\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\PagesEditDialog.ui">
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">Uic%27ing %(Identity)...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">.\..\BaseClient\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">"$(QTDIR)\bin\uic.exe" -o ".\..\BaseClient\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Uic%27ing %(Identity)...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\..\BaseClient\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\uic.exe" -o ".\..\BaseClient\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">Uic%27ing %(Identity)...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">.\..\BaseClient\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">"$(QTDIR)\bin\uic.exe" -o ".\..\BaseClient\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\CategoriesEditDialog.ui">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">Uic%27ing %(Identity)...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">.\..\BaseClient\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>

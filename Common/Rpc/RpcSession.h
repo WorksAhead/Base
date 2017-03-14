@@ -595,6 +595,7 @@ struct ExtraInfo
 {
     ::std::string id;
     ::std::string title;
+    ::std::string category;
     ::std::string setup;
     ::std::string user;
     ::std::string uptime;
@@ -612,6 +613,10 @@ struct ExtraInfo
             return false;
         }
         if(title != __rhs.title)
+        {
+            return false;
+        }
+        if(category != __rhs.category)
         {
             return false;
         }
@@ -657,6 +662,14 @@ struct ExtraInfo
             return true;
         }
         else if(__rhs.title < title)
+        {
+            return false;
+        }
+        if(category < __rhs.category)
+        {
+            return true;
+        }
+        else if(__rhs.category < category)
         {
             return false;
         }
@@ -1022,7 +1035,7 @@ template<>
 struct StreamableTraits< ::Rpc::ExtraInfo>
 {
     static const StreamHelperCategory helper = StreamHelperCategoryStruct;
-    static const int minWireSize = 7;
+    static const int minWireSize = 8;
     static const bool fixedLength = false;
 };
 
@@ -1033,6 +1046,7 @@ struct StreamWriter< ::Rpc::ExtraInfo, S>
     {
         __os->write(v.id);
         __os->write(v.title);
+        __os->write(v.category);
         __os->write(v.setup);
         __os->write(v.user);
         __os->write(v.uptime);
@@ -1048,6 +1062,7 @@ struct StreamReader< ::Rpc::ExtraInfo, S>
     {
         __is->read(v.id);
         __is->read(v.title);
+        __is->read(v.category);
         __is->read(v.setup);
         __is->read(v.user);
         __is->read(v.uptime);
@@ -1195,8 +1210,14 @@ typedef ::IceUtil::Handle< Callback_ExtraSubmitter_setTitle_Base> Callback_Extra
 class Callback_ExtraSubmitter_setSetup_Base : virtual public ::IceInternal::CallbackBase { };
 typedef ::IceUtil::Handle< Callback_ExtraSubmitter_setSetup_Base> Callback_ExtraSubmitter_setSetupPtr;
 
+class Callback_ExtraSubmitter_setCategory_Base : virtual public ::IceInternal::CallbackBase { };
+typedef ::IceUtil::Handle< Callback_ExtraSubmitter_setCategory_Base> Callback_ExtraSubmitter_setCategoryPtr;
+
 class Callback_ExtraSubmitter_setInfo_Base : virtual public ::IceInternal::CallbackBase { };
 typedef ::IceUtil::Handle< Callback_ExtraSubmitter_setInfo_Base> Callback_ExtraSubmitter_setInfoPtr;
+
+class Callback_ExtraSubmitter_uploadImage_Base : virtual public ::IceInternal::CallbackBase { };
+typedef ::IceUtil::Handle< Callback_ExtraSubmitter_uploadImage_Base> Callback_ExtraSubmitter_uploadImagePtr;
 
 class Callback_ExtraSubmitter_uploadExtra_Base : virtual public ::IceInternal::CallbackBase { };
 typedef ::IceUtil::Handle< Callback_ExtraSubmitter_uploadExtra_Base> Callback_ExtraSubmitter_uploadExtraPtr;
@@ -1237,11 +1258,17 @@ typedef ::IceUtil::Handle< Callback_Session_setPages_Base> Callback_Session_setP
 class Callback_Session_getPages_Base : virtual public ::IceInternal::CallbackBase { };
 typedef ::IceUtil::Handle< Callback_Session_getPages_Base> Callback_Session_getPagesPtr;
 
-class Callback_Session_setCategories_Base : virtual public ::IceInternal::CallbackBase { };
-typedef ::IceUtil::Handle< Callback_Session_setCategories_Base> Callback_Session_setCategoriesPtr;
+class Callback_Session_setContentCategories_Base : virtual public ::IceInternal::CallbackBase { };
+typedef ::IceUtil::Handle< Callback_Session_setContentCategories_Base> Callback_Session_setContentCategoriesPtr;
 
-class Callback_Session_getCategories_Base : virtual public ::IceInternal::CallbackBase { };
-typedef ::IceUtil::Handle< Callback_Session_getCategories_Base> Callback_Session_getCategoriesPtr;
+class Callback_Session_getContentCategories_Base : virtual public ::IceInternal::CallbackBase { };
+typedef ::IceUtil::Handle< Callback_Session_getContentCategories_Base> Callback_Session_getContentCategoriesPtr;
+
+class Callback_Session_setExtraCategories_Base : virtual public ::IceInternal::CallbackBase { };
+typedef ::IceUtil::Handle< Callback_Session_setExtraCategories_Base> Callback_Session_setExtraCategoriesPtr;
+
+class Callback_Session_getExtraCategories_Base : virtual public ::IceInternal::CallbackBase { };
+typedef ::IceUtil::Handle< Callback_Session_getExtraCategories_Base> Callback_Session_getExtraCategoriesPtr;
 
 class Callback_Session_browseContent_Base : virtual public ::IceInternal::CallbackBase { };
 typedef ::IceUtil::Handle< Callback_Session_browseContent_Base> Callback_Session_browseContentPtr;
@@ -1287,6 +1314,9 @@ typedef ::IceUtil::Handle< Callback_Session_browseExtra_Base> Callback_Session_b
 
 class Callback_Session_getExtraInfo_Base : virtual public ::IceInternal::CallbackBase { };
 typedef ::IceUtil::Handle< Callback_Session_getExtraInfo_Base> Callback_Session_getExtraInfoPtr;
+
+class Callback_Session_downloadExtraImage_Base : virtual public ::IceInternal::CallbackBase { };
+typedef ::IceUtil::Handle< Callback_Session_downloadExtraImage_Base> Callback_Session_downloadExtraImagePtr;
 
 class Callback_Session_downloadExtra_Base : virtual public ::IceInternal::CallbackBase { };
 typedef ::IceUtil::Handle< Callback_Session_downloadExtra_Base> Callback_Session_downloadExtraPtr;
@@ -3838,6 +3868,82 @@ private:
     
 public:
 
+    ::Rpc::ErrorCode setCategory(const ::std::string& __p_category)
+    {
+        return setCategory(__p_category, 0);
+    }
+    ::Rpc::ErrorCode setCategory(const ::std::string& __p_category, const ::Ice::Context& __ctx)
+    {
+        return setCategory(__p_category, &__ctx);
+    }
+#ifdef ICE_CPP11
+    ::Ice::AsyncResultPtr
+    begin_setCategory(const ::std::string& __p_category, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return __begin_setCategory(__p_category, 0, __response, __exception, __sent);
+    }
+    ::Ice::AsyncResultPtr
+    begin_setCategory(const ::std::string& __p_category, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_setCategory(__p_category, 0, ::Ice::newCallback(__completed, __sent), 0);
+    }
+    ::Ice::AsyncResultPtr
+    begin_setCategory(const ::std::string& __p_category, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return __begin_setCategory(__p_category, &__ctx, __response, __exception, __sent);
+    }
+    ::Ice::AsyncResultPtr
+    begin_setCategory(const ::std::string& __p_category, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_setCategory(__p_category, &__ctx, ::Ice::newCallback(__completed, __sent));
+    }
+    
+private:
+
+    ::Ice::AsyncResultPtr __begin_setCategory(const ::std::string& __p_category, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent);
+    
+public:
+#endif
+
+    ::Ice::AsyncResultPtr begin_setCategory(const ::std::string& __p_category)
+    {
+        return begin_setCategory(__p_category, 0, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_setCategory(const ::std::string& __p_category, const ::Ice::Context& __ctx)
+    {
+        return begin_setCategory(__p_category, &__ctx, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_setCategory(const ::std::string& __p_category, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_setCategory(__p_category, 0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_setCategory(const ::std::string& __p_category, const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_setCategory(__p_category, &__ctx, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_setCategory(const ::std::string& __p_category, const ::Rpc::Callback_ExtraSubmitter_setCategoryPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_setCategory(__p_category, 0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_setCategory(const ::std::string& __p_category, const ::Ice::Context& __ctx, const ::Rpc::Callback_ExtraSubmitter_setCategoryPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_setCategory(__p_category, &__ctx, __del, __cookie);
+    }
+
+    ::Rpc::ErrorCode end_setCategory(const ::Ice::AsyncResultPtr&);
+    
+private:
+
+    ::Rpc::ErrorCode setCategory(const ::std::string&, const ::Ice::Context*);
+    ::Ice::AsyncResultPtr begin_setCategory(const ::std::string&, const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
+    
+public:
+
     ::Rpc::ErrorCode setInfo(const ::std::string& __p_info)
     {
         return setInfo(__p_info, 0);
@@ -3911,6 +4017,82 @@ private:
 
     ::Rpc::ErrorCode setInfo(const ::std::string&, const ::Ice::Context*);
     ::Ice::AsyncResultPtr begin_setInfo(const ::std::string&, const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
+    
+public:
+
+    ::Rpc::ErrorCode uploadImage(::Rpc::UploaderPrx& __p_uploader)
+    {
+        return uploadImage(__p_uploader, 0);
+    }
+    ::Rpc::ErrorCode uploadImage(::Rpc::UploaderPrx& __p_uploader, const ::Ice::Context& __ctx)
+    {
+        return uploadImage(__p_uploader, &__ctx);
+    }
+#ifdef ICE_CPP11
+    ::Ice::AsyncResultPtr
+    begin_uploadImage(const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::UploaderPrx&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return __begin_uploadImage(0, __response, __exception, __sent);
+    }
+    ::Ice::AsyncResultPtr
+    begin_uploadImage(const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_uploadImage(0, ::Ice::newCallback(__completed, __sent), 0);
+    }
+    ::Ice::AsyncResultPtr
+    begin_uploadImage(const ::Ice::Context& __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::UploaderPrx&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return __begin_uploadImage(&__ctx, __response, __exception, __sent);
+    }
+    ::Ice::AsyncResultPtr
+    begin_uploadImage(const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_uploadImage(&__ctx, ::Ice::newCallback(__completed, __sent));
+    }
+    
+private:
+
+    ::Ice::AsyncResultPtr __begin_uploadImage(const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::UploaderPrx&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent);
+    
+public:
+#endif
+
+    ::Ice::AsyncResultPtr begin_uploadImage()
+    {
+        return begin_uploadImage(0, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_uploadImage(const ::Ice::Context& __ctx)
+    {
+        return begin_uploadImage(&__ctx, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_uploadImage(const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_uploadImage(0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_uploadImage(const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_uploadImage(&__ctx, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_uploadImage(const ::Rpc::Callback_ExtraSubmitter_uploadImagePtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_uploadImage(0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_uploadImage(const ::Ice::Context& __ctx, const ::Rpc::Callback_ExtraSubmitter_uploadImagePtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_uploadImage(&__ctx, __del, __cookie);
+    }
+
+    ::Rpc::ErrorCode end_uploadImage(::Rpc::UploaderPrx& __p_uploader, const ::Ice::AsyncResultPtr&);
+    
+private:
+
+    ::Rpc::ErrorCode uploadImage(::Rpc::UploaderPrx&, const ::Ice::Context*);
+    ::Ice::AsyncResultPtr begin_uploadImage(const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
     
 public:
 
@@ -5229,155 +5411,307 @@ private:
     
 public:
 
-    ::Rpc::ErrorCode setCategories(const ::Rpc::StringSeq& __p_categories)
+    ::Rpc::ErrorCode setContentCategories(const ::Rpc::StringSeq& __p_categories)
     {
-        return setCategories(__p_categories, 0);
+        return setContentCategories(__p_categories, 0);
     }
-    ::Rpc::ErrorCode setCategories(const ::Rpc::StringSeq& __p_categories, const ::Ice::Context& __ctx)
+    ::Rpc::ErrorCode setContentCategories(const ::Rpc::StringSeq& __p_categories, const ::Ice::Context& __ctx)
     {
-        return setCategories(__p_categories, &__ctx);
+        return setContentCategories(__p_categories, &__ctx);
     }
 #ifdef ICE_CPP11
     ::Ice::AsyncResultPtr
-    begin_setCategories(const ::Rpc::StringSeq& __p_categories, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    begin_setContentCategories(const ::Rpc::StringSeq& __p_categories, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
     {
-        return __begin_setCategories(__p_categories, 0, __response, __exception, __sent);
+        return __begin_setContentCategories(__p_categories, 0, __response, __exception, __sent);
     }
     ::Ice::AsyncResultPtr
-    begin_setCategories(const ::Rpc::StringSeq& __p_categories, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    begin_setContentCategories(const ::Rpc::StringSeq& __p_categories, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
     {
-        return begin_setCategories(__p_categories, 0, ::Ice::newCallback(__completed, __sent), 0);
+        return begin_setContentCategories(__p_categories, 0, ::Ice::newCallback(__completed, __sent), 0);
     }
     ::Ice::AsyncResultPtr
-    begin_setCategories(const ::Rpc::StringSeq& __p_categories, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    begin_setContentCategories(const ::Rpc::StringSeq& __p_categories, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
     {
-        return __begin_setCategories(__p_categories, &__ctx, __response, __exception, __sent);
+        return __begin_setContentCategories(__p_categories, &__ctx, __response, __exception, __sent);
     }
     ::Ice::AsyncResultPtr
-    begin_setCategories(const ::Rpc::StringSeq& __p_categories, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    begin_setContentCategories(const ::Rpc::StringSeq& __p_categories, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
     {
-        return begin_setCategories(__p_categories, &__ctx, ::Ice::newCallback(__completed, __sent));
+        return begin_setContentCategories(__p_categories, &__ctx, ::Ice::newCallback(__completed, __sent));
     }
     
 private:
 
-    ::Ice::AsyncResultPtr __begin_setCategories(const ::Rpc::StringSeq& __p_categories, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent);
+    ::Ice::AsyncResultPtr __begin_setContentCategories(const ::Rpc::StringSeq& __p_categories, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent);
     
 public:
 #endif
 
-    ::Ice::AsyncResultPtr begin_setCategories(const ::Rpc::StringSeq& __p_categories)
+    ::Ice::AsyncResultPtr begin_setContentCategories(const ::Rpc::StringSeq& __p_categories)
     {
-        return begin_setCategories(__p_categories, 0, ::IceInternal::__dummyCallback, 0);
+        return begin_setContentCategories(__p_categories, 0, ::IceInternal::__dummyCallback, 0);
     }
 
-    ::Ice::AsyncResultPtr begin_setCategories(const ::Rpc::StringSeq& __p_categories, const ::Ice::Context& __ctx)
+    ::Ice::AsyncResultPtr begin_setContentCategories(const ::Rpc::StringSeq& __p_categories, const ::Ice::Context& __ctx)
     {
-        return begin_setCategories(__p_categories, &__ctx, ::IceInternal::__dummyCallback, 0);
+        return begin_setContentCategories(__p_categories, &__ctx, ::IceInternal::__dummyCallback, 0);
     }
 
-    ::Ice::AsyncResultPtr begin_setCategories(const ::Rpc::StringSeq& __p_categories, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    ::Ice::AsyncResultPtr begin_setContentCategories(const ::Rpc::StringSeq& __p_categories, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
     {
-        return begin_setCategories(__p_categories, 0, __del, __cookie);
+        return begin_setContentCategories(__p_categories, 0, __del, __cookie);
     }
 
-    ::Ice::AsyncResultPtr begin_setCategories(const ::Rpc::StringSeq& __p_categories, const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    ::Ice::AsyncResultPtr begin_setContentCategories(const ::Rpc::StringSeq& __p_categories, const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
     {
-        return begin_setCategories(__p_categories, &__ctx, __del, __cookie);
+        return begin_setContentCategories(__p_categories, &__ctx, __del, __cookie);
     }
 
-    ::Ice::AsyncResultPtr begin_setCategories(const ::Rpc::StringSeq& __p_categories, const ::Rpc::Callback_Session_setCategoriesPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    ::Ice::AsyncResultPtr begin_setContentCategories(const ::Rpc::StringSeq& __p_categories, const ::Rpc::Callback_Session_setContentCategoriesPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
     {
-        return begin_setCategories(__p_categories, 0, __del, __cookie);
+        return begin_setContentCategories(__p_categories, 0, __del, __cookie);
     }
 
-    ::Ice::AsyncResultPtr begin_setCategories(const ::Rpc::StringSeq& __p_categories, const ::Ice::Context& __ctx, const ::Rpc::Callback_Session_setCategoriesPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    ::Ice::AsyncResultPtr begin_setContentCategories(const ::Rpc::StringSeq& __p_categories, const ::Ice::Context& __ctx, const ::Rpc::Callback_Session_setContentCategoriesPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
     {
-        return begin_setCategories(__p_categories, &__ctx, __del, __cookie);
+        return begin_setContentCategories(__p_categories, &__ctx, __del, __cookie);
     }
 
-    ::Rpc::ErrorCode end_setCategories(const ::Ice::AsyncResultPtr&);
+    ::Rpc::ErrorCode end_setContentCategories(const ::Ice::AsyncResultPtr&);
     
 private:
 
-    ::Rpc::ErrorCode setCategories(const ::Rpc::StringSeq&, const ::Ice::Context*);
-    ::Ice::AsyncResultPtr begin_setCategories(const ::Rpc::StringSeq&, const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
+    ::Rpc::ErrorCode setContentCategories(const ::Rpc::StringSeq&, const ::Ice::Context*);
+    ::Ice::AsyncResultPtr begin_setContentCategories(const ::Rpc::StringSeq&, const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
     
 public:
 
-    ::Rpc::ErrorCode getCategories(::Rpc::StringSeq& __p_categories)
+    ::Rpc::ErrorCode getContentCategories(::Rpc::StringSeq& __p_categories)
     {
-        return getCategories(__p_categories, 0);
+        return getContentCategories(__p_categories, 0);
     }
-    ::Rpc::ErrorCode getCategories(::Rpc::StringSeq& __p_categories, const ::Ice::Context& __ctx)
+    ::Rpc::ErrorCode getContentCategories(::Rpc::StringSeq& __p_categories, const ::Ice::Context& __ctx)
     {
-        return getCategories(__p_categories, &__ctx);
+        return getContentCategories(__p_categories, &__ctx);
     }
 #ifdef ICE_CPP11
     ::Ice::AsyncResultPtr
-    begin_getCategories(const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::StringSeq&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    begin_getContentCategories(const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::StringSeq&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
     {
-        return __begin_getCategories(0, __response, __exception, __sent);
+        return __begin_getContentCategories(0, __response, __exception, __sent);
     }
     ::Ice::AsyncResultPtr
-    begin_getCategories(const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    begin_getContentCategories(const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
     {
-        return begin_getCategories(0, ::Ice::newCallback(__completed, __sent), 0);
+        return begin_getContentCategories(0, ::Ice::newCallback(__completed, __sent), 0);
     }
     ::Ice::AsyncResultPtr
-    begin_getCategories(const ::Ice::Context& __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::StringSeq&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    begin_getContentCategories(const ::Ice::Context& __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::StringSeq&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
     {
-        return __begin_getCategories(&__ctx, __response, __exception, __sent);
+        return __begin_getContentCategories(&__ctx, __response, __exception, __sent);
     }
     ::Ice::AsyncResultPtr
-    begin_getCategories(const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    begin_getContentCategories(const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
     {
-        return begin_getCategories(&__ctx, ::Ice::newCallback(__completed, __sent));
+        return begin_getContentCategories(&__ctx, ::Ice::newCallback(__completed, __sent));
     }
     
 private:
 
-    ::Ice::AsyncResultPtr __begin_getCategories(const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::StringSeq&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent);
+    ::Ice::AsyncResultPtr __begin_getContentCategories(const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::StringSeq&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent);
     
 public:
 #endif
 
-    ::Ice::AsyncResultPtr begin_getCategories()
+    ::Ice::AsyncResultPtr begin_getContentCategories()
     {
-        return begin_getCategories(0, ::IceInternal::__dummyCallback, 0);
+        return begin_getContentCategories(0, ::IceInternal::__dummyCallback, 0);
     }
 
-    ::Ice::AsyncResultPtr begin_getCategories(const ::Ice::Context& __ctx)
+    ::Ice::AsyncResultPtr begin_getContentCategories(const ::Ice::Context& __ctx)
     {
-        return begin_getCategories(&__ctx, ::IceInternal::__dummyCallback, 0);
+        return begin_getContentCategories(&__ctx, ::IceInternal::__dummyCallback, 0);
     }
 
-    ::Ice::AsyncResultPtr begin_getCategories(const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    ::Ice::AsyncResultPtr begin_getContentCategories(const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
     {
-        return begin_getCategories(0, __del, __cookie);
+        return begin_getContentCategories(0, __del, __cookie);
     }
 
-    ::Ice::AsyncResultPtr begin_getCategories(const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    ::Ice::AsyncResultPtr begin_getContentCategories(const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
     {
-        return begin_getCategories(&__ctx, __del, __cookie);
+        return begin_getContentCategories(&__ctx, __del, __cookie);
     }
 
-    ::Ice::AsyncResultPtr begin_getCategories(const ::Rpc::Callback_Session_getCategoriesPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    ::Ice::AsyncResultPtr begin_getContentCategories(const ::Rpc::Callback_Session_getContentCategoriesPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
     {
-        return begin_getCategories(0, __del, __cookie);
+        return begin_getContentCategories(0, __del, __cookie);
     }
 
-    ::Ice::AsyncResultPtr begin_getCategories(const ::Ice::Context& __ctx, const ::Rpc::Callback_Session_getCategoriesPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    ::Ice::AsyncResultPtr begin_getContentCategories(const ::Ice::Context& __ctx, const ::Rpc::Callback_Session_getContentCategoriesPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
     {
-        return begin_getCategories(&__ctx, __del, __cookie);
+        return begin_getContentCategories(&__ctx, __del, __cookie);
     }
 
-    ::Rpc::ErrorCode end_getCategories(::Rpc::StringSeq& __p_categories, const ::Ice::AsyncResultPtr&);
+    ::Rpc::ErrorCode end_getContentCategories(::Rpc::StringSeq& __p_categories, const ::Ice::AsyncResultPtr&);
     
 private:
 
-    ::Rpc::ErrorCode getCategories(::Rpc::StringSeq&, const ::Ice::Context*);
-    ::Ice::AsyncResultPtr begin_getCategories(const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
+    ::Rpc::ErrorCode getContentCategories(::Rpc::StringSeq&, const ::Ice::Context*);
+    ::Ice::AsyncResultPtr begin_getContentCategories(const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
+    
+public:
+
+    ::Rpc::ErrorCode setExtraCategories(const ::Rpc::StringSeq& __p_categories)
+    {
+        return setExtraCategories(__p_categories, 0);
+    }
+    ::Rpc::ErrorCode setExtraCategories(const ::Rpc::StringSeq& __p_categories, const ::Ice::Context& __ctx)
+    {
+        return setExtraCategories(__p_categories, &__ctx);
+    }
+#ifdef ICE_CPP11
+    ::Ice::AsyncResultPtr
+    begin_setExtraCategories(const ::Rpc::StringSeq& __p_categories, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return __begin_setExtraCategories(__p_categories, 0, __response, __exception, __sent);
+    }
+    ::Ice::AsyncResultPtr
+    begin_setExtraCategories(const ::Rpc::StringSeq& __p_categories, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_setExtraCategories(__p_categories, 0, ::Ice::newCallback(__completed, __sent), 0);
+    }
+    ::Ice::AsyncResultPtr
+    begin_setExtraCategories(const ::Rpc::StringSeq& __p_categories, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return __begin_setExtraCategories(__p_categories, &__ctx, __response, __exception, __sent);
+    }
+    ::Ice::AsyncResultPtr
+    begin_setExtraCategories(const ::Rpc::StringSeq& __p_categories, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_setExtraCategories(__p_categories, &__ctx, ::Ice::newCallback(__completed, __sent));
+    }
+    
+private:
+
+    ::Ice::AsyncResultPtr __begin_setExtraCategories(const ::Rpc::StringSeq& __p_categories, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent);
+    
+public:
+#endif
+
+    ::Ice::AsyncResultPtr begin_setExtraCategories(const ::Rpc::StringSeq& __p_categories)
+    {
+        return begin_setExtraCategories(__p_categories, 0, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_setExtraCategories(const ::Rpc::StringSeq& __p_categories, const ::Ice::Context& __ctx)
+    {
+        return begin_setExtraCategories(__p_categories, &__ctx, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_setExtraCategories(const ::Rpc::StringSeq& __p_categories, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_setExtraCategories(__p_categories, 0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_setExtraCategories(const ::Rpc::StringSeq& __p_categories, const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_setExtraCategories(__p_categories, &__ctx, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_setExtraCategories(const ::Rpc::StringSeq& __p_categories, const ::Rpc::Callback_Session_setExtraCategoriesPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_setExtraCategories(__p_categories, 0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_setExtraCategories(const ::Rpc::StringSeq& __p_categories, const ::Ice::Context& __ctx, const ::Rpc::Callback_Session_setExtraCategoriesPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_setExtraCategories(__p_categories, &__ctx, __del, __cookie);
+    }
+
+    ::Rpc::ErrorCode end_setExtraCategories(const ::Ice::AsyncResultPtr&);
+    
+private:
+
+    ::Rpc::ErrorCode setExtraCategories(const ::Rpc::StringSeq&, const ::Ice::Context*);
+    ::Ice::AsyncResultPtr begin_setExtraCategories(const ::Rpc::StringSeq&, const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
+    
+public:
+
+    ::Rpc::ErrorCode getExtraCategories(::Rpc::StringSeq& __p_categories)
+    {
+        return getExtraCategories(__p_categories, 0);
+    }
+    ::Rpc::ErrorCode getExtraCategories(::Rpc::StringSeq& __p_categories, const ::Ice::Context& __ctx)
+    {
+        return getExtraCategories(__p_categories, &__ctx);
+    }
+#ifdef ICE_CPP11
+    ::Ice::AsyncResultPtr
+    begin_getExtraCategories(const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::StringSeq&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return __begin_getExtraCategories(0, __response, __exception, __sent);
+    }
+    ::Ice::AsyncResultPtr
+    begin_getExtraCategories(const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_getExtraCategories(0, ::Ice::newCallback(__completed, __sent), 0);
+    }
+    ::Ice::AsyncResultPtr
+    begin_getExtraCategories(const ::Ice::Context& __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::StringSeq&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return __begin_getExtraCategories(&__ctx, __response, __exception, __sent);
+    }
+    ::Ice::AsyncResultPtr
+    begin_getExtraCategories(const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_getExtraCategories(&__ctx, ::Ice::newCallback(__completed, __sent));
+    }
+    
+private:
+
+    ::Ice::AsyncResultPtr __begin_getExtraCategories(const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::StringSeq&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent);
+    
+public:
+#endif
+
+    ::Ice::AsyncResultPtr begin_getExtraCategories()
+    {
+        return begin_getExtraCategories(0, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_getExtraCategories(const ::Ice::Context& __ctx)
+    {
+        return begin_getExtraCategories(&__ctx, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_getExtraCategories(const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_getExtraCategories(0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_getExtraCategories(const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_getExtraCategories(&__ctx, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_getExtraCategories(const ::Rpc::Callback_Session_getExtraCategoriesPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_getExtraCategories(0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_getExtraCategories(const ::Ice::Context& __ctx, const ::Rpc::Callback_Session_getExtraCategoriesPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_getExtraCategories(&__ctx, __del, __cookie);
+    }
+
+    ::Rpc::ErrorCode end_getExtraCategories(::Rpc::StringSeq& __p_categories, const ::Ice::AsyncResultPtr&);
+    
+private:
+
+    ::Rpc::ErrorCode getExtraCategories(::Rpc::StringSeq&, const ::Ice::Context*);
+    ::Ice::AsyncResultPtr begin_getExtraCategories(const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
     
 public:
 
@@ -6369,79 +6703,79 @@ private:
     
 public:
 
-    ::Rpc::ErrorCode browseExtra(::Rpc::ExtraBrowserPrx& __p_browser)
+    ::Rpc::ErrorCode browseExtra(const ::std::string& __p_category, const ::std::string& __p_search, ::Rpc::ExtraBrowserPrx& __p_browser)
     {
-        return browseExtra(__p_browser, 0);
+        return browseExtra(__p_category, __p_search, __p_browser, 0);
     }
-    ::Rpc::ErrorCode browseExtra(::Rpc::ExtraBrowserPrx& __p_browser, const ::Ice::Context& __ctx)
+    ::Rpc::ErrorCode browseExtra(const ::std::string& __p_category, const ::std::string& __p_search, ::Rpc::ExtraBrowserPrx& __p_browser, const ::Ice::Context& __ctx)
     {
-        return browseExtra(__p_browser, &__ctx);
+        return browseExtra(__p_category, __p_search, __p_browser, &__ctx);
     }
 #ifdef ICE_CPP11
     ::Ice::AsyncResultPtr
-    begin_browseExtra(const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::ExtraBrowserPrx&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    begin_browseExtra(const ::std::string& __p_category, const ::std::string& __p_search, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::ExtraBrowserPrx&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
     {
-        return __begin_browseExtra(0, __response, __exception, __sent);
+        return __begin_browseExtra(__p_category, __p_search, 0, __response, __exception, __sent);
     }
     ::Ice::AsyncResultPtr
-    begin_browseExtra(const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    begin_browseExtra(const ::std::string& __p_category, const ::std::string& __p_search, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
     {
-        return begin_browseExtra(0, ::Ice::newCallback(__completed, __sent), 0);
+        return begin_browseExtra(__p_category, __p_search, 0, ::Ice::newCallback(__completed, __sent), 0);
     }
     ::Ice::AsyncResultPtr
-    begin_browseExtra(const ::Ice::Context& __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::ExtraBrowserPrx&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    begin_browseExtra(const ::std::string& __p_category, const ::std::string& __p_search, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::ExtraBrowserPrx&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
     {
-        return __begin_browseExtra(&__ctx, __response, __exception, __sent);
+        return __begin_browseExtra(__p_category, __p_search, &__ctx, __response, __exception, __sent);
     }
     ::Ice::AsyncResultPtr
-    begin_browseExtra(const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    begin_browseExtra(const ::std::string& __p_category, const ::std::string& __p_search, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
     {
-        return begin_browseExtra(&__ctx, ::Ice::newCallback(__completed, __sent));
+        return begin_browseExtra(__p_category, __p_search, &__ctx, ::Ice::newCallback(__completed, __sent));
     }
     
 private:
 
-    ::Ice::AsyncResultPtr __begin_browseExtra(const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::ExtraBrowserPrx&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent);
+    ::Ice::AsyncResultPtr __begin_browseExtra(const ::std::string& __p_category, const ::std::string& __p_search, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::ExtraBrowserPrx&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent);
     
 public:
 #endif
 
-    ::Ice::AsyncResultPtr begin_browseExtra()
+    ::Ice::AsyncResultPtr begin_browseExtra(const ::std::string& __p_category, const ::std::string& __p_search)
     {
-        return begin_browseExtra(0, ::IceInternal::__dummyCallback, 0);
+        return begin_browseExtra(__p_category, __p_search, 0, ::IceInternal::__dummyCallback, 0);
     }
 
-    ::Ice::AsyncResultPtr begin_browseExtra(const ::Ice::Context& __ctx)
+    ::Ice::AsyncResultPtr begin_browseExtra(const ::std::string& __p_category, const ::std::string& __p_search, const ::Ice::Context& __ctx)
     {
-        return begin_browseExtra(&__ctx, ::IceInternal::__dummyCallback, 0);
+        return begin_browseExtra(__p_category, __p_search, &__ctx, ::IceInternal::__dummyCallback, 0);
     }
 
-    ::Ice::AsyncResultPtr begin_browseExtra(const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    ::Ice::AsyncResultPtr begin_browseExtra(const ::std::string& __p_category, const ::std::string& __p_search, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
     {
-        return begin_browseExtra(0, __del, __cookie);
+        return begin_browseExtra(__p_category, __p_search, 0, __del, __cookie);
     }
 
-    ::Ice::AsyncResultPtr begin_browseExtra(const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    ::Ice::AsyncResultPtr begin_browseExtra(const ::std::string& __p_category, const ::std::string& __p_search, const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
     {
-        return begin_browseExtra(&__ctx, __del, __cookie);
+        return begin_browseExtra(__p_category, __p_search, &__ctx, __del, __cookie);
     }
 
-    ::Ice::AsyncResultPtr begin_browseExtra(const ::Rpc::Callback_Session_browseExtraPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    ::Ice::AsyncResultPtr begin_browseExtra(const ::std::string& __p_category, const ::std::string& __p_search, const ::Rpc::Callback_Session_browseExtraPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
     {
-        return begin_browseExtra(0, __del, __cookie);
+        return begin_browseExtra(__p_category, __p_search, 0, __del, __cookie);
     }
 
-    ::Ice::AsyncResultPtr begin_browseExtra(const ::Ice::Context& __ctx, const ::Rpc::Callback_Session_browseExtraPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    ::Ice::AsyncResultPtr begin_browseExtra(const ::std::string& __p_category, const ::std::string& __p_search, const ::Ice::Context& __ctx, const ::Rpc::Callback_Session_browseExtraPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
     {
-        return begin_browseExtra(&__ctx, __del, __cookie);
+        return begin_browseExtra(__p_category, __p_search, &__ctx, __del, __cookie);
     }
 
     ::Rpc::ErrorCode end_browseExtra(::Rpc::ExtraBrowserPrx& __p_browser, const ::Ice::AsyncResultPtr&);
     
 private:
 
-    ::Rpc::ErrorCode browseExtra(::Rpc::ExtraBrowserPrx&, const ::Ice::Context*);
-    ::Ice::AsyncResultPtr begin_browseExtra(const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
+    ::Rpc::ErrorCode browseExtra(const ::std::string&, const ::std::string&, ::Rpc::ExtraBrowserPrx&, const ::Ice::Context*);
+    ::Ice::AsyncResultPtr begin_browseExtra(const ::std::string&, const ::std::string&, const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
     
 public:
 
@@ -6518,6 +6852,82 @@ private:
 
     ::Rpc::ErrorCode getExtraInfo(const ::std::string&, ::Rpc::ExtraInfo&, const ::Ice::Context*);
     ::Ice::AsyncResultPtr begin_getExtraInfo(const ::std::string&, const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
+    
+public:
+
+    ::Rpc::ErrorCode downloadExtraImage(const ::std::string& __p_id, ::Rpc::DownloaderPrx& __p_downloader)
+    {
+        return downloadExtraImage(__p_id, __p_downloader, 0);
+    }
+    ::Rpc::ErrorCode downloadExtraImage(const ::std::string& __p_id, ::Rpc::DownloaderPrx& __p_downloader, const ::Ice::Context& __ctx)
+    {
+        return downloadExtraImage(__p_id, __p_downloader, &__ctx);
+    }
+#ifdef ICE_CPP11
+    ::Ice::AsyncResultPtr
+    begin_downloadExtraImage(const ::std::string& __p_id, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::DownloaderPrx&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return __begin_downloadExtraImage(__p_id, 0, __response, __exception, __sent);
+    }
+    ::Ice::AsyncResultPtr
+    begin_downloadExtraImage(const ::std::string& __p_id, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_downloadExtraImage(__p_id, 0, ::Ice::newCallback(__completed, __sent), 0);
+    }
+    ::Ice::AsyncResultPtr
+    begin_downloadExtraImage(const ::std::string& __p_id, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::DownloaderPrx&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return __begin_downloadExtraImage(__p_id, &__ctx, __response, __exception, __sent);
+    }
+    ::Ice::AsyncResultPtr
+    begin_downloadExtraImage(const ::std::string& __p_id, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_downloadExtraImage(__p_id, &__ctx, ::Ice::newCallback(__completed, __sent));
+    }
+    
+private:
+
+    ::Ice::AsyncResultPtr __begin_downloadExtraImage(const ::std::string& __p_id, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::DownloaderPrx&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent);
+    
+public:
+#endif
+
+    ::Ice::AsyncResultPtr begin_downloadExtraImage(const ::std::string& __p_id)
+    {
+        return begin_downloadExtraImage(__p_id, 0, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_downloadExtraImage(const ::std::string& __p_id, const ::Ice::Context& __ctx)
+    {
+        return begin_downloadExtraImage(__p_id, &__ctx, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_downloadExtraImage(const ::std::string& __p_id, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_downloadExtraImage(__p_id, 0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_downloadExtraImage(const ::std::string& __p_id, const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_downloadExtraImage(__p_id, &__ctx, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_downloadExtraImage(const ::std::string& __p_id, const ::Rpc::Callback_Session_downloadExtraImagePtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_downloadExtraImage(__p_id, 0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_downloadExtraImage(const ::std::string& __p_id, const ::Ice::Context& __ctx, const ::Rpc::Callback_Session_downloadExtraImagePtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_downloadExtraImage(__p_id, &__ctx, __del, __cookie);
+    }
+
+    ::Rpc::ErrorCode end_downloadExtraImage(::Rpc::DownloaderPrx& __p_downloader, const ::Ice::AsyncResultPtr&);
+    
+private:
+
+    ::Rpc::ErrorCode downloadExtraImage(const ::std::string&, ::Rpc::DownloaderPrx&, const ::Ice::Context*);
+    ::Ice::AsyncResultPtr begin_downloadExtraImage(const ::std::string&, const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
     
 public:
 
@@ -7821,8 +8231,14 @@ public:
     virtual ::Rpc::ErrorCode setSetup(const ::std::string&, const ::Ice::Current& = ::Ice::Current()) = 0;
     ::Ice::DispatchStatus ___setSetup(::IceInternal::Incoming&, const ::Ice::Current&);
 
+    virtual ::Rpc::ErrorCode setCategory(const ::std::string&, const ::Ice::Current& = ::Ice::Current()) = 0;
+    ::Ice::DispatchStatus ___setCategory(::IceInternal::Incoming&, const ::Ice::Current&);
+
     virtual ::Rpc::ErrorCode setInfo(const ::std::string&, const ::Ice::Current& = ::Ice::Current()) = 0;
     ::Ice::DispatchStatus ___setInfo(::IceInternal::Incoming&, const ::Ice::Current&);
+
+    virtual ::Rpc::ErrorCode uploadImage(::Rpc::UploaderPrx&, const ::Ice::Current& = ::Ice::Current()) = 0;
+    ::Ice::DispatchStatus ___uploadImage(::IceInternal::Incoming&, const ::Ice::Current&);
 
     virtual ::Rpc::ErrorCode uploadExtra(::Rpc::UploaderPrx&, const ::Ice::Current& = ::Ice::Current()) = 0;
     ::Ice::DispatchStatus ___uploadExtra(::IceInternal::Incoming&, const ::Ice::Current&);
@@ -7956,11 +8372,17 @@ public:
     virtual ::Rpc::ErrorCode getPages(::Rpc::StringSeq&, const ::Ice::Current& = ::Ice::Current()) = 0;
     ::Ice::DispatchStatus ___getPages(::IceInternal::Incoming&, const ::Ice::Current&);
 
-    virtual ::Rpc::ErrorCode setCategories(const ::Rpc::StringSeq&, const ::Ice::Current& = ::Ice::Current()) = 0;
-    ::Ice::DispatchStatus ___setCategories(::IceInternal::Incoming&, const ::Ice::Current&);
+    virtual ::Rpc::ErrorCode setContentCategories(const ::Rpc::StringSeq&, const ::Ice::Current& = ::Ice::Current()) = 0;
+    ::Ice::DispatchStatus ___setContentCategories(::IceInternal::Incoming&, const ::Ice::Current&);
 
-    virtual ::Rpc::ErrorCode getCategories(::Rpc::StringSeq&, const ::Ice::Current& = ::Ice::Current()) = 0;
-    ::Ice::DispatchStatus ___getCategories(::IceInternal::Incoming&, const ::Ice::Current&);
+    virtual ::Rpc::ErrorCode getContentCategories(::Rpc::StringSeq&, const ::Ice::Current& = ::Ice::Current()) = 0;
+    ::Ice::DispatchStatus ___getContentCategories(::IceInternal::Incoming&, const ::Ice::Current&);
+
+    virtual ::Rpc::ErrorCode setExtraCategories(const ::Rpc::StringSeq&, const ::Ice::Current& = ::Ice::Current()) = 0;
+    ::Ice::DispatchStatus ___setExtraCategories(::IceInternal::Incoming&, const ::Ice::Current&);
+
+    virtual ::Rpc::ErrorCode getExtraCategories(::Rpc::StringSeq&, const ::Ice::Current& = ::Ice::Current()) = 0;
+    ::Ice::DispatchStatus ___getExtraCategories(::IceInternal::Incoming&, const ::Ice::Current&);
 
     virtual ::Rpc::ErrorCode browseContent(const ::std::string&, const ::std::string&, const ::std::string&, ::Rpc::ContentBrowserPrx&, const ::Ice::Current& = ::Ice::Current()) = 0;
     ::Ice::DispatchStatus ___browseContent(::IceInternal::Incoming&, const ::Ice::Current&);
@@ -8001,11 +8423,14 @@ public:
     virtual ::Rpc::ErrorCode getEngineVersion(const ::std::string&, const ::std::string&, ::Rpc::EngineVersionInfo&, const ::Ice::Current& = ::Ice::Current()) = 0;
     ::Ice::DispatchStatus ___getEngineVersion(::IceInternal::Incoming&, const ::Ice::Current&);
 
-    virtual ::Rpc::ErrorCode browseExtra(::Rpc::ExtraBrowserPrx&, const ::Ice::Current& = ::Ice::Current()) = 0;
+    virtual ::Rpc::ErrorCode browseExtra(const ::std::string&, const ::std::string&, ::Rpc::ExtraBrowserPrx&, const ::Ice::Current& = ::Ice::Current()) = 0;
     ::Ice::DispatchStatus ___browseExtra(::IceInternal::Incoming&, const ::Ice::Current&);
 
     virtual ::Rpc::ErrorCode getExtraInfo(const ::std::string&, ::Rpc::ExtraInfo&, const ::Ice::Current& = ::Ice::Current()) = 0;
     ::Ice::DispatchStatus ___getExtraInfo(::IceInternal::Incoming&, const ::Ice::Current&);
+
+    virtual ::Rpc::ErrorCode downloadExtraImage(const ::std::string&, ::Rpc::DownloaderPrx&, const ::Ice::Current& = ::Ice::Current()) = 0;
+    ::Ice::DispatchStatus ___downloadExtraImage(::IceInternal::Incoming&, const ::Ice::Current&);
 
     virtual ::Rpc::ErrorCode downloadExtra(const ::std::string&, ::Rpc::DownloaderPrx&, const ::Ice::Current& = ::Ice::Current()) = 0;
     ::Ice::DispatchStatus ___downloadExtra(::IceInternal::Incoming&, const ::Ice::Current&);
@@ -10534,6 +10959,110 @@ newCallback_ExtraSubmitter_setSetup(T* instance, void (T::*cb)(::Rpc::ErrorCode,
 }
 
 template<class T>
+class CallbackNC_ExtraSubmitter_setCategory : public Callback_ExtraSubmitter_setCategory_Base, public ::IceInternal::TwowayCallbackNC<T>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception&);
+    typedef void (T::*Sent)(bool);
+    typedef void (T::*Response)(::Rpc::ErrorCode);
+
+    CallbackNC_ExtraSubmitter_setCategory(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::TwowayCallbackNC<T>(obj, cb != 0, excb, sentcb), _response(cb)
+    {
+    }
+
+    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+    {
+        ::Rpc::ExtraSubmitterPrx __proxy = ::Rpc::ExtraSubmitterPrx::uncheckedCast(__result->getProxy());
+        ::Rpc::ErrorCode __ret;
+        try
+        {
+            __ret = __proxy->end_setCategory(__result);
+        }
+        catch(const ::Ice::Exception& ex)
+        {
+            ::IceInternal::CallbackNC<T>::exception(__result, ex);
+            return;
+        }
+        if(_response)
+        {
+            (::IceInternal::CallbackNC<T>::_callback.get()->*_response)(__ret);
+        }
+    }
+
+    private:
+
+    Response _response;
+};
+
+template<class T> Callback_ExtraSubmitter_setCategoryPtr
+newCallback_ExtraSubmitter_setCategory(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_ExtraSubmitter_setCategory<T>(instance, cb, excb, sentcb);
+}
+
+template<class T> Callback_ExtraSubmitter_setCategoryPtr
+newCallback_ExtraSubmitter_setCategory(T* instance, void (T::*cb)(::Rpc::ErrorCode), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_ExtraSubmitter_setCategory<T>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT>
+class Callback_ExtraSubmitter_setCategory : public Callback_ExtraSubmitter_setCategory_Base, public ::IceInternal::TwowayCallback<T, CT>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception& , const CT&);
+    typedef void (T::*Sent)(bool , const CT&);
+    typedef void (T::*Response)(::Rpc::ErrorCode, const CT&);
+
+    Callback_ExtraSubmitter_setCategory(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::TwowayCallback<T, CT>(obj, cb != 0, excb, sentcb), _response(cb)
+    {
+    }
+
+    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+    {
+        ::Rpc::ExtraSubmitterPrx __proxy = ::Rpc::ExtraSubmitterPrx::uncheckedCast(__result->getProxy());
+        ::Rpc::ErrorCode __ret;
+        try
+        {
+            __ret = __proxy->end_setCategory(__result);
+        }
+        catch(const ::Ice::Exception& ex)
+        {
+            ::IceInternal::Callback<T, CT>::exception(__result, ex);
+            return;
+        }
+        if(_response)
+        {
+            (::IceInternal::Callback<T, CT>::_callback.get()->*_response)(__ret, CT::dynamicCast(__result->getCookie()));
+        }
+    }
+
+    private:
+
+    Response _response;
+};
+
+template<class T, typename CT> Callback_ExtraSubmitter_setCategoryPtr
+newCallback_ExtraSubmitter_setCategory(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_ExtraSubmitter_setCategory<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT> Callback_ExtraSubmitter_setCategoryPtr
+newCallback_ExtraSubmitter_setCategory(T* instance, void (T::*cb)(::Rpc::ErrorCode, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_ExtraSubmitter_setCategory<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T>
 class CallbackNC_ExtraSubmitter_setInfo : public Callback_ExtraSubmitter_setInfo_Base, public ::IceInternal::TwowayCallbackNC<T>
 {
 public:
@@ -10635,6 +11164,112 @@ template<class T, typename CT> Callback_ExtraSubmitter_setInfoPtr
 newCallback_ExtraSubmitter_setInfo(T* instance, void (T::*cb)(::Rpc::ErrorCode, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
 {
     return new Callback_ExtraSubmitter_setInfo<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T>
+class CallbackNC_ExtraSubmitter_uploadImage : public Callback_ExtraSubmitter_uploadImage_Base, public ::IceInternal::TwowayCallbackNC<T>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception&);
+    typedef void (T::*Sent)(bool);
+    typedef void (T::*Response)(::Rpc::ErrorCode, const ::Rpc::UploaderPrx&);
+
+    CallbackNC_ExtraSubmitter_uploadImage(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::TwowayCallbackNC<T>(obj, cb != 0, excb, sentcb), _response(cb)
+    {
+    }
+
+    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+    {
+        ::Rpc::ExtraSubmitterPrx __proxy = ::Rpc::ExtraSubmitterPrx::uncheckedCast(__result->getProxy());
+        ::Rpc::UploaderPrx uploader;
+        ::Rpc::ErrorCode __ret;
+        try
+        {
+            __ret = __proxy->end_uploadImage(uploader, __result);
+        }
+        catch(const ::Ice::Exception& ex)
+        {
+            ::IceInternal::CallbackNC<T>::exception(__result, ex);
+            return;
+        }
+        if(_response)
+        {
+            (::IceInternal::CallbackNC<T>::_callback.get()->*_response)(__ret, uploader);
+        }
+    }
+
+    private:
+
+    Response _response;
+};
+
+template<class T> Callback_ExtraSubmitter_uploadImagePtr
+newCallback_ExtraSubmitter_uploadImage(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::UploaderPrx&), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_ExtraSubmitter_uploadImage<T>(instance, cb, excb, sentcb);
+}
+
+template<class T> Callback_ExtraSubmitter_uploadImagePtr
+newCallback_ExtraSubmitter_uploadImage(T* instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::UploaderPrx&), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_ExtraSubmitter_uploadImage<T>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT>
+class Callback_ExtraSubmitter_uploadImage : public Callback_ExtraSubmitter_uploadImage_Base, public ::IceInternal::TwowayCallback<T, CT>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception& , const CT&);
+    typedef void (T::*Sent)(bool , const CT&);
+    typedef void (T::*Response)(::Rpc::ErrorCode, const ::Rpc::UploaderPrx&, const CT&);
+
+    Callback_ExtraSubmitter_uploadImage(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::TwowayCallback<T, CT>(obj, cb != 0, excb, sentcb), _response(cb)
+    {
+    }
+
+    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+    {
+        ::Rpc::ExtraSubmitterPrx __proxy = ::Rpc::ExtraSubmitterPrx::uncheckedCast(__result->getProxy());
+        ::Rpc::UploaderPrx uploader;
+        ::Rpc::ErrorCode __ret;
+        try
+        {
+            __ret = __proxy->end_uploadImage(uploader, __result);
+        }
+        catch(const ::Ice::Exception& ex)
+        {
+            ::IceInternal::Callback<T, CT>::exception(__result, ex);
+            return;
+        }
+        if(_response)
+        {
+            (::IceInternal::Callback<T, CT>::_callback.get()->*_response)(__ret, uploader, CT::dynamicCast(__result->getCookie()));
+        }
+    }
+
+    private:
+
+    Response _response;
+};
+
+template<class T, typename CT> Callback_ExtraSubmitter_uploadImagePtr
+newCallback_ExtraSubmitter_uploadImage(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::UploaderPrx&, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_ExtraSubmitter_uploadImage<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT> Callback_ExtraSubmitter_uploadImagePtr
+newCallback_ExtraSubmitter_uploadImage(T* instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::UploaderPrx&, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_ExtraSubmitter_uploadImage<T, CT>(instance, cb, excb, sentcb);
 }
 
 template<class T>
@@ -11936,7 +12571,7 @@ newCallback_Session_getPages(T* instance, void (T::*cb)(::Rpc::ErrorCode, const 
 }
 
 template<class T>
-class CallbackNC_Session_setCategories : public Callback_Session_setCategories_Base, public ::IceInternal::TwowayCallbackNC<T>
+class CallbackNC_Session_setContentCategories : public Callback_Session_setContentCategories_Base, public ::IceInternal::TwowayCallbackNC<T>
 {
 public:
 
@@ -11946,7 +12581,7 @@ public:
     typedef void (T::*Sent)(bool);
     typedef void (T::*Response)(::Rpc::ErrorCode);
 
-    CallbackNC_Session_setCategories(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+    CallbackNC_Session_setContentCategories(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
         : ::IceInternal::TwowayCallbackNC<T>(obj, cb != 0, excb, sentcb), _response(cb)
     {
     }
@@ -11957,7 +12592,7 @@ public:
         ::Rpc::ErrorCode __ret;
         try
         {
-            __ret = __proxy->end_setCategories(__result);
+            __ret = __proxy->end_setContentCategories(__result);
         }
         catch(const ::Ice::Exception& ex)
         {
@@ -11975,20 +12610,20 @@ public:
     Response _response;
 };
 
-template<class T> Callback_Session_setCategoriesPtr
-newCallback_Session_setCategories(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+template<class T> Callback_Session_setContentCategoriesPtr
+newCallback_Session_setContentCategories(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
 {
-    return new CallbackNC_Session_setCategories<T>(instance, cb, excb, sentcb);
+    return new CallbackNC_Session_setContentCategories<T>(instance, cb, excb, sentcb);
 }
 
-template<class T> Callback_Session_setCategoriesPtr
-newCallback_Session_setCategories(T* instance, void (T::*cb)(::Rpc::ErrorCode), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+template<class T> Callback_Session_setContentCategoriesPtr
+newCallback_Session_setContentCategories(T* instance, void (T::*cb)(::Rpc::ErrorCode), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
 {
-    return new CallbackNC_Session_setCategories<T>(instance, cb, excb, sentcb);
+    return new CallbackNC_Session_setContentCategories<T>(instance, cb, excb, sentcb);
 }
 
 template<class T, typename CT>
-class Callback_Session_setCategories : public Callback_Session_setCategories_Base, public ::IceInternal::TwowayCallback<T, CT>
+class Callback_Session_setContentCategories : public Callback_Session_setContentCategories_Base, public ::IceInternal::TwowayCallback<T, CT>
 {
 public:
 
@@ -11998,7 +12633,7 @@ public:
     typedef void (T::*Sent)(bool , const CT&);
     typedef void (T::*Response)(::Rpc::ErrorCode, const CT&);
 
-    Callback_Session_setCategories(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+    Callback_Session_setContentCategories(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
         : ::IceInternal::TwowayCallback<T, CT>(obj, cb != 0, excb, sentcb), _response(cb)
     {
     }
@@ -12009,7 +12644,7 @@ public:
         ::Rpc::ErrorCode __ret;
         try
         {
-            __ret = __proxy->end_setCategories(__result);
+            __ret = __proxy->end_setContentCategories(__result);
         }
         catch(const ::Ice::Exception& ex)
         {
@@ -12027,20 +12662,20 @@ public:
     Response _response;
 };
 
-template<class T, typename CT> Callback_Session_setCategoriesPtr
-newCallback_Session_setCategories(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+template<class T, typename CT> Callback_Session_setContentCategoriesPtr
+newCallback_Session_setContentCategories(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
 {
-    return new Callback_Session_setCategories<T, CT>(instance, cb, excb, sentcb);
+    return new Callback_Session_setContentCategories<T, CT>(instance, cb, excb, sentcb);
 }
 
-template<class T, typename CT> Callback_Session_setCategoriesPtr
-newCallback_Session_setCategories(T* instance, void (T::*cb)(::Rpc::ErrorCode, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+template<class T, typename CT> Callback_Session_setContentCategoriesPtr
+newCallback_Session_setContentCategories(T* instance, void (T::*cb)(::Rpc::ErrorCode, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
 {
-    return new Callback_Session_setCategories<T, CT>(instance, cb, excb, sentcb);
+    return new Callback_Session_setContentCategories<T, CT>(instance, cb, excb, sentcb);
 }
 
 template<class T>
-class CallbackNC_Session_getCategories : public Callback_Session_getCategories_Base, public ::IceInternal::TwowayCallbackNC<T>
+class CallbackNC_Session_getContentCategories : public Callback_Session_getContentCategories_Base, public ::IceInternal::TwowayCallbackNC<T>
 {
 public:
 
@@ -12050,7 +12685,7 @@ public:
     typedef void (T::*Sent)(bool);
     typedef void (T::*Response)(::Rpc::ErrorCode, const ::Rpc::StringSeq&);
 
-    CallbackNC_Session_getCategories(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+    CallbackNC_Session_getContentCategories(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
         : ::IceInternal::TwowayCallbackNC<T>(obj, cb != 0, excb, sentcb), _response(cb)
     {
     }
@@ -12062,7 +12697,7 @@ public:
         ::Rpc::ErrorCode __ret;
         try
         {
-            __ret = __proxy->end_getCategories(categories, __result);
+            __ret = __proxy->end_getContentCategories(categories, __result);
         }
         catch(const ::Ice::Exception& ex)
         {
@@ -12080,20 +12715,20 @@ public:
     Response _response;
 };
 
-template<class T> Callback_Session_getCategoriesPtr
-newCallback_Session_getCategories(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::StringSeq&), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+template<class T> Callback_Session_getContentCategoriesPtr
+newCallback_Session_getContentCategories(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::StringSeq&), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
 {
-    return new CallbackNC_Session_getCategories<T>(instance, cb, excb, sentcb);
+    return new CallbackNC_Session_getContentCategories<T>(instance, cb, excb, sentcb);
 }
 
-template<class T> Callback_Session_getCategoriesPtr
-newCallback_Session_getCategories(T* instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::StringSeq&), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+template<class T> Callback_Session_getContentCategoriesPtr
+newCallback_Session_getContentCategories(T* instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::StringSeq&), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
 {
-    return new CallbackNC_Session_getCategories<T>(instance, cb, excb, sentcb);
+    return new CallbackNC_Session_getContentCategories<T>(instance, cb, excb, sentcb);
 }
 
 template<class T, typename CT>
-class Callback_Session_getCategories : public Callback_Session_getCategories_Base, public ::IceInternal::TwowayCallback<T, CT>
+class Callback_Session_getContentCategories : public Callback_Session_getContentCategories_Base, public ::IceInternal::TwowayCallback<T, CT>
 {
 public:
 
@@ -12103,7 +12738,7 @@ public:
     typedef void (T::*Sent)(bool , const CT&);
     typedef void (T::*Response)(::Rpc::ErrorCode, const ::Rpc::StringSeq&, const CT&);
 
-    Callback_Session_getCategories(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+    Callback_Session_getContentCategories(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
         : ::IceInternal::TwowayCallback<T, CT>(obj, cb != 0, excb, sentcb), _response(cb)
     {
     }
@@ -12115,7 +12750,7 @@ public:
         ::Rpc::ErrorCode __ret;
         try
         {
-            __ret = __proxy->end_getCategories(categories, __result);
+            __ret = __proxy->end_getContentCategories(categories, __result);
         }
         catch(const ::Ice::Exception& ex)
         {
@@ -12133,16 +12768,226 @@ public:
     Response _response;
 };
 
-template<class T, typename CT> Callback_Session_getCategoriesPtr
-newCallback_Session_getCategories(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::StringSeq&, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+template<class T, typename CT> Callback_Session_getContentCategoriesPtr
+newCallback_Session_getContentCategories(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::StringSeq&, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
 {
-    return new Callback_Session_getCategories<T, CT>(instance, cb, excb, sentcb);
+    return new Callback_Session_getContentCategories<T, CT>(instance, cb, excb, sentcb);
 }
 
-template<class T, typename CT> Callback_Session_getCategoriesPtr
-newCallback_Session_getCategories(T* instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::StringSeq&, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+template<class T, typename CT> Callback_Session_getContentCategoriesPtr
+newCallback_Session_getContentCategories(T* instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::StringSeq&, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
 {
-    return new Callback_Session_getCategories<T, CT>(instance, cb, excb, sentcb);
+    return new Callback_Session_getContentCategories<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T>
+class CallbackNC_Session_setExtraCategories : public Callback_Session_setExtraCategories_Base, public ::IceInternal::TwowayCallbackNC<T>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception&);
+    typedef void (T::*Sent)(bool);
+    typedef void (T::*Response)(::Rpc::ErrorCode);
+
+    CallbackNC_Session_setExtraCategories(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::TwowayCallbackNC<T>(obj, cb != 0, excb, sentcb), _response(cb)
+    {
+    }
+
+    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+    {
+        ::Rpc::SessionPrx __proxy = ::Rpc::SessionPrx::uncheckedCast(__result->getProxy());
+        ::Rpc::ErrorCode __ret;
+        try
+        {
+            __ret = __proxy->end_setExtraCategories(__result);
+        }
+        catch(const ::Ice::Exception& ex)
+        {
+            ::IceInternal::CallbackNC<T>::exception(__result, ex);
+            return;
+        }
+        if(_response)
+        {
+            (::IceInternal::CallbackNC<T>::_callback.get()->*_response)(__ret);
+        }
+    }
+
+    private:
+
+    Response _response;
+};
+
+template<class T> Callback_Session_setExtraCategoriesPtr
+newCallback_Session_setExtraCategories(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_Session_setExtraCategories<T>(instance, cb, excb, sentcb);
+}
+
+template<class T> Callback_Session_setExtraCategoriesPtr
+newCallback_Session_setExtraCategories(T* instance, void (T::*cb)(::Rpc::ErrorCode), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_Session_setExtraCategories<T>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT>
+class Callback_Session_setExtraCategories : public Callback_Session_setExtraCategories_Base, public ::IceInternal::TwowayCallback<T, CT>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception& , const CT&);
+    typedef void (T::*Sent)(bool , const CT&);
+    typedef void (T::*Response)(::Rpc::ErrorCode, const CT&);
+
+    Callback_Session_setExtraCategories(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::TwowayCallback<T, CT>(obj, cb != 0, excb, sentcb), _response(cb)
+    {
+    }
+
+    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+    {
+        ::Rpc::SessionPrx __proxy = ::Rpc::SessionPrx::uncheckedCast(__result->getProxy());
+        ::Rpc::ErrorCode __ret;
+        try
+        {
+            __ret = __proxy->end_setExtraCategories(__result);
+        }
+        catch(const ::Ice::Exception& ex)
+        {
+            ::IceInternal::Callback<T, CT>::exception(__result, ex);
+            return;
+        }
+        if(_response)
+        {
+            (::IceInternal::Callback<T, CT>::_callback.get()->*_response)(__ret, CT::dynamicCast(__result->getCookie()));
+        }
+    }
+
+    private:
+
+    Response _response;
+};
+
+template<class T, typename CT> Callback_Session_setExtraCategoriesPtr
+newCallback_Session_setExtraCategories(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_Session_setExtraCategories<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT> Callback_Session_setExtraCategoriesPtr
+newCallback_Session_setExtraCategories(T* instance, void (T::*cb)(::Rpc::ErrorCode, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_Session_setExtraCategories<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T>
+class CallbackNC_Session_getExtraCategories : public Callback_Session_getExtraCategories_Base, public ::IceInternal::TwowayCallbackNC<T>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception&);
+    typedef void (T::*Sent)(bool);
+    typedef void (T::*Response)(::Rpc::ErrorCode, const ::Rpc::StringSeq&);
+
+    CallbackNC_Session_getExtraCategories(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::TwowayCallbackNC<T>(obj, cb != 0, excb, sentcb), _response(cb)
+    {
+    }
+
+    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+    {
+        ::Rpc::SessionPrx __proxy = ::Rpc::SessionPrx::uncheckedCast(__result->getProxy());
+        ::Rpc::StringSeq categories;
+        ::Rpc::ErrorCode __ret;
+        try
+        {
+            __ret = __proxy->end_getExtraCategories(categories, __result);
+        }
+        catch(const ::Ice::Exception& ex)
+        {
+            ::IceInternal::CallbackNC<T>::exception(__result, ex);
+            return;
+        }
+        if(_response)
+        {
+            (::IceInternal::CallbackNC<T>::_callback.get()->*_response)(__ret, categories);
+        }
+    }
+
+    private:
+
+    Response _response;
+};
+
+template<class T> Callback_Session_getExtraCategoriesPtr
+newCallback_Session_getExtraCategories(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::StringSeq&), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_Session_getExtraCategories<T>(instance, cb, excb, sentcb);
+}
+
+template<class T> Callback_Session_getExtraCategoriesPtr
+newCallback_Session_getExtraCategories(T* instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::StringSeq&), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_Session_getExtraCategories<T>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT>
+class Callback_Session_getExtraCategories : public Callback_Session_getExtraCategories_Base, public ::IceInternal::TwowayCallback<T, CT>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception& , const CT&);
+    typedef void (T::*Sent)(bool , const CT&);
+    typedef void (T::*Response)(::Rpc::ErrorCode, const ::Rpc::StringSeq&, const CT&);
+
+    Callback_Session_getExtraCategories(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::TwowayCallback<T, CT>(obj, cb != 0, excb, sentcb), _response(cb)
+    {
+    }
+
+    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+    {
+        ::Rpc::SessionPrx __proxy = ::Rpc::SessionPrx::uncheckedCast(__result->getProxy());
+        ::Rpc::StringSeq categories;
+        ::Rpc::ErrorCode __ret;
+        try
+        {
+            __ret = __proxy->end_getExtraCategories(categories, __result);
+        }
+        catch(const ::Ice::Exception& ex)
+        {
+            ::IceInternal::Callback<T, CT>::exception(__result, ex);
+            return;
+        }
+        if(_response)
+        {
+            (::IceInternal::Callback<T, CT>::_callback.get()->*_response)(__ret, categories, CT::dynamicCast(__result->getCookie()));
+        }
+    }
+
+    private:
+
+    Response _response;
+};
+
+template<class T, typename CT> Callback_Session_getExtraCategoriesPtr
+newCallback_Session_getExtraCategories(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::StringSeq&, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_Session_getExtraCategories<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT> Callback_Session_getExtraCategoriesPtr
+newCallback_Session_getExtraCategories(T* instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::StringSeq&, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_Session_getExtraCategories<T, CT>(instance, cb, excb, sentcb);
 }
 
 template<class T>
@@ -13729,6 +14574,112 @@ template<class T, typename CT> Callback_Session_getExtraInfoPtr
 newCallback_Session_getExtraInfo(T* instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::ExtraInfo&, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
 {
     return new Callback_Session_getExtraInfo<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T>
+class CallbackNC_Session_downloadExtraImage : public Callback_Session_downloadExtraImage_Base, public ::IceInternal::TwowayCallbackNC<T>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception&);
+    typedef void (T::*Sent)(bool);
+    typedef void (T::*Response)(::Rpc::ErrorCode, const ::Rpc::DownloaderPrx&);
+
+    CallbackNC_Session_downloadExtraImage(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::TwowayCallbackNC<T>(obj, cb != 0, excb, sentcb), _response(cb)
+    {
+    }
+
+    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+    {
+        ::Rpc::SessionPrx __proxy = ::Rpc::SessionPrx::uncheckedCast(__result->getProxy());
+        ::Rpc::DownloaderPrx downloader;
+        ::Rpc::ErrorCode __ret;
+        try
+        {
+            __ret = __proxy->end_downloadExtraImage(downloader, __result);
+        }
+        catch(const ::Ice::Exception& ex)
+        {
+            ::IceInternal::CallbackNC<T>::exception(__result, ex);
+            return;
+        }
+        if(_response)
+        {
+            (::IceInternal::CallbackNC<T>::_callback.get()->*_response)(__ret, downloader);
+        }
+    }
+
+    private:
+
+    Response _response;
+};
+
+template<class T> Callback_Session_downloadExtraImagePtr
+newCallback_Session_downloadExtraImage(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::DownloaderPrx&), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_Session_downloadExtraImage<T>(instance, cb, excb, sentcb);
+}
+
+template<class T> Callback_Session_downloadExtraImagePtr
+newCallback_Session_downloadExtraImage(T* instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::DownloaderPrx&), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_Session_downloadExtraImage<T>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT>
+class Callback_Session_downloadExtraImage : public Callback_Session_downloadExtraImage_Base, public ::IceInternal::TwowayCallback<T, CT>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception& , const CT&);
+    typedef void (T::*Sent)(bool , const CT&);
+    typedef void (T::*Response)(::Rpc::ErrorCode, const ::Rpc::DownloaderPrx&, const CT&);
+
+    Callback_Session_downloadExtraImage(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::TwowayCallback<T, CT>(obj, cb != 0, excb, sentcb), _response(cb)
+    {
+    }
+
+    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+    {
+        ::Rpc::SessionPrx __proxy = ::Rpc::SessionPrx::uncheckedCast(__result->getProxy());
+        ::Rpc::DownloaderPrx downloader;
+        ::Rpc::ErrorCode __ret;
+        try
+        {
+            __ret = __proxy->end_downloadExtraImage(downloader, __result);
+        }
+        catch(const ::Ice::Exception& ex)
+        {
+            ::IceInternal::Callback<T, CT>::exception(__result, ex);
+            return;
+        }
+        if(_response)
+        {
+            (::IceInternal::Callback<T, CT>::_callback.get()->*_response)(__ret, downloader, CT::dynamicCast(__result->getCookie()));
+        }
+    }
+
+    private:
+
+    Response _response;
+};
+
+template<class T, typename CT> Callback_Session_downloadExtraImagePtr
+newCallback_Session_downloadExtraImage(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::DownloaderPrx&, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_Session_downloadExtraImage<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT> Callback_Session_downloadExtraImagePtr
+newCallback_Session_downloadExtraImage(T* instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::DownloaderPrx&, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_Session_downloadExtraImage<T, CT>(instance, cb, excb, sentcb);
 }
 
 template<class T>

@@ -12,11 +12,46 @@ RpcExtraBrowserImpl::~RpcExtraBrowserImpl()
 
 }
 
-Rpc::ErrorCode RpcExtraBrowserImpl::init()
+Rpc::ErrorCode RpcExtraBrowserImpl::init(const std::string& category, const std::string& search)
 {
 	std::ostringstream oss;
 	oss << "SELECT * FROM Extras";
 	oss << " WHERE State=" << sqlText("Normal");
+
+	if (!category.empty())
+	{
+		std::map<std::string, std::string> categories;
+		center_->getGroupedExtraCategories(categories);
+
+		std::vector<std::string> list;
+		boost::split(list, category, boost::is_any_of(","));
+
+		std::map<std::string, std::string> groupedExp;
+
+		for (const std::string& s : list) {
+			auto it = categories.find(s);
+			if (it != categories.end()) {
+				std::string& exp = groupedExp[it->second];
+				if (!exp.empty()) {
+					exp += " OR ";
+				}
+				exp += "Category LIKE " + sqlText("%(" + s + ")%");
+			}
+		}
+
+		for (auto& p : groupedExp) {
+			oss << " AND (" + p.second + ")";
+		}
+	}
+
+	if (!search.empty())
+	{
+		oss << " AND (";
+		oss << "Title LIKE " << sqlText("%" + search + "%");
+		oss << " OR Info LIKE " << sqlText("%" + search + "%");
+		oss << ")";
+	}
+
 	oss << " ORDER BY UpTime DESC";
 
 	s_.reset(new SQLite::Statement(*center_->db(), oss.str()));
@@ -54,6 +89,11 @@ Rpc::ErrorCode RpcExtraBrowserImpl::next(Ice::Int n, Rpc::ExtraInfoSeq& seq, con
 		Rpc::ExtraInfo info;
 		info.id = s_->getColumn("Id").getText();
 		info.title = s_->getColumn("Title").getText();
+
+		std::string category = s_->getColumn("Category").getText();
+		category.erase(std::remove_if(category.begin(), category.end(), boost::is_any_of("()")), category.end());
+		info.category = category;
+
 		info.setup = s_->getColumn("Setup").getText();
 		info.user = s_->getColumn("User").getText();
 		info.uptime = s_->getColumn("UpTime").getText();

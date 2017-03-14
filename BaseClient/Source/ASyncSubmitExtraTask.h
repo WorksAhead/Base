@@ -19,7 +19,8 @@ public:
 
 	void setInfoHead(const std::string&);
 
-	void setPath(const std::string&);
+	void setExtraLocation(const std::string&);
+	void setImageFile(const std::string&);
 
 	virtual void start();
 	virtual void cancel();
@@ -36,9 +37,10 @@ private:
 	ContextPtr context_;
 	Rpc::ExtraSubmitterPrx submitter_;
 
-	std::string path_;
 	std::string infoHead_;
 	std::string info_;
+	std::string extraLocation_;
+	std::string imageFile_;
 
 	int state_;
 	int progress_;

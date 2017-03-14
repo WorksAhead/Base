@@ -94,7 +94,7 @@ Rpc::ErrorCode RpcSessionImpl::getPages(Rpc::StringSeq& pages, const Ice::Curren
 	return Rpc::ec_success;
 }
 
-Rpc::ErrorCode RpcSessionImpl::setCategories(const Rpc::StringSeq& categories, const Ice::Current&)
+Rpc::ErrorCode RpcSessionImpl::setContentCategories(const Rpc::StringSeq& categories, const Ice::Current&)
 {
 	boost::recursive_mutex::scoped_lock lock(sync_);
 	checkIsDestroyed();
@@ -103,16 +103,38 @@ Rpc::ErrorCode RpcSessionImpl::setCategories(const Rpc::StringSeq& categories, c
 		return Rpc::ec_access_denied;
 	}
 
-	context_->center()->setCategories(categories);
+	context_->center()->setContentCategories(categories);
 	return Rpc::ec_success;
 }
 
-Rpc::ErrorCode RpcSessionImpl::getCategories(Rpc::StringSeq& categories, const Ice::Current&)
+Rpc::ErrorCode RpcSessionImpl::getContentCategories(Rpc::StringSeq& categories, const Ice::Current&)
 {
 	boost::recursive_mutex::scoped_lock lock(sync_);
 	checkIsDestroyed();
 
-	context_->center()->getCategories(categories);
+	context_->center()->getContentCategories(categories);
+	return Rpc::ec_success;
+}
+
+Rpc::ErrorCode RpcSessionImpl::setExtraCategories(const Rpc::StringSeq& categories, const Ice::Current&)
+{
+	boost::recursive_mutex::scoped_lock lock(sync_);
+	checkIsDestroyed();
+
+	if (context_->userGroup() != "Admin") {
+		return Rpc::ec_access_denied;
+	}
+
+	context_->center()->setExtraCategories(categories);
+	return Rpc::ec_success;
+}
+
+Rpc::ErrorCode RpcSessionImpl::getExtraCategories(Rpc::StringSeq& categories, const Ice::Current&)
+{
+	boost::recursive_mutex::scoped_lock lock(sync_);
+	checkIsDestroyed();
+
+	context_->center()->getExtraCategories(categories);
 	return Rpc::ec_success;
 }
 
@@ -414,14 +436,14 @@ Rpc::ErrorCode RpcSessionImpl::getEngineVersion(const std::string& name, const s
 	return Rpc::ec_success;
 }
 
-Rpc::ErrorCode RpcSessionImpl::browseExtra(Rpc::ExtraBrowserPrx& browserPrx, const Ice::Current& c)
+Rpc::ErrorCode RpcSessionImpl::browseExtra(const std::string& category, const std::string& search, Rpc::ExtraBrowserPrx& browserPrx, const Ice::Current& c)
 {
 	boost::recursive_mutex::scoped_lock lock(sync_);
 	checkIsDestroyed();
 
 	RpcExtraBrowserImplPtr browser = new RpcExtraBrowserImpl(context_->center());
 
-	Rpc::ErrorCode ec = browser->init();
+	Rpc::ErrorCode ec = browser->init(category, search);
 	if (ec != Rpc::ec_success) {
 		return ec;
 	}
@@ -449,11 +471,46 @@ Rpc::ErrorCode RpcSessionImpl::getExtraInfo(const std::string& id, Rpc::ExtraInf
 
 	info.id = form.at("Id");
 	info.title = form.at("Title");
+
+	std::string category = form.at("Category");
+	category.erase(std::remove_if(category.begin(), category.end(), boost::is_any_of("()")), category.end());
+	info.category = category;
+
 	info.setup = form.at("Setup");
 	info.user = form.at("User");
 	info.uptime = form.at("UpTime");
 	info.info = form.at("Info");
 	info.state = form.at("State");
+
+	return Rpc::ec_success;
+}
+
+Rpc::ErrorCode RpcSessionImpl::downloadExtraImage(const std::string& id, Rpc::DownloaderPrx& downloaderPrx, const Ice::Current& c)
+{
+	boost::recursive_mutex::scoped_lock lock(sync_);
+	checkIsDestroyed();
+
+	std::map<std::string, std::string> form;
+	if (!context_->center()->getExtra(form, id)) {
+		return Rpc::ec_extra_does_not_exist;
+	}
+
+	RpcFileDownloaderImplPtr downloader = new RpcFileDownloaderImpl;
+
+	fs::path path = context_->center()->getExtraPath(id);
+	path /= "image_0";
+
+	Rpc::ErrorCode ec = downloader->init(path.string());
+	if (ec != Rpc::ec_success) {
+		return ec;
+	}
+
+	downloaderPrx = Rpc::DownloaderPrx::uncheckedCast(c.adapter->addWithUUID(downloader));
+
+	if (!context_->objectManager()->addObject(downloaderPrx)) {
+		downloaderPrx->destroy();
+		return Rpc::ec_server_busy;
+	}
 
 	return Rpc::ec_success;
 }

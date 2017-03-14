@@ -6,6 +6,7 @@
 #include <QPainter>
 #include <QMessageBox>
 #include <QMenu>
+#include <QPixmap>
 
 #include <boost/algorithm/string.hpp>
 
@@ -16,7 +17,7 @@
 ManageExtraWidget::ManageExtraWidget(ContextPtr context, QWidget* parent) : QWidget(parent), context_(context)
 {
 	ui_.setupUi(this);
-	ui_.extraList->header()->setSortIndicator(4, Qt::DescendingOrder);
+	ui_.extraList->header()->setSortIndicator(5, Qt::DescendingOrder);
 
 	QObject::connect(ui_.showMoreButton, &QPushButton::clicked, this, &ManageExtraWidget::onShowMore);
 	QObject::connect(ui_.showAllButton, &QPushButton::clicked, this, &ManageExtraWidget::onShowAll);
@@ -69,7 +70,7 @@ void ManageExtraWidget::onShowAll()
 void ManageExtraWidget::onRefresh()
 {
 	ui_.extraList->clear();
-	context_->session->browseExtra(browser_);
+	context_->session->browseExtra("", "", browser_);
 	if (browser_) {
 		showMore(ITEMS_PER_REQUEST);
 	}
@@ -83,7 +84,7 @@ void ManageExtraWidget::onSubmit()
 		return;														\
 	}
 
-	SubmitExtraDialog d;
+	SubmitExtraDialog d(context_, this);
 
 	if (d.exec() == 1)
 	{
@@ -94,6 +95,10 @@ void ManageExtraWidget::onSubmit()
 
 		if (!d.getTitle().isEmpty()) {
 			ec = submitter->setTitle(d.getTitle().toStdString());
+			CHECK_ERROR_CODE(ec);
+		}
+		if (!d.getCategory().isEmpty()) {
+			ec = submitter->setCategory(d.getCategory().toStdString());
 			CHECK_ERROR_CODE(ec);
 		}
 		if (!d.getSetup().isEmpty()) {
@@ -107,7 +112,12 @@ void ManageExtraWidget::onSubmit()
 
 		boost::shared_ptr<ASyncSubmitExtraTask> task(new ASyncSubmitExtraTask(context_, submitter));
 		task->setInfoHead(QString("Submit %1").arg(d.getTitle()).toLocal8Bit().data());
-		task->setPath(d.getLocation().toLocal8Bit().data());
+		task->setExtraLocation(d.getLocation().toLocal8Bit().data());
+
+		if (!d.getCoverImage().isEmpty())
+		{
+			task->setImageFile(d.getCoverImage().toStdString());
+		}
 
 		context_->addTask(task);
 	}
@@ -137,11 +147,12 @@ void ManageExtraWidget::onEdit()
 		return;
 	}
 
-	SubmitExtraDialog d;
+	SubmitExtraDialog d(context_, this);
 
 	d.switchToEditMode();
-	
+
 	d.setTitle(ei.title.c_str());
+	d.setCategory(ei.category.c_str());
 	d.setSetup(ei.setup.c_str());
 	d.setInfo(ei.info.c_str());
 
@@ -156,6 +167,10 @@ void ManageExtraWidget::onEdit()
 			ec = submitter->setTitle(d.getTitle().toStdString());
 			CHECK_ERROR_CODE(ec);
 		}
+		if (!d.getCategory().isEmpty()) {
+			ec = submitter->setCategory(d.getCategory().toStdString());
+			CHECK_ERROR_CODE(ec);
+		}
 		if (!d.getSetup().isEmpty()) {
 			ec = submitter->setSetup(d.getSetup().toStdString());
 			CHECK_ERROR_CODE(ec);
@@ -166,7 +181,7 @@ void ManageExtraWidget::onEdit()
 		}
 
 		ec = submitter->finish();
-		CHECK_ERROR_CODE(ec);
+		context_->promptRpcError(ec);
 	}
 
 #undef CHECK_ERROR_CODE
@@ -228,6 +243,7 @@ void ManageExtraWidget::showMore(int count)
 			QStringList list;
 			list << item.id.c_str();
 			list << item.title.c_str();
+			list << item.category.c_str();
 			list << item.setup.c_str();
 			list << item.user.c_str();
 			list << item.uptime.c_str();

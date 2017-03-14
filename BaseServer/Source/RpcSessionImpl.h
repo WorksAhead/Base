@@ -24,8 +24,11 @@ public:
 	virtual Rpc::ErrorCode setPages(const Rpc::StringSeq&, const Ice::Current&);
 	virtual Rpc::ErrorCode getPages(Rpc::StringSeq&, const Ice::Current&);
 
-	virtual Rpc::ErrorCode setCategories(const Rpc::StringSeq&, const Ice::Current&);
-	virtual Rpc::ErrorCode getCategories(Rpc::StringSeq&, const Ice::Current&);
+	virtual Rpc::ErrorCode setContentCategories(const Rpc::StringSeq&, const Ice::Current&);
+	virtual Rpc::ErrorCode getContentCategories(Rpc::StringSeq&, const Ice::Current&);
+
+	virtual Rpc::ErrorCode setExtraCategories(const Rpc::StringSeq&, const Ice::Current&);
+	virtual Rpc::ErrorCode getExtraCategories(Rpc::StringSeq&, const Ice::Current&);
 
 	virtual Rpc::ErrorCode browseContent(const std::string&, const std::string&, const std::string&, Rpc::ContentBrowserPrx&, const Ice::Current&);
 	virtual Rpc::ErrorCode getContentInfo(const std::string&, Rpc::ContentInfo&, const Ice::Current&);
@@ -42,8 +45,9 @@ public:
 	virtual Rpc::ErrorCode updateEngineVersion(const std::string&, const std::string&, Rpc::EngineVersionSubmitterPrx&, const Ice::Current&);
 	virtual Rpc::ErrorCode getEngineVersion(const std::string&, const std::string&, Rpc::EngineVersionInfo&, const Ice::Current&);
 
-	virtual Rpc::ErrorCode browseExtra(Rpc::ExtraBrowserPrx&, const Ice::Current&);
+	virtual Rpc::ErrorCode browseExtra(const std::string&, const std::string&, Rpc::ExtraBrowserPrx&, const Ice::Current&);
 	virtual Rpc::ErrorCode getExtraInfo(const std::string&, Rpc::ExtraInfo&, const Ice::Current&);
+	virtual Rpc::ErrorCode downloadExtraImage(const std::string&, Rpc::DownloaderPrx&, const Ice::Current&);
 	virtual Rpc::ErrorCode downloadExtra(const std::string&, Rpc::DownloaderPrx&, const Ice::Current&);
 	virtual Rpc::ErrorCode submitExtra(Rpc::ExtraSubmitterPrx&, const Ice::Current&);
 	virtual Rpc::ErrorCode updateExtra(const std::string&, Rpc::ExtraSubmitterPrx&, const Ice::Current&);

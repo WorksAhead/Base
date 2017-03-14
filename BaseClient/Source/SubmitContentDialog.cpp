@@ -204,7 +204,7 @@ void SubmitContentDialog::onEditPage()
 void SubmitContentDialog::onEditCategory()
 {
 	Rpc::StringSeq categories;
-	Rpc::ErrorCode ec = context_->session->getCategories(categories);
+	Rpc::ErrorCode ec = context_->session->getContentCategories(categories);
 	if (ec != Rpc::ec_success) {
 		return;
 	}

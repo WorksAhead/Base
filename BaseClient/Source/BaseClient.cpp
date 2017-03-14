@@ -12,6 +12,7 @@
 #include "ASyncCreateProjectTask.h"
 #include "ASyncRemoveTask.h"
 #include "ContentImageLoader.h"
+#include "ExtraImageLoader.h"
 #include "ErrorMessage.h"
 #include "QtUtils.h"
 #include "URLUtils.h"
@@ -100,6 +101,7 @@ BaseClient::BaseClient(const QString& workPath, const QString& version, Rpc::Ses
 	}
 
 	context_->contentImageLoader = new ContentImageLoader(context_, this);
+	context_->extraImageLoader = new ExtraImageLoader(context_, this);
 	context_->addTask = std::bind(&BaseClient::addTask, this, std::placeholders::_1);
 	context_->showTaskManager = std::bind(&BaseClient::onShowTaskManager, this);
 	context_->uniquePath = std::bind(&BaseClient::uniquePath, this);
@@ -287,16 +289,16 @@ BaseClient::BaseClient(const QString& workPath, const QString& version, Rpc::Ses
 		throw int(0);
 	}
 
-	Rpc::StringSeq categories;
-	ec = session->getCategories(categories);
+	Rpc::StringSeq contentCategories;
+	ec = session->getContentCategories(contentCategories);
 	if (ec != Rpc::ec_success) {
 		promptRpcError(ec);
 		throw int(0);
 	}
 
-	QStringList categoryList;
-	for (const std::string& s : categories) {
-		categoryList << s.c_str();
+	QStringList contentCategoryList;
+	for (const std::string& s : contentCategories) {
+		contentCategoryList << s.c_str();
 	}
 
 	QList<PageContentWidget*> pageContentWidgets;
@@ -309,7 +311,7 @@ BaseClient::BaseClient(const QString& workPath, const QString& version, Rpc::Ses
 		{
 			std::string name = boost::erase_last_copy(page, "*");
 			PageContentWidget* w = new PageContentWidget(context_, page.c_str());
-			w->categoryFilterWidget()->labelSelectorWidget()->setLabels(categoryList);
+			w->categoryFilterWidget()->labelSelectorWidget()->setLabels(contentCategoryList);
 			tabWidget_->addTab(name.c_str(), w);
 			pageContentWidgets.append(w);
 			QObject::connect(w, &PageContentWidget::unresolvedUrl, this, &BaseClient::openUrl);
@@ -336,7 +338,26 @@ BaseClient::BaseClient(const QString& workPath, const QString& version, Rpc::Ses
 
 	tabWidget_->addTab(QString::fromLocal8Bit("引擎下载"), new PageEngineWidget(context_, "Engine"));
 
-	tabWidget_->addTab(QString::fromLocal8Bit("外部工具"), new PageExtraWidget(context_, "Extra"));
+	PageExtraWidget* pageExtraWidget = new PageExtraWidget(context_, "Extra");
+	{
+		Rpc::StringSeq extraCategories;
+		ec = session->getExtraCategories(extraCategories);
+		if (ec != Rpc::ec_success) {
+			promptRpcError(ec);
+			throw int(0);
+		}
+
+		QStringList extraCategoryList;
+		for (const std::string& s : extraCategories) {
+			extraCategoryList << s.c_str();
+		}
+
+		CategoryFilterWidget* w = pageExtraWidget->categoryFilterWidget();
+		w->labelSelectorWidget()->setLabels(extraCategoryList);
+		QObject::connect(w, &CategoryFilterWidget::collapsed, w, &CategoryFilterWidget::collapse);
+		QObject::connect(w, &CategoryFilterWidget::extended, w, &CategoryFilterWidget::extend);
+		tabWidget_->addTab(QString::fromLocal8Bit("外部工具"), pageExtraWidget);
+	}
 
 	library_ = new LibraryWidget(context_);
 	tabWidget_->addTab(QString::fromLocal8Bit("本地内容"), library_);

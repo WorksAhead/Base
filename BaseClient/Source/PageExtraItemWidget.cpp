@@ -4,12 +4,11 @@
 #include <QPainter>
 #include <QMouseEvent>
 
-PageExtraItemWidget::PageExtraItemWidget(ContextPtr context, QWidget* parent) : QWidget(parent), context_(context)
+PageExtraItemWidget::PageExtraItemWidget(QWidget* parent) : QWidget(parent)
 {
-	setAutoFillBackground(true);
-	ui_.setupUi(this);
+	size_ = 1;
 
-	QObject::connect(ui_.installButton, &QPushButton::clicked, this, &PageExtraItemWidget::onInstall);
+	setSize(size_);
 }
 
 PageExtraItemWidget::~PageExtraItemWidget()
@@ -21,33 +20,85 @@ void PageExtraItemWidget::setId(const QString& id)
 	id_ = id;
 }
 
-void PageExtraItemWidget::setTitle(const QString& title)
+QString PageExtraItemWidget::id() const
 {
-	ui_.nameLabel->setText(title);
+	return id_;
 }
 
-void PageExtraItemWidget::mousePressEvent(QMouseEvent*)
+void PageExtraItemWidget::setText(const QString& text)
 {
+	text_ = text;
 }
 
-void PageExtraItemWidget::mouseDoubleClickEvent(QMouseEvent* e)
+QString PageExtraItemWidget::text() const
 {
+	return text_;
 }
 
-void PageExtraItemWidget::resizeEvent(QResizeEvent*)
+void PageExtraItemWidget::setBackground(const QPixmap& bg)
 {
+	bg_ = bg;
+	updateBackground(size());
+}
+
+void PageExtraItemWidget::setSize(int size)
+{
+	size_ = size;
+
+	if (size == 0) {
+		setFixedSize(150, 150);
+	}
+	else {
+		setFixedSize(230, 230);
+	}
 }
 
 void PageExtraItemWidget::paintEvent(QPaintEvent*)
 {
-	QStyleOption opt;
-	opt.init(this);
-	QPainter p(this);
-	style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+	QPainter painter(this);
+	painter.drawPixmap(QPoint(0, 0), scaledBg_);
+
+	if (size_ == 0)
+	{
+		QFont f = font();
+		f.setPixelSize(12);
+
+		QFontMetrics fm(f);
+
+		QRect textRect = fm.boundingRect(rect().adjusted(5, 5, -5, -5), Qt::AlignLeft|Qt::TextWordWrap, text_);
+		textRect.moveBottom(rect().height() - 5);
+
+		painter.fillRect(textRect.adjusted(-2, -2, 2, 2), QColor(0, 0, 0, 160));
+
+		painter.setFont(f);
+		painter.drawText(textRect, text_);
+	}
+	else {
+		QFont f = font();
+		f.setPixelSize(14);
+
+		QFontMetrics fm(f);
+
+		QRect textRect = fm.boundingRect(rect().adjusted(15, 15, -15, -15), Qt::AlignLeft|Qt::TextWordWrap, text_);
+		textRect.moveBottom(rect().height() - 15);
+
+		painter.fillRect(textRect.adjusted(-5, -5, 5, 5), QColor(0, 0, 0, 160));
+
+		painter.setFont(f);
+		painter.drawText(textRect, text_);
+	}
 }
 
-void PageExtraItemWidget::onInstall()
+void PageExtraItemWidget::resizeEvent(QResizeEvent* e)
 {
-	context_->installExtra(id_.toStdString());
+	updateBackground(e->size());
+}
+
+void PageExtraItemWidget::updateBackground(const QSize& s)
+{
+	if (!bg_.isNull()) {
+		scaledBg_ = bg_.scaled(s, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
+		repaint();
+	}
 }
 

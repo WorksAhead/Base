@@ -27,11 +27,15 @@ void ASyncSubmitExtraTask::setInfoHead(const std::string& infoHead)
 	infoHead_ = infoHead;
 }
 
-void ASyncSubmitExtraTask::setPath(const std::string& path)
+void ASyncSubmitExtraTask::setExtraLocation(const std::string& path)
 {
-	path_ = path;
+	extraLocation_ = path;
 }
 
+void ASyncSubmitExtraTask::setImageFile(const std::string& imageFile)
+{
+	imageFile_ = imageFile;
+}
 
 void ASyncSubmitExtraTask::start()
 {
@@ -95,6 +99,38 @@ void ASyncSubmitExtraTask::run()
 		info_ = infoHead_;
 	}
 
+	if (!imageFile_.empty())
+	{
+		Rpc::UploaderPrx uploader;
+		Rpc::ErrorCode ec = submitter_->uploadImage(uploader);
+		if (ec != Rpc::ec_success) {
+			boost::mutex::scoped_lock lock(sync_);
+			info_ = infoHead_ + " - " + std::string("Rpc: ") + errorMessage(ec);
+			state_ = ASyncTask::state_failed;
+			return;
+		}
+
+		std::unique_ptr<ASyncUploadTask> task(new ASyncUploadTask(context_, uploader));
+		task->setInfoHead(infoHead_);
+		task->setFilename(imageFile_);
+		task->start();
+
+		for (;;)
+		{
+			const int ret = update(task.get(), 0, 0.01);
+			if (ret < 0) {
+				if (task->state() == ASyncTask::state_cancelled) {
+					uploader->cancel();
+				}
+				return;
+			}
+			else if (ret > 0) {
+				break;
+			}
+			std::this_thread::sleep_for(std::chrono::milliseconds(10));
+		}
+	}
+
 	Rpc::UploaderPrx uploader;
 	Rpc::ErrorCode ec = submitter_->uploadExtra(uploader);
 	if (ec != Rpc::ec_success) {
@@ -106,12 +142,12 @@ void ASyncSubmitExtraTask::run()
 
 	std::unique_ptr<ASyncPackTask> packTask(new ASyncPackTask(context_));
 	packTask->setInfoHead(infoHead_);
-	packTask->setPath(path_);
+	packTask->setPath(extraLocation_);
 	packTask->start();
 
 	for (;;)
 	{
-		const int ret = update(packTask.get(), 0, 0.5);
+		const int ret = update(packTask.get(), 1, 0.49);
 		if (ret < 0) {
 			if (packTask->state() == ASyncTask::state_cancelled) {
 				submitter_->cancel();

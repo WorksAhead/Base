@@ -61,6 +61,7 @@ module Rpc
 	{
 		string id;
 		string title;
+		string category;
 		string setup;
 		string user;
 		string uptime;
@@ -119,7 +120,9 @@ module Rpc
 	{
 		ErrorCode setTitle(string title);
 		ErrorCode setSetup(string setup);
+		ErrorCode setCategory(string category);
 		ErrorCode setInfo(string info);
+		ErrorCode uploadImage(out Uploader* uploader);
 		ErrorCode uploadExtra(out Uploader* uploader);
 		void cancel();
 		ErrorCode finish();
@@ -158,8 +161,11 @@ module Rpc
 		ErrorCode setPages(StringSeq pages);
 		ErrorCode getPages(out StringSeq pages);
 
-		ErrorCode setCategories(StringSeq categories);
-		ErrorCode getCategories(out StringSeq categories);
+		ErrorCode setContentCategories(StringSeq categories);
+		ErrorCode getContentCategories(out StringSeq categories);
+
+		ErrorCode setExtraCategories(StringSeq categories);
+		ErrorCode getExtraCategories(out StringSeq categories);
 
 		ErrorCode browseContent(string page, string category, string search, out ContentBrowser* browser);
 		ErrorCode getContentInfo(string id, out ContentInfo info);
@@ -176,8 +182,9 @@ module Rpc
 		ErrorCode updateEngineVersion(string name, string version, out EngineVersionSubmitter* submitter);
 		ErrorCode getEngineVersion(string name, string version, out EngineVersionInfo engineVersion);
 
-		ErrorCode browseExtra(out ExtraBrowser* browser);
+		ErrorCode browseExtra(string category, string search, out ExtraBrowser* browser);
 		ErrorCode getExtraInfo(string id, out ExtraInfo info);
+		ErrorCode downloadExtraImage(string id, out Downloader* downloader);
 		ErrorCode downloadExtra(string id, out Downloader* downloader);
 		ErrorCode submitExtra(out ExtraSubmitter* submitter);
 		ErrorCode updateExtra(string id, out ExtraSubmitter* submitter);
