@@ -28,7 +28,7 @@ PageExtraWidget::PageExtraWidget(ContextPtr context, const QString& name, QWidge
 	QWidget* w = new QWidget;
 	w->setObjectName("FlowWidget");
 
-	flowLayout_ = new FlowLayout(0, 20, 20);
+	flowLayout_ = new FlowLayout(0, 12, 12);
 
 	w->setLayout(flowLayout_);
 
