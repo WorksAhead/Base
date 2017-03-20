@@ -336,7 +336,7 @@ BaseClient::BaseClient(const QString& workPath, const QString& version, Rpc::Ses
 		}
 	}
 
-	tabWidget_->addTab(QString::fromLocal8Bit("引擎下载"), new PageEngineWidget(context_, "Engine"));
+	tabWidget_->addTab(QString::fromLocal8Bit("引擎"), new PageEngineWidget(context_, "Engine"));
 
 	PageExtraWidget* pageExtraWidget = new PageExtraWidget(context_, "Extra");
 	{
@@ -356,7 +356,7 @@ BaseClient::BaseClient(const QString& workPath, const QString& version, Rpc::Ses
 		w->labelSelectorWidget()->setLabels(extraCategoryList);
 		QObject::connect(w, &CategoryFilterWidget::collapsed, w, &CategoryFilterWidget::collapse);
 		QObject::connect(w, &CategoryFilterWidget::extended, w, &CategoryFilterWidget::extend);
-		tabWidget_->addTab(QString::fromLocal8Bit("外部工具"), pageExtraWidget);
+		tabWidget_->addTab(QString::fromLocal8Bit("工具"), pageExtraWidget);
 	}
 
 	library_ = new LibraryWidget(context_);

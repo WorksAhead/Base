@@ -467,6 +467,10 @@ PageExtraWidget {
 	background: rgb(30, 30, 30);
 }
 
+QWidget#PageExtraExtraWidget {
+	background: rgb(30, 30, 30);
+}
+
 LibraryWidget {
 	background: rgb(30, 30, 30);
 }

@@ -35,7 +35,9 @@ protected:
 private Q_SLOTS:
 	void onCategoryChanged();
 	void onScroll(int);
+	void onBack();
 	void onRefresh();
+	void onInstall();
 	void onImageLoaded(const QString& id, const QPixmap&);
 	void onTimeout();
 
@@ -56,6 +58,9 @@ private:
 	QTimer* timer_;
 
 	Ui::PageExtraWidget ui_;
+
+	QString currentId_;
+
 	bool firstShow_;
 	int count_;
 };

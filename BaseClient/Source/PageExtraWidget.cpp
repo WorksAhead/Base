@@ -4,6 +4,7 @@
 #include "ExtraImageLoader.h"
 
 #include <QPainter>
+#include <QScrollArea>
 #include <QScrollBar>
 #include <QTime>
 #include <QMouseEvent>
@@ -38,10 +39,14 @@ PageExtraWidget::PageExtraWidget(ContextPtr context, const QString& name, QWidge
 	timer_->setInterval(30);
 
 	QObject::connect(ui_.scrollArea->verticalScrollBar(), &QScrollBar::valueChanged, this, &PageExtraWidget::onScroll);
+	QObject::connect(ui_.backButton, &QPushButton::clicked, this, &PageExtraWidget::onBack);
 	QObject::connect(ui_.refreshButton, &QPushButton::clicked, this, &PageExtraWidget::onRefresh);
+	QObject::connect(ui_.installButton, &QPushButton::clicked, this, &PageExtraWidget::onInstall);
 	QObject::connect(ui_.filterWidget->labelSelectorWidget(), &LabelSelectorWidget::clicked, this, &PageExtraWidget::onCategoryChanged);
 	QObject::connect(context_->extraImageLoader, &ExtraImageLoader::loaded, this, &PageExtraWidget::onImageLoaded);
 	QObject::connect(timer_, &QTimer::timeout, this, &PageExtraWidget::onTimeout);
+
+	ui_.backButton->setVisible(false);
 
 	firstShow_ = true;
 	count_ = 0;
@@ -60,16 +65,38 @@ void PageExtraWidget::mousePressEvent(QMouseEvent* e)
 {
 	if (e->button() == Qt::LeftButton)
 	{
-		QPoint pos = ui_.scrollArea->mapFrom(this, e->pos());
-
-		if (ui_.scrollArea->rect().contains(pos))
+		if (ui_.stackedWidget->currentIndex() == 0)
 		{
-			QWidget* w = ui_.scrollArea->childAt(pos);
-			PageExtraItemWidget* pi = qobject_cast<PageExtraItemWidget*>(w);
-			if (pi) {
-				int ret = QMessageBox::question(this, "Base", QString(tr("Do you want to install %1 ?")).arg(pi->text()));
-				if (ret == QMessageBox::Yes) {
-					context_->installExtra(pi->id().toStdString());
+			QPoint pos = ui_.scrollArea->mapFrom(this, e->pos());
+
+			if (ui_.scrollArea->rect().contains(pos))
+			{
+				QWidget* w = ui_.scrollArea->childAt(pos);
+
+				PageExtraItemWidget* pi = qobject_cast<PageExtraItemWidget*>(w);
+
+				if (pi)
+				{
+					Rpc::ExtraInfo item;
+
+					if (context_->session->getExtraInfo(pi->id().toStdString(), item) == Rpc::ec_success)
+					{
+						ui_.titleLabel->setText(pi->text());
+
+						std::ostringstream tip;
+						tip << item.user << " " << item.uptime << "\n";
+						tip << "\nID:\n" << item.id << "\n";
+
+						ui_.summaryLabel->setText(tip.str().c_str());
+
+						ui_.infoLabel->setText(item.info.c_str());
+
+						ui_.stackedWidget->setCurrentIndex(1);
+						ui_.backButton->setVisible(true);
+						ui_.refreshButton->setVisible(false);
+
+						currentId_ = pi->id();
+					}
 				}
 			}
 		}
@@ -106,6 +133,13 @@ void PageExtraWidget::onScroll(int position)
 	}
 }
 
+void PageExtraWidget::onBack()
+{
+	ui_.stackedWidget->setCurrentIndex(0);
+	ui_.backButton->setVisible(false);
+	ui_.refreshButton->setVisible(true);
+}
+
 void PageExtraWidget::onRefresh()
 {
 	clear();
@@ -117,6 +151,11 @@ void PageExtraWidget::onRefresh()
 	if (browser_) {
 		showMore(ITEMS_FIRST_REQUEST);
 	}
+}
+
+void PageExtraWidget::onInstall()
+{
+	context_->installExtra(currentId_.toStdString());
 }
 
 void PageExtraWidget::onImageLoaded(const QString& id, const QPixmap& bg)
@@ -144,14 +183,6 @@ void PageExtraWidget::onTimeout()
 			itemWidget->setId(item.id.c_str());
 			itemWidget->setText(item.title.c_str());
 			itemWidget->setSize(0);
-
-			std::ostringstream tip;
-			tip << item.title << "\n\n";
-			tip << item.user << " " << item.uptime << "\n";
-			tip << "\nID:\n" << item.id << "\n";
-			tip << "\n" << item.info.c_str();
-
-			itemWidget->setToolTip(tip.str().c_str());
 
 			items_.insert(item.id.c_str(), itemWidget);
 
