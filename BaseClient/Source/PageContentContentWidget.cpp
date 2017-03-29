@@ -124,6 +124,9 @@ void PageContentContentWidget::refresh()
 
 		presentVideo(videos_[0]);
 	}
+
+	ui_.commentWidget->setContext(context_);
+	ui_.commentWidget->setTargetId(contentId_);
 }
 
 void PageContentContentWidget::cancel()
@@ -176,7 +179,16 @@ void PageContentContentWidget::mousePressEvent(QMouseEvent* e)
 
 void PageContentContentWidget::resizeEvent(QResizeEvent* e)
 {
-	QWidget::resizeEvent(e);
+	int left;
+	int right;
+
+	ui_.verticalLayout_4->getContentsMargins(&left, 0, &right, 0);
+
+	int space = ui_.verticalLayout_4->spacing();
+
+	int width = (e->size().width() - left - right - space) * (2.0f / 3.0f);
+
+	ui_.stackedWidget->setFixedWidth(width);
 }
 
 void PageContentContentWidget::showEvent(QShowEvent*)

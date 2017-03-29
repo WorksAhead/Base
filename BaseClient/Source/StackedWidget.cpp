@@ -25,10 +25,14 @@ void StackedWidget::resizeEvent(QResizeEvent* e)
 {
 	QSize size = e->size();
 
-	if (aspectRatio_ != 0.0f) {
+	if (aspectRatio_ != 0.0f)
+	{
 		int height = (int)floor(size.width() / aspectRatio_ + 0.5f);
-		if (size.height() != height) {
+
+		if (height != size.height())
+		{
 			setFixedHeight(height);
 		}
 	}
 }
+

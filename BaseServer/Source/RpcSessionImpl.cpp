@@ -9,6 +9,7 @@
 #include "RpcClientBrowserImpl.h"
 #include "RpcClientSubmitterImpl.h"
 #include "RpcUserBrowserImpl.h"
+#include "RpcCommentBrowserImpl.h"
 #include "PathUtils.h"
 
 #include <Ice/Ice.h>
@@ -792,6 +793,87 @@ Rpc::ErrorCode RpcSessionImpl::removeUser(const std::string& username, const Ice
 	}
 
 	return Rpc::ec_operation_failed;
+}
+
+Rpc::ErrorCode RpcSessionImpl::browseComment(const std::string& targetId, const std::string& user, Rpc::CommentBrowserPrx& browserPrx, const Ice::Current& c)
+{
+	boost::recursive_mutex::scoped_lock lock(sync_);
+	checkIsDestroyed();
+
+	RpcCommentBrowserImplPtr browser = new RpcCommentBrowserImpl(context_);
+
+	Rpc::ErrorCode ec = browser->init(targetId, user);
+	if (ec != Rpc::ec_success) {
+		return ec;
+	}
+
+	browserPrx = Rpc::CommentBrowserPrx::uncheckedCast(c.adapter->addWithUUID(browser));
+
+	if (!context_->objectManager()->addObject(browserPrx)) {
+		browserPrx->destroy();
+		return Rpc::ec_server_busy;
+	}
+
+	return Rpc::ec_success;
+
+	return Rpc::ec_operation_failed;
+}
+
+Rpc::ErrorCode RpcSessionImpl::addComment(const std::string& targetId, const std::string& comment, const Ice::Current& c)
+{
+	boost::recursive_mutex::scoped_lock lock(sync_);
+	checkIsDestroyed();
+
+	if (context_->center()->addComment(targetId, context_->user(), comment))
+	{
+		return Rpc::ec_success;
+	}
+
+	return Rpc::ec_operation_failed;
+}
+
+Rpc::ErrorCode RpcSessionImpl::editComment(const std::string& id, const std::string& comment, const Ice::Current&)
+{
+	boost::recursive_mutex::scoped_lock lock(sync_);
+	checkIsDestroyed();
+
+	Form form;
+
+	if (!context_->center()->getComment(id, form)) {
+		return Rpc::ec_comment_does_not_exist;
+	}
+
+	if (!boost::iequals(context_->user(), form.at("User")) && context_->userGroup() != "Admin") {
+		return Rpc::ec_access_denied;
+	}
+	
+	if (!context_->center()->editComment(id, comment)) {
+		return Rpc::ec_operation_failed;
+	}
+
+	return Rpc::ec_success;
+}
+
+Rpc::ErrorCode RpcSessionImpl::removeComment(const std::string& id, const Ice::Current&)
+{
+	boost::recursive_mutex::scoped_lock lock(sync_);
+	checkIsDestroyed();
+
+	Form form;
+
+	if (!context_->center()->getComment(id, form)) {
+		return Rpc::ec_comment_does_not_exist;
+	}
+
+	if (!boost::iequals(context_->user(), form.at("User")) && context_->userGroup() != "Admin") {
+		return Rpc::ec_access_denied;
+	}
+
+	if (!context_->center()->removeComment(id)) {
+		return Rpc::ec_operation_failed;
+	}
+
+	return Rpc::ec_success;
 }
 
 IceUtil::Time RpcSessionImpl::timestamp()

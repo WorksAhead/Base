@@ -78,6 +78,9 @@ Center::Center()
 	db_->exec("CREATE TABLE IF NOT EXISTS Info ("
 		"Key TEXT UNIQUE, Value TEXT)");
 
+	db_->exec("CREATE TABLE IF NOT EXISTS Comments ("
+		"Id TEXT, TargetId TEXT, User TEXT, Time DATETIME, Comment TEXT)");
+
 	db_->exec("CREATE INDEX IF NOT EXISTS IndexOfUsers ON Users ("
 		"\"Group\")");
 
@@ -92,6 +95,9 @@ Center::Center()
 
 	db_->exec("CREATE INDEX IF NOT EXISTS IndexOfClients ON Clients ("
 		"Version, UpTime, State)");
+
+	db_->exec("CREATE INDEX IF NOT EXISTS IndexOfComments ON Comments ("
+		"Id, TargetId, User, Time)");
 
 	loadPagesFromDb();
 	loadContentCategoriesFromDb();
@@ -705,6 +711,73 @@ bool Center::removeUser(const std::string& username)
 	oss << "DELETE FROM Users";
 	oss << " WHERE Username=";
 	oss << sqlText(username);
+
+	SQLite::Transaction t(*db_);
+	int n = db_->exec(oss.str());
+	t.commit();
+
+	return (n > 0);
+}
+
+bool Center::getComment(const std::string& id, Form& form)
+{
+	std::ostringstream oss;
+	oss << "SELECT * FROM Comments";
+	oss << " WHERE ";
+	oss << "Id=" << sqlText(id);
+
+	SQLite::Statement s(*db_, oss.str());
+	if (!s.executeStep()) {
+		return false;
+	}
+
+	form["Id"] = s.getColumn("Id").getText();
+	form["TargetId"] = s.getColumn("TargetId").getText();
+	form["User"] = s.getColumn("User").getText();
+	form["Time"] = s.getColumn("Time").getText();
+	form["Comment"] = s.getColumn("Comment").getText();
+
+	return true;
+}
+
+bool Center::addComment(const std::string& targetId, const std::string& user, const std::string& comment)
+{
+	std::ostringstream oss;
+	oss << "INSERT INTO Comments VALUES (";
+	oss << sqlText(generateUuid()) << ", ";
+	oss << sqlText(targetId) << ", ";
+	oss << sqlText(user) << ", ";
+	oss << sqlText(getCurrentTimeString()) << ", ";
+	oss << sqlText(comment) << ")";
+
+	SQLite::Transaction t(*db_);
+	int n = db_->exec(oss.str());
+	t.commit();
+
+	return (n > 0);
+}
+
+bool Center::editComment(const std::string& id, const std::string& comment)
+{
+	std::ostringstream oss;
+	oss << "UPDATE Comments SET Comment=";
+	oss << sqlText(comment);
+	oss << " WHERE Id=";
+	oss << sqlText(id);
+
+	SQLite::Transaction t(*db_);
+	int n = db_->exec(oss.str());
+	t.commit();
+
+	return (n > 0);
+}
+
+bool Center::removeComment(const std::string& id)
+{
+	std::ostringstream oss;
+	oss << "DELETE FROM Comment";
+	oss << " WHERE Id=";
+	oss << sqlText(id);
 
 	SQLite::Transaction t(*db_);
 	int n = db_->exec(oss.str());

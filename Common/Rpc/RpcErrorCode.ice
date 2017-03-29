@@ -32,6 +32,7 @@ module Rpc
 		ec_client_version_does_not_exist,
 		ec_client_version_is_removed,
 		ec_client_version_too_low,
+		ec_comment_does_not_exist,
 	};
 };
 

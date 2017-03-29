@@ -46,7 +46,7 @@ PageContentBrowserWidget::PageContentBrowserWidget(ContextPtr context, const QSt
 	firstShow_ = true;
 	count_ = 0;
 
-	coverSize_ = 1;	
+	coverSize_ = 1;
 }
 
 PageContentBrowserWidget::~PageContentBrowserWidget()

@@ -27,5 +27,6 @@
         <file>Icons/MuteOn.png</file>
         <file>Icons/MuteOff.png</file>
         <file>Icons/VideoMark.png</file>
+        <file>Icons/SlightlySmilingFace.png</file>
     </qresource>
 </RCC>

@@ -10,7 +10,10 @@
     <height>700</height>
    </rect>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_4">
+  <layout class="QVBoxLayout" name="verticalLayout_4" stretch="0,0,0,0,0">
+   <property name="spacing">
+    <number>6</number>
+   </property>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="2,1">
      <property name="spacing">
@@ -57,7 +60,7 @@
              <x>0</x>
              <y>0</y>
              <width>522</width>
-             <height>141</height>
+             <height>126</height>
             </rect>
            </property>
           </widget>
@@ -180,14 +183,33 @@
     </widget>
    </item>
    <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeType">
+      <enum>QSizePolicy::Fixed</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item>
+    <widget class="CommentWidget" name="commentWidget" native="true"/>
+   </item>
+   <item>
     <spacer name="verticalSpacer_3">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>
      <property name="sizeHint" stdset="0">
       <size>
-       <width>40</width>
-       <height>20</height>
+       <width>20</width>
+       <height>0</height>
       </size>
      </property>
     </spacer>
@@ -199,6 +221,12 @@
    <class>StackedWidget</class>
    <extends>QStackedWidget</extends>
    <header>StackedWidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>CommentWidget</class>
+   <extends>QWidget</extends>
+   <header>CommentWidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

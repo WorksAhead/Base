@@ -82,6 +82,11 @@ public:
 	bool setUserGroup(const std::string& username, const std::string& group);
 	bool removeUser(const std::string& username);
 
+	bool getComment(const std::string& id, Form& form);
+	bool addComment(const std::string& targetId, const std::string& user, const std::string& comment);
+	bool editComment(const std::string& id, const std::string& comment);
+	bool removeComment(const std::string& id);
+
 	DatabasePtr db() const { return db_; }
 
 private:

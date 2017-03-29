@@ -96,6 +96,9 @@ void PageExtraWidget::mousePressEvent(QMouseEvent* e)
 						ui_.refreshButton->setVisible(false);
 
 						currentId_ = pi->id();
+
+						ui_.commentWidget->setContext(context_);
+						ui_.commentWidget->setTargetId(pi->id());
 					}
 				}
 			}

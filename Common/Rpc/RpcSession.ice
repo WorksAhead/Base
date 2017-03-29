@@ -151,6 +151,22 @@ module Rpc
 		ErrorCode finish();
 	};
 
+	struct Comment
+	{
+		string id;
+		string targetId;
+		string user;
+		string time;
+		string comment;
+	};
+
+	sequence<Comment> CommentSeq;
+
+	interface CommentBrowser extends ManagedObject
+	{
+		ErrorCode next(int n, out CommentSeq items);
+	};
+
 	interface Session extends ManagedObject
 	{
 		void refresh();
@@ -199,6 +215,11 @@ module Rpc
 		ErrorCode browseUsers(out UserBrowser* browser);
 		ErrorCode setUserGroup(string username, string group);
 		ErrorCode removeUser(string username);
+
+		ErrorCode browseComment(string targetId, string user, out CommentBrowser* browser);
+		ErrorCode addComment(string targetId, string comment);
+		ErrorCode editComment(string id, string comment);
+		ErrorCode removeComment(string id);
 	};
 };
 

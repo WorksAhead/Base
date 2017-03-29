@@ -102,6 +102,7 @@
     <ClCompile Include="..\BaseServer\Source\RpcClientBrowserImpl.cpp" />
     <ClCompile Include="..\BaseServer\Source\RpcClientDownloaderImpl.cpp" />
     <ClCompile Include="..\BaseServer\Source\RpcClientSubmitterImpl.cpp" />
+    <ClCompile Include="..\BaseServer\Source\RpcCommentBrowserImpl.cpp" />
     <ClCompile Include="..\BaseServer\Source\RpcContentBrowserImpl.cpp" />
     <ClCompile Include="..\BaseServer\Source\RpcContentSubmitterImpl.cpp" />
     <ClCompile Include="..\BaseServer\Source\RpcEngineVersionBrowserImpl.cpp" />
@@ -142,6 +143,7 @@
     <ClInclude Include="..\BaseServer\Source\RpcClientBrowserImpl.h" />
     <ClInclude Include="..\BaseServer\Source\RpcClientDownloaderImpl.h" />
     <ClInclude Include="..\BaseServer\Source\RpcClientSubmitterImpl.h" />
+    <ClInclude Include="..\BaseServer\Source\RpcCommentBrowserImpl.h" />
     <ClInclude Include="..\BaseServer\Source\RpcContentBrowserImpl.h" />
     <ClInclude Include="..\BaseServer\Source\RpcContentSubmitterImpl.h" />
     <ClInclude Include="..\BaseServer\Source\RpcEngineVersionBrowserImpl.h" />

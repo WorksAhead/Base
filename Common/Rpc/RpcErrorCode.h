@@ -76,7 +76,8 @@ enum ErrorCode
     ec_client_version_already_exists = 25,
     ec_client_version_does_not_exist = 26,
     ec_client_version_is_removed = 27,
-    ec_client_version_too_low = 28
+    ec_client_version_too_low = 28,
+    ec_comment_does_not_exist = 29
 };
 
 }
@@ -88,7 +89,7 @@ struct StreamableTraits< ::Rpc::ErrorCode>
 {
     static const StreamHelperCategory helper = StreamHelperCategoryEnum;
     static const int minValue = 0;
-    static const int maxValue = 28;
+    static const int maxValue = 29;
     static const int minWireSize = 1;
     static const bool fixedLength = false;
 };
