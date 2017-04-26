@@ -64,6 +64,7 @@ public:
 	virtual Rpc::ErrorCode removeUser(const std::string&, const Ice::Current&);
 
 	virtual Rpc::ErrorCode browseComment(const std::string&, const std::string&, Rpc::CommentBrowserPrx&, const Ice::Current&);
+	virtual Rpc::ErrorCode getComment(const std::string&, std::string&, const Ice::Current&);
 	virtual Rpc::ErrorCode addComment(const std::string&, const std::string&, const Ice::Current&);
 	virtual Rpc::ErrorCode editComment(const std::string&, const std::string&, const Ice::Current&);
 	virtual Rpc::ErrorCode removeComment(const std::string&, const Ice::Current&);

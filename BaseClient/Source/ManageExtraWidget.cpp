@@ -17,7 +17,7 @@
 ManageExtraWidget::ManageExtraWidget(ContextPtr context, QWidget* parent) : QWidget(parent), context_(context)
 {
 	ui_.setupUi(this);
-	ui_.extraList->header()->setSortIndicator(5, Qt::DescendingOrder);
+	ui_.extraList->header()->setSortIndicator(6, Qt::DescendingOrder);
 
 	QObject::connect(ui_.showMoreButton, &QPushButton::clicked, this, &ManageExtraWidget::onShowMore);
 	QObject::connect(ui_.showAllButton, &QPushButton::clicked, this, &ManageExtraWidget::onShowAll);
@@ -84,7 +84,64 @@ void ManageExtraWidget::onSubmit()
 		return;														\
 	}
 
+	bool copyForm = false;
+	bool fillParentId = false;
+
+	QList<QTreeWidgetItem*> items = ui_.extraList->selectedItems();
+
+	if (items.count() == 1)
+	{
+		QMessageBox msgBox(this);
+
+		msgBox.setWindowTitle("Base");
+		msgBox.setIcon(QMessageBox::Question);
+		msgBox.setText(tr("What do you want ?"));
+
+		QPushButton* b0 = msgBox.addButton("A new form", QMessageBox::NoRole);
+		QPushButton* b1 = msgBox.addButton("A copy of the selected form", QMessageBox::NoRole);
+		QPushButton* b2 = msgBox.addButton("A sub-copy of the selected form", QMessageBox::NoRole);
+		QPushButton* b3 = msgBox.addButton("Cancel", QMessageBox::NoRole);
+
+		msgBox.exec();
+
+		if (msgBox.clickedButton() == b3) {
+			return;
+		}
+		else if (msgBox.clickedButton() == b1) {
+			copyForm = true;
+		}
+		else if (msgBox.clickedButton() == b2) {
+			copyForm = true;
+			fillParentId = true;
+		}
+	}
+
 	SubmitExtraDialog d(context_, this);
+
+	if (copyForm)
+	{
+		Rpc::ExtraInfo ei;
+		Rpc::ErrorCode ec;
+
+		if ((ec = context_->session->getExtraInfo(items[0]->text(0).toStdString(), ei)) != Rpc::ec_success) {
+			context_->promptRpcError(ec);
+			return;
+		}
+
+		d.loadCoverImageFrom(ei.id.c_str());
+
+		if (fillParentId) {
+			d.setParentId(ei.id.c_str());
+		}
+		else {
+			d.setParentId(ei.parentId.c_str());
+		}
+		
+		d.setTitle(ei.title.c_str());
+		d.setCategory(ei.category.c_str());
+		d.setSetup(ei.setup.c_str());
+		d.setInfo(ei.info.c_str());
+	}
 
 	if (d.exec() == 1)
 	{
@@ -93,6 +150,10 @@ void ManageExtraWidget::onSubmit()
 		Rpc::ErrorCode ec = context_->session->submitExtra(submitter);
 		CHECK_ERROR_CODE(ec);
 
+		if (!d.getParentId().isEmpty()) {
+			ec = submitter->setParentId(d.getParentId().toStdString());
+			CHECK_ERROR_CODE(ec);
+		}
 		if (!d.getTitle().isEmpty()) {
 			ec = submitter->setTitle(d.getTitle().toStdString());
 			CHECK_ERROR_CODE(ec);
@@ -151,6 +212,7 @@ void ManageExtraWidget::onEdit()
 
 	d.switchToEditMode();
 
+	d.setParentId(ei.parentId.c_str());
 	d.setTitle(ei.title.c_str());
 	d.setCategory(ei.category.c_str());
 	d.setSetup(ei.setup.c_str());
@@ -163,6 +225,10 @@ void ManageExtraWidget::onEdit()
 		Rpc::ErrorCode ec = context_->session->updateExtra(ei.id, submitter);
 		CHECK_ERROR_CODE(ec);
 
+		if (!d.getParentId().isEmpty()) {
+			ec = submitter->setParentId(d.getParentId().toStdString());
+			CHECK_ERROR_CODE(ec);
+		}
 		if (!d.getTitle().isEmpty()) {
 			ec = submitter->setTitle(d.getTitle().toStdString());
 			CHECK_ERROR_CODE(ec);
@@ -242,6 +308,7 @@ void ManageExtraWidget::showMore(int count)
 
 			QStringList list;
 			list << item.id.c_str();
+			list << item.parentId.c_str();
 			list << item.title.c_str();
 			list << item.category.c_str();
 			list << item.setup.c_str();

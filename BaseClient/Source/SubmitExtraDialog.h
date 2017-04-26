@@ -16,13 +16,17 @@ public:
 	explicit SubmitExtraDialog(ContextPtr context, QWidget* parent = 0);
 	~SubmitExtraDialog();
 
+	void loadCoverImageFrom(const QString& id);
+
 	void switchToEditMode();
 
+	void setParentId(const QString& parentId);
 	void setTitle(const QString& title);
 	void setCategory(const QString& category);
 	void setSetup(const QString& setup);
 	void setInfo(const QString& info);
 
+	QString getParentId() const;
 	QString getTitle() const;
 	QString getLocation() const;
 	QString getCategory() const;
@@ -31,6 +35,7 @@ public:
 	QString getInfo() const;
 
 private Q_SLOTS:
+	void onImageLoaded(const QString&, const QPixmap&);
 	void editCategory();
 	void selectLocation();
 	void setCover();

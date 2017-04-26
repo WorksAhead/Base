@@ -60,6 +60,7 @@ module Rpc
 	struct ExtraInfo
 	{
 		string id;
+		string parentId;
 		string title;
 		string category;
 		string setup;
@@ -118,6 +119,7 @@ module Rpc
 
 	interface ExtraSubmitter extends ManagedObject
 	{
+		ErrorCode setParentId(string id);
 		ErrorCode setTitle(string title);
 		ErrorCode setSetup(string setup);
 		ErrorCode setCategory(string category);
@@ -217,6 +219,7 @@ module Rpc
 		ErrorCode removeUser(string username);
 
 		ErrorCode browseComment(string targetId, string user, out CommentBrowser* browser);
+		ErrorCode getComment(string targetId, out string comment);
 		ErrorCode addComment(string targetId, string comment);
 		ErrorCode editComment(string id, string comment);
 		ErrorCode removeComment(string id);

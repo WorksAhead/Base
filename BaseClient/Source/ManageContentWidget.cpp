@@ -77,16 +77,34 @@ void ManageContentWidget::onRefresh()
 void ManageContentWidget::onSubmit()
 {
 	bool copyForm = false;
+	bool fillParentId = false;
 
 	QList<QTreeWidgetItem*> items = ui_.contentList->selectedItems();
-	if (items.count() == 1) {
-		int ret = QMessageBox::question(this, "Base", tr("Do you want to copy form information from the selected Content ?"),
-			tr("Yes"), tr("No, I need a clean form"), tr("Cancel"), 0, 2);
-		if (ret == 2) {
+
+	if (items.count() == 1)
+	{
+		QMessageBox msgBox(this);
+
+		msgBox.setWindowTitle("Base");
+		msgBox.setIcon(QMessageBox::Question);
+		msgBox.setText(tr("What do you want ?"));
+
+		QPushButton* b0 = msgBox.addButton("A new form", QMessageBox::NoRole);
+		QPushButton* b1 = msgBox.addButton("A copy of the selected form", QMessageBox::NoRole);
+		QPushButton* b2 = msgBox.addButton("A sub-copy of the selected form", QMessageBox::NoRole);
+		QPushButton* b3 = msgBox.addButton("Cancel", QMessageBox::NoRole);
+
+		msgBox.exec();
+
+		if (msgBox.clickedButton() == b3) {
 			return;
 		}
-		if (ret == 0) {
+		else if (msgBox.clickedButton() == b1) {
 			copyForm = true;
+		}
+		else if (msgBox.clickedButton() == b2) {
+			copyForm = true;
+			fillParentId = true;
 		}
 	}
 
@@ -109,7 +127,13 @@ void ManageContentWidget::onSubmit()
 		getline(stream, command);
 		getline(stream, workDir);
 
-		d.setParentId(ci.parentId.c_str());
+		if (fillParentId) {
+			d.setParentId(ci.id.c_str());
+		}
+		else {
+			d.setParentId(ci.parentId.c_str());
+		}
+
 		d.setTitle(ci.title.c_str());
 		d.setPage(ci.page.c_str());
 		d.setCategory(ci.category.c_str());

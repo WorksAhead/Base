@@ -1,6 +1,7 @@
 #include "SubmitExtraDialog.h"
 #include "ImageCropperDialog.h"
 #include "LabelSelectorDialog.h"
+#include "ExtraImageLoader.h"
 
 #include <QFileDialog>
 #include <QRegExpValidator>
@@ -40,6 +41,15 @@ SubmitExtraDialog::~SubmitExtraDialog()
 {
 }
 
+void SubmitExtraDialog::loadCoverImageFrom(const QString& id)
+{
+	QObject::connect(context_->extraImageLoader, &ExtraImageLoader::loaded, this, &SubmitExtraDialog::onImageLoaded);
+
+	setProperty("image id", id);
+
+	context_->extraImageLoader->load(id);
+}
+
 void SubmitExtraDialog::switchToEditMode()
 {
 	setWindowTitle(tr("Edit Extra"));
@@ -49,6 +59,11 @@ void SubmitExtraDialog::switchToEditMode()
 	ui_.coverViewer->setDisabled(true);
 	ui_.setCoverButton->setDisabled(true);
 	editMode_ = true;
+}
+
+void SubmitExtraDialog::setParentId(const QString& parentId)
+{
+	ui_.parentIdEdit->setText(parentId);
 }
 
 void SubmitExtraDialog::setTitle(const QString& title)
@@ -66,10 +81,14 @@ void SubmitExtraDialog::setSetup(const QString& setup)
 	ui_.setupEdit->setText(setup);
 }
 
-
 void SubmitExtraDialog::setInfo(const QString& info)
 {
 	ui_.infoEdit->setPlainText(info);
+}
+
+QString SubmitExtraDialog::getParentId() const
+{
+	return ui_.parentIdEdit->text();
 }
 
 QString SubmitExtraDialog::getTitle() const
@@ -100,6 +119,23 @@ QString SubmitExtraDialog::getCoverImage() const
 QString SubmitExtraDialog::getInfo() const
 {
 	return ui_.infoEdit->toPlainText();
+}
+
+void SubmitExtraDialog::onImageLoaded(const QString& id, const QPixmap& pixmap)
+{
+	if (property("image id").toString() == id)
+	{
+		ui_.coverViewer->setPixmap(pixmap);
+
+		std::string imageFilename = context_->uniquePath() + ".jpg";
+
+		if (!ui_.coverViewer->pixmap().scaled(QSize(300, 300), Qt::KeepAspectRatio, Qt::SmoothTransformation).save(imageFilename.c_str(), "JPG", 90)) {
+			QMessageBox::information(this, "Base", tr("Failed to save image"));
+			return;
+		}
+
+		coverImage_ = imageFilename.c_str();
+	}
 }
 
 void SubmitExtraDialog::editCategory()

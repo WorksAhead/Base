@@ -50,6 +50,9 @@
     <Filter Include="Security">
       <UniqueIdentifier>{e6484e81-42ec-43ee-868e-8b3c9a721ff9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="gumbo">
+      <UniqueIdentifier>{55abac57-f0c0-4f62-8c1f-8c6b24bfeaca}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\BaseClient\Source\ASyncTaskManagerDialog.ui">
@@ -355,13 +358,19 @@
     <CustomBuild Include="..\BaseClient\Source\CommentWidget.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="..\BaseClient\Source\CommentItemWidget.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="..\BaseClient\Source\TextEditWidget.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
     <CustomBuild Include="..\BaseClient\Source\TextEditWidget.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\EmojiInputDialog.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\CommentEditDialog.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\CommentEditDialog.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>
@@ -1284,6 +1293,66 @@
     <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_TextEditWidget.cpp">
       <Filter>Generated Files\ReleaseConsole_Win32</Filter>
     </ClCompile>
+    <ClCompile Include="..\Ext\gumbo\attribute.c">
+      <Filter>gumbo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Ext\gumbo\char_ref.c">
+      <Filter>gumbo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Ext\gumbo\error.c">
+      <Filter>gumbo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Ext\gumbo\parser.c">
+      <Filter>gumbo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Ext\gumbo\string_buffer.c">
+      <Filter>gumbo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Ext\gumbo\string_piece.c">
+      <Filter>gumbo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Ext\gumbo\tag.c">
+      <Filter>gumbo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Ext\gumbo\tokenizer.c">
+      <Filter>gumbo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Ext\gumbo\utf8.c">
+      <Filter>gumbo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Ext\gumbo\util.c">
+      <Filter>gumbo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Ext\gumbo\vector.c">
+      <Filter>gumbo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\Source\Emoji.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\Source\EmojiInputDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_EmojiInputDialog.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_EmojiInputDialog.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_EmojiInputDialog.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\Source\CommentEditDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_CommentEditDialog.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_CommentEditDialog.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_CommentEditDialog.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\BaseClient\Resources\BaseClient.rc">
@@ -1582,10 +1651,13 @@
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_CommentWidget.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_CommentItemWidget.h">
+    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_TextEditWidget.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_TextEditWidget.h">
+    <ClInclude Include="..\BaseClient\Source\Emoji.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_CommentEditDialog.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>

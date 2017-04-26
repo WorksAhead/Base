@@ -471,6 +471,7 @@ Rpc::ErrorCode RpcSessionImpl::getExtraInfo(const std::string& id, Rpc::ExtraInf
 	}
 
 	info.id = form.at("Id");
+	info.parentId = form.at("ParentId");
 	info.title = form.at("Title");
 
 	std::string category = form.at("Category");
@@ -815,6 +816,22 @@ Rpc::ErrorCode RpcSessionImpl::browseComment(const std::string& targetId, const 
 	}
 
 	return Rpc::ec_success;
+
+	return Rpc::ec_operation_failed;
+}
+
+Rpc::ErrorCode RpcSessionImpl::getComment(const std::string& targetId, std::string& comment, const Ice::Current&)
+{
+	boost::recursive_mutex::scoped_lock lock(sync_);
+	checkIsDestroyed();
+
+	Form form;
+
+	if (context_->center()->getComment(targetId, form))
+	{
+		comment = form.at("Comment");
+		return Rpc::ec_success;
+	}
 
 	return Rpc::ec_operation_failed;
 }

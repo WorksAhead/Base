@@ -61,7 +61,7 @@
         <x>0</x>
         <y>0</y>
         <width>581</width>
-        <height>699</height>
+        <height>727</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -152,6 +152,17 @@
            </property>
            <property name="autoDefault">
             <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_5">
+         <item>
+          <widget class="QLineEdit" name="parentIdEdit">
+           <property name="placeholderText">
+            <string>Parent Id</string>
            </property>
           </widget>
          </item>

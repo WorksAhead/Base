@@ -31,6 +31,7 @@ public:
 
 	virtual void destroy(const Ice::Current&);
 
+	virtual Rpc::ErrorCode setParentId(const std::string&, const Ice::Current&);
 	virtual Rpc::ErrorCode setTitle(const std::string&, const Ice::Current&);
 	virtual Rpc::ErrorCode setCategory(const std::string&, const Ice::Current&);
 	virtual Rpc::ErrorCode setSetup(const std::string&, const Ice::Current&);

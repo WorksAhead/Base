@@ -105,6 +105,8 @@ void SubmitContentDialog::loadImagesFrom(const QString& contentId, int count)
 {
 	QObject::connect(context_->contentImageLoader, &ContentImageLoader::loaded, this, &SubmitContentDialog::onImageLoaded);
 
+	setProperty("image id", contentId);
+
 	for (int i = 0; i < count; ++i) {
 		context_->contentImageLoader->load(contentId, i);
 	}
@@ -477,32 +479,35 @@ void SubmitContentDialog::onSubmit()
 #undef CHECK_ERROR_CODE
 }
 
-void SubmitContentDialog::onImageLoaded(const QString&, int index, const QPixmap& pixmap)
+void SubmitContentDialog::onImageLoaded(const QString& contentId, int index, const QPixmap& pixmap)
 {
-	if (index == 0) {
-		ui_.coverViewer->setPixmap(pixmap);
-	}
-	else if (index > 0)
+	if (property("image id").toString() == contentId)
 	{
-		ImageViewerWidget* imageViewer = new ImageViewerWidget;
-		imageViewer->setPixmap(pixmap);
-
-		ui_.screenshotWidget->insertWidget(index - 1, imageViewer);
-
-		const int count = ui_.screenshotWidget->count();
-
-		if (count > 1) {
-			ui_.prevScreenshotButton->setEnabled(true);
-			ui_.nextScreenshotButton->setEnabled(true);
+		if (index == 0) {
+			ui_.coverViewer->setPixmap(pixmap);
 		}
+		else if (index > 0)
+		{
+			ImageViewerWidget* imageViewer = new ImageViewerWidget;
+			imageViewer->setPixmap(pixmap);
 
-		if (count > 0) {
-			ui_.removeScreenshotButton->setEnabled(true);
+			ui_.screenshotWidget->insertWidget(index - 1, imageViewer);
+
+			const int count = ui_.screenshotWidget->count();
+
+			if (count > 1) {
+				ui_.prevScreenshotButton->setEnabled(true);
+				ui_.nextScreenshotButton->setEnabled(true);
+			}
+
+			if (count > 0) {
+				ui_.removeScreenshotButton->setEnabled(true);
+			}
+
+			/*if (count >= 5) {
+				ui_.addScreenshotButton->setEnabled(false);
+			}*/
 		}
-
-		/*if (count >= 5) {
-			ui_.addScreenshotButton->setEnabled(false);
-		}*/
 	}
 }
 

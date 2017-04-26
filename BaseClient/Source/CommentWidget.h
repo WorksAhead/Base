@@ -7,6 +7,7 @@
 
 #include "ui_CommentWidget.h"
 
+#include <QStringList>
 #include <QTimer>
 
 class CommentWidget : public QWidget {
@@ -27,9 +28,12 @@ public:
 private Q_SLOTS:
 	void onTimeout();
 	void onSubmit();
+	void onAnchorClicked(const QUrl&);
 
 private:
 	void refresh();
+
+	void getParagraphs(void*, QStringList&);
 
 private:
 	Ui::CommentWidget ui_;

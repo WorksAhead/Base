@@ -8,10 +8,11 @@
 
 #include <QPainter>
 #include <QMouseEvent>
-
 #include <QScrollBar>
 #include <QLabel>
 #include <QGridLayout>
+#include <QMenu>
+#include <QClipboard>
 
 #include <boost/filesystem.hpp>
 #include <boost/algorithm/string.hpp>
@@ -78,7 +79,7 @@ void PageContentContentWidget::refresh()
 	summary << ci.user << " " << ci.upTime << "\n";
 	summary << "\nSupported Engine Versions:\n";
 	summary << ci.engineName << " " << ci.engineVersion << "\n";
-	summary << "\nID:\n" << ci.id << "\n";
+	summary << "\nId:\n" << ci.id << "\n";
 	if (!ci.parentId.empty()) {
 		summary << "\nParent Id:\n" << ci.parentId << "\n";
 	}
@@ -126,7 +127,10 @@ void PageContentContentWidget::refresh()
 	}
 
 	ui_.commentWidget->setContext(context_);
-	ui_.commentWidget->setTargetId(contentId_);
+
+	QString parentId = QString::fromStdString(ci.parentId);
+
+	ui_.commentWidget->setTargetId(parentId.isEmpty() ? contentId_ : parentId);
 }
 
 void PageContentContentWidget::cancel()
@@ -171,6 +175,41 @@ void PageContentContentWidget::mousePressEvent(QMouseEvent* e)
 					else if (index < videos_.count()) {
 						presentVideo(videos_.at(index));
 					}
+				}
+			}
+		}
+	}
+	else if (e->button() == Qt::RightButton)
+	{
+		if (ui_.summaryLabel->rect().contains(ui_.summaryLabel->mapFrom(this, e->pos())))
+		{
+			QMenu m;
+
+			QAction* actionCopyId = m.addAction("Copy Id");
+			QAction* actionCopyParentId = m.addAction("Copy Parent Id");
+
+			QAction* selectedItem = m.exec(QCursor::pos());
+
+			if (selectedItem == actionCopyId || selectedItem == actionCopyParentId)
+			{
+				Rpc::ContentInfo ci;
+
+				Rpc::ErrorCode ec = context_->session->getContentInfo(contentId_.toStdString(), ci);
+
+				if (ec == Rpc::ec_success)
+				{
+					if (selectedItem == actionCopyId)
+					{
+						QApplication::clipboard()->setText(ci.id.c_str());
+					}
+					else /*if (selectedItem == actionCopyParentId)*/
+					{
+						QApplication::clipboard()->setText(ci.parentId.c_str());
+					}
+				}
+				else
+				{
+					context_->promptRpcError(ec);
 				}
 			}
 		}

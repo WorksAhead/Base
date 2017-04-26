@@ -7,12 +7,16 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>288</height>
+    <height>357</height>
    </rect>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_2">
+  <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0,0">
    <item>
-    <layout class="QVBoxLayout" name="verticalLayout"/>
+    <widget class="QTextBrowser" name="commentBrowser">
+     <property name="openLinks">
+      <bool>false</bool>
+     </property>
+    </widget>
    </item>
    <item>
     <spacer name="verticalSpacer">
@@ -88,7 +92,7 @@
            </font>
           </property>
           <property name="text">
-           <string>Submit</string>
+           <string>Add comment</string>
           </property>
          </widget>
         </item>

@@ -9,6 +9,8 @@
 #include <QTime>
 #include <QMouseEvent>
 #include <QMessageBox>
+#include <QMenu>
+#include <QClipboard>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
@@ -84,8 +86,13 @@ void PageExtraWidget::mousePressEvent(QMouseEvent* e)
 						ui_.titleLabel->setText(pi->text());
 
 						std::ostringstream tip;
+
 						tip << item.user << " " << item.uptime << "\n";
-						tip << "\nID:\n" << item.id << "\n";
+						tip << "\nId:\n" << item.id << "\n";
+
+						if (!item.parentId.empty()) {
+							tip << "\nParent Id:\n" << item.parentId << "\n";
+						}
 
 						ui_.summaryLabel->setText(tip.str().c_str());
 
@@ -98,7 +105,50 @@ void PageExtraWidget::mousePressEvent(QMouseEvent* e)
 						currentId_ = pi->id();
 
 						ui_.commentWidget->setContext(context_);
-						ui_.commentWidget->setTargetId(pi->id());
+
+						QString parentId = QString::fromStdString(item.parentId);
+
+						ui_.commentWidget->setTargetId(parentId.isEmpty() ? pi->id() : parentId);
+
+						ui_.scrollArea_2->verticalScrollBar()->setValue(0);
+					}
+				}
+			}
+		}
+	}
+	else if (e->button() == Qt::RightButton)
+	{
+		if (ui_.stackedWidget->currentIndex() == 1)
+		{
+			if (ui_.summaryLabel->rect().contains(ui_.summaryLabel->mapFrom(this, e->pos())))
+			{
+				QMenu m;
+
+				QAction* actionCopyId = m.addAction("Copy Id");
+				QAction* actionCopyParentId = m.addAction("Copy Parent Id");
+
+				QAction* selectedItem = m.exec(QCursor::pos());
+
+				if (selectedItem == actionCopyId || selectedItem == actionCopyParentId)
+				{
+					Rpc::ExtraInfo info;
+
+					Rpc::ErrorCode ec = context_->session->getExtraInfo(currentId_.toStdString(), info);
+
+					if (ec == Rpc::ec_success)
+					{
+						if (selectedItem == actionCopyId)
+						{
+							QApplication::clipboard()->setText(info.id.c_str());
+						}
+						else /*if (selectedItem == actionCopyParentId)*/
+						{
+							QApplication::clipboard()->setText(info.parentId.c_str());
+						}
+					}
+					else
+					{
+						context_->promptRpcError(ec);
 					}
 				}
 			}

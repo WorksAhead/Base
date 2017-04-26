@@ -3,6 +3,9 @@
 
 #include "ui_TextEditWidget.h"
 
+// forward declaration
+class EmojiInputDialog;
+
 class TextEditWidget : public QWidget {
 private:
 	Q_OBJECT
@@ -12,6 +15,9 @@ public:
 	~TextEditWidget();
 
 	void clear();
+
+	void setHtml(const QString&);
+	void setPlainText(const QString&);
 
 	QString toPlainText();
 	QString toHtml();
@@ -24,6 +30,8 @@ private Q_SLOTS :
 
 private:
 	Ui::TextEditWidget ui_;
+
+	EmojiInputDialog* d_;
 };
 
 #endif // TEXTEDITWIDGET_HEADER_

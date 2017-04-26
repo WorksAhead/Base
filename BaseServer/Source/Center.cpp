@@ -68,7 +68,7 @@ Center::Center()
 		"User TEXT, UpTime DATETIME, State TEXT)");
 
 	db_->exec("CREATE TABLE IF NOT EXISTS Extras ("
-		"Id TEXT, Title TEXT, Category TEXT, Setup TEXT, "
+		"Id TEXT, ParentId TEXT, Title TEXT, Category TEXT, Setup TEXT, "
 		"User TEXT, UpTime DATETIME, Info TEXT, State TEXT)");
 
 	db_->exec("CREATE TABLE IF NOT EXISTS Clients ("
@@ -91,7 +91,7 @@ Center::Center()
 		"Id, ParentId, Page, Category, EngineName, EngineVersion, User, UpTime, State)");
 
 	db_->exec("CREATE INDEX IF NOT EXISTS IndexOfExtras ON Extras ("
-		"Id, Title, Category, User, UpTime, State)");
+		"Id, ParentId, Title, Category, User, UpTime, State)");
 
 	db_->exec("CREATE INDEX IF NOT EXISTS IndexOfClients ON Clients ("
 		"Version, UpTime, State)");
@@ -522,6 +522,7 @@ bool Center::addExtra(const Form& form, const std::string& id)
 	std::ostringstream oss;
 	oss << "INSERT INTO Extras VALUES (";
 	oss << sqlText(id) << ", ";
+	oss << sqlText(form.at("ParentId")) << ", ";
 	oss << sqlText(form.at("Title")) << ", ";
 	oss << sqlText(form.at("Category")) << ", ";
 	oss << sqlText(form.at("Setup")) << ", ";
@@ -541,6 +542,7 @@ bool Center::updateExtra(const Form& form, const std::string& id)
 {
 	std::ostringstream oss;
 	oss << "UPDATE Extras SET ";
+	oss << "ParentId=" << sqlText(form.at("ParentId")) << ", ";
 	oss << "Title=" << sqlText(form.at("Title")) << ", ";
 	oss << "Category=" << sqlText(form.at("Category")) << ", ";
 	oss << "Setup=" << sqlText(form.at("Setup")) << ", ";
@@ -567,6 +569,7 @@ bool Center::getExtra(Form& form, const std::string& id)
 	}
 
 	form["Id"] = s.getColumn("Id").getText();
+	form["ParentId"] = s.getColumn("ParentId").getText();
 	form["Title"] = s.getColumn("Title").getText();
 	form["Category"] = s.getColumn("Category").getText();
 	form["Setup"] = s.getColumn("Setup").getText();
@@ -775,7 +778,7 @@ bool Center::editComment(const std::string& id, const std::string& comment)
 bool Center::removeComment(const std::string& id)
 {
 	std::ostringstream oss;
-	oss << "DELETE FROM Comment";
+	oss << "DELETE FROM Comments";
 	oss << " WHERE Id=";
 	oss << sqlText(id);
 

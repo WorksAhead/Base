@@ -45,7 +45,7 @@ PageContentWidget::PageContentWidget(ContextPtr context, const QString& name, QW
 
 	QObject::connect(ui_.filterWidget->labelSelectorWidget(), &LabelSelectorWidget::clicked, this, &PageContentWidget::onCategoryChanged);
 
-	coverSize_ = 1;
+	coverSize_ = 0;
 
 	openBrowser();
 }

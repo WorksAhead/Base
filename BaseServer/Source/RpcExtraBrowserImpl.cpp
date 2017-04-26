@@ -88,6 +88,7 @@ Rpc::ErrorCode RpcExtraBrowserImpl::next(Ice::Int n, Rpc::ExtraInfoSeq& seq, con
 
 		Rpc::ExtraInfo info;
 		info.id = s_->getColumn("Id").getText();
+		info.parentId = s_->getColumn("ParentId").getText();
 		info.title = s_->getColumn("Title").getText();
 
 		std::string category = s_->getColumn("Category").getText();

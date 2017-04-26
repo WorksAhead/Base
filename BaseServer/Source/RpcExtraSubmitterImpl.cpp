@@ -72,6 +72,20 @@ void RpcExtraSubmitterImpl::destroy(const Ice::Current& c)
 	}
 }
 
+Rpc::ErrorCode RpcExtraSubmitterImpl::setParentId(const std::string& id, const Ice::Current&)
+{
+	boost::recursive_mutex::scoped_lock lock(sync_);
+	checkIsDestroyed();
+
+	if (finished_ || cancelled_) {
+		return Rpc::ec_invalid_operation;
+	}
+
+	form_["ParentId"] = id;
+
+	return Rpc::ec_success;
+}
+
 Rpc::ErrorCode RpcExtraSubmitterImpl::setTitle(const std::string& title, const Ice::Current&)
 {
 	boost::recursive_mutex::scoped_lock lock(sync_);
@@ -252,6 +266,7 @@ Rpc::ErrorCode RpcExtraSubmitterImpl::finish(const Ice::Current&)
 		return Rpc::ec_invalid_operation;
 	}
 
+	setEmptyIfNotExist(form_, "ParentId");
 	setEmptyIfNotExist(form_, "Info");
 
 	if (!form_.count("Title") || !form_.count("Setup")) {
