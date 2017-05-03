@@ -28,6 +28,7 @@
 #include <QMessageBox>
 #include <QLocalSocket>
 #include <QSettings>
+#include <QDesktopServices>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
@@ -243,6 +244,15 @@ BaseClient::BaseClient(const QString& workPath, const QString& version, Rpc::Ses
 		}
 	};
 
+	context_->openUrl = [guitid, this](const std::string& url) {
+		if (QThread::currentThreadId() == guitid) {
+			openUrl(url.c_str());
+		}
+		else {
+			QMetaObject::invokeMethod(this, "openUrl", Qt::BlockingQueuedConnection, Q_ARG(QString, url.c_str()));
+		}
+	};
+
 	if (!fs::exists(cachePath()) && !fs::create_directories(cachePath())) {
 		throw std::runtime_error("Failed to create directory");
 	}
@@ -335,6 +345,11 @@ BaseClient::BaseClient(const QString& workPath, const QString& version, Rpc::Ses
 			QObject::connect(w, &CategoryFilterWidget::extended, w2, &CategoryFilterWidget::extend);
 		}
 	}
+
+	PageWebWidget* webBrowser = new PageWebWidget(context_, "WebBrowser");
+	webBrowser->setUrl(QUrl("http://www.bing.com"));
+
+	tabWidget_->addTab(QString::fromLocal8Bit("ä¯ÀÀ"), webBrowser);
 
 	tabWidget_->addTab(QString::fromLocal8Bit("ÒýÇæ"), new PageEngineWidget(context_, "Engine"));
 
@@ -1028,22 +1043,51 @@ void BaseClient::getProjectList(std::vector<ProjectInfo>& outList)
 
 void BaseClient::openUrl(const QString& url)
 {
-	std::string path;
-	KVMap args;
-	if (parseUrl(url.toStdString(), path, args)) {
-		if (path == "base://content/") {
-			std::string page;
-			if (args.lookupValue(page, "page")) {
-				for (int i = 0; i < tabWidget_->count(); ++i) {
-					PageContentWidget* w = qobject_cast<PageContentWidget*>(tabWidget_->widget(i));
-					if (w && w->name().toStdString() == page) {
-						if (w->openUrl(url)) {
-							const int index = tabWidget_->indexOf(w);
-							tabWidget_->setCurrentIndex(index);
-							activateWindow();
+	if (url.startsWith("base:", Qt::CaseInsensitive))
+	{
+		std::string path;
+		KVMap args;
+
+		if (parseUrl(url.toStdString(), path, args))
+		{
+			if (path == "base://content/")
+			{
+				std::string page;
+
+				if (args.lookupValue(page, "page"))
+				{
+					for (int i = 0; i < tabWidget_->count(); ++i)
+					{
+						PageContentWidget* w = qobject_cast<PageContentWidget*>(tabWidget_->widget(i));
+
+						if (w && w->name().toStdString() == page)
+						{
+							if (w->openUrl(url))
+							{
+								const int index = tabWidget_->indexOf(w);
+								tabWidget_->setCurrentIndex(index);
+								activateWindow();
+							}
 						}
 					}
 				}
+			}
+		}
+	}
+	else if (url.startsWith("http:", Qt::CaseInsensitive) || url.startsWith("https:", Qt::CaseInsensitive))
+	{
+		//QDesktopServices::openUrl(url);
+		for (int i = 0; i < tabWidget_->count(); ++i)
+		{
+			PageWebWidget* w = qobject_cast<PageWebWidget*>(tabWidget_->widget(tabWidget_->count() - i - 1));
+
+			if (w)
+			{
+				w->setUrl(url);
+				const int index = tabWidget_->indexOf(w);
+				tabWidget_->setCurrentIndex(index);
+				activateWindow();
+				break;
 			}
 		}
 	}

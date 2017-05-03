@@ -83,7 +83,12 @@ void SubmitExtraDialog::setSetup(const QString& setup)
 
 void SubmitExtraDialog::setInfo(const QString& info)
 {
-	ui_.infoEdit->setPlainText(info);
+	if (info.startsWith("<!DOCTYPE HTML", Qt::CaseInsensitive)) {
+		ui_.descriptionEdit->setHtml(info);
+	}
+	else {
+		ui_.descriptionEdit->setPlainText(info);
+	}
 }
 
 QString SubmitExtraDialog::getParentId() const
@@ -118,7 +123,7 @@ QString SubmitExtraDialog::getCoverImage() const
 
 QString SubmitExtraDialog::getInfo() const
 {
-	return ui_.infoEdit->toPlainText();
+	return ui_.descriptionEdit->toHtml();
 }
 
 void SubmitExtraDialog::onImageLoaded(const QString& id, const QPixmap& pixmap)

@@ -40,6 +40,7 @@ private Q_SLOTS:
 	void onImageLoaded(const QString& id, int index, const QPixmap&);
 	void onVideoSnapshot(const QString& filename);
 	void onDownload();
+	void onAnchorClicked(const QUrl&);
 
 private:
 	void initView();

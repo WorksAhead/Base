@@ -59,9 +59,9 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>0</y>
+        <y>-458</y>
         <width>581</width>
-        <height>727</height>
+        <height>1056</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -277,9 +277,12 @@
         </layout>
        </item>
        <item>
-        <widget class="AutoExpandTextEdit" name="infoEdit">
-         <property name="placeholderText">
-          <string>Information</string>
+        <widget class="TextEditWidget" name="descriptionEdit" native="true">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>400</height>
+          </size>
          </property>
         </widget>
        </item>
@@ -339,9 +342,10 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>AutoExpandTextEdit</class>
-   <extends>QPlainTextEdit</extends>
-   <header>AutoExpandTextEdit.h</header>
+   <class>TextEditWidget</class>
+   <extends>QWidget</extends>
+   <header>TextEditWidget.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <tabstops>
@@ -350,7 +354,6 @@
   <tabstop>selectLocationButton</tabstop>
   <tabstop>setupEdit</tabstop>
   <tabstop>setCoverButton</tabstop>
-  <tabstop>infoEdit</tabstop>
   <tabstop>submitButton</tabstop>
   <tabstop>scrollArea</tabstop>
  </tabstops>

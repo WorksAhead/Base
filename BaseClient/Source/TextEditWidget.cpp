@@ -4,6 +4,10 @@
 
 #include <QApplication>
 #include <QDesktopWidget>
+#include <QLayout>
+#include <QBoxLayout>
+#include <QDialogButtonBox>
+#include <QLineEdit>
 
 TextEditWidget::TextEditWidget(QWidget* parent) : QWidget(parent)
 {
@@ -18,6 +22,7 @@ TextEditWidget::TextEditWidget(QWidget* parent) : QWidget(parent)
 	QObject::connect(ui_.boldButton, &QPushButton::clicked, this, &TextEditWidget::onBold);
 	QObject::connect(ui_.italicButton, &QPushButton::clicked, this, &TextEditWidget::onItalic);
 	QObject::connect(ui_.underlineButton, &QPushButton::clicked, this, &TextEditWidget::onUnderline);
+	QObject::connect(ui_.linkButton, &QPushButton::clicked, this, &TextEditWidget::onHyperlink);
 	QObject::connect(ui_.emojiButton, &QPushButton::clicked, this, &TextEditWidget::onEmoji);
 
 	QObject::connect(d_, &EmojiInputDialog::emojiPressed, [this](const QString& image)
@@ -103,6 +108,46 @@ void TextEditWidget::onUnderline()
 		f.setFontUnderline(!f.fontUnderline());
 
 		cursor.mergeCharFormat(f);
+	}
+}
+
+void TextEditWidget::onHyperlink()
+{
+	QDialog d;
+
+	d.setWindowTitle("Base");
+	d.setWindowFlags(Qt::Dialog);
+	d.setWindowFlags(d.windowFlags() & ~Qt::WindowContextHelpButtonHint);
+
+	QBoxLayout* layout = new QBoxLayout(QBoxLayout::TopToBottom);
+
+	QLineEdit* textEdit = new QLineEdit();
+	textEdit->setPlaceholderText("Text");
+
+	QLineEdit* urlEdit = new QLineEdit();
+	urlEdit->setPlaceholderText("URL");
+
+	QDialogButtonBox* buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+
+	QObject::connect(buttonBox, &QDialogButtonBox::accepted, &d, &QDialog::accept);
+	QObject::connect(buttonBox, &QDialogButtonBox::rejected, &d, &QDialog::reject);
+
+	layout->addWidget(textEdit);
+	layout->addWidget(urlEdit);
+	layout->addWidget(buttonBox);
+
+	d.setLayout(layout);
+
+	d.show();
+	d.layout()->invalidate();
+	d.hide();
+
+	d.setFixedSize(400, d.height());
+
+	if (d.exec() == QDialog::Accepted)
+	{
+		QTextCursor cursor = ui_.textEdit->textCursor();
+		cursor.insertHtml("<a href=\"" + urlEdit->text() + "\">" + textEdit->text() + "</a>");
 	}
 }
 

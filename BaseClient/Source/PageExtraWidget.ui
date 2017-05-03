@@ -203,13 +203,13 @@
             <number>20</number>
            </property>
            <property name="leftMargin">
-            <number>0</number>
+            <number>9</number>
            </property>
            <property name="topMargin">
             <number>0</number>
            </property>
            <property name="rightMargin">
-            <number>0</number>
+            <number>9</number>
            </property>
            <property name="bottomMargin">
             <number>0</number>
@@ -271,15 +271,9 @@
             </layout>
            </item>
            <item>
-            <widget class="QLabel" name="infoLabel">
-             <property name="text">
-              <string>Description</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
+            <widget class="QTextBrowser" name="description">
+             <property name="openLinks">
+              <bool>false</bool>
              </property>
             </widget>
            </item>

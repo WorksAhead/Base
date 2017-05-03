@@ -53,6 +53,7 @@ PageContentContentWidget::PageContentContentWidget(ContextPtr context, const QSt
 
 	QObject::connect(context_->contentImageLoader, &ContentImageLoader::loaded, this, &PageContentContentWidget::onImageLoaded);
 	QObject::connect(ui_.downloadButton, &QPushButton::clicked, this, &PageContentContentWidget::onDownload);
+	QObject::connect(ui_.description, &QTextBrowser::anchorClicked, this, &PageContentContentWidget::onAnchorClicked);
 
 	firstShow_ = true;
 }
@@ -71,7 +72,7 @@ void PageContentContentWidget::refresh()
 		ui_.titleLabel->setText("Content not found");
 		ui_.summaryLabel->setVisible(false);
 		ui_.downloadButton->setVisible(false);
-		ui_.descriptionLabel->setVisible(false);
+		ui_.description->setVisible(false);
 		return;
 	}
 
@@ -89,7 +90,13 @@ void PageContentContentWidget::refresh()
 
 	ui_.titleLabel->setText(ci.title.c_str());
 	ui_.summaryLabel->setText(summary.str().c_str());
-	ui_.descriptionLabel->setText(ci.desc.c_str());
+
+	if (boost::istarts_with(ci.desc, "<!DOCTYPE HTML")) {
+		ui_.description->setHtml(ci.desc.c_str());
+	}
+	else {
+		ui_.description->setText(ci.desc.c_str());
+	}
 
 	if (versions.size()) {
 		supportedEngineVersion_.first = ci.engineName.c_str();
@@ -131,6 +138,8 @@ void PageContentContentWidget::refresh()
 	QString parentId = QString::fromStdString(ci.parentId);
 
 	ui_.commentWidget->setTargetId(parentId.isEmpty() ? contentId_ : parentId);
+
+	repaint();
 }
 
 void PageContentContentWidget::cancel()
@@ -240,6 +249,12 @@ void PageContentContentWidget::showEvent(QShowEvent*)
 
 void PageContentContentWidget::paintEvent(QPaintEvent* e)
 {
+	QSize size = ui_.description->document()->size().toSize();
+
+	if (ui_.description->height() != size.height() + 12) {
+		ui_.description->setFixedHeight(size.height() + 12);
+	}
+
 	QStyleOption opt;
 	opt.init(this);
 	QPainter p(this);
@@ -352,6 +367,11 @@ void PageContentContentWidget::onDownload()
 	if (installEngine) {
 		context_->installEngine(EngineVersion(engineName.toStdString(), engineVersion.toStdString()));
 	}
+}
+
+void PageContentContentWidget::onAnchorClicked(const QUrl& url)
+{
+	context_->openUrl(url.toString().toStdString());
 }
 
 void PageContentContentWidget::initView()

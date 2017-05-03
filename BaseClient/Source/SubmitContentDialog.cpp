@@ -159,7 +159,12 @@ void SubmitContentDialog::setVideo(const QString& video)
 
 void SubmitContentDialog::setDesc(const QString& desc)
 {
-	ui_.descriptionEdit->setPlainText(desc);
+	if (desc.startsWith("<!DOCTYPE HTML", Qt::CaseInsensitive)) {
+		ui_.descriptionEdit->setHtml(desc);
+	}
+	else {
+		ui_.descriptionEdit->setPlainText(desc);
+	}
 }
 
 void SubmitContentDialog::onEditPage()
@@ -427,7 +432,7 @@ void SubmitContentDialog::onSubmit()
 		}
 	}
 
-	if (ui_.descriptionEdit->toPlainText().isEmpty()) {
+	if (ui_.descriptionEdit->toHtml().isEmpty()) {
 		QMessageBox::information(this, "Base", tr("The Description cannot be left empty."));
 		return;
 	}
@@ -435,7 +440,7 @@ void SubmitContentDialog::onSubmit()
 	ec = submitter->setVideo(ui_.videoEdit->toPlainText().toStdString());
 	CHECK_ERROR_CODE(ec);
 
-	ec = submitter->setDescription(ui_.descriptionEdit->toPlainText().toStdString());
+	ec = submitter->setDescription(ui_.descriptionEdit->toHtml().toStdString());
 	CHECK_ERROR_CODE(ec);
 
 	if (!editMode_)

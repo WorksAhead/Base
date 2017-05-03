@@ -47,6 +47,7 @@ PageExtraWidget::PageExtraWidget(ContextPtr context, const QString& name, QWidge
 	QObject::connect(ui_.filterWidget->labelSelectorWidget(), &LabelSelectorWidget::clicked, this, &PageExtraWidget::onCategoryChanged);
 	QObject::connect(context_->extraImageLoader, &ExtraImageLoader::loaded, this, &PageExtraWidget::onImageLoaded);
 	QObject::connect(timer_, &QTimer::timeout, this, &PageExtraWidget::onTimeout);
+	QObject::connect(ui_.description, &QTextBrowser::anchorClicked, this, &PageExtraWidget::onAnchorClicked);
 
 	ui_.backButton->setVisible(false);
 
@@ -96,7 +97,12 @@ void PageExtraWidget::mousePressEvent(QMouseEvent* e)
 
 						ui_.summaryLabel->setText(tip.str().c_str());
 
-						ui_.infoLabel->setText(item.info.c_str());
+						if (boost::istarts_with(item.info, "<!DOCTYPE HTML")) {
+							ui_.description->setHtml(item.info.c_str());
+						}
+						else {
+							ui_.description->setText(item.info.c_str());
+						}
 
 						ui_.stackedWidget->setCurrentIndex(1);
 						ui_.backButton->setVisible(true);
@@ -111,6 +117,8 @@ void PageExtraWidget::mousePressEvent(QMouseEvent* e)
 						ui_.commentWidget->setTargetId(parentId.isEmpty() ? pi->id() : parentId);
 
 						ui_.scrollArea_2->verticalScrollBar()->setValue(0);
+
+						repaint();
 					}
 				}
 			}
@@ -166,6 +174,12 @@ void PageExtraWidget::showEvent(QShowEvent* e)
 
 void PageExtraWidget::paintEvent(QPaintEvent* e)
 {
+	QSize size = ui_.description->document()->size().toSize();
+
+	if (ui_.description->height() != size.height() + 12) {
+		ui_.description->setFixedHeight(size.height() + 12);
+	}
+
 	QStyleOption opt;
 	opt.init(this);
 	QPainter p(this);
@@ -252,6 +266,11 @@ void PageExtraWidget::onTimeout()
 			timer_->stop();
 		}
 	}
+}
+
+void PageExtraWidget::onAnchorClicked(const QUrl& url)
+{
+	context_->openUrl(url.toString().toStdString());
 }
 
 void PageExtraWidget::showMore(int n)

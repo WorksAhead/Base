@@ -115,7 +115,6 @@ void CommentWidget::onTimeout()
 		}
 
 		QSize size = ui_.commentBrowser->document()->size().toSize();
-
 		ui_.commentBrowser->setFixedHeight(size.height() + 12);
 
 		if (items.size() < ITEMS_PER_REQUEST)
@@ -191,6 +190,10 @@ void CommentWidget::onAnchorClicked(const QUrl& url)
 				refresh();
 			}
 		}
+	}
+	else
+	{
+		context_->openUrl(url.toString().toStdString());
 	}
 }
 

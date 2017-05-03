@@ -40,6 +40,7 @@ private Q_SLOTS:
 	void onInstall();
 	void onImageLoaded(const QString& id, const QPixmap&);
 	void onTimeout();
+	void onAnchorClicked(const QUrl&);
 
 private:
 	void showMore(int);

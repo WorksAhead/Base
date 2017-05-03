@@ -140,6 +140,8 @@ struct Context
 	std::function<void(Rpc::ErrorCode)> promptRpcError;
 	std::function<void(const EngineVersion&, int)> promptEngineState;
 	std::function<void(const std::string&, int)> promptExtraState;
+
+	std::function<void(const std::string&)> openUrl;
 };
 
 typedef std::shared_ptr<Context> ContextPtr;

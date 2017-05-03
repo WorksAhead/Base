@@ -26,6 +26,7 @@ private Q_SLOTS :
 	void onBold();
 	void onItalic();
 	void onUnderline();
+	void onHyperlink();
 	void onEmoji();
 
 private:

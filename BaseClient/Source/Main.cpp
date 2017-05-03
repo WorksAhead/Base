@@ -36,7 +36,7 @@
 #include <windows.h>
 #endif
 
-#define BASE_CURRENT_VERSION "1.0.0.38"
+#define BASE_CURRENT_VERSION "1.0.0.39"
 
 namespace fs = boost::filesystem;
 

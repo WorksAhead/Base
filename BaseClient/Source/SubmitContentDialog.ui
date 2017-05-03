@@ -59,9 +59,9 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>-508</y>
+        <y>-1006</y>
         <width>581</width>
-        <height>1275</height>
+        <height>1604</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -499,9 +499,12 @@
         </layout>
        </item>
        <item>
-        <widget class="AutoExpandTextEdit" name="descriptionEdit">
-         <property name="placeholderText">
-          <string>Description</string>
+        <widget class="TextEditWidget" name="descriptionEdit" native="true">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>400</height>
+          </size>
          </property>
         </widget>
        </item>
@@ -565,6 +568,12 @@
    <extends>QPlainTextEdit</extends>
    <header>AutoExpandTextEdit.h</header>
   </customwidget>
+  <customwidget>
+   <class>TextEditWidget</class>
+   <extends>QWidget</extends>
+   <header>TextEditWidget.h</header>
+   <container>1</container>
+  </customwidget>
  </customwidgets>
  <tabstops>
   <tabstop>titleEdit</tabstop>
@@ -581,7 +590,6 @@
   <tabstop>removeScreenshotButton</tabstop>
   <tabstop>prevScreenshotButton</tabstop>
   <tabstop>nextScreenshotButton</tabstop>
-  <tabstop>descriptionEdit</tabstop>
   <tabstop>submitButton</tabstop>
   <tabstop>scrollArea</tabstop>
  </tabstops>
