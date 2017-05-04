@@ -62,6 +62,11 @@ void CommentWidget::onTimeout()
 
 		browser_->next(ITEMS_PER_REQUEST, items);
 
+		if (!items.empty())
+		{
+			ui_.commentBrowser->setVisible(true);
+		}
+
 		for (Rpc::Comment& item : items)
 		{
 			std::string::size_type atPos = item.user.find('@');
@@ -200,6 +205,8 @@ void CommentWidget::onAnchorClicked(const QUrl& url)
 void CommentWidget::refresh()
 {
 	ui_.commentBrowser->clear();
+
+	ui_.commentBrowser->setVisible(false);
 
 	addEmojiResourcesToDocument(ui_.commentBrowser->document());
 

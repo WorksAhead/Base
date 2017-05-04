@@ -5,6 +5,7 @@
 #include "ContentImageLoader.h"
 #include "VideoPlayerWidget.h"
 #include "ImageViewerWidget.h"
+#include "Emoji.h"
 
 #include <QPainter>
 #include <QMouseEvent>
@@ -53,7 +54,11 @@ PageContentContentWidget::PageContentContentWidget(ContextPtr context, const QSt
 
 	QObject::connect(context_->contentImageLoader, &ContentImageLoader::loaded, this, &PageContentContentWidget::onImageLoaded);
 	QObject::connect(ui_.downloadButton, &QPushButton::clicked, this, &PageContentContentWidget::onDownload);
+	QObject::connect(ui_.summary, &QTextBrowser::anchorClicked, this, &PageContentContentWidget::onAnchorClicked);
 	QObject::connect(ui_.description, &QTextBrowser::anchorClicked, this, &PageContentContentWidget::onAnchorClicked);
+
+	addEmojiResourcesToDocument(ui_.summary->document());
+	addEmojiResourcesToDocument(ui_.description->document());
 
 	firstShow_ = true;
 }
@@ -67,35 +72,59 @@ void PageContentContentWidget::refresh()
 	scrollArea_->verticalScrollBar()->setValue(0);
 
 	Rpc::ContentInfo ci;
+
 	Rpc::ErrorCode ec = context_->session->getContentInfo(contentId_.toStdString(), ci);
-	if (ec != Rpc::ec_success) {
+
+	if (ec != Rpc::ec_success)
+	{
 		ui_.titleLabel->setText("Content not found");
-		ui_.summaryLabel->setVisible(false);
+		ui_.metaInfoLabel->setVisible(false);
 		ui_.downloadButton->setVisible(false);
+		ui_.summary->setVisible(false);
 		ui_.description->setVisible(false);
 		return;
 	}
 
-	std::ostringstream summary;
-	summary << ci.user << " " << ci.upTime << "\n";
-	summary << "\nSupported Engine Versions:\n";
-	summary << ci.engineName << " " << ci.engineVersion << "\n";
-	summary << "\nId:\n" << ci.id << "\n";
+	std::ostringstream metaInfo;
+
+	metaInfo << ci.user << " " << ci.upTime << "\n";
+	metaInfo << "\nSupported Engine Versions:\n";
+	metaInfo << ci.engineName << " " << ci.engineVersion << "\n";
+	metaInfo << "\nId:\n" << ci.id << "\n";
+
 	if (!ci.parentId.empty()) {
-		summary << "\nParent Id:\n" << ci.parentId << "\n";
+		metaInfo << "\nParent Id:\n" << ci.parentId << "\n";
 	}
 
 	std::vector<std::string> versions;
 	boost::split(versions, ci.engineVersion, boost::is_any_of("|"));
 
 	ui_.titleLabel->setText(ci.title.c_str());
-	ui_.summaryLabel->setText(summary.str().c_str());
+	ui_.metaInfoLabel->setText(metaInfo.str().c_str());
 
-	if (boost::istarts_with(ci.desc, "<!DOCTYPE HTML")) {
-		ui_.description->setHtml(ci.desc.c_str());
+	if (boost::istarts_with(ci.desc, "<!SUMMARY>"))
+	{
+		size_t p = ci.desc.find("<!DESCRIPTION>", 10);
+
+		if (p != std::string::npos) {
+			ui_.summary->setHtml(ci.desc.substr(10, p - 10).c_str());
+			ui_.description->setHtml(ci.desc.substr(p + 14).c_str());
+			ui_.description->setVisible(true);
+		}
+		else {
+			ui_.summary->setHtml(ci.desc.substr(10).c_str());
+			ui_.description->setVisible(false);
+		}
 	}
-	else {
-		ui_.description->setText(ci.desc.c_str());
+	else if (boost::istarts_with(ci.desc, "<!DOCTYPE HTML"))
+	{
+		ui_.summary->setHtml(ci.desc.c_str());
+		ui_.description->setVisible(false);
+	}
+	else
+	{
+		ui_.summary->setText(ci.desc.c_str());
+		ui_.description->setVisible(false);
 	}
 
 	if (versions.size()) {
@@ -190,7 +219,7 @@ void PageContentContentWidget::mousePressEvent(QMouseEvent* e)
 	}
 	else if (e->button() == Qt::RightButton)
 	{
-		if (ui_.summaryLabel->rect().contains(ui_.summaryLabel->mapFrom(this, e->pos())))
+		if (ui_.metaInfoLabel->rect().contains(ui_.metaInfoLabel->mapFrom(this, e->pos())))
 		{
 			QMenu m;
 
@@ -249,7 +278,13 @@ void PageContentContentWidget::showEvent(QShowEvent*)
 
 void PageContentContentWidget::paintEvent(QPaintEvent* e)
 {
-	QSize size = ui_.description->document()->size().toSize();
+	QSize size = ui_.summary->document()->size().toSize();
+
+	if (ui_.summary->height() != size.height() + 12) {
+		ui_.summary->setFixedHeight(size.height() + 12);
+	}
+
+	size = ui_.description->document()->size().toSize();
 
 	if (ui_.description->height() != size.height() + 12) {
 		ui_.description->setFixedHeight(size.height() + 12);

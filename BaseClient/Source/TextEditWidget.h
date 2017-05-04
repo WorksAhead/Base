@@ -16,6 +16,8 @@ public:
 
 	void clear();
 
+	void setPlaceholderText(const QString&);
+
 	void setHtml(const QString&);
 	void setPlainText(const QString&);
 

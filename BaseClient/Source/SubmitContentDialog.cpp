@@ -31,6 +31,9 @@ SubmitContentDialog::SubmitContentDialog(ContextPtr context, QWidget* parent) : 
 
 	ui_.setupUi(this);
 
+	ui_.summaryEdit->setPlaceholderText("Summary");
+	ui_.descriptionEdit->setPlaceholderText("Description");
+
 	QObject::connect(ui_.editPageButton, &QPushButton::clicked, this, &SubmitContentDialog::onEditPage);
 	QObject::connect(ui_.editCategoryButton, &QPushButton::clicked, this, &SubmitContentDialog::onEditCategory);
 
@@ -159,11 +162,27 @@ void SubmitContentDialog::setVideo(const QString& video)
 
 void SubmitContentDialog::setDesc(const QString& desc)
 {
-	if (desc.startsWith("<!DOCTYPE HTML", Qt::CaseInsensitive)) {
-		ui_.descriptionEdit->setHtml(desc);
+	std::string d = desc.toStdString();
+
+	if (boost::istarts_with(d, "<!SUMMARY>"))
+	{
+		size_t p = d.find("<!DESCRIPTION>", 10);
+
+		if (p != std::string::npos) {
+			ui_.summaryEdit->setHtml(d.substr(10, p - 10).c_str());
+			ui_.descriptionEdit->setHtml(d.substr(p + 14).c_str());
+		}
+		else {
+			ui_.summaryEdit->setHtml(d.substr(10).c_str());
+		}
 	}
-	else {
-		ui_.descriptionEdit->setPlainText(desc);
+	else if (boost::istarts_with(d, "<!DOCTYPE HTML"))
+	{
+		ui_.summaryEdit->setHtml(d.c_str());
+	}
+	else
+	{
+		ui_.summaryEdit->setPlainText(d.c_str());
 	}
 }
 
@@ -432,15 +451,21 @@ void SubmitContentDialog::onSubmit()
 		}
 	}
 
-	if (ui_.descriptionEdit->toHtml().isEmpty()) {
-		QMessageBox::information(this, "Base", tr("The Description cannot be left empty."));
+	if (ui_.summaryEdit->toPlainText().isEmpty()) {
+		QMessageBox::information(this, "Base", tr("The Summary cannot be left empty."));
 		return;
 	}
 
 	ec = submitter->setVideo(ui_.videoEdit->toPlainText().toStdString());
 	CHECK_ERROR_CODE(ec);
 
-	ec = submitter->setDescription(ui_.descriptionEdit->toHtml().toStdString());
+	QString desc = "<!SUMMARY>" + ui_.summaryEdit->toHtml();
+
+	if (!ui_.descriptionEdit->toPlainText().isEmpty()) {
+		desc = desc + "<!DESCRIPTION>" + ui_.descriptionEdit->toHtml();
+	}
+
+	ec = submitter->setDescription(desc.toStdString());
 	CHECK_ERROR_CODE(ec);
 
 	if (!editMode_)

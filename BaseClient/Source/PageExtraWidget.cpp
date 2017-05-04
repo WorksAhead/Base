@@ -86,16 +86,16 @@ void PageExtraWidget::mousePressEvent(QMouseEvent* e)
 					{
 						ui_.titleLabel->setText(pi->text());
 
-						std::ostringstream tip;
+						std::ostringstream metaInfo;
 
-						tip << item.user << " " << item.uptime << "\n";
-						tip << "\nId:\n" << item.id << "\n";
+						metaInfo << item.user << " " << item.uptime << "\n";
+						metaInfo << "\nId:\n" << item.id << "\n";
 
 						if (!item.parentId.empty()) {
-							tip << "\nParent Id:\n" << item.parentId << "\n";
+							metaInfo << "\nParent Id:\n" << item.parentId << "\n";
 						}
 
-						ui_.summaryLabel->setText(tip.str().c_str());
+						ui_.metaInfoLabel->setText(metaInfo.str().c_str());
 
 						if (boost::istarts_with(item.info, "<!DOCTYPE HTML")) {
 							ui_.description->setHtml(item.info.c_str());
@@ -128,7 +128,7 @@ void PageExtraWidget::mousePressEvent(QMouseEvent* e)
 	{
 		if (ui_.stackedWidget->currentIndex() == 1)
 		{
-			if (ui_.summaryLabel->rect().contains(ui_.summaryLabel->mapFrom(this, e->pos())))
+			if (ui_.metaInfoLabel->rect().contains(ui_.metaInfoLabel->mapFrom(this, e->pos())))
 			{
 				QMenu m;
 

@@ -227,9 +227,9 @@
             </widget>
            </item>
            <item>
-            <widget class="QLabel" name="summaryLabel">
+            <widget class="QLabel" name="metaInfoLabel">
              <property name="text">
-              <string>Summary</string>
+              <string>MetaInformation</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>

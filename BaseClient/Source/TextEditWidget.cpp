@@ -44,6 +44,11 @@ void TextEditWidget::clear()
 	addEmojiResourcesToDocument(ui_.textEdit->document());
 }
 
+void TextEditWidget::setPlaceholderText(const QString& text)
+{
+	ui_.textEdit->setPlaceholderText(text);
+}
+
 void TextEditWidget::setHtml(const QString& html)
 {
 	ui_.textEdit->setHtml(html);
