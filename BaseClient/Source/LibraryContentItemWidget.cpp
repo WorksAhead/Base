@@ -11,6 +11,7 @@
 
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/date_time.hpp>
 
 namespace fs = boost::filesystem;
 
@@ -89,7 +90,11 @@ void LibraryContentItemWidget::onCreate()
 		return;
 	}
 
-	context_->createProject(contentId_.toStdString(), title().toLocal8Bit().data(), d.location().toLocal8Bit().data());
+	t = title().toLocal8Bit().data();
+	t += " ";
+	t += boost::posix_time::to_simple_string(boost::posix_time::second_clock::local_time());
+
+	context_->createProject(contentId_.toStdString(), t, d.location().toLocal8Bit().data());
 }
 
 void LibraryContentItemWidget::onRemove()

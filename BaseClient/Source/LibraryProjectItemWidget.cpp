@@ -205,11 +205,15 @@ void LibraryProjectItemWidget::onOpen()
 		const int ret = QMessageBox::question(
 			0, "Base",
 			QString(tr("The default Engine (%1 %2) to open this project is not installed, "
-			"do you want to install it now ?")).arg(engineName.c_str()).arg(engineVersion.c_str()),
-			QMessageBox::Yes|QMessageBox::Default, QMessageBox::No);
+				"do you want to install it now ?")).arg(engineName.c_str()).arg(engineVersion.c_str()),
+			"Install", "Use custom Engine", "Cancel", 0, 2);
 
-		if (ret == QMessageBox::Yes) {
+		if (ret == 0) {
 			context_->installEngine(EngineVersion(engineName, engineVersion));
+		}
+		else if (ret == 1) {
+			context_->changeProjectDefaultEngineVersion(projectId_.toStdString(), EngineVersion(engineName, "(Custom)"));
+			onOpen();
 		}
 
 		return;

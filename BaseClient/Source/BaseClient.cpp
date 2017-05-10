@@ -911,7 +911,7 @@ void BaseClient::createProject(const std::string& contentId, const std::string& 
 	properties["startup"] = toLocal8bit(ci.startup);
 
 	boost::shared_ptr<ASyncCreateProjectTask> task(new ASyncCreateProjectTask(context_));
-	task->setInfoHead("Create " + title);
+	task->setInfoHead("Create " + toLocal8bit(ci.title));
 	task->setContentId(contentId);
 	task->setProjectId(boost::uuids::to_string(rand_()));
 	task->setLocation(location);
