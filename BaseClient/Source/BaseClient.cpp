@@ -187,6 +187,7 @@ BaseClient::BaseClient(const QString& workPath, const QString& version, Rpc::Ses
 	context_->removeProject = std::bind(&BaseClient::removeProject, this, std::placeholders::_1, std::placeholders::_2);
 	context_->renameProject = std::bind(&BaseClient::renameProject, this, std::placeholders::_1, std::placeholders::_2);
 	context_->changeProjectDefaultEngineVersion = std::bind(&BaseClient::changeProjectDefaultEngineVersion, this, std::placeholders::_1, std::placeholders::_2);
+	context_->changeProjectStartup = std::bind(&BaseClient::changeProjectStartup, this, std::placeholders::_1, std::placeholders::_2);
 	context_->getProject = std::bind(&BaseClient::getProject, this, std::placeholders::_1, std::placeholders::_2);
 	context_->getProjectList = std::bind(&BaseClient::getProjectList, this, std::placeholders::_1);
 
@@ -1009,6 +1010,25 @@ void BaseClient::changeProjectDefaultEngineVersion(const std::string& id, const 
 	auto it = projectTabel_.find(id);
 	if (it != projectTabel_.end()) {
 		it->second.defaultEngineVersion = v.first + "\n" + v.second;
+	}
+}
+
+void BaseClient::changeProjectStartup(const std::string& id, const std::string& startup)
+{
+	std::ostringstream oss;
+	oss << "UPDATE Projects SET Startup=";
+	oss << sqlText(startup);
+	oss << " WHERE Id=";
+	oss << sqlText(id);
+
+	SQLite::Transaction t(*db_);
+	db_->exec(oss.str());
+	t.commit();
+
+	boost::recursive_mutex::scoped_lock lock(projectTabelSync_);
+	auto it = projectTabel_.find(id);
+	if (it != projectTabel_.end()) {
+		it->second.startup = startup;
 	}
 }
 

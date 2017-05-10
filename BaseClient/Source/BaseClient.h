@@ -72,6 +72,7 @@ private:
 	void removeProject(const std::string& id, bool removeDir);
 	void renameProject(const std::string& id, const std::string& newName);
 	void changeProjectDefaultEngineVersion(const std::string& id, const EngineVersion&);
+	void changeProjectStartup(const std::string& id, const std::string& startup);
 	bool getProject(ProjectInfo&, const std::string& id);
 	void getProjectList(std::vector<ProjectInfo>&);
 

@@ -127,6 +127,7 @@ void LibraryProjectItemWidget::paintEvent(QPaintEvent*)
 void LibraryProjectItemWidget::onOpen()
 {
 	ProjectInfo pi;
+
 	if (!context_->getProject(pi, projectId_.toStdString())) {
 		return;
 	}
@@ -135,11 +136,49 @@ void LibraryProjectItemWidget::onOpen()
 	std::string engineVersion;
 	{
 		std::istringstream stream(pi.defaultEngineVersion);
+
 		std::getline(stream, engineName);
 		std::getline(stream, engineVersion);
+
 		if (engineName.empty() || engineVersion.empty()) {
 			QMessageBox::information(this, "Base", tr("No default Engine."));
+			return;
 		}
+	}
+
+	if (engineVersion == "(Custom)")
+	{
+		std::string startup = pi.startup;
+
+		if (boost::icontains(startup, "$(EngineDir)"))
+		{
+			QString s = QFileDialog::getExistingDirectory(this, QString("Select custom %1").arg(engineName.c_str()));
+
+			if (s.isEmpty()) {
+				return;
+			}
+
+			boost::ireplace_all(startup, "$(EngineDir)", s.toStdString());
+
+			context_->changeProjectStartup(projectId_.toStdString(), startup);
+		}
+
+		boost::ireplace_all(startup, "$(ProjectDir)", pi.location);
+
+		std::string command;
+		std::string workDir;
+
+		std::istringstream stream(startup);
+		getline(stream, command);
+		getline(stream, workDir);
+
+		QStringList args = parseCombinedArgString(QString::fromLocal8Bit(command.c_str()));
+		QString program = args.first();
+		args.removeFirst();
+
+		QProcess::startDetached(program, args, QString::fromLocal8Bit(workDir.c_str()));
+
+		return;
 	}
 
 	int state = context_->getEngineState(EngineVersion(engineName, engineVersion));
@@ -216,16 +255,16 @@ void LibraryProjectItemWidget::onSwitchEngineVersion()
 	std::vector<std::string> versions;
 	boost::split(versions, ci.engineVersion, boost::is_any_of("|"));
 
-	if (versions.empty()) {
-		return;
-	}
+	versions.push_back("(Custom)");
 
 	QStringList list;
 
 	int current = 0;
 
-	for (int i = 0; i < versions.size(); ++i) {
-		list << versions[i].c_str();
+	for (int i = 0; i < versions.size(); ++i)
+	{
+		list.append(versions[i].c_str());
+
 		if (defaultEngineVersion == versions[i]) {
 			current = i;
 		}
@@ -234,8 +273,10 @@ void LibraryProjectItemWidget::onSwitchEngineVersion()
 	bool ok;
 
 	QString item = QInputDialog::getItem(this, tr("Switch Engine version"), ci.engineName.c_str(), list, current, false, &ok, Qt::WindowTitleHint);
+
 	if (ok && !item.isEmpty()) {
 		context_->changeProjectDefaultEngineVersion(projectId_.toStdString(), EngineVersion(ci.engineName, item.toStdString()));
+		context_->changeProjectStartup(projectId_.toStdString(), ci.startup);
 	}
 }
 
