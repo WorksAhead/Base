@@ -4,6 +4,8 @@
 #include "Datetime.h"
 #include "Context.h"
 
+#include "Security/Base64.h"
+
 #include <Ice/Ice.h>
 
 #include <SQLiteCpp/Database.h>
@@ -14,8 +16,6 @@
 #include <sstream>
 
 #include <curl/curl.h>
-
-#include "Security/Base64.h"
 
 namespace fs = boost::filesystem;
 

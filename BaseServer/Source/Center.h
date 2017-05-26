@@ -3,6 +3,8 @@
 
 #include "SQLiteUtil.h"
 
+#include <IceUtil/IceUtil.h>
+
 #include <boost/shared_ptr.hpp>
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/recursive_mutex.hpp>
@@ -13,10 +15,11 @@
 #include <vector>
 #include <map>
 #include <string>
+#include <list>
 
 typedef std::map<std::string, std::string> Form;
 
-class Center {
+class Center : public IceUtil::TimerTask {
 public:
 	enum LockMode {
 		lock_read,
@@ -87,7 +90,13 @@ public:
 	bool editComment(const std::string& id, const std::string& comment);
 	bool removeComment(const std::string& id);
 
+	void increaseDownloadCount(const std::string& targetId);
+	int queryDownloadCount(const std::string& targetId);
+
 	DatabasePtr db() const { return db_; }
+
+protected:
+	virtual void runTimerTask();
 
 private:
 	void loadPagesFromDb();
@@ -95,6 +104,7 @@ private:
 	void updateContentCategoryGroup();
 	void loadExtraCategoriesFromDb();
 	void updateExtraCategoryGroup();
+	void loadDownloadCountFromDb();
 
 private:
 	std::string baseDir_;
@@ -123,6 +133,9 @@ private:
 
 	std::unordered_map<std::string, int> lockedClientVersionSet_;
 	boost::mutex lockedClientVersionSetSync_;
+
+	std::unordered_map<std::string, int> downloadCountSet_;
+	boost::mutex downloadCountSetSync_;
 };
 
 class EngineVersionLockGuard {
@@ -212,7 +225,7 @@ inline bool versionLess(const std::string& lhs, const std::string& rhs)
 	return false;
 }
 
-typedef boost::shared_ptr<Center> CenterPtr;
+typedef IceUtil::Handle<Center> CenterPtr;
 
 inline void setEmptyIfNotExist(Form& form, const char* key)
 {

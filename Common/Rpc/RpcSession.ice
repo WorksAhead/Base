@@ -223,6 +223,8 @@ module Rpc
 		ErrorCode addComment(string targetId, string comment);
 		ErrorCode editComment(string id, string comment);
 		ErrorCode removeComment(string id);
+
+		ErrorCode queryDownloadCount(string targetId, out int count);
 	};
 };
 

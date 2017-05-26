@@ -339,6 +339,11 @@ QLabel#Thumbnail {
 	background-color: rgb(20, 20, 20);
 }
 
+QLabel#downloadCountLabel {
+	color: rgb(160, 160, 160);
+	font-size: 12px;
+}
+
 QLineEdit, QTextEdit, QPlainTextEdit {
 	background: rgb(20, 20, 20);
 	border: 1px solid rgb(50, 50, 50);

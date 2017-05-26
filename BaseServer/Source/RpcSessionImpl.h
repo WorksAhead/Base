@@ -69,6 +69,8 @@ public:
 	virtual Rpc::ErrorCode editComment(const std::string&, const std::string&, const Ice::Current&);
 	virtual Rpc::ErrorCode removeComment(const std::string&, const Ice::Current&);
 
+	virtual Rpc::ErrorCode queryDownloadCount(const std::string&, int&, const Ice::Current&);
+
 	IceUtil::Time timestamp();
 
 private:

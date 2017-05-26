@@ -110,6 +110,12 @@ void PageExtraWidget::mousePressEvent(QMouseEvent* e)
 
 						currentId_ = pi->id();
 
+						int downloadCount = 0;
+
+						context_->session->queryDownloadCount(item.id, downloadCount);
+
+						ui_.downloadCountLabel->setText(QString("%1 downloads").arg(downloadCount));
+
 						ui_.commentWidget->setContext(context_);
 
 						QString parentId = QString::fromStdString(item.parentId);

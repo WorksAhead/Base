@@ -215,6 +215,8 @@ Rpc::ErrorCode RpcSessionImpl::downloadContent(const std::string& id, Rpc::Downl
 	fs::path file = context_->center()->getContentPath(id);
 	file /= "content";
 
+	context_->center()->increaseDownloadCount(id);
+
 	return downloadContentFile(id, file.string(), downloaderPrx, c);
 }
 
@@ -323,6 +325,8 @@ Rpc::ErrorCode RpcSessionImpl::downloadEngineVersion(const std::string& name, co
 		downloaderPrx->destroy();
 		return Rpc::ec_server_busy;
 	}
+
+	context_->center()->increaseDownloadCount(name + "\n" + version);
 
 	return Rpc::ec_success;
 }
@@ -543,6 +547,8 @@ Rpc::ErrorCode RpcSessionImpl::downloadExtra(const std::string& id, Rpc::Downloa
 		downloaderPrx->destroy();
 		return Rpc::ec_server_busy;
 	}
+
+	context_->center()->increaseDownloadCount(id);
 
 	return Rpc::ec_success;
 }
@@ -889,6 +895,16 @@ Rpc::ErrorCode RpcSessionImpl::removeComment(const std::string& id, const Ice::C
 	if (!context_->center()->removeComment(id)) {
 		return Rpc::ec_operation_failed;
 	}
+
+	return Rpc::ec_success;
+}
+
+Rpc::ErrorCode RpcSessionImpl::queryDownloadCount(const std::string& targetId, int& count, const Ice::Current&)
+{
+	boost::recursive_mutex::scoped_lock lock(sync_);
+	checkIsDestroyed();
+
+	count = context_->center()->queryDownloadCount(targetId);
 
 	return Rpc::ec_success;
 }

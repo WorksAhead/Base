@@ -148,6 +148,12 @@ void PageContentContentWidget::refresh()
 	screenshots_.clear();
 	screenshots_.resize(ci.imageCount - 1);
 
+	int downloadCount = 0;
+
+	context_->session->queryDownloadCount(ci.id, downloadCount);
+
+	ui_.downloadCountLabel->setText(QString("%1 downloads").arg(downloadCount));
+
 	initView();
 
 	for (int i = 1; i < ci.imageCount; ++i) {
@@ -411,17 +417,22 @@ void PageContentContentWidget::onAnchorClicked(const QUrl& url)
 
 void PageContentContentWidget::initView()
 {
-	while (ui_.stackedWidget->count()) {
+	while (ui_.stackedWidget->count())
+	{
 		QWidget* w = ui_.stackedWidget->widget(0);
-		if (qobject_cast<VideoPlayerWidget*>(w)) {
+
+		if (qobject_cast<VideoPlayerWidget*>(w))
+		{
 			VideoPlayerWidget* player = qobject_cast<VideoPlayerWidget*>(w);
 			player->stop();
 		}
+
 		w->deleteLater();
 		ui_.stackedWidget->removeWidget(w);
 	}
 
-	while (thumbnailLayout_->count()) {
+	while (thumbnailLayout_->count())
+	{
 		QLayoutItem* li = thumbnailLayout_->takeAt(0);
 		li->widget()->deleteLater();
 		delete li;

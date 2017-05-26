@@ -256,6 +256,13 @@
               </widget>
              </item>
              <item>
+              <widget class="QLabel" name="downloadCountLabel">
+               <property name="text">
+                <string>0 downloads</string>
+               </property>
+              </widget>
+             </item>
+             <item>
               <spacer name="horizontalSpacer_3">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
@@ -321,15 +328,15 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>CategoryFilterWidget</class>
-   <extends>QWidget</extends>
-   <header>CategoryFilterWidget.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>CommentWidget</class>
    <extends>QWidget</extends>
    <header>CommentWidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>CategoryFilterWidget</class>
+   <extends>QWidget</extends>
+   <header>CategoryFilterWidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

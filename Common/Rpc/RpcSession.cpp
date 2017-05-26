@@ -201,6 +201,8 @@ const ::std::string __Rpc__Session__editComment_name = "editComment";
 
 const ::std::string __Rpc__Session__removeComment_name = "removeComment";
 
+const ::std::string __Rpc__Session__queryDownloadCount_name = "queryDownloadCount";
+
 }
 
 namespace Ice
@@ -9428,6 +9430,128 @@ IceProxy::Rpc::Session::end_removeComment(const ::Ice::AsyncResultPtr& __result)
     return __ret;
 }
 
+::Rpc::ErrorCode
+IceProxy::Rpc::Session::queryDownloadCount(const ::std::string& __p_targetId, ::Ice::Int& __p_count, const ::Ice::Context* __ctx)
+{
+    __checkTwowayOnly(__Rpc__Session__queryDownloadCount_name);
+    ::IceInternal::Outgoing __og(this, __Rpc__Session__queryDownloadCount_name, ::Ice::Normal, __ctx);
+    try
+    {
+        ::IceInternal::BasicStream* __os = __og.startWriteParams(::Ice::DefaultFormat);
+        __os->write(__p_targetId);
+        __og.endWriteParams();
+    }
+    catch(const ::Ice::LocalException& __ex)
+    {
+        __og.abort(__ex);
+    }
+    if(!__og.invoke())
+    {
+        try
+        {
+            __og.throwUserException();
+        }
+        catch(const ::Ice::UserException& __ex)
+        {
+            ::Ice::UnknownUserException __uue(__FILE__, __LINE__, __ex.ice_name());
+            throw __uue;
+        }
+    }
+    ::Rpc::ErrorCode __ret;
+    ::IceInternal::BasicStream* __is = __og.startReadParams();
+    __is->read(__p_count);
+    __is->read(__ret);
+    __og.endReadParams();
+    return __ret;
+}
+
+::Ice::AsyncResultPtr
+IceProxy::Rpc::Session::begin_queryDownloadCount(const ::std::string& __p_targetId, const ::Ice::Context* __ctx, const ::IceInternal::CallbackBasePtr& __del, const ::Ice::LocalObjectPtr& __cookie)
+{
+    __checkAsyncTwowayOnly(__Rpc__Session__queryDownloadCount_name);
+    ::IceInternal::OutgoingAsyncPtr __result = new ::IceInternal::OutgoingAsync(this, __Rpc__Session__queryDownloadCount_name, __del, __cookie);
+    try
+    {
+        __result->prepare(__Rpc__Session__queryDownloadCount_name, ::Ice::Normal, __ctx);
+        ::IceInternal::BasicStream* __os = __result->startWriteParams(::Ice::DefaultFormat);
+        __os->write(__p_targetId);
+        __result->endWriteParams();
+        __result->invoke();
+    }
+    catch(const ::Ice::Exception& __ex)
+    {
+        __result->abort(__ex);
+    }
+    return __result;
+}
+
+#ifdef ICE_CPP11
+
+::Ice::AsyncResultPtr
+IceProxy::Rpc::Session::__begin_queryDownloadCount(const ::std::string& __p_targetId, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, ::Ice::Int)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent)
+{
+    class Cpp11CB : public ::IceInternal::Cpp11FnCallbackNC
+    {
+    public:
+
+        Cpp11CB(const ::std::function<void (::Rpc::ErrorCode, ::Ice::Int)>& responseFunc, const ::std::function<void (const ::Ice::Exception&)>& exceptionFunc, const ::std::function<void (bool)>& sentFunc) :
+            ::IceInternal::Cpp11FnCallbackNC(exceptionFunc, sentFunc),
+            _response(responseFunc)
+        {
+            CallbackBase::checkCallback(true, responseFunc || exceptionFunc != nullptr);
+        }
+
+        virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+        {
+            ::Rpc::SessionPrx __proxy = ::Rpc::SessionPrx::uncheckedCast(__result->getProxy());
+            ::Ice::Int __p_count;
+            ::Rpc::ErrorCode __ret;
+            try
+            {
+                __ret = __proxy->end_queryDownloadCount(__p_count, __result);
+            }
+            catch(const ::Ice::Exception& ex)
+            {
+                Cpp11FnCallbackNC::exception(__result, ex);
+                return;
+            }
+            if(_response != nullptr)
+            {
+                _response(__ret, __p_count);
+            }
+        }
+    
+    private:
+        
+        ::std::function<void (::Rpc::ErrorCode, ::Ice::Int)> _response;
+    };
+    return begin_queryDownloadCount(__p_targetId, __ctx, new Cpp11CB(__response, __exception, __sent));
+}
+#endif
+
+::Rpc::ErrorCode
+IceProxy::Rpc::Session::end_queryDownloadCount(::Ice::Int& __p_count, const ::Ice::AsyncResultPtr& __result)
+{
+    ::Ice::AsyncResult::__check(__result, this, __Rpc__Session__queryDownloadCount_name);
+    ::Rpc::ErrorCode __ret;
+    if(!__result->__wait())
+    {
+        try
+        {
+            __result->__throwUserException();
+        }
+        catch(const ::Ice::UserException& __ex)
+        {
+            throw ::Ice::UnknownUserException(__FILE__, __LINE__, __ex.ice_name());
+        }
+    }
+    ::IceInternal::BasicStream* __is = __result->__startReadParams();
+    __is->read(__p_count);
+    __is->read(__ret);
+    __result->__endReadParams();
+    return __ret;
+}
+
 const ::std::string&
 IceProxy::Rpc::Session::ice_staticId()
 {
@@ -12043,6 +12167,23 @@ Rpc::Session::___removeComment(::IceInternal::Incoming& __inS, const ::Ice::Curr
     return ::Ice::DispatchOK;
 }
 
+::Ice::DispatchStatus
+Rpc::Session::___queryDownloadCount(::IceInternal::Incoming& __inS, const ::Ice::Current& __current)
+{
+    __checkMode(::Ice::Normal, __current.mode);
+    ::IceInternal::BasicStream* __is = __inS.startReadParams();
+    ::std::string __p_targetId;
+    __is->read(__p_targetId);
+    __inS.endReadParams();
+    ::Ice::Int __p_count;
+    ::Rpc::ErrorCode __ret = queryDownloadCount(__p_targetId, __p_count, __current);
+    ::IceInternal::BasicStream* __os = __inS.__startWriteParams(::Ice::DefaultFormat);
+    __os->write(__p_count);
+    __os->write(__ret);
+    __inS.__endWriteParams(true);
+    return ::Ice::DispatchOK;
+}
+
 namespace
 {
 const ::std::string __Rpc__Session_all[] =
@@ -12075,6 +12216,7 @@ const ::std::string __Rpc__Session_all[] =
     "ice_ids",
     "ice_isA",
     "ice_ping",
+    "queryDownloadCount",
     "refresh",
     "removeClient",
     "removeComment",
@@ -12101,7 +12243,7 @@ const ::std::string __Rpc__Session_all[] =
 ::Ice::DispatchStatus
 Rpc::Session::__dispatch(::IceInternal::Incoming& in, const ::Ice::Current& current)
 {
-    ::std::pair< const ::std::string*, const ::std::string*> r = ::std::equal_range(__Rpc__Session_all, __Rpc__Session_all + 47, current.operation);
+    ::std::pair< const ::std::string*, const ::std::string*> r = ::std::equal_range(__Rpc__Session_all, __Rpc__Session_all + 48, current.operation);
     if(r.first == r.second)
     {
         throw ::Ice::OperationNotExistException(__FILE__, __LINE__, current.id, current.facet, current.operation);
@@ -12223,77 +12365,81 @@ Rpc::Session::__dispatch(::IceInternal::Incoming& in, const ::Ice::Current& curr
         }
         case 28:
         {
-            return ___refresh(in, current);
+            return ___queryDownloadCount(in, current);
         }
         case 29:
         {
-            return ___removeClient(in, current);
+            return ___refresh(in, current);
         }
         case 30:
         {
-            return ___removeComment(in, current);
+            return ___removeClient(in, current);
         }
         case 31:
         {
-            return ___removeContent(in, current);
+            return ___removeComment(in, current);
         }
         case 32:
         {
-            return ___removeEngineVersion(in, current);
+            return ___removeContent(in, current);
         }
         case 33:
         {
-            return ___removeExtra(in, current);
+            return ___removeEngineVersion(in, current);
         }
         case 34:
         {
-            return ___removeUser(in, current);
+            return ___removeExtra(in, current);
         }
         case 35:
         {
-            return ___setContentCategories(in, current);
+            return ___removeUser(in, current);
         }
         case 36:
         {
-            return ___setExtraCategories(in, current);
+            return ___setContentCategories(in, current);
         }
         case 37:
         {
-            return ___setPages(in, current);
+            return ___setExtraCategories(in, current);
         }
         case 38:
         {
-            return ___setUserGroup(in, current);
+            return ___setPages(in, current);
         }
         case 39:
         {
-            return ___submitClient(in, current);
+            return ___setUserGroup(in, current);
         }
         case 40:
         {
-            return ___submitContent(in, current);
+            return ___submitClient(in, current);
         }
         case 41:
         {
-            return ___submitEngineVersion(in, current);
+            return ___submitContent(in, current);
         }
         case 42:
         {
-            return ___submitExtra(in, current);
+            return ___submitEngineVersion(in, current);
         }
         case 43:
         {
-            return ___updateClient(in, current);
+            return ___submitExtra(in, current);
         }
         case 44:
         {
-            return ___updateContent(in, current);
+            return ___updateClient(in, current);
         }
         case 45:
         {
-            return ___updateEngineVersion(in, current);
+            return ___updateContent(in, current);
         }
         case 46:
+        {
+            return ___updateEngineVersion(in, current);
+        }
+        case 47:
         {
             return ___updateExtra(in, current);
         }

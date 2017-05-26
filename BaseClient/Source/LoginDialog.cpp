@@ -10,7 +10,6 @@
 
 #include <boost/filesystem.hpp>
 
-#include "Security/Md5.h"
 #include "Security/Base64.h"
 
 namespace fs = boost::filesystem;

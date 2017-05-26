@@ -1540,6 +1540,9 @@ typedef ::IceUtil::Handle< Callback_Session_editComment_Base> Callback_Session_e
 class Callback_Session_removeComment_Base : virtual public ::IceInternal::CallbackBase { };
 typedef ::IceUtil::Handle< Callback_Session_removeComment_Base> Callback_Session_removeCommentPtr;
 
+class Callback_Session_queryDownloadCount_Base : virtual public ::IceInternal::CallbackBase { };
+typedef ::IceUtil::Handle< Callback_Session_queryDownloadCount_Base> Callback_Session_queryDownloadCountPtr;
+
 }
 
 namespace IceProxy
@@ -8675,6 +8678,82 @@ private:
     ::Ice::AsyncResultPtr begin_removeComment(const ::std::string&, const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
     
 public:
+
+    ::Rpc::ErrorCode queryDownloadCount(const ::std::string& __p_targetId, ::Ice::Int& __p_count)
+    {
+        return queryDownloadCount(__p_targetId, __p_count, 0);
+    }
+    ::Rpc::ErrorCode queryDownloadCount(const ::std::string& __p_targetId, ::Ice::Int& __p_count, const ::Ice::Context& __ctx)
+    {
+        return queryDownloadCount(__p_targetId, __p_count, &__ctx);
+    }
+#ifdef ICE_CPP11
+    ::Ice::AsyncResultPtr
+    begin_queryDownloadCount(const ::std::string& __p_targetId, const ::IceInternal::Function<void (::Rpc::ErrorCode, ::Ice::Int)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return __begin_queryDownloadCount(__p_targetId, 0, __response, __exception, __sent);
+    }
+    ::Ice::AsyncResultPtr
+    begin_queryDownloadCount(const ::std::string& __p_targetId, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_queryDownloadCount(__p_targetId, 0, ::Ice::newCallback(__completed, __sent), 0);
+    }
+    ::Ice::AsyncResultPtr
+    begin_queryDownloadCount(const ::std::string& __p_targetId, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, ::Ice::Int)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return __begin_queryDownloadCount(__p_targetId, &__ctx, __response, __exception, __sent);
+    }
+    ::Ice::AsyncResultPtr
+    begin_queryDownloadCount(const ::std::string& __p_targetId, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_queryDownloadCount(__p_targetId, &__ctx, ::Ice::newCallback(__completed, __sent));
+    }
+    
+private:
+
+    ::Ice::AsyncResultPtr __begin_queryDownloadCount(const ::std::string& __p_targetId, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, ::Ice::Int)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent);
+    
+public:
+#endif
+
+    ::Ice::AsyncResultPtr begin_queryDownloadCount(const ::std::string& __p_targetId)
+    {
+        return begin_queryDownloadCount(__p_targetId, 0, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_queryDownloadCount(const ::std::string& __p_targetId, const ::Ice::Context& __ctx)
+    {
+        return begin_queryDownloadCount(__p_targetId, &__ctx, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_queryDownloadCount(const ::std::string& __p_targetId, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_queryDownloadCount(__p_targetId, 0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_queryDownloadCount(const ::std::string& __p_targetId, const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_queryDownloadCount(__p_targetId, &__ctx, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_queryDownloadCount(const ::std::string& __p_targetId, const ::Rpc::Callback_Session_queryDownloadCountPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_queryDownloadCount(__p_targetId, 0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_queryDownloadCount(const ::std::string& __p_targetId, const ::Ice::Context& __ctx, const ::Rpc::Callback_Session_queryDownloadCountPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_queryDownloadCount(__p_targetId, &__ctx, __del, __cookie);
+    }
+
+    ::Rpc::ErrorCode end_queryDownloadCount(::Ice::Int& __p_count, const ::Ice::AsyncResultPtr&);
+    
+private:
+
+    ::Rpc::ErrorCode queryDownloadCount(const ::std::string&, ::Ice::Int&, const ::Ice::Context*);
+    ::Ice::AsyncResultPtr begin_queryDownloadCount(const ::std::string&, const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
+    
+public:
     
     ::IceInternal::ProxyHandle<Session> ice_context(const ::Ice::Context& __context) const
     {
@@ -9352,6 +9431,9 @@ public:
 
     virtual ::Rpc::ErrorCode removeComment(const ::std::string&, const ::Ice::Current& = ::Ice::Current()) = 0;
     ::Ice::DispatchStatus ___removeComment(::IceInternal::Incoming&, const ::Ice::Current&);
+
+    virtual ::Rpc::ErrorCode queryDownloadCount(const ::std::string&, ::Ice::Int&, const ::Ice::Current& = ::Ice::Current()) = 0;
+    ::Ice::DispatchStatus ___queryDownloadCount(::IceInternal::Incoming&, const ::Ice::Current&);
 
     virtual ::Ice::DispatchStatus __dispatch(::IceInternal::Incoming&, const ::Ice::Current&);
 
@@ -17563,6 +17645,112 @@ template<class T, typename CT> Callback_Session_removeCommentPtr
 newCallback_Session_removeComment(T* instance, void (T::*cb)(::Rpc::ErrorCode, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
 {
     return new Callback_Session_removeComment<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T>
+class CallbackNC_Session_queryDownloadCount : public Callback_Session_queryDownloadCount_Base, public ::IceInternal::TwowayCallbackNC<T>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception&);
+    typedef void (T::*Sent)(bool);
+    typedef void (T::*Response)(::Rpc::ErrorCode, ::Ice::Int);
+
+    CallbackNC_Session_queryDownloadCount(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::TwowayCallbackNC<T>(obj, cb != 0, excb, sentcb), _response(cb)
+    {
+    }
+
+    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+    {
+        ::Rpc::SessionPrx __proxy = ::Rpc::SessionPrx::uncheckedCast(__result->getProxy());
+        ::Ice::Int count;
+        ::Rpc::ErrorCode __ret;
+        try
+        {
+            __ret = __proxy->end_queryDownloadCount(count, __result);
+        }
+        catch(const ::Ice::Exception& ex)
+        {
+            ::IceInternal::CallbackNC<T>::exception(__result, ex);
+            return;
+        }
+        if(_response)
+        {
+            (::IceInternal::CallbackNC<T>::_callback.get()->*_response)(__ret, count);
+        }
+    }
+
+    private:
+
+    Response _response;
+};
+
+template<class T> Callback_Session_queryDownloadCountPtr
+newCallback_Session_queryDownloadCount(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode, ::Ice::Int), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_Session_queryDownloadCount<T>(instance, cb, excb, sentcb);
+}
+
+template<class T> Callback_Session_queryDownloadCountPtr
+newCallback_Session_queryDownloadCount(T* instance, void (T::*cb)(::Rpc::ErrorCode, ::Ice::Int), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_Session_queryDownloadCount<T>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT>
+class Callback_Session_queryDownloadCount : public Callback_Session_queryDownloadCount_Base, public ::IceInternal::TwowayCallback<T, CT>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception& , const CT&);
+    typedef void (T::*Sent)(bool , const CT&);
+    typedef void (T::*Response)(::Rpc::ErrorCode, ::Ice::Int, const CT&);
+
+    Callback_Session_queryDownloadCount(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::TwowayCallback<T, CT>(obj, cb != 0, excb, sentcb), _response(cb)
+    {
+    }
+
+    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+    {
+        ::Rpc::SessionPrx __proxy = ::Rpc::SessionPrx::uncheckedCast(__result->getProxy());
+        ::Ice::Int count;
+        ::Rpc::ErrorCode __ret;
+        try
+        {
+            __ret = __proxy->end_queryDownloadCount(count, __result);
+        }
+        catch(const ::Ice::Exception& ex)
+        {
+            ::IceInternal::Callback<T, CT>::exception(__result, ex);
+            return;
+        }
+        if(_response)
+        {
+            (::IceInternal::Callback<T, CT>::_callback.get()->*_response)(__ret, count, CT::dynamicCast(__result->getCookie()));
+        }
+    }
+
+    private:
+
+    Response _response;
+};
+
+template<class T, typename CT> Callback_Session_queryDownloadCountPtr
+newCallback_Session_queryDownloadCount(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode, ::Ice::Int, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_Session_queryDownloadCount<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT> Callback_Session_queryDownloadCountPtr
+newCallback_Session_queryDownloadCount(T* instance, void (T::*cb)(::Rpc::ErrorCode, ::Ice::Int, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_Session_queryDownloadCount<T, CT>(instance, cb, excb, sentcb);
 }
 
 }

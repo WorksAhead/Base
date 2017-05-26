@@ -132,14 +132,14 @@
     <ClCompile Include="..\BaseServer\Source\RpcClientBrowserImpl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\Security\Base64.cpp">
-      <Filter>Security</Filter>
-    </ClCompile>
     <ClCompile Include="..\Common\Security\Rijndael.cpp">
       <Filter>Security</Filter>
     </ClCompile>
     <ClCompile Include="..\BaseServer\Source\RpcCommentBrowserImpl.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\Security\Base64.cpp">
+      <Filter>Security</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -260,14 +260,14 @@
     <ClInclude Include="..\BaseServer\Source\RpcClientBrowserImpl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Common\Security\Base64.h">
-      <Filter>Security</Filter>
-    </ClInclude>
     <ClInclude Include="..\Common\Security\Rijndael.h">
       <Filter>Security</Filter>
     </ClInclude>
     <ClInclude Include="..\BaseServer\Source\RpcCommentBrowserImpl.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\Security\Base64.h">
+      <Filter>Security</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -81,6 +81,9 @@ Center::Center()
 	db_->exec("CREATE TABLE IF NOT EXISTS Comments ("
 		"Id TEXT, TargetId TEXT, User TEXT, Time DATETIME, Comment TEXT)");
 
+	db_->exec("CREATE TABLE IF NOT EXISTS DownloadCount ("
+		"TargetId TEXT UNIQUE, Count INT)");
+
 	db_->exec("CREATE INDEX IF NOT EXISTS IndexOfUsers ON Users ("
 		"\"Group\")");
 
@@ -99,9 +102,13 @@ Center::Center()
 	db_->exec("CREATE INDEX IF NOT EXISTS IndexOfComments ON Comments ("
 		"Id, TargetId, User, Time)");
 
+	db_->exec("CREATE INDEX IF NOT EXISTS IndexOfDownloadCount ON DownloadCount ("
+		"TargetId, Count)");
+
 	loadPagesFromDb();
 	loadContentCategoriesFromDb();
 	loadExtraCategoriesFromDb();
+	loadDownloadCountFromDb();
 }
 
 Center::~Center()
@@ -789,6 +796,41 @@ bool Center::removeComment(const std::string& id)
 	return (n > 0);
 }
 
+void Center::increaseDownloadCount(const std::string& targetId)
+{
+	boost::unique_lock<boost::mutex> lock(downloadCountSetSync_);
+	const int count = ++downloadCountSet_[targetId];
+	lock.unlock();
+
+	std::ostringstream oss;
+	oss << "INSERT OR REPLACE INTO DownloadCount VALUES (";
+	oss << sqlText(targetId) << ", ";
+	oss << "'" << count << "'";
+	oss << ")";
+
+	SQLite::Transaction t(*db_);
+	db_->exec(oss.str());
+	t.commit();
+}
+
+int Center::queryDownloadCount(const std::string& targetId)
+{
+	boost::mutex::scoped_lock lock(downloadCountSetSync_);
+
+	auto it = downloadCountSet_.find(targetId);
+
+	if (it != downloadCountSet_.end()) {
+		return it->second;
+	}
+
+	return 0;
+}
+
+void Center::runTimerTask()
+{
+
+}
+
 void Center::loadPagesFromDb()
 {
 	boost::mutex::scoped_lock lock(pagesSync_);
@@ -890,6 +932,22 @@ void Center::updateExtraCategoryGroup()
 		else if (!group.empty()) {
 			groupedExtraCategories_.insert(std::make_pair(s, group));
 		}
+	}
+}
+
+void Center::loadDownloadCountFromDb()
+{
+	boost::mutex::scoped_lock lock(downloadCountSetSync_);
+
+	std::ostringstream oss;
+	oss << "SELECT * FROM DownloadCount";
+
+	SQLite::Statement s(*db_, oss.str());
+
+	while (s.executeStep())
+	{
+		downloadCountSet_.insert(std::make_pair(
+			s.getColumn("TargetId").getText(), s.getColumn("Count").getInt()));
 	}
 }
 
