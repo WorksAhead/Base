@@ -24,10 +24,12 @@ namespace fs = boost::filesystem;
 RpcSessionImpl::RpcSessionImpl(ContextPtr context)
 	: destroyed_(false), timestamp_(IceUtil::Time::now(IceUtil::Time::Monotonic)), context_(context)
 {
+	context_->center()->onUserLogin(context_->user());
 }
 
 RpcSessionImpl::~RpcSessionImpl()
 {
+	context_->center()->onUserLogout(context_->user());
 }
 
 void RpcSessionImpl::destroy(const Ice::Current& c)
@@ -139,6 +141,28 @@ Rpc::ErrorCode RpcSessionImpl::getExtraCategories(Rpc::StringSeq& categories, co
 	return Rpc::ec_success;
 }
 
+Rpc::ErrorCode RpcSessionImpl::setUniformInfo(const std::string& key, const std::string& value, const Ice::Current&)
+{
+	boost::recursive_mutex::scoped_lock lock(sync_);
+	checkIsDestroyed();
+
+	if (context_->userGroup() != "Admin") {
+		return Rpc::ec_access_denied;
+	}
+
+	context_->center()->setUniformInfo(key, value);
+	return Rpc::ec_success;
+}
+
+Rpc::ErrorCode RpcSessionImpl::getUniformInfo(const std::string& key, std::string& value, const Ice::Current&)
+{
+	boost::recursive_mutex::scoped_lock lock(sync_);
+	checkIsDestroyed();
+
+	context_->center()->getUniformInfo(key, value);
+	return Rpc::ec_success;
+}
+
 Rpc::ErrorCode RpcSessionImpl::browseContent(const std::string& page, const std::string& category, const std::string& search, Rpc::ContentBrowserPrx& browserPrx, const Ice::Current& c)
 {
 	boost::recursive_mutex::scoped_lock lock(sync_);
@@ -147,6 +171,28 @@ Rpc::ErrorCode RpcSessionImpl::browseContent(const std::string& page, const std:
 	RpcContentBrowserImplPtr browser = new RpcContentBrowserImpl(context_->center());
 
 	Rpc::ErrorCode ec = browser->init(page, category, search);
+	if (ec != Rpc::ec_success) {
+		return ec;
+	}
+
+	browserPrx = Rpc::ContentBrowserPrx::uncheckedCast(c.adapter->addWithUUID(browser));
+
+	if (!context_->objectManager()->addObject(browserPrx)) {
+		browserPrx->destroy();
+		return Rpc::ec_server_busy;
+	}
+
+	return Rpc::ec_success;
+}
+
+Rpc::ErrorCode RpcSessionImpl::browseContentByParentId(const std::string& parentId, Rpc::ContentBrowserPrx& browserPrx, const Ice::Current& c)
+{
+	boost::recursive_mutex::scoped_lock lock(sync_);
+	checkIsDestroyed();
+
+	RpcContentBrowserImplPtr browser = new RpcContentBrowserImpl(context_->center());
+
+	Rpc::ErrorCode ec = browser->init(parentId);
 	if (ec != Rpc::ec_success) {
 		return ec;
 	}
@@ -273,12 +319,21 @@ Rpc::ErrorCode RpcSessionImpl::updateContent(const std::string& id, Rpc::Content
 	return Rpc::ec_success;
 }
 
-Rpc::ErrorCode RpcSessionImpl::removeContent(const std::string& id, const Ice::Current&)
+Rpc::ErrorCode RpcSessionImpl::changeContentState(const std::string& id, const std::string& state, const Ice::Current&)
 {
 	boost::recursive_mutex::scoped_lock lock(sync_);
 	checkIsDestroyed();
 
-	if (!context_->center()->changeContentState(id, "Removed")) {
+	std::map<std::string, std::string> form;
+	if (!context_->center()->getContent(form, id)) {
+		return Rpc::ec_content_does_not_exist;
+	}
+
+	if (!boost::iequals(context_->user(), form.at("User")) && context_->userGroup() != "Admin") {
+		return Rpc::ec_access_denied;
+	}
+
+	if (!context_->center()->changeContentState(id, state)) {
 		return Rpc::ec_operation_failed;
 	}
 
@@ -905,6 +960,26 @@ Rpc::ErrorCode RpcSessionImpl::queryDownloadCount(const std::string& targetId, i
 	checkIsDestroyed();
 
 	count = context_->center()->queryDownloadCount(targetId);
+
+	return Rpc::ec_success;
+}
+
+Rpc::ErrorCode RpcSessionImpl::isUserOnline(const std::string& userName, bool& result, const Ice::Current&)
+{
+	boost::recursive_mutex::scoped_lock lock(sync_);
+	checkIsDestroyed();
+
+	result = context_->center()->isUserOnline(userName);
+
+	return Rpc::ec_success;
+}
+
+Rpc::ErrorCode RpcSessionImpl::onlineUserCount(int& count, const Ice::Current&)
+{
+	boost::recursive_mutex::scoped_lock lock(sync_);
+	checkIsDestroyed();
+
+	count = context_->center()->onlineUserCount();
 
 	return Rpc::ec_success;
 }

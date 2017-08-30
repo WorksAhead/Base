@@ -59,18 +59,36 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>-1012</y>
+        <y>0</y>
         <width>581</width>
-        <height>1810</height>
+        <height>1872</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_3">
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_4">
+        <layout class="QHBoxLayout" name="horizontalLayout_11">
          <item>
-          <widget class="QLineEdit" name="titleEdit">
+          <widget class="QLineEdit" name="parentIdEdit">
            <property name="placeholderText">
-            <string>Title</string>
+            <string>Parent Id</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="2,1">
+         <item>
+          <widget class="QLineEdit" name="nameEdit">
+           <property name="placeholderText">
+            <string>Name</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="versionEdit">
+           <property name="placeholderText">
+            <string>Version(d.d.d)</string>
            </property>
           </widget>
          </item>
@@ -161,34 +179,19 @@
         </layout>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="1,3">
-         <item>
-          <widget class="QLineEdit" name="engineNameEdit">
-           <property name="placeholderText">
-            <string>Engine Name</string>
-           </property>
-          </widget>
-         </item>
+        <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="3,0,0">
          <item>
           <widget class="QLineEdit" name="engineVersionEdit">
-           <property name="placeholderText">
-            <string>Engine Version(Seperate versions with '|', priority order)</string>
+           <property name="readOnly">
+            <bool>true</bool>
            </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="1,0">
-         <item>
-          <widget class="QLineEdit" name="locationEdit">
            <property name="placeholderText">
-            <string>Location</string>
+            <string>Engine Version</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="selectLocationButton">
+          <widget class="QPushButton" name="addEngineVersionButton">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
              <horstretch>0</horstretch>
@@ -197,18 +200,46 @@
            </property>
            <property name="minimumSize">
             <size>
-             <width>30</width>
-             <height>0</height>
+             <width>0</width>
+             <height>23</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
-             <width>30</width>
+             <width>40</width>
              <height>16777215</height>
             </size>
            </property>
            <property name="text">
-            <string>...</string>
+            <string>Add</string>
+           </property>
+           <property name="autoDefault">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="removeEngineVersionButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>23</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>60</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Remove</string>
            </property>
            <property name="autoDefault">
             <bool>false</bool>
@@ -218,11 +249,114 @@
         </layout>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_11">
+        <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="2,0">
          <item>
-          <widget class="QLineEdit" name="parentIdEdit">
+          <widget class="QLineEdit" name="locationEdit">
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
            <property name="placeholderText">
-            <string>Parent Id</string>
+            <string>Location</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="browseLocationButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>23</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>60</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Browse</string>
+           </property>
+           <property name="autoDefault">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_14" stretch="0,1">
+         <item>
+          <widget class="QCheckBox" name="projectInSubDirCheckBox">
+           <property name="text">
+            <string>Project in sub-directory:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_5">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_15" stretch="8,0">
+         <item>
+          <widget class="QLineEdit" name="projectLocationEdit">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+           <property name="placeholderText">
+            <string>Project Location</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="browseProjectLocationButton">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>23</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>60</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Browse</string>
+           </property>
+           <property name="autoDefault">
+            <bool>false</bool>
            </property>
           </widget>
          </item>
@@ -586,16 +720,27 @@
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>titleEdit</tabstop>
-  <tabstop>pageEdit</tabstop>
-  <tabstop>engineNameEdit</tabstop>
-  <tabstop>engineVersionEdit</tabstop>
-  <tabstop>locationEdit</tabstop>
-  <tabstop>selectLocationButton</tabstop>
   <tabstop>parentIdEdit</tabstop>
+  <tabstop>nameEdit</tabstop>
+  <tabstop>versionEdit</tabstop>
+  <tabstop>pageEdit</tabstop>
+  <tabstop>editPageButton</tabstop>
+  <tabstop>categoryEdit</tabstop>
+  <tabstop>editCategoryButton</tabstop>
+  <tabstop>engineVersionEdit</tabstop>
+  <tabstop>addEngineVersionButton</tabstop>
+  <tabstop>removeEngineVersionButton</tabstop>
+  <tabstop>locationEdit</tabstop>
+  <tabstop>browseLocationButton</tabstop>
+  <tabstop>projectInSubDirCheckBox</tabstop>
+  <tabstop>projectLocationEdit</tabstop>
+  <tabstop>browseProjectLocationButton</tabstop>
   <tabstop>commandEdit</tabstop>
+  <tabstop>macroButton1</tabstop>
   <tabstop>workDirEdit</tabstop>
+  <tabstop>macroButton2</tabstop>
   <tabstop>setCoverButton</tabstop>
+  <tabstop>videoEdit</tabstop>
   <tabstop>addScreenshotButton</tabstop>
   <tabstop>removeScreenshotButton</tabstop>
   <tabstop>prevScreenshotButton</tabstop>
@@ -604,5 +749,38 @@
   <tabstop>scrollArea</tabstop>
  </tabstops>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>projectInSubDirCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>projectLocationEdit</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>110</x>
+     <y>199</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>105</x>
+     <y>230</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>projectInSubDirCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>browseProjectLocationButton</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>170</x>
+     <y>199</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>541</x>
+     <y>227</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

@@ -1,6 +1,7 @@
 #include "ManageInfoWidget.h"
 #include "PagesEditDialog.h"
 #include "CategoriesEditDialog.h"
+#include "LuaEditDialog.h"
 
 #include <QMessageBox>
 #include <QTextStream>
@@ -95,6 +96,34 @@ void ManageInfoWidget::onRefresh()
 
 		ui_.list->addTopLevelItem(new QTreeWidgetItem(QStringList() << "ExtraCategories" << formattedCategories));
 	}
+
+	{
+		std::string code;
+
+		if ((ec = context_->session->getUniformInfo("SubmitContent.lua", code)) != Rpc::ec_success) {
+			context_->promptRpcError(ec);
+			return;
+		}
+
+		QString formattedCode(code.c_str());
+		formattedCode.replace('\n', '\r');
+
+		ui_.list->addTopLevelItem(new QTreeWidgetItem(QStringList() << "SubmitContent.lua" << formattedCode));
+	}
+
+	{
+		std::string code;
+
+		if ((ec = context_->session->getUniformInfo("CustomEngine.lua", code)) != Rpc::ec_success) {
+			context_->promptRpcError(ec);
+			return;
+		}
+
+		QString formattedCode(code.c_str());
+		formattedCode.replace('\n', '\r');
+
+		ui_.list->addTopLevelItem(new QTreeWidgetItem(QStringList() << "CustomEngine.lua" << formattedCode));
+	}
 }
 
 void ManageInfoWidget::onEdit()
@@ -128,6 +157,13 @@ void ManageInfoWidget::onEdit()
 
 			Rpc::ErrorCode ec = context_->session->setPages(pages);
 
+			if (ec == Rpc::ec_success)
+			{
+				s = text;
+				s.replace('\n', '\r');
+				items[0]->setText(1, s);
+			}
+
 			context_->promptRpcError(ec);
 		}
 	}
@@ -153,6 +189,13 @@ void ManageInfoWidget::onEdit()
 
 			Rpc::ErrorCode ec = context_->session->setContentCategories(categories);
 
+			if (ec == Rpc::ec_success)
+			{
+				s = text;
+				s.replace('\n', '\r');
+				items[0]->setText(1, s);
+			}
+
 			context_->promptRpcError(ec);
 		}
 	}
@@ -177,6 +220,55 @@ void ManageInfoWidget::onEdit()
 			}
 
 			Rpc::ErrorCode ec = context_->session->setExtraCategories(categories);
+
+			if (ec == Rpc::ec_success)
+			{
+				s = text;
+				s.replace('\n', '\r');
+				items[0]->setText(1, s);
+			}
+
+			context_->promptRpcError(ec);
+		}
+	}
+	else if (items[0]->text(0) == "SubmitContent.lua")
+	{
+		QString s = items[0]->text(1);
+		s.replace('\r', '\n');
+
+		LuaEditDialog d(s, this);
+
+		if (d.exec())
+		{
+			Rpc::ErrorCode ec = context_->session->setUniformInfo("SubmitContent.lua", d.text().toStdString());
+
+			if (ec == Rpc::ec_success)
+			{
+				s = d.text();
+				s.replace('\n', '\r');
+				items[0]->setText(1, s);
+			}
+
+			context_->promptRpcError(ec);
+		}
+	}
+	else if (items[0]->text(0) == "CustomEngine.lua")
+	{
+		QString s = items[0]->text(1);
+		s.replace('\r', '\n');
+
+		LuaEditDialog d(s, this);
+
+		if (d.exec())
+		{
+			Rpc::ErrorCode ec = context_->session->setUniformInfo("CustomEngine.lua", d.text().toStdString());
+
+			if (ec == Rpc::ec_success)
+			{
+				s = d.text();
+				s.replace('\n', '\r');
+				items[0]->setText(1, s);
+			}
 
 			context_->promptRpcError(ec);
 		}

@@ -191,9 +191,18 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="removeButton">
+      <widget class="QToolButton" name="changeStateButton">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>23</height>
+        </size>
+       </property>
        <property name="text">
-        <string>Remove</string>
+        <string>Change State</string>
+       </property>
+       <property name="popupMode">
+        <enum>QToolButton::MenuButtonPopup</enum>
        </property>
       </widget>
      </item>
@@ -207,7 +216,6 @@
   <tabstop>showAllButton</tabstop>
   <tabstop>refreshButton</tabstop>
   <tabstop>editButton</tabstop>
-  <tabstop>removeButton</tabstop>
  </tabstops>
  <resources/>
  <connections/>

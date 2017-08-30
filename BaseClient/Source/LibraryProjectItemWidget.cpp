@@ -42,6 +42,8 @@ LibraryProjectItemWidget::LibraryProjectItemWidget(ContextPtr context, QWidget* 
 	QObject::connect(removeAction, &QAction::triggered, this, &LibraryProjectItemWidget::onRemove);
 
 	updateTips();
+
+	script_.loadFromServer(context_, "CustomEngine.lua");
 }
 
 LibraryProjectItemWidget::~LibraryProjectItemWidget()
@@ -132,18 +134,45 @@ void LibraryProjectItemWidget::onOpen()
 		return;
 	}
 
-	std::string engineName;
-	std::string engineVersion;
+	std::string engineName, engineVersion;
 	{
 		std::istringstream stream(pi.defaultEngineVersion);
 
 		std::getline(stream, engineName);
 		std::getline(stream, engineVersion);
+	}
 
-		if (engineName.empty() || engineVersion.empty()) {
+	if (engineName.empty() || engineVersion.empty())
+	{
+		if (boost::icontains(pi.startup, "$(EngineDir)"))
+		{
 			QMessageBox::information(this, "Base", tr("No default Engine."));
-			return;
 		}
+		else
+		{
+			std::string startup = pi.startup;
+			boost::ireplace_all(startup, "$(ProjectDir)", pi.location);
+			std::string command;
+			std::string workDir;
+			std::istringstream stream(startup);
+			getline(stream, command);
+			getline(stream, workDir);
+
+			if (!command.empty())
+			{
+				QStringList args = parseCombinedArgString(QString::fromLocal8Bit(command.c_str()));
+				QString program = args.first();
+				args.removeFirst();
+
+				QProcess::startDetached(program, args, QString::fromLocal8Bit(workDir.c_str()));
+			}
+			else
+			{
+				QDesktopServices::openUrl(QUrl::fromLocalFile(QString::fromLocal8Bit(pi.location.c_str())));
+			}
+		}
+
+		return;
 	}
 
 	if (engineVersion == "(Custom)")
@@ -155,6 +184,16 @@ void LibraryProjectItemWidget::onOpen()
 			QString s = QFileDialog::getExistingDirectory(this, QString("Select custom %1").arg(engineName.c_str()));
 
 			if (s.isEmpty()) {
+				return;
+			}
+
+			s.replace('/', '\\');
+
+			if (s.endsWith('\\')) {
+				s.remove(s.count() - 1, 1);
+			}
+
+			if (!checkCustomEngineLocation(s)) {
 				return;
 			}
 
@@ -345,6 +384,43 @@ void LibraryProjectItemWidget::updateTips()
 
 	if (!tips.isEmpty()) {
 		ui_.thumbnailViewer->setToolTip(tips);
+	}
+}
+
+bool LibraryProjectItemWidget::checkCustomEngineLocation(const QString& location)
+{
+	Rpc::ErrorCode ec;
+	Rpc::ContentInfo ci;
+
+	if ((ec = context_->session->getContentInfo(contentId_.toStdString(), ci)) != Rpc::ec_success) {
+		return false;
+	}
+
+	kaguya::State& state = script_.state();
+
+	auto f = state["checkCustomEngineLocation"];
+	{
+		bool valid = f(ci.engineName, ci.engineVersion, location.toStdString());
+
+		if (!valid)
+		{
+			QMessageBox msgBox(this);
+			msgBox.setIcon(QMessageBox::Warning);
+			msgBox.setWindowTitle("Base");
+			msgBox.setText(tr("Location might be invalid"));
+
+			QPushButton* b0 = msgBox.addButton("Back", QMessageBox::NoRole);
+			QPushButton* b1 = msgBox.addButton("Continue anyway", QMessageBox::NoRole);
+
+			msgBox.setDefaultButton(b0);
+			msgBox.exec();
+
+			if (msgBox.clickedButton() == b0) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 }
 

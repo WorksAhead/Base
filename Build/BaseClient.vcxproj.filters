@@ -373,6 +373,12 @@
     <CustomBuild Include="..\BaseClient\Source\CommentEditDialog.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\LuaEditDialog.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\LuaEditDialog.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\BaseClient\Source\Main.cpp">
@@ -1353,6 +1359,21 @@
     <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_CommentEditDialog.cpp">
       <Filter>Generated Files\ReleaseConsole_Win32</Filter>
     </ClCompile>
+    <ClCompile Include="..\BaseClient\Source\LuaEditDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_LuaEditDialog.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_LuaEditDialog.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_LuaEditDialog.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\Source\Script.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\BaseClient\Resources\BaseClient.rc">
@@ -1659,6 +1680,12 @@
     </ClInclude>
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_CommentEditDialog.h">
       <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_LuaEditDialog.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\Source\Script.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

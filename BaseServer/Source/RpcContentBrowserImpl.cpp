@@ -15,11 +15,21 @@ RpcContentBrowserImpl::~RpcContentBrowserImpl()
 Rpc::ErrorCode RpcContentBrowserImpl::init(const std::string& page, const std::string& category, const std::string& search)
 {
 	std::ostringstream oss;
-	oss << "SELECT Id, Title FROM Contents";
-	oss << " WHERE State=" << sqlText("Normal");
+	oss << "SELECT Id, Title, State FROM Contents";
 
-	if (!page.empty()) {
-		oss << " AND Page LIKE " << sqlText("%(" + page + ")%");
+	bool firstCondition = true;
+
+	if (!page.empty())
+	{
+		if (firstCondition) {
+			oss << " WHERE ";
+			firstCondition = false;
+		}
+		else {
+			oss << " AND ";
+		}
+
+		oss << "Page LIKE " << sqlText("%(" + page + ")%");
 	}
 
 	if (!category.empty())
@@ -32,30 +42,64 @@ Rpc::ErrorCode RpcContentBrowserImpl::init(const std::string& page, const std::s
 
 		std::map<std::string, std::string> groupedExp;
 
-		for (const std::string& s : list) {
+		for (const std::string& s : list)
+		{
 			auto it = categories.find(s);
-			if (it != categories.end()) {
+
+			if (it != categories.end())
+			{
 				std::string& exp = groupedExp[it->second];
+
 				if (!exp.empty()) {
 					exp += " OR ";
 				}
+
 				exp += "Category LIKE " + sqlText("%(" + s + ")%");
 			}
 		}
 
-		for (auto& p : groupedExp) {
-			oss << " AND (" + p.second + ")";
+		if (firstCondition) {
+			oss << " WHERE ";
+			firstCondition = false;
+		}
+		else {
+			oss << " AND ";
+		}
+
+		for (auto& p : groupedExp)
+		{
+			oss << "(" + p.second + ")";
 		}
 	}
 
 	if (!search.empty())
 	{
-		oss << " AND (";
+		if (firstCondition) {
+			oss << " WHERE ";
+			firstCondition = false;
+		}
+		else {
+			oss << " AND ";
+		}
+
+		oss << "(";
 		oss << "Title LIKE " << sqlText("%" + search + "%");
 		oss << " OR Desc LIKE " << sqlText("%" + search + "%");
 		oss << ")";
 	}
 
+	oss << " ORDER BY UpTime DESC";
+
+	s_.reset(new SQLite::Statement(*center_->db(), oss.str()));
+
+	return Rpc::ec_success;
+}
+
+Rpc::ErrorCode RpcContentBrowserImpl::init(const std::string& parentId)
+{
+	std::ostringstream oss;
+	oss << "SELECT Id, Title, State FROM Contents";
+	oss << " WHERE ParentId=" << sqlText(parentId);
 	oss << " ORDER BY UpTime DESC";
 
 	s_.reset(new SQLite::Statement(*center_->db(), oss.str()));
@@ -93,6 +137,7 @@ Rpc::ErrorCode RpcContentBrowserImpl::next(Ice::Int n, Rpc::ContentItemSeq& item
 		Rpc::ContentItem item;
 		item.id = s_->getColumn("Id").getText();
 		item.title = s_->getColumn("Title").getText();
+		item.state = s_->getColumn("State").getText();
 
 		items.push_back(item);
 	}

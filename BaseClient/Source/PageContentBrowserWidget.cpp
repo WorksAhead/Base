@@ -147,6 +147,10 @@ void PageContentBrowserWidget::onTimeout()
 		{
 			const Rpc::ContentItem& item = items.at(i);
 
+			if (item.state != "Normal") {
+				continue;
+			}
+
 			PageContentItemWidget* pi = new PageContentItemWidget(this);
 			pi->setSize(coverSize_);
 			pi->setId(item.id.c_str());

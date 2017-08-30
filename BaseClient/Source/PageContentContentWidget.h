@@ -43,6 +43,7 @@ private Q_SLOTS:
 	void onAnchorClicked(const QUrl&);
 
 private:
+	void refreshRelatedVersions(int);
 	void initView();
 	VideoPlayerWidget* findVideoPlayerWidget(int);
 	ImageViewerWidget* findImageViewerWidget();

@@ -19,6 +19,7 @@
 #include <QLocalSocket>
 #include <QSettings>
 #include <QWebEngineSettings>
+#include <QTextBrowser>
 
 #include <IceUtil/IceUtil.h>
 #include <Ice/Ice.h>
@@ -36,7 +37,7 @@
 #include <windows.h>
 #endif
 
-#define BASE_CURRENT_VERSION "1.0.0.43"
+#define BASE_CURRENT_VERSION "1.0.0.45"
 
 namespace fs = boost::filesystem;
 
@@ -321,6 +322,30 @@ int main(int argc, char* argv[])
 		w.setMinimumSize(800, 500);
 		w.resize(1280, 800);
 		w.show();
+
+		QFile changeLogFile(QString::fromLocal8Bit((workDir / "ChangeLog").string().c_str()));
+
+		if (changeLogFile.exists())
+		{
+			if (changeLogFile.open(QIODevice::ReadOnly))
+			{
+				QTextStream stream(&changeLogFile);
+				stream.setCodec("UTF-8");
+
+				QTextBrowser* browser = new QTextBrowser();
+				browser->setAttribute(Qt::WA_DeleteOnClose);
+				browser->setWindowTitle("ChangeLog");
+				browser->setText(stream.readAll());
+				browser->setReadOnly(true);
+				browser->resize(600, 600);
+				browser->show();
+
+				changeLogFile.close();
+			}
+
+			QFile::remove("ChangeLog.old");
+			QFile::rename("ChangeLog", "ChangeLog.old");
+		}
 
 		returnCode = app.exec();
 	}

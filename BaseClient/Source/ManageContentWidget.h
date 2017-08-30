@@ -7,6 +7,8 @@
 
 #include "ui_ManageContentWidget.h"
 
+#include <QStringList>
+
 class ManageContentWidget : public QWidget {
 private:
 	Q_OBJECT
@@ -25,10 +27,10 @@ private Q_SLOTS:
 	void onRefresh();
 	void onSubmit();
 	void onEdit();
-	void onRemove();
 
 private:
 	void showMore(int);
+	QStringList queryEngineVersions(bool refresh = false);
 
 private:
 	Ui::ManageContentWidget ui_;
@@ -37,6 +39,8 @@ private:
 	ContextPtr context_;
 
 	Rpc::ContentBrowserPrx browser_;
+
+	QStringList cachedEngineVersions_;
 };
 
 #endif // MANAGECONTENTWIDGET_HEADER_

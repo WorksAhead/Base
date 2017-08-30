@@ -108,6 +108,7 @@ Center::Center()
 	loadPagesFromDb();
 	loadContentCategoriesFromDb();
 	loadExtraCategoriesFromDb();
+	loadUniformInfoFromDb();
 	loadDownloadCountFromDb();
 }
 
@@ -213,6 +214,38 @@ void Center::getGroupedExtraCategories(std::map<std::string, std::string>& group
 {
 	boost::mutex::scoped_lock lock(extraCategoriesSync_);
 	groupedCategories = groupedExtraCategories_;
+}
+
+void Center::setUniformInfo(const std::string& key, const std::string& value)
+{
+	boost::mutex::scoped_lock lock(uniformInfoSync_);
+
+	std::ostringstream oss;
+	oss << "INSERT OR REPLACE INTO Info VALUES (";
+	oss << sqlText(key);
+	oss << ", ";
+	oss << sqlText(value);
+	oss << ")";
+
+	SQLite::Transaction t(*db_);
+	db_->exec(oss.str());
+	t.commit();
+
+	uniformInfo_[key] = value;
+}
+
+void Center::getUniformInfo(const std::string& key, std::string& value)
+{
+	boost::mutex::scoped_lock lock(uniformInfoSync_);
+
+	auto it = uniformInfo_.find(key);
+
+	if (it != uniformInfo_.end()) {
+		value = it->second;
+	}
+	else {
+		value = "";
+	}
 }
 
 bool Center::lockEngineVersion(const std::string& name, const std::string& version, LockMode mode)
@@ -826,6 +859,32 @@ int Center::queryDownloadCount(const std::string& targetId)
 	return 0;
 }
 
+void Center::onUserLogin(const std::string& userName)
+{
+	boost::mutex::scoped_lock lock(onlineUsersSync_);
+	++onlineUsers_[userName];
+}
+
+void Center::onUserLogout(const std::string& userName)
+{
+	boost::mutex::scoped_lock lock(onlineUsersSync_);
+	if (--onlineUsers_[userName] <= 0) {
+		onlineUsers_.erase(userName);
+	}
+}
+
+bool Center::isUserOnline(const std::string& userName)
+{
+	boost::mutex::scoped_lock lock(onlineUsersSync_);
+	return onlineUsers_.count(userName) > 0;
+}
+
+int Center::onlineUserCount()
+{
+	boost::mutex::scoped_lock lock(onlineUsersSync_);
+	return (int)onlineUsers_.size();
+}
+
 void Center::runTimerTask()
 {
 
@@ -932,6 +991,20 @@ void Center::updateExtraCategoryGroup()
 		else if (!group.empty()) {
 			groupedExtraCategories_.insert(std::make_pair(s, group));
 		}
+	}
+}
+
+void Center::loadUniformInfoFromDb()
+{
+	boost::mutex::scoped_lock lock(uniformInfoSync_);
+
+	SQLite::Statement s(*db_, "SELECT * FROM Info");
+
+	while (s.executeStep())
+	{
+		uniformInfo_.insert(std::make_pair(
+			s.getColumn("Key").getText(),
+			s.getColumn("Value").getText()));
 	}
 }
 

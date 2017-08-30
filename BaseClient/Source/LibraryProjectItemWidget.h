@@ -2,6 +2,7 @@
 #define LIBRARYPROJECTITEMWIDGET_HEADER_
 
 #include "Context.h"
+#include "Script.h"
 
 #include "ui_LibraryProjectItemWidget.h"
 
@@ -38,12 +39,14 @@ private Q_SLOTS:
 
 private:
 	void updateTips();
+	bool checkCustomEngineLocation(const QString&);
 
 private:
 	ContextPtr context_;
 	Ui::LibraryProjectItemWidget ui_;
 	QString contentId_;
 	QString projectId_;
+	Script script_;
 };
 
 #endif // LIBRARYPROJECTITEMWIDGET_HEADER_

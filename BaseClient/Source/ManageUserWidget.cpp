@@ -103,6 +103,10 @@ void ManageUserWidget::onShowAll()
 
 void ManageUserWidget::onRefresh()
 {
+	int count = 0;
+	context_->session->onlineUserCount(count);
+	ui_.infoLabel->setText(QString("%1 online").arg(count));
+
 	ui_.userList->clear();
 	context_->session->browseUsers(browser_);
 	if (browser_) {
@@ -110,28 +114,10 @@ void ManageUserWidget::onRefresh()
 	}
 }
 
-//void ManageUserWidget::onRemove()
-//{
-//	const int ret = QMessageBox::question(
-//		0, "Base",
-//		tr("Are you sure you want to remove these Users ?\nWarning: This operation cannot be undone."),
-//		QMessageBox::Yes, QMessageBox::No|QMessageBox::Default);
-//
-//	if (ret != QMessageBox::Yes) {
-//		return;
-//	}
-//
-//	QList<QTreeWidgetItem*> items = ui_.userList->selectedItems();
-//	for (int i = 0; i < items.count(); ++i) {
-//		Rpc::ErrorCode ec = context_->session->removeUser(items[i]->text(0).toStdString());
-//		if (ec == Rpc::ec_success) {
-//			delete items[i];
-//		}
-//	}
-//}
-
 void ManageUserWidget::showMore(int count)
 {
+	Rpc::ErrorCode ec;
+
 	while (count > 0)
 	{
 		const int n = std::min(count, ITEMS_PER_REQUEST);
@@ -144,10 +130,22 @@ void ManageUserWidget::showMore(int count)
 		for (int i = 0; i < users.size(); ++i)
 		{
 			QStringList list;
+
 			list << users[i].username.c_str();
 			list << users[i].group.c_str();
+
 			boost::replace_all(users[i].info, "\n", "\r");
 			list << users[i].info.c_str();
+
+			bool online;
+			
+			if ((ec = context_->session->isUserOnline(users[i].username, online)) != Rpc::ec_success) {
+				context_->promptRpcError(ec);
+				return;
+			}
+
+			list << (online ? "*" : "");
+
 			QTreeWidgetItem* item = new QTreeWidgetItem(list);
 			items.append(item);
 		}

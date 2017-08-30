@@ -2,8 +2,11 @@
 #define SUBMITCONTENTDIALOG_HEADER_
 
 #include "Context.h"
+#include "Script.h"
 
 #include "ui_SubmitContentDialog.h"
+
+#include <QStringList>
 
 class SubmitContentDialog : public QDialog {
 private:
@@ -13,6 +16,8 @@ public:
 	SubmitContentDialog(ContextPtr context, QWidget* parent = 0);
 	~SubmitContentDialog();
 
+	void setEngineVersions(const QStringList& engineVersions);
+
 	void switchToEditMode(const QString& contentId);
 
 	void loadImagesFrom(const QString& contentId, int count);
@@ -21,8 +26,7 @@ public:
 	void setTitle(const QString& title);
 	void setPage(const QString& name);
 	void setCategory(const QString& category);
-	void setEngineName(const QString& name);
-	void setEngineVersion(const QString& version);
+	void setEngineNameAndVersion(const QString& name, const QString& version);
 	void setCommand(const QString& command);
 	void setWorkingDir(const QString& workDir);
 	void setVideo(const QString& video);
@@ -31,7 +35,10 @@ public:
 private Q_SLOTS:
 	void onEditPage();
 	void onEditCategory();
-	void onSelectLocation();
+	void onAddEngineVersion();
+	void onRemoveEngineVersion();
+	void onBrowseLocation();
+	void onBrowseProjectLocation();
 	void onSetCover();
 	void onPrevScreenshot();
 	void onNextScreenshot();
@@ -45,14 +52,18 @@ protected:
 	virtual void keyPressEvent(QKeyEvent*);
 
 private:
+	void generateCommandAndWorkDir();
+	bool checkLocation();
 	QPixmap getImage(const QSize& ratio);
 	QString getOpenImageFileName();
 
 private:
 	ContextPtr context_;
+	QStringList engineVersions_;
 	bool editMode_;
 	QString contentId_;
 	Ui::SubmitContentDialog ui_;
+	Script script_;
 };
 
 #endif // SUBMITCONTENTDIALOG_HEADER_

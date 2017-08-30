@@ -30,13 +30,17 @@ public:
 	virtual Rpc::ErrorCode setExtraCategories(const Rpc::StringSeq&, const Ice::Current&);
 	virtual Rpc::ErrorCode getExtraCategories(Rpc::StringSeq&, const Ice::Current&);
 
+	virtual Rpc::ErrorCode setUniformInfo(const std::string&, const std::string&, const Ice::Current&);
+	virtual Rpc::ErrorCode getUniformInfo(const std::string&, std::string&, const Ice::Current&);
+
 	virtual Rpc::ErrorCode browseContent(const std::string&, const std::string&, const std::string&, Rpc::ContentBrowserPrx&, const Ice::Current&);
+	virtual Rpc::ErrorCode browseContentByParentId(const std::string&, Rpc::ContentBrowserPrx&, const Ice::Current&);
 	virtual Rpc::ErrorCode getContentInfo(const std::string&, Rpc::ContentInfo&, const Ice::Current&);
 	virtual Rpc::ErrorCode downloadContentImage(const std::string&, Ice::Int, Rpc::DownloaderPrx&, const Ice::Current&);
 	virtual Rpc::ErrorCode downloadContent(const std::string&, Rpc::DownloaderPrx&, const Ice::Current&);
 	virtual Rpc::ErrorCode submitContent(Rpc::ContentSubmitterPrx&, const Ice::Current&);
 	virtual Rpc::ErrorCode updateContent(const std::string&, Rpc::ContentSubmitterPrx&, const Ice::Current&);
-	virtual Rpc::ErrorCode removeContent(const std::string&, const Ice::Current&);
+	virtual Rpc::ErrorCode changeContentState(const std::string&, const std::string&, const Ice::Current&);
 
 	virtual Rpc::ErrorCode browseEngineVersions(bool all, Rpc::EngineVersionBrowserPrx&, const Ice::Current&);
 	virtual Rpc::ErrorCode downloadEngineVersion(const std::string&, const std::string&, Rpc::DownloaderPrx&, const Ice::Current&);
@@ -70,6 +74,9 @@ public:
 	virtual Rpc::ErrorCode removeComment(const std::string&, const Ice::Current&);
 
 	virtual Rpc::ErrorCode queryDownloadCount(const std::string&, int&, const Ice::Current&);
+
+	virtual Rpc::ErrorCode isUserOnline(const std::string& userName, bool& result, const Ice::Current&);
+	virtual Rpc::ErrorCode onlineUserCount(int& count, const Ice::Current&);
 
 	IceUtil::Time timestamp();
 

@@ -12,6 +12,7 @@ module Rpc
 	{
 		string id;
 		string title;
+		string state;
 	};
 
 	struct ContentInfo
@@ -185,13 +186,17 @@ module Rpc
 		ErrorCode setExtraCategories(StringSeq categories);
 		ErrorCode getExtraCategories(out StringSeq categories);
 
+		ErrorCode setUniformInfo(string key, string value);
+		ErrorCode getUniformInfo(string key, out string value);
+
 		ErrorCode browseContent(string page, string category, string search, out ContentBrowser* browser);
+		ErrorCode browseContentByParentId(string parentId, out ContentBrowser* browser);
 		ErrorCode getContentInfo(string id, out ContentInfo info);
 		ErrorCode downloadContentImage(string id, int index, out Downloader* downloader);
 		ErrorCode downloadContent(string id, out Downloader* downloader);
 		ErrorCode submitContent(out ContentSubmitter* submitter);
 		ErrorCode updateContent(string id, out ContentSubmitter* submitter);
-		ErrorCode removeContent(string id);
+		ErrorCode changeContentState(string id, string state);
 
 		ErrorCode browseEngineVersions(bool all, out EngineVersionBrowser* browser);
 		ErrorCode downloadEngineVersion(string name, string version, out Downloader* downloader);
@@ -225,6 +230,9 @@ module Rpc
 		ErrorCode removeComment(string id);
 
 		ErrorCode queryDownloadCount(string targetId, out int count);
+
+		ErrorCode isUserOnline(string userName, out bool result);
+		ErrorCode onlineUserCount(out int count);
 	};
 };
 

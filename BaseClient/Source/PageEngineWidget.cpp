@@ -17,11 +17,7 @@
 #include <vector>
 #include <algorithm>
 
-//namespace fs = boost::filesystem;
-
 #define ITEMS_PER_REQUEST 100
-
-// Rpc::EngineVersionBrowserPrx browser_;
 
 PageEngineWidget::PageEngineWidget(ContextPtr context, const QString& name, QWidget* parent) : QWidget(parent), context_(context), name_(name)
 {
@@ -31,20 +27,6 @@ PageEngineWidget::PageEngineWidget(ContextPtr context, const QString& name, QWid
 	layout_->setSpacing(0);
 
 	setLayout(layout_);
-
-	/*ui_.setupUi(this);
-
-	QWidget* w = new QWidget;
-	w->setObjectName("FlowWidget");
-
-	flowLayout_ = new FlowLayout(0, 20, 20);
-
-	w->setLayout(flowLayout_);
-
-	ui_.scrollArea->setWidget(w);
-
-	QObject::connect(ui_.scrollArea->verticalScrollBar(), &QScrollBar::valueChanged, this, &PageEngineWidget::onScroll);
-	QObject::connect(ui_.refreshButton, &QPushButton::clicked, this, &PageEngineWidget::onRefresh);*/
 
 	firstShow_ = true;
 }
@@ -73,9 +55,13 @@ void PageEngineWidget::onRefresh()
 {
 	clear();
 
-	Rpc::EngineVersionBrowserPrx browser_;
+	Rpc::EngineVersionBrowserPrx browser;
 
-	context_->session->browseEngineVersions(false, browser_);
+	context_->session->browseEngineVersions(false, browser);
+
+	if (!browser) {
+		return;
+	}
 
 	std::vector<Rpc::EngineVersionInfo> v;
 
@@ -83,7 +69,7 @@ void PageEngineWidget::onRefresh()
 	{
 		Rpc::EngineVersionSeq items;
 
-		browser_->next(ITEMS_PER_REQUEST, items);
+		browser->next(ITEMS_PER_REQUEST, items);
 
 		v.insert(v.end(), items.begin(), items.end());
 

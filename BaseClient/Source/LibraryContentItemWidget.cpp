@@ -83,6 +83,9 @@ void LibraryContentItemWidget::onCreate()
 
 	t.erase(std::remove_if(t.begin(), t.end(), boost::is_any_of(R"(\/:*?"<>|)")), t.end());
 
+	boost::replace_all(t, "\r", " ");
+	boost::trim(t);
+
 	d.setDirectory(QString::fromLocal8Bit(t.c_str()));
 
 	int ret = d.exec();

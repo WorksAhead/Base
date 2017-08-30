@@ -12,6 +12,7 @@
 #include <boost/algorithm/string.hpp>
 
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
 #include <map>
 #include <string>
@@ -40,6 +41,9 @@ public:
 	void setExtraCategories(const std::vector<std::string>&);
 	void getExtraCategories(std::vector<std::string>&);
 	void getGroupedExtraCategories(std::map<std::string, std::string>&);
+
+	void setUniformInfo(const std::string& key, const std::string& value);
+	void getUniformInfo(const std::string& key, std::string& value);
 
 	bool lockEngineVersion(const std::string& name, const std::string& version, LockMode);
 	void unlockEngineVersion(const std::string& name, const std::string& version, LockMode);
@@ -93,6 +97,11 @@ public:
 	void increaseDownloadCount(const std::string& targetId);
 	int queryDownloadCount(const std::string& targetId);
 
+	void onUserLogin(const std::string& userName);
+	void onUserLogout(const std::string& userName);
+	bool isUserOnline(const std::string& userName);
+	int onlineUserCount();
+
 	DatabasePtr db() const { return db_; }
 
 protected:
@@ -104,6 +113,7 @@ private:
 	void updateContentCategoryGroup();
 	void loadExtraCategoriesFromDb();
 	void updateExtraCategoryGroup();
+	void loadUniformInfoFromDb();
 	void loadDownloadCountFromDb();
 
 private:
@@ -128,6 +138,9 @@ private:
 	std::map<std::string, std::string> groupedExtraCategories_;
 	boost::mutex extraCategoriesSync_;
 
+	std::unordered_map<std::string, std::string> uniformInfo_;
+	boost::mutex uniformInfoSync_;
+
 	std::unordered_map<std::string, int> lockedEngineVersionSet_;
 	boost::mutex lockedEngineVersionSetSync_;
 
@@ -136,6 +149,9 @@ private:
 
 	std::unordered_map<std::string, int> downloadCountSet_;
 	boost::mutex downloadCountSetSync_;
+
+	std::unordered_map<std::string, int> onlineUsers_;
+	boost::mutex onlineUsersSync_;;
 };
 
 class EngineVersionLockGuard {

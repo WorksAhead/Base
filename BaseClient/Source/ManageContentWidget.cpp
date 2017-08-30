@@ -9,6 +9,7 @@
 #include <boost/algorithm/string.hpp>
 
 #include <sstream>
+#include <algorithm>
 
 #define ITEMS_PER_REQUEST 100
 
@@ -22,7 +23,46 @@ ManageContentWidget::ManageContentWidget(ContextPtr context, QWidget* parent) : 
 	QObject::connect(ui_.refreshButton, &QPushButton::clicked, this, &ManageContentWidget::onRefresh);
 	QObject::connect(ui_.submitButton, &QPushButton::clicked, this, &ManageContentWidget::onSubmit);
 	QObject::connect(ui_.editButton, &QPushButton::clicked, this, &ManageContentWidget::onEdit);
-	QObject::connect(ui_.removeButton, &QPushButton::clicked, this, &ManageContentWidget::onRemove);
+	QObject::connect(ui_.changeStateButton, &QToolButton::clicked, ui_.changeStateButton, &QToolButton::showMenu);
+
+	ui_.changeStateButton->setMenu(new QMenu);
+	{
+		QMenu* menu = ui_.changeStateButton->menu();
+
+		QAction* a1 = menu->addAction("Normal");
+		QAction* a2 = menu->addAction("Removed");
+		QAction* a3 = menu->addAction("Hidden");
+
+		QObject::connect(a1, &QAction::triggered, [this]()
+		{
+			QList<QTreeWidgetItem*> items = ui_.contentList->selectedItems();
+
+			for (int i = 0; i < items.count(); ++i)
+			{
+				context_->session->changeContentState(items[i]->text(0).toStdString(), "Normal");
+			}
+		});
+
+		QObject::connect(a2, &QAction::triggered, [this]()
+		{
+			QList<QTreeWidgetItem*> items = ui_.contentList->selectedItems();
+
+			for (int i = 0; i < items.count(); ++i)
+			{
+				context_->session->changeContentState(items[i]->text(0).toStdString(), "Removed");
+			}
+		});
+
+		QObject::connect(a3, &QAction::triggered, [this]()
+		{
+			QList<QTreeWidgetItem*> items = ui_.contentList->selectedItems();
+
+			for (int i = 0; i < items.count(); ++i)
+			{
+				context_->session->changeContentState(items[i]->text(0).toStdString(), "Hidden");
+			}
+		});
+	}
 
 	firstShow_ = true;
 }
@@ -68,16 +108,20 @@ void ManageContentWidget::onShowAll()
 void ManageContentWidget::onRefresh()
 {
 	ui_.contentList->clear();
+
 	context_->session->browseContent("", "", "", browser_);
+
 	if (browser_) {
 		showMore(ITEMS_PER_REQUEST);
 	}
+
+	queryEngineVersions(true);
 }
 
 void ManageContentWidget::onSubmit()
 {
 	bool copyForm = false;
-	bool fillParentId = false;
+	bool newVersion = false;
 
 	QList<QTreeWidgetItem*> items = ui_.contentList->selectedItems();
 
@@ -86,12 +130,10 @@ void ManageContentWidget::onSubmit()
 		QMessageBox msgBox(this);
 
 		msgBox.setWindowTitle("Base");
-		msgBox.setIcon(QMessageBox::Question);
-		msgBox.setText(tr("What do you want ?"));
 
-		QPushButton* b0 = msgBox.addButton("A new form", QMessageBox::NoRole);
-		QPushButton* b1 = msgBox.addButton("A copy of the selected form", QMessageBox::NoRole);
-		QPushButton* b2 = msgBox.addButton("A sub-copy of the selected form", QMessageBox::NoRole);
+		QPushButton* b0 = msgBox.addButton("Empty form", QMessageBox::NoRole);
+		QPushButton* b1 = msgBox.addButton("New Version", QMessageBox::NoRole);
+		QPushButton* b2 = msgBox.addButton("Copy selected form", QMessageBox::NoRole);
 		QPushButton* b3 = msgBox.addButton("Cancel", QMessageBox::NoRole);
 
 		msgBox.exec();
@@ -99,16 +141,18 @@ void ManageContentWidget::onSubmit()
 		if (msgBox.clickedButton() == b3) {
 			return;
 		}
-		else if (msgBox.clickedButton() == b1) {
-			copyForm = true;
-		}
 		else if (msgBox.clickedButton() == b2) {
 			copyForm = true;
-			fillParentId = true;
+		}
+		else if (msgBox.clickedButton() == b1) {
+			copyForm = true;
+			newVersion = true;
 		}
 	}
 
 	SubmitContentDialog d(context_, this);
+
+	d.setEngineVersions(queryEngineVersions());
 
 	if (copyForm)
 	{
@@ -127,8 +171,8 @@ void ManageContentWidget::onSubmit()
 		getline(stream, command);
 		getline(stream, workDir);
 
-		if (fillParentId) {
-			d.setParentId(ci.id.c_str());
+		if (newVersion) {
+			d.setParentId(ci.parentId.empty() ? ci.id.c_str() : ci.parentId.c_str());
 		}
 		else {
 			d.setParentId(ci.parentId.c_str());
@@ -137,8 +181,7 @@ void ManageContentWidget::onSubmit()
 		d.setTitle(ci.title.c_str());
 		d.setPage(ci.page.c_str());
 		d.setCategory(ci.category.c_str());
-		d.setEngineName(ci.engineName.c_str());
-		d.setEngineVersion(ci.engineVersion.c_str());
+		d.setEngineNameAndVersion(ci.engineName.c_str(), ci.engineVersion.c_str());
 		d.setCommand(command.c_str());
 		d.setWorkingDir(workDir.c_str());
 		d.setVideo(ci.video.c_str());
@@ -172,47 +215,21 @@ void ManageContentWidget::onEdit()
 
 	SubmitContentDialog d(context_, this);
 
+	d.setEngineVersions(queryEngineVersions());
+
 	d.switchToEditMode(ci.id.c_str());
 
 	d.setParentId(ci.parentId.c_str());
 	d.setTitle(ci.title.c_str());
 	d.setPage(ci.page.c_str());
 	d.setCategory(ci.category.c_str());
-	d.setEngineName(ci.engineName.c_str());
-	d.setEngineVersion(ci.engineVersion.c_str());
+	d.setEngineNameAndVersion(ci.engineName.c_str(), ci.engineVersion.c_str());
 	d.setCommand(command.c_str());
 	d.setWorkingDir(workDir.c_str());
 	d.setVideo(ci.video.c_str());
 	d.setDesc(ci.desc.c_str());
 
 	d.exec();
-}
-
-void ManageContentWidget::onRemove()
-{
-	const int ret = QMessageBox::question(
-		0, "Base",
-		tr("Are you sure you want to remove these Contents ?\nWarning: This operation cannot be undone."),
-		QMessageBox::Yes, QMessageBox::No|QMessageBox::Default);
-
-	if (ret != QMessageBox::Yes) {
-		return;
-	}
-
-	int count = 0;
-
-	QList<QTreeWidgetItem*> items = ui_.contentList->selectedItems();
-	for (int i = 0; i < items.count(); ++i) {
-		Rpc::ErrorCode ec = context_->session->removeContent(items[i]->text(0).toStdString());
-		if (ec == Rpc::ec_success) {
-			++count;
-			delete items[i];
-		}
-	}
-
-	QMessageBox::information(0, "Base",
-		QString(tr("%1 Contents have been removed.")).arg(count),
-		QMessageBox::Yes);
 }
 
 void ManageContentWidget::showMore(int count)
@@ -280,5 +297,47 @@ void ManageContentWidget::showMore(int count)
 			break;
 		}
 	}
+}
+
+QStringList ManageContentWidget::queryEngineVersions(bool refresh)
+{
+	if (refresh)
+	{
+		cachedEngineVersions_.clear();
+
+		Rpc::EngineVersionBrowserPrx browser;
+
+		context_->session->browseEngineVersions(false, browser);
+
+		if (browser)
+		{
+			std::vector<std::string> v;
+
+			for (;;)
+			{
+				Rpc::EngineVersionSeq items;
+
+				browser->next(ITEMS_PER_REQUEST, items);
+
+				for (size_t i = 0; i < items.size(); ++i)
+				{
+					v.push_back(items[i].name + "\r" + items[i].version);
+				}
+
+				if (items.size() < ITEMS_PER_REQUEST) {
+					break;
+				}
+			}
+
+			std::stable_sort(v.begin(), v.end());
+
+			for (size_t i = 0; i < v.size(); ++i)
+			{
+				cachedEngineVersions_.append(v[i].c_str());
+			}
+		}
+	}
+
+	return cachedEngineVersions_;
 }
 

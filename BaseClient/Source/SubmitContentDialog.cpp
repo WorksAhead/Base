@@ -13,15 +13,17 @@
 #include <QFileInfo>
 #include <QMessageBox>
 #include <QMenu>
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QJsonValue>
-#include <QJsonArray>
+#include <QInputDialog>
+#include <QRegExpValidator>
+
+#include <kaguya.hpp>
 
 #include <boost/filesystem.hpp>
 
 #include <memory>
 #include <math.h>
+
+#define VERSION_FORMAT R"((0|[1-9][0-9]?)\.(0|[1-9][0-9]?)\.(0|[1-9][0-9]?))"
 
 namespace fs = boost::filesystem;
 
@@ -31,11 +33,16 @@ SubmitContentDialog::SubmitContentDialog(ContextPtr context, QWidget* parent) : 
 
 	ui_.setupUi(this);
 
+	ui_.versionEdit->setValidator(new QRegExpValidator(QRegExp(VERSION_FORMAT)));
+
 	ui_.summaryEdit->setPlaceholderText("Summary");
 	ui_.descriptionEdit->setPlaceholderText("Description");
 
 	QObject::connect(ui_.editPageButton, &QPushButton::clicked, this, &SubmitContentDialog::onEditPage);
 	QObject::connect(ui_.editCategoryButton, &QPushButton::clicked, this, &SubmitContentDialog::onEditCategory);
+
+	QObject::connect(ui_.addEngineVersionButton, &QPushButton::clicked, this, &SubmitContentDialog::onAddEngineVersion);
+	QObject::connect(ui_.removeEngineVersionButton, &QPushButton::clicked, this, &SubmitContentDialog::onRemoveEngineVersion);
 
 	QMenu* menu1 = new QMenu;
 	QMenu* menu2 = new QMenu;
@@ -49,7 +56,8 @@ SubmitContentDialog::SubmitContentDialog(ContextPtr context, QWidget* parent) : 
 	QAction* addEngineDir2 = menu2->addAction("$(EngineDir)");
 	QAction* addProjectDir2 = menu2->addAction("$(ProjectDir)");
 
-	QObject::connect(ui_.selectLocationButton, &QPushButton::clicked, this, &SubmitContentDialog::onSelectLocation);
+	QObject::connect(ui_.browseLocationButton, &QPushButton::clicked, this, &SubmitContentDialog::onBrowseLocation);
+	QObject::connect(ui_.browseProjectLocationButton, &QPushButton::clicked, this, &SubmitContentDialog::onBrowseProjectLocation);
 
 	QObject::connect(addEngineDir1, &QAction::triggered, [this](){
 		ui_.commandEdit->insert("$(EngineDir)");
@@ -62,6 +70,28 @@ SubmitContentDialog::SubmitContentDialog(ContextPtr context, QWidget* parent) : 
 	});
 	QObject::connect(addProjectDir2, &QAction::triggered, [this](){
 		ui_.workDirEdit->insert("$(ProjectDir)");
+	});
+
+	QObject::connect(ui_.projectInSubDirCheckBox, &QCheckBox::toggled, [this](bool checked)
+	{
+		if (!checked) {
+			ui_.projectLocationEdit->clear();
+		}
+	});
+
+	QObject::connect(ui_.engineVersionEdit, &QLineEdit::textChanged, [this]()
+	{
+		generateCommandAndWorkDir();
+	});
+
+	QObject::connect(ui_.locationEdit, &QLineEdit::textChanged, [this]()
+	{
+		generateCommandAndWorkDir();
+	});
+
+	QObject::connect(ui_.projectLocationEdit, &QLineEdit::textChanged, [this]()
+	{
+		generateCommandAndWorkDir();
 	});
 
 	QObject::connect(ui_.setCoverButton, &QPushButton::clicked, this, &SubmitContentDialog::onSetCover);
@@ -78,10 +108,17 @@ SubmitContentDialog::SubmitContentDialog(ContextPtr context, QWidget* parent) : 
 	ui_.removeScreenshotButton->setEnabled(false);
 
 	editMode_ = false;
+
+	script_.loadFromServer(context_, "SubmitContent.lua");
 }
 
 SubmitContentDialog::~SubmitContentDialog()
 {
+}
+
+void SubmitContentDialog::setEngineVersions(const QStringList& engineVersions)
+{
+	engineVersions_ = engineVersions;
 }
 
 void SubmitContentDialog::switchToEditMode(const QString& contentId)
@@ -89,7 +126,8 @@ void SubmitContentDialog::switchToEditMode(const QString& contentId)
 	setWindowTitle(tr("Edit Content"));
 
 	ui_.locationEdit->setEnabled(false);
-	ui_.selectLocationButton->setEnabled(false);
+	ui_.browseLocationButton->setEnabled(false);
+	ui_.projectInSubDirCheckBox->setEnabled(false);
 	ui_.coverLabel->setEnabled(false);
 	ui_.coverViewer->setEnabled(false);
 	ui_.setCoverButton->setEnabled(false);
@@ -122,7 +160,10 @@ void SubmitContentDialog::setParentId(const QString& parentId)
 
 void SubmitContentDialog::setTitle(const QString& title)
 {
-	ui_.titleEdit->setText(title);
+	QStringList v = title.split('\r');
+
+	ui_.nameEdit->setText((v.count() > 0) ? v[0] : "");
+	ui_.versionEdit->setText((v.count() > 1) ? v[1] : "0.0.0");
 }
 
 void SubmitContentDialog::setPage(const QString& name)
@@ -135,14 +176,14 @@ void SubmitContentDialog::setCategory(const QString& category)
 	ui_.categoryEdit->setText(category);
 }
 
-void SubmitContentDialog::setEngineName(const QString& name)
+void SubmitContentDialog::setEngineNameAndVersion(const QString& name, const QString& version)
 {
-	ui_.engineNameEdit->setText(name);
-}
-
-void SubmitContentDialog::setEngineVersion(const QString& version)
-{
-	ui_.engineVersionEdit->setText(version);
+	if (name.isEmpty()) {
+		ui_.engineVersionEdit->setText("N/A\r");
+	}
+	else {
+		ui_.engineVersionEdit->setText(name + "\r" + version);
+	}
 }
 
 void SubmitContentDialog::setCommand(const QString& command)
@@ -264,12 +305,149 @@ void SubmitContentDialog::onEditCategory()
 	ui_.categoryEdit->setText(text);
 }
 
-void SubmitContentDialog::onSelectLocation()
+void SubmitContentDialog::onAddEngineVersion()
+{
+	QString name;
+	QStringList version;
+	{
+		QStringList list = ui_.engineVersionEdit->text().split('\r');
+
+		if (list.count() == 2)
+		{
+			name = list[0];
+			version = list[1].split('|');
+		}
+	}
+
+	QStringList items;
+
+	for (QString v : engineVersions_)
+	{
+		QStringList vv = v.split('\r');
+
+		if (!name.isEmpty() && vv[0] != name) {
+			continue;
+		}
+		else if (version.contains(vv[1])) {
+			continue;
+		}
+
+		items.append(v);
+	}
+
+	if (name == "N/A") {
+		return;
+	}
+	else if (name.isEmpty()) {
+		items.push_front("N/A\r");
+	}
+	else if (items.isEmpty()) {
+		return;
+	}
+
+	bool ok;
+	QString item = QInputDialog::getItem(this, tr("Add Engine Version"), tr("Engine Version"), items, 0, false, &ok, Qt::WindowTitleHint);
+
+	if (ok && !item.isEmpty())
+	{
+		QStringList v = item.split('\r');
+
+		name = v[0];
+		version.append(v[1]);
+
+		QString text = name + "\r";
+
+		for (int i = 0; i < version.count(); ++i)
+		{
+			if (i != 0) {
+				text += "|";
+			}
+
+			text += version[i];
+		}
+
+		ui_.engineVersionEdit->setText(text);
+	}
+}
+
+void SubmitContentDialog::onRemoveEngineVersion()
+{
+	QString name;
+	QStringList version;
+	{
+		QStringList list = ui_.engineVersionEdit->text().split('\r');
+
+		if (list.count() == 2)
+		{
+			name = list[0];
+			version = list[1].split('|');
+		}
+	}
+
+	if (!version.isEmpty())
+	{
+		version.pop_back();
+
+		if (!version.isEmpty())
+		{
+			QString text = name + "\r";
+
+			for (int i = 0; i < version.count(); ++i)
+			{
+				if (i != 0) {
+					text += "|";
+				}
+
+				text += version[i];
+			}
+
+			ui_.engineVersionEdit->setText(text);
+		}
+		else
+		{
+			ui_.engineVersionEdit->clear();
+		}
+	}
+}
+
+void SubmitContentDialog::onBrowseLocation()
 {
 	QString s = QFileDialog::getExistingDirectory(this, "Select location");
 
-	if (!s.isEmpty()) {
+	if (!s.isEmpty())
+	{
+		s.replace('/', '\\');
+
+		if (s.endsWith('\\')) {
+			s.remove(s.count() - 1, 1);
+		}
+
 		ui_.locationEdit->setText(s);
+	}
+}
+
+void SubmitContentDialog::onBrowseProjectLocation()
+{
+	QString s = QFileDialog::getExistingDirectory(this, "Select project location", ui_.locationEdit->text());
+
+	if (!s.isEmpty())
+	{
+		s.replace('/', '\\');
+
+		if (s.endsWith('\\')) {
+			s.remove(s.count() - 1, 1);
+		}
+
+		if (s.startsWith(ui_.locationEdit->text() + "\\", Qt::CaseInsensitive) && s.count() > ui_.locationEdit->text().count() + 1)
+		{
+			s.remove(0, ui_.locationEdit->text().count() + 1);
+			ui_.projectLocationEdit->setText(s);
+		}
+		else
+		{
+			QMessageBox::information(this, "Base", tr("Project Location must be a sub-directory of Location."));
+			return;
+		}
 	}
 }
 
@@ -373,12 +551,21 @@ void SubmitContentDialog::onSubmit()
 		CHECK_ERROR_CODE(ec);
 	}
 
-	if (ui_.titleEdit->text().isEmpty()) {
-		QMessageBox::information(this, "Base", tr("The Title field cannot be left empty."));
+	if (ui_.nameEdit->text().isEmpty()) {
+		QMessageBox::information(this, "Base", tr("The Name field cannot be left empty."));
+		return;
+	}
+	else if (ui_.versionEdit->text().isEmpty()) {
+		QMessageBox::information(this, "Base", tr("The Version field cannot be left empty."));
 		return;
 	}
 
-	ec = submitter->setTitle(ui_.titleEdit->text().toStdString());
+	if (!QRegExp(VERSION_FORMAT).exactMatch(ui_.versionEdit->text())) {
+		QMessageBox::information(this, "Base", tr("Invalid Version format."));
+		return;
+	}
+
+	ec = submitter->setTitle((ui_.nameEdit->text() + "\r" + ui_.versionEdit->text()).toStdString());
 	CHECK_ERROR_CODE(ec);
 
 	if (ui_.pageEdit->text().isEmpty()) {
@@ -397,16 +584,27 @@ void SubmitContentDialog::onSubmit()
 	ec = submitter->setCategory(ui_.categoryEdit->text().toStdString());
 	CHECK_ERROR_CODE(ec);
 
-	//if (ui_.engineNameEdit->text().isEmpty()) {
-	//	QMessageBox::information(this, "Base", tr("The Engine Name field cannot be left empty."));
-	//	return;
-	//}
-	//else if (ui_.engineVersionEdit->text().isEmpty()) {
-	//	QMessageBox::information(this, "Base", tr("The Engine Version field cannot be left empty."));
-	//	return;
-	//}
+	if (ui_.engineVersionEdit->text().isEmpty())
+	{
+		QMessageBox::information(this, "Base", tr("The Engine Version field cannot be left empty."));
+		return;
+	}
 
-	ec = submitter->setEngine(ui_.engineNameEdit->text().toStdString(), ui_.engineVersionEdit->text().toStdString());
+	QString engineName, engineVersion;
+	{
+		QStringList list = ui_.engineVersionEdit->text().split('\r');
+
+		engineName = list[0];
+		engineVersion = list[1];
+
+		if (engineName == "N/A")
+		{
+			engineName.clear();
+			engineVersion.clear();
+		}
+	}
+
+	ec = submitter->setEngine(engineName.toStdString(), engineVersion.toStdString());
 	CHECK_ERROR_CODE(ec);
 
 	if (!editMode_)
@@ -422,14 +620,14 @@ void SubmitContentDialog::onSubmit()
 			QMessageBox::information(this, "Base", tr("\"%1\" is not a valid location."));
 			return;
 		}
+
+		if (!checkLocation()) {
+			return;
+		}
 	}
 
-	//if (ui_.commandEdit->text().isEmpty()) {
-	//	QMessageBox::information(this, "Base", tr("The Command field cannot be left empty."));
-	//	return;
-	//}
-
 	QString startup = ui_.commandEdit->text();
+
 	if (!ui_.workDirEdit->text().isEmpty()) {
 		startup += "\n";
 		startup += ui_.workDirEdit->text();
@@ -472,7 +670,7 @@ void SubmitContentDialog::onSubmit()
 	{
 		boost::shared_ptr<ASyncSubmitContentTask> task(new ASyncSubmitContentTask(context_, submitter));
 
-		task->setInfoHead(QString("Submit %1").arg(ui_.titleEdit->text()).toLocal8Bit().data());
+		task->setInfoHead(QString("Submit %1 %2").arg(ui_.nameEdit->text()).arg(ui_.versionEdit->text()).toLocal8Bit().data());
 		task->setContentLocation(ui_.locationEdit->text().toLocal8Bit().data());
 
 		std::string imageFilename;
@@ -548,6 +746,77 @@ void SubmitContentDialog::keyPressEvent(QKeyEvent* e)
 	}
 }
 
+void SubmitContentDialog::generateCommandAndWorkDir()
+{
+	QStringList list = ui_.engineVersionEdit->text().split('\r');
+
+	if (list.count() != 2)
+	{
+		ui_.commandEdit->clear();
+		ui_.workDirEdit->clear();
+		return;
+	}
+
+	std::string engineName = list[0].toStdString();
+	std::string engineVersion = list[1].toStdString();
+	std::string location = ui_.locationEdit->text().toStdString();
+	std::string projectLocation = ui_.projectLocationEdit->text().toStdString();
+
+	kaguya::State& state = script_.state();
+
+	auto f = state["generateCommandAndWorkDir"];
+	{
+		std::string command;
+		std::string workDir;
+
+		kaguya::tie(command, workDir) = f(engineName, engineVersion, location, projectLocation);
+
+		ui_.commandEdit->setText(command.c_str());
+		ui_.workDirEdit->setText(workDir.c_str());
+	}
+}
+
+bool SubmitContentDialog::checkLocation()
+{
+	QStringList list = ui_.engineVersionEdit->text().split('\r');
+
+	if (list.count() != 2) {
+		return false;
+	}
+
+	std::string engineName = list[0].toStdString();
+	std::string engineVersion = list[1].toStdString();
+	std::string location = ui_.locationEdit->text().toStdString();
+	std::string projectLocation = ui_.projectLocationEdit->text().toStdString();
+
+	kaguya::State& state = script_.state();
+
+	auto f = state["checkLocation"];
+	{
+		bool valid = f(engineName, engineVersion, location, projectLocation);
+
+		if (!valid)
+		{
+			QMessageBox msgBox(this);
+			msgBox.setIcon(QMessageBox::Warning);
+			msgBox.setWindowTitle("Base");
+			msgBox.setText(tr("Location might be invalid"));
+
+			QPushButton* b0 = msgBox.addButton("Back", QMessageBox::NoRole);
+			QPushButton* b1 = msgBox.addButton("Continue anyway", QMessageBox::NoRole);
+
+			msgBox.setDefaultButton(b0);
+			msgBox.exec();
+
+			if (msgBox.clickedButton() == b0) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+}
+
 QPixmap SubmitContentDialog::getImage(const QSize& ratio)
 {
 	QString path = getOpenImageFileName();
@@ -572,3 +841,4 @@ QString SubmitContentDialog::getOpenImageFileName()
 {
 	return QFileDialog::getOpenFileName(this, "Open File", QString(), "Images (*.bmp *.gif *.png *.jpg *.jpeg *.pbm *.pgm *.ppm)");
 }
+

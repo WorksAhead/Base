@@ -6,6 +6,7 @@
 #include "VideoPlayerWidget.h"
 #include "ImageViewerWidget.h"
 #include "Emoji.h"
+#include "URLUtils.h"
 
 #include <QPainter>
 #include <QMouseEvent>
@@ -21,6 +22,7 @@
 #include <vector>
 #include <sstream>
 #include <string>
+#include <limits>
 
 namespace fs = boost::filesystem;
 
@@ -51,6 +53,16 @@ PageContentContentWidget::PageContentContentWidget(ContextPtr context, const QSt
 	layout->setSpacing(0);
 	layout->addWidget(scrollArea_);
 	setLayout(layout);
+
+	QObject::connect(ui_.versionInfoLabel, &QLabel::linkActivated, [this](const QString& link)
+	{
+		if (link == "All") {
+			refreshRelatedVersions(std::numeric_limits<int>::max());
+		}
+		else {
+			context_->openUrl(link.toStdString());
+		}
+	});
 
 	QObject::connect(context_->contentImageLoader, &ContentImageLoader::loaded, this, &PageContentContentWidget::onImageLoaded);
 	QObject::connect(ui_.downloadButton, &QPushButton::clicked, this, &PageContentContentWidget::onDownload);
@@ -101,6 +113,8 @@ void PageContentContentWidget::refresh()
 
 	ui_.titleLabel->setText(ci.title.c_str());
 	ui_.metaInfoLabel->setText(metaInfo.str().c_str());
+
+	refreshRelatedVersions(5);
 
 	if (boost::istarts_with(ci.desc, "<!SUMMARY>"))
 	{
@@ -413,6 +427,87 @@ void PageContentContentWidget::onDownload()
 void PageContentContentWidget::onAnchorClicked(const QUrl& url)
 {
 	context_->openUrl(url.toString().toStdString());
+}
+
+void PageContentContentWidget::refreshRelatedVersions(int count)
+{
+	Rpc::ContentInfo ci;
+
+	Rpc::ErrorCode ec = context_->session->getContentInfo(contentId_.toStdString(), ci);
+
+	if (ec != Rpc::ec_success) {
+		return;
+	}
+
+	Rpc::ContentBrowserPrx browser;
+
+	ec = context_->session->browseContentByParentId(!ci.parentId.empty() ? ci.parentId : ci.id, browser);
+
+	if (ec != Rpc::ec_success) {
+		return;
+	}
+
+	std::ostringstream versionInfo;
+
+	while (count > 0)
+	{
+		const int n = qMin(count, 20);
+
+		Rpc::ContentItemSeq items;
+		browser->next(count, items);
+
+		if (items.size() < n)
+		{
+			Rpc::ContentInfo ci2;
+
+			if (context_->session->getContentInfo(ci.parentId, ci2) == Rpc::ec_success) {
+				items.push_back({ci2.id, ci2.title});
+			}
+
+			count = 0;
+		}
+
+		if (versionInfo.str().empty() && !items.empty()) {
+			versionInfo << "Related versions:<br/>";
+		}
+
+		for (size_t i = 0; i < items.size(); ++i)
+		{
+			if (items[i].state == "Removed") {
+				continue;
+			}
+
+			Rpc::ContentInfo ci2;
+
+			if (context_->session->getContentInfo(items[i].id, ci2) != Rpc::ec_success) {
+				continue;
+			}
+
+			if (ci2.id == ci.id) {
+				continue;
+			}
+
+			std::vector<std::string> pages;
+			boost::split(pages, ci2.page, boost::is_any_of(","));
+
+			if (pages.empty()) {
+				continue;
+			}
+
+			percentEncode(pages[0]);
+
+			boost::replace_all(items[i].title, "\r", " ");
+			versionInfo << "<a href=\"" << "base://content/?id=" << items[i].id << "&page=" << pages[0] << "\">" << items[i].title << "</a><br/>";
+		}
+
+		count -= n;
+	}
+
+	if (count == 0) {
+		versionInfo << "<a href=\"All\">Show All</a>";
+	}
+
+	ui_.versionInfoLabel->setText(versionInfo.str().c_str());
 }
 
 void PageContentContentWidget::initView()
