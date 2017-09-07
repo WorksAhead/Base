@@ -15,8 +15,7 @@
 #include <QMenu>
 #include <QInputDialog>
 #include <QRegExpValidator>
-
-#include <kaguya.hpp>
+#include <QShortcut>
 
 #include <boost/filesystem.hpp>
 
@@ -103,9 +102,19 @@ SubmitContentDialog::SubmitContentDialog(ContextPtr context, QWidget* parent) : 
 
 	QObject::connect(ui_.submitButton, &QPushButton::clicked, this, &SubmitContentDialog::onSubmit);
 
+	QShortcut* showAllShortcut = new QShortcut(QKeySequence(Qt::Key_F12), this);
+
+	QObject::connect(showAllShortcut, &QShortcut::activated, this, &SubmitContentDialog::onShowAll);
+
 	ui_.prevScreenshotButton->setEnabled(false);
 	ui_.nextScreenshotButton->setEnabled(false);
 	ui_.removeScreenshotButton->setEnabled(false);
+
+	ui_.parentIdEdit->setVisible(false);
+	ui_.commandEdit->setVisible(false);
+	ui_.macroButton1->setVisible(false);
+	ui_.workDirEdit->setVisible(false);
+	ui_.macroButton2->setVisible(false);
 
 	editMode_ = false;
 
@@ -137,6 +146,8 @@ void SubmitContentDialog::switchToEditMode(const QString& contentId)
 	ui_.removeScreenshotButton->setEnabled(false);
 	ui_.prevScreenshotButton->setEnabled(false);
 	ui_.nextScreenshotButton->setEnabled(false);
+
+	onShowAll();
 
 	contentId_ = contentId;
 	editMode_ = true;
@@ -225,6 +236,15 @@ void SubmitContentDialog::setDesc(const QString& desc)
 	{
 		ui_.summaryEdit->setPlainText(d.c_str());
 	}
+}
+
+void SubmitContentDialog::onShowAll()
+{
+	ui_.parentIdEdit->setVisible(true);
+	ui_.commandEdit->setVisible(true);
+	ui_.macroButton1->setVisible(true);
+	ui_.workDirEdit->setVisible(true);
+	ui_.macroButton2->setVisible(true);
 }
 
 void SubmitContentDialog::onEditPage()

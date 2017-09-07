@@ -33,6 +33,7 @@ public:
 	void setDesc(const QString& desc);
 
 private Q_SLOTS:
+	void onShowAll();
 	void onEditPage();
 	void onEditCategory();
 	void onAddEngineVersion();

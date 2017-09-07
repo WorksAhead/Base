@@ -250,6 +250,16 @@ void ManageContentWidget::showMore(int count)
 				continue;
 			}
 
+			if (ci.state == "Normal" && !ui_.showNormalCheckBox->isChecked()) {
+				continue;
+			}
+			else if (ci.state == "Hidden" && !ui_.showHiddenCheckBox->isChecked()) {
+				continue;
+			}
+			else if (ci.state == "Removed" && !ui_.showRemovedCheckBox->isChecked()) {
+				continue;
+			}
+
 			std::string::size_type atPos = ci.user.find('@');
 			if (atPos != std::string::npos) {
 				ci.user.erase(atPos);
