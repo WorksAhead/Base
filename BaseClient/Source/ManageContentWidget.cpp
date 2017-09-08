@@ -275,6 +275,7 @@ void ManageContentWidget::showMore(int count)
 			getline(stream, command);
 			getline(stream, workDir);
 
+			boost::replace_all(ci.title, "\r", " ");
 			boost::replace_all(ci.video, "\n", "\r");
 			boost::replace_all(ci.desc, "\n", "\r");
 

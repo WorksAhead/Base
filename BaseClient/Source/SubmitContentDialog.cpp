@@ -22,7 +22,7 @@
 #include <memory>
 #include <math.h>
 
-#define VERSION_FORMAT R"((0|[1-9][0-9]?)\.(0|[1-9][0-9]?)\.(0|[1-9][0-9]?))"
+#define VERSION_FORMAT R"((0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*))"
 
 namespace fs = boost::filesystem;
 

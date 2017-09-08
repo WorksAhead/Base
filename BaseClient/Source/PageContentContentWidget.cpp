@@ -460,8 +460,11 @@ void PageContentContentWidget::refreshRelatedVersions(int count)
 		{
 			Rpc::ContentInfo ci2;
 
-			if (context_->session->getContentInfo(ci.parentId, ci2) == Rpc::ec_success) {
-				items.push_back({ci2.id, ci2.title});
+			if (context_->session->getContentInfo(ci.parentId, ci2) == Rpc::ec_success)
+			{
+				if (ci2.state != "Removed") {
+					items.push_back({ci2.id, ci2.title});
+				}
 			}
 
 			count = 0;
