@@ -1,6 +1,7 @@
 #include "Script.h"
 
 #include <QFileInfo>
+#include <QDirIterator>
 
 Script::Script()
 {
@@ -22,6 +23,26 @@ Script::Script()
 	{
 		QFileInfo info(path.c_str());
 		return info.isFile();
+	});
+
+	state_["fs"]["findFile"] = kaguya::function([](const std::string& path, const std::string& pattern)->std::vector<std::string>
+	{
+		std::vector<std::string> v;
+
+		QRegExp exp(pattern.c_str(), Qt::CaseInsensitive, QRegExp::Wildcard);
+
+		QDirIterator it(path.c_str(), QDirIterator::NoIteratorFlags);
+
+		while (it.hasNext())
+		{
+			QFileInfo info(it.next());
+
+			if (info.isFile() && exp.exactMatch(info.fileName())) {
+				v.push_back(info.fileName().toStdString());
+			}
+		}
+
+		return v;
 	});
 
 	state_.setErrorHandler([](int, const char* message) {
