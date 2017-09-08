@@ -288,7 +288,7 @@ Rpc::ErrorCode RpcSessionImpl::submitContent(Rpc::ContentSubmitterPrx& submitter
 	return Rpc::ec_success;
 }
 
-Rpc::ErrorCode RpcSessionImpl::updateContent(const std::string& id, Rpc::ContentSubmitterPrx& submitterPrx, const Ice::Current& c)
+Rpc::ErrorCode RpcSessionImpl::copyContent(const std::string& id, Rpc::ContentSubmitterPrx& submitterPrx, const Ice::Current& c)
 {
 	boost::recursive_mutex::scoped_lock lock(sync_);
 	checkIsDestroyed();
@@ -304,7 +304,38 @@ Rpc::ErrorCode RpcSessionImpl::updateContent(const std::string& id, Rpc::Content
 
 	RpcContentSubmitterImplPtr submitter = new RpcContentSubmitterImpl(context_);
 
-	Rpc::ErrorCode ec = submitter->init(RpcContentSubmitterImpl::update_mode, id);
+	Rpc::ErrorCode ec = submitter->init(RpcContentSubmitterImpl::copy_mode, id);
+	if (ec != Rpc::ec_success) {
+		return ec;
+	}
+
+	submitterPrx = Rpc::ContentSubmitterPrx::uncheckedCast(c.adapter->addWithUUID(submitter));
+
+	if (!context_->objectManager()->addObject(submitterPrx)) {
+		submitterPrx->destroy();
+		return Rpc::ec_server_busy;
+	}
+
+	return Rpc::ec_success;
+}
+
+Rpc::ErrorCode RpcSessionImpl::editContent(const std::string& id, Rpc::ContentSubmitterPrx& submitterPrx, const Ice::Current& c)
+{
+	boost::recursive_mutex::scoped_lock lock(sync_);
+	checkIsDestroyed();
+
+	std::map<std::string, std::string> form;
+	if (!context_->center()->getContent(form, id)) {
+		return Rpc::ec_content_does_not_exist;
+	}
+
+	if (!boost::iequals(context_->user(), form.at("User")) && context_->userGroup() != "Admin") {
+		return Rpc::ec_access_denied;
+	}
+
+	RpcContentSubmitterImplPtr submitter = new RpcContentSubmitterImpl(context_);
+
+	Rpc::ErrorCode ec = submitter->init(RpcContentSubmitterImpl::edit_mode, id);
 	if (ec != Rpc::ec_success) {
 		return ec;
 	}

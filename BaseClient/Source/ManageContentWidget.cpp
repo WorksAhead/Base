@@ -121,6 +121,7 @@ void ManageContentWidget::onRefresh()
 void ManageContentWidget::onSubmit()
 {
 	bool copyForm = false;
+	bool copyContent = false;
 	bool newVersion = false;
 
 	QList<QTreeWidgetItem*> items = ui_.contentList->selectedItems();
@@ -131,9 +132,9 @@ void ManageContentWidget::onSubmit()
 
 		msgBox.setWindowTitle("Base");
 
-		QPushButton* b0 = msgBox.addButton("Empty form", QMessageBox::NoRole);
-		QPushButton* b1 = msgBox.addButton("New Version", QMessageBox::NoRole);
-		QPushButton* b2 = msgBox.addButton("Copy selected form", QMessageBox::NoRole);
+		QPushButton* b0 = msgBox.addButton("New Content", QMessageBox::NoRole);
+		QPushButton* b1 = msgBox.addButton("New Version of selected Content", QMessageBox::NoRole);
+		QPushButton* b2 = msgBox.addButton("Copy selected Content", QMessageBox::NoRole);
 		QPushButton* b3 = msgBox.addButton("Cancel", QMessageBox::NoRole);
 
 		msgBox.exec();
@@ -143,6 +144,7 @@ void ManageContentWidget::onSubmit()
 		}
 		else if (msgBox.clickedButton() == b2) {
 			copyForm = true;
+			copyContent = true;
 		}
 		else if (msgBox.clickedButton() == b1) {
 			copyForm = true;
@@ -157,10 +159,16 @@ void ManageContentWidget::onSubmit()
 	if (copyForm)
 	{
 		Rpc::ErrorCode ec;
+
 		Rpc::ContentInfo ci;
+
 		if ((ec = context_->session->getContentInfo(items[0]->text(0).toStdString(), ci)) != Rpc::ec_success) {
 			context_->promptRpcError(ec);
 			return;
+		}
+
+		if (copyContent) {
+			d.switchToCopyMode(ci.id.c_str());
 		}
 
 		d.loadImagesFrom(ci.id.c_str(), ci.imageCount);

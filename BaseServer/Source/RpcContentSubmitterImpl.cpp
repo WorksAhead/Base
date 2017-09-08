@@ -38,6 +38,23 @@ Rpc::ErrorCode RpcContentSubmitterImpl::init(int mode, const std::string& id)
 
 		return Rpc::ec_success;
 	}
+	else if (mode == copy_mode)
+	{
+		oldId_ = id;
+		oldBase_ = context_->center()->getContentPath(id);
+
+		id_ = context_->center()->generateUuid();
+		base_ = context_->center()->getContentPath(id_);
+
+		boost::system::error_code ec;
+		if (!fs::create_directories(makeSafePath(base_), ec)) {
+			return Rpc::ec_file_io_error;
+		}
+
+		mode_ = mode;
+
+		return Rpc::ec_success;
+	}
 	else
 	{
 		id_ = id;
@@ -264,7 +281,7 @@ Rpc::ErrorCode RpcContentSubmitterImpl::uploadImage(Ice::Int index, Rpc::Uploade
 	boost::recursive_mutex::scoped_lock lock(sync_);
 	checkIsDestroyed();
 
-	if (mode_ == update_mode) {
+	if (mode_ == edit_mode) {
 		return Rpc::ec_access_denied;
 	}
 
@@ -309,7 +326,7 @@ Rpc::ErrorCode RpcContentSubmitterImpl::uploadContent(Rpc::UploaderPrx& uploader
 	boost::recursive_mutex::scoped_lock lock(sync_);
 	checkIsDestroyed();
 
-	if (mode_ == update_mode) {
+	if (mode_ == edit_mode || mode_ == copy_mode) {
 		return Rpc::ec_access_denied;
 	}
 
@@ -380,7 +397,7 @@ Rpc::ErrorCode RpcContentSubmitterImpl::finish(const Ice::Current&)
 		return Rpc::ec_incomplete_form;
 	}
 
-	if (mode_ == submit_mode)
+	if (mode_ == submit_mode || mode_ == copy_mode)
 	{
 		int imageCount = 0;
 
@@ -399,20 +416,40 @@ Rpc::ErrorCode RpcContentSubmitterImpl::finish(const Ice::Current&)
 
 		form_["ImageCount"] = std::to_string(imageCount);
 
-		if (!contentUploader_.second || !contentUploader_.second->isFinished()) {
-			return Rpc::ec_incomplete_content;
+		if (mode_ == submit_mode)
+		{
+			if (!contentUploader_.second || !contentUploader_.second->isFinished()) {
+				return Rpc::ec_incomplete_content;
+			}
+		}
+		else
+		{
+			fs::path p(oldBase_);
+			p /= "content";
+
+			fs::path p2(base_);
+			p2 /= "content";
+
+			boost::system::error_code ec;
+			fs::copy_file(p, p2, ec);
+
+			if (ec) {
+				return Rpc::ec_file_io_error;
+			}
 		}
 
 		form_["User"] = context_->user();
 
 		setEmptyIfNotExist(form_, "ParentId");
 		setEmptyIfNotExist(form_, "Video");
+
 		context_->center()->addContent(form_, id_);
 	}
 	else
 	{
 		setEmptyIfNotExist(form_, "ParentId");
 		setEmptyIfNotExist(form_, "Video");
+
 		context_->center()->updateContent(form_, id_);
 	}
 

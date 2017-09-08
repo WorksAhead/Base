@@ -117,6 +117,7 @@ SubmitContentDialog::SubmitContentDialog(ContextPtr context, QWidget* parent) : 
 	ui_.macroButton2->setVisible(false);
 
 	editMode_ = false;
+	copyMode_ = false;
 
 	script_.loadFromServer(context_, "SubmitContent.lua");
 }
@@ -151,6 +152,18 @@ void SubmitContentDialog::switchToEditMode(const QString& contentId)
 
 	contentId_ = contentId;
 	editMode_ = true;
+}
+
+void SubmitContentDialog::switchToCopyMode(const QString& contentId)
+{
+	setWindowTitle(tr("Copy Content"));
+
+	ui_.locationEdit->setEnabled(false);
+	ui_.browseLocationButton->setEnabled(false);
+	ui_.projectInSubDirCheckBox->setEnabled(false);
+
+	contentId_ = contentId;
+	copyMode_ = true;
 }
 
 void SubmitContentDialog::loadImagesFrom(const QString& contentId, int count)
@@ -563,7 +576,11 @@ void SubmitContentDialog::onSubmit()
 	Rpc::ErrorCode ec;
 
 	if (editMode_) {
-		ec = context_->session->updateContent(contentId_.toStdString(), submitter);
+		ec = context_->session->editContent(contentId_.toStdString(), submitter);
+		CHECK_ERROR_CODE(ec);
+	}
+	else if (copyMode_) {
+		ec = context_->session->copyContent(contentId_.toStdString(), submitter);
 		CHECK_ERROR_CODE(ec);
 	}
 	else {
@@ -627,7 +644,7 @@ void SubmitContentDialog::onSubmit()
 	ec = submitter->setEngine(engineName.toStdString(), engineVersion.toStdString());
 	CHECK_ERROR_CODE(ec);
 
-	if (!editMode_)
+	if (!editMode_ && !copyMode_)
 	{
 		if (ui_.locationEdit->text().isEmpty()) {
 			QMessageBox::information(this, "Base", tr("The Location is not specified."));

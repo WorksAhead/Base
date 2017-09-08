@@ -132,61 +132,65 @@ void ASyncSubmitContentTask::run()
 		}
 	}
 
-	Rpc::UploaderPrx uploader;
-	Rpc::ErrorCode ec = submitter_->uploadContent(uploader);
-	if (ec != Rpc::ec_success) {
-		boost::mutex::scoped_lock lock(sync_);
-		info_ = infoHead_ + " - " + std::string("Rpc: ") + errorMessage(ec);
-		state_ = ASyncTask::state_failed;
-		return;
-	}
-
-	std::unique_ptr<ASyncPackTask> packTask(new ASyncPackTask(context_));
-	packTask->setInfoHead(infoHead_);
-	packTask->setPath(contentLocation_);
-	packTask->start();
-
-	for (;;)
+	if (!contentLocation_.empty())
 	{
-		const int ret = update(packTask.get(), 5, 0.45);
-		if (ret < 0) {
-			if (packTask->state() == ASyncTask::state_cancelled) {
-				uploader->cancel();
+		Rpc::UploaderPrx uploader;
+		Rpc::ErrorCode ec = submitter_->uploadContent(uploader);
+		if (ec != Rpc::ec_success) {
+			boost::mutex::scoped_lock lock(sync_);
+			info_ = infoHead_ + " - " + std::string("Rpc: ") + errorMessage(ec);
+			state_ = ASyncTask::state_failed;
+			return;
+		}
+
+		std::unique_ptr<ASyncPackTask> packTask(new ASyncPackTask(context_));
+		packTask->setInfoHead(infoHead_);
+		packTask->setPath(contentLocation_);
+		packTask->start();
+
+		for (;;)
+		{
+			const int ret = update(packTask.get(), 5, 0.45);
+			if (ret < 0) {
+				if (packTask->state() == ASyncTask::state_cancelled) {
+					uploader->cancel();
+				}
+				return;
 			}
-			return;
+			else if (ret > 0) {
+				break;
+			}
+			std::this_thread::sleep_for(std::chrono::milliseconds(100));
 		}
-		else if (ret > 0) {
-			break;
+
+		BOOST_SCOPE_EXIT_ALL(&packTask)
+		{
+			boost::system::error_code ec;
+			if (fs::exists(packTask->package(), ec)) {
+				fs::remove(packTask->package(), ec);
+			}
+		};
+
+		std::unique_ptr<ASyncUploadTask> uploadTask(new ASyncUploadTask(context_, uploader));
+		uploadTask->setInfoHead(infoHead_);
+		uploadTask->setFilename(packTask->package());
+		uploadTask->start();
+
+		for (;;)
+		{
+			const int ret = update(uploadTask.get(), 50, 0.5);
+			if (ret < 0) {
+				return;
+			}
+			else if (ret > 0) {
+				break;
+			}
+			std::this_thread::sleep_for(std::chrono::milliseconds(100));
 		}
-		std::this_thread::sleep_for(std::chrono::milliseconds(100));
 	}
 
-	BOOST_SCOPE_EXIT_ALL(&packTask)
-	{
-		boost::system::error_code ec;
-		if (fs::exists(packTask->package(), ec)) {
-			fs::remove(packTask->package(), ec);
-		}
-	};
+	Rpc::ErrorCode ec = submitter_->finish();
 
-	std::unique_ptr<ASyncUploadTask> uploadTask(new ASyncUploadTask(context_, uploader));
-	uploadTask->setInfoHead(infoHead_);
-	uploadTask->setFilename(packTask->package());
-	uploadTask->start();
-
-	for (;;)
-	{
-		const int ret = update(uploadTask.get(), 50, 0.5);
-		if (ret < 0) {
-			return;
-		}
-		else if (ret > 0) {
-			break;
-		}
-		std::this_thread::sleep_for(std::chrono::milliseconds(100));
-	}
-	
-	ec = submitter_->finish();
 	if (ec != Rpc::ec_success) {
 		boost::mutex::scoped_lock lock(sync_);
 		info_ = infoHead_ + " - " + std::string("Rpc: ") + errorMessage(ec);

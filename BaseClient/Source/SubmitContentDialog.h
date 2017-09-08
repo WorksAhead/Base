@@ -19,6 +19,7 @@ public:
 	void setEngineVersions(const QStringList& engineVersions);
 
 	void switchToEditMode(const QString& contentId);
+	void switchToCopyMode(const QString& contentId);
 
 	void loadImagesFrom(const QString& contentId, int count);
 
@@ -62,6 +63,7 @@ private:
 	ContextPtr context_;
 	QStringList engineVersions_;
 	bool editMode_;
+	bool copyMode_;
 	QString contentId_;
 	Ui::SubmitContentDialog ui_;
 	Script script_;

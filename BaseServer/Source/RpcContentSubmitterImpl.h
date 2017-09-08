@@ -18,7 +18,8 @@ private:
 public:
 	enum {
 		submit_mode,
-		update_mode,
+		copy_mode,
+		edit_mode,
 	};
 
 public:
@@ -63,6 +64,8 @@ public:
 	bool destroyed_;
 	bool finished_;
 	bool cancelled_;
+	std::string oldId_;
+	std::string oldBase_;
 	std::string id_;
 	std::string base_;
 	int mode_;
