@@ -237,6 +237,7 @@ Rpc::ErrorCode RpcSessionImpl::getContentInfo(const std::string& id, Rpc::Conten
 	info.desc = form.at("Desc");
 	info.user = form.at("User");
 	info.upTime = form.at("UpTime");
+	info.displayPriority = std::stoi(form.at("DisplayPriority"));
 	info.state = form.at("State");
 
 	return Rpc::ec_success;
@@ -365,6 +366,27 @@ Rpc::ErrorCode RpcSessionImpl::changeContentState(const std::string& id, const s
 	}
 
 	if (!context_->center()->changeContentState(id, state)) {
+		return Rpc::ec_operation_failed;
+	}
+
+	return Rpc::ec_success;
+}
+
+Rpc::ErrorCode RpcSessionImpl::changeContentDisplayPriority(const std::string& id, Ice::Int displayPriority, const Ice::Current&)
+{
+	boost::recursive_mutex::scoped_lock lock(sync_);
+	checkIsDestroyed();
+
+	std::map<std::string, std::string> form;
+	if (!context_->center()->getContent(form, id)) {
+		return Rpc::ec_content_does_not_exist;
+	}
+
+	if (context_->userGroup() != "Admin") {
+		return Rpc::ec_access_denied;
+	}
+
+	if (!context_->center()->changeContentDisplayPriority(id, displayPriority)) {
 		return Rpc::ec_operation_failed;
 	}
 

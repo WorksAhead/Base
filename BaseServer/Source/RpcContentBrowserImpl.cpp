@@ -88,7 +88,7 @@ Rpc::ErrorCode RpcContentBrowserImpl::init(const std::string& page, const std::s
 		oss << ")";
 	}
 
-	oss << " ORDER BY UpTime DESC";
+	oss << " ORDER BY DisplayPriority DESC, UpTime DESC";
 
 	s_.reset(new SQLite::Statement(*center_->db(), oss.str()));
 
@@ -100,7 +100,7 @@ Rpc::ErrorCode RpcContentBrowserImpl::init(const std::string& parentId)
 	std::ostringstream oss;
 	oss << "SELECT Id, Title, State FROM Contents";
 	oss << " WHERE ParentId=" << sqlText(parentId);
-	oss << " ORDER BY UpTime DESC";
+	oss << " ORDER BY DisplayPriority DESC, UpTime DESC";
 
 	s_.reset(new SQLite::Statement(*center_->db(), oss.str()));
 

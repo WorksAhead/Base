@@ -29,6 +29,8 @@
 #include <QLocalSocket>
 #include <QSettings>
 #include <QDesktopServices>
+#include <QTimer>
+#include <QCloseEvent>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
@@ -398,14 +400,45 @@ BaseClient::BaseClient(const QString& workPath, const QString& version, Rpc::Ses
 	if (!url.isEmpty()) {
 		QMetaObject::invokeMethod(this, "openUrl", Qt::QueuedConnection, Q_ARG(QString, url));
 	}
+
+	QTimer* refreshTaskTimer = new QTimer(this);
+
+	refreshTaskTimer->setInterval(100);
+	refreshTaskTimer->start();
+
+	QObject::connect(refreshTaskTimer, &QTimer::timeout, this, &BaseClient::onRefreshTasks);
 }
 
 BaseClient::~BaseClient()
 {
 }
 
+void BaseClient::closeEvent(QCloseEvent* e)
+{
+	size_t taskCount = 0;
+	{
+		boost::recursive_mutex::scoped_lock lock(taskListSync_);
+		taskCount = taskList_.size();
+	}
+
+	if (taskCount)
+	{
+		int rc = QMessageBox::question(this, "Base",
+			"One or more tasks are running in the background, do you want to quit anyway ?",
+			QMessageBox::Yes, QMessageBox::No|QMessageBox::Default);
+
+		if (rc == QMessageBox::No) {
+			e->ignore();
+		}
+	}
+}
+
 void BaseClient::addTask(ASyncTaskPtr task)
 {
+	boost::recursive_mutex::scoped_lock lock(taskListSync_);
+
+	taskList_.push_back(task);
+
 	task->start();
 
 	lowerPane_->addTask(task);
@@ -1261,6 +1294,27 @@ void BaseClient::onNewConnection()
 	}
 
 	socket->deleteLater();
+}
+
+void BaseClient::onRefreshTasks()
+{
+	boost::recursive_mutex::scoped_lock lock(taskListSync_);
+
+	for (auto it = taskList_.begin(); it != taskList_.end(); )
+	{
+		switch ((*it)->state())
+		{
+		case ASyncTask::state_cancelled:
+		case ASyncTask::state_finished:
+		case ASyncTask::state_failed:
+			it = taskList_.erase(it);
+			break;
+
+		default:
+			++it;
+			break;
+		}
+	}
 }
 
 void BaseClient::initDb()

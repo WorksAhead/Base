@@ -30,6 +30,7 @@ module Rpc
 		string desc;
 		string user;
 		string upTime;
+		int displayPriority;
 		string state;
 	};
 
@@ -198,6 +199,7 @@ module Rpc
 		ErrorCode copyContent(string id, out ContentSubmitter* submitter);
 		ErrorCode editContent(string id, out ContentSubmitter* submitter);
 		ErrorCode changeContentState(string id, string state);
+		ErrorCode changeContentDisplayPriority(string id, int displayPriority);
 
 		ErrorCode browseEngineVersions(bool all, out EngineVersionBrowser* browser);
 		ErrorCode downloadEngineVersion(string name, string version, out Downloader* downloader);

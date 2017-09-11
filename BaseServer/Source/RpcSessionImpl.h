@@ -42,6 +42,7 @@ public:
 	virtual Rpc::ErrorCode copyContent(const std::string&, Rpc::ContentSubmitterPrx&, const Ice::Current&);
 	virtual Rpc::ErrorCode editContent(const std::string&, Rpc::ContentSubmitterPrx&, const Ice::Current&);
 	virtual Rpc::ErrorCode changeContentState(const std::string&, const std::string&, const Ice::Current&);
+	virtual Rpc::ErrorCode changeContentDisplayPriority(const std::string&, Ice::Int, const Ice::Current&);
 
 	virtual Rpc::ErrorCode browseEngineVersions(bool all, Rpc::EngineVersionBrowserPrx&, const Ice::Current&);
 	virtual Rpc::ErrorCode downloadEngineVersion(const std::string&, const std::string&, Rpc::DownloaderPrx&, const Ice::Current&);

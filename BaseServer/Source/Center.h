@@ -67,6 +67,7 @@ public:
 	bool updateContent(const Form& form, const std::string& id);
 	bool getContent(Form& form, const std::string& id);
 	bool changeContentState(const std::string& id, const std::string& state);
+	bool changeContentDisplayPriority(const std::string& id, int displayPriority);
 
 	bool addEngineVersion(const std::string& name, const std::string& version, const Form& form);
 	bool updateEngineVersion(const std::string& name, const std::string& version, const Form& form);

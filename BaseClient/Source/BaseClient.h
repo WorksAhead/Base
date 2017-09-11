@@ -22,6 +22,7 @@
 #include <unordered_set>
 #include <unordered_map>
 #include <map>
+#include <list>
 
 // forward declaration
 class HTabWidget;
@@ -35,6 +36,9 @@ private:
 public:
 	BaseClient(const QString& workPath, const QString& version, Rpc::SessionPrx, const QString& url);
 	~BaseClient();
+
+protected:
+	virtual void closeEvent(QCloseEvent*);
 
 private:
 	void addTask(ASyncTaskPtr);
@@ -93,6 +97,7 @@ private Q_SLOTS:
 	void addLibraryNotification();
 	void onShowTaskManager();
 	void onNewConnection();
+	void onRefreshTasks();
 
 private:
 	void initDb();
@@ -147,6 +152,9 @@ private:
 
 	std::unordered_map<std::string, ProjectInfo> projectTabel_;
 	boost::recursive_mutex projectTabelSync_;
+
+	std::list<ASyncTaskPtr> taskList_;
+	boost::recursive_mutex taskListSync_;
 };
 
 #endif // BASECLIENT_HEADER_

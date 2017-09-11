@@ -4,6 +4,7 @@
 
 #include <QPainter>
 #include <QMessageBox>
+#include <QInputDialog>
 #include <QMenu>
 
 #include <boost/algorithm/string.hpp>
@@ -23,7 +24,12 @@ ManageContentWidget::ManageContentWidget(ContextPtr context, QWidget* parent) : 
 	QObject::connect(ui_.refreshButton, &QPushButton::clicked, this, &ManageContentWidget::onRefresh);
 	QObject::connect(ui_.submitButton, &QPushButton::clicked, this, &ManageContentWidget::onSubmit);
 	QObject::connect(ui_.editButton, &QPushButton::clicked, this, &ManageContentWidget::onEdit);
+	QObject::connect(ui_.changeDisplayPriorityButton, &QPushButton::clicked, this, &ManageContentWidget::onChangeDisplayPriority);
 	QObject::connect(ui_.changeStateButton, &QToolButton::clicked, ui_.changeStateButton, &QToolButton::showMenu);
+
+	if (context_->currentUserGroup == "Admin") {
+		ui_.changeDisplayPriorityButton->setEnabled(true);
+	}
 
 	ui_.changeStateButton->setMenu(new QMenu);
 	{
@@ -240,6 +246,28 @@ void ManageContentWidget::onEdit()
 	d.exec();
 }
 
+void ManageContentWidget::onChangeDisplayPriority()
+{
+	QList<QTreeWidgetItem*> items = ui_.contentList->selectedItems();
+
+	if (items.count() == 0) {
+		return;
+	}
+
+	bool ok;
+
+	int displayPriority = QInputDialog::getInt(this, "Base", "DisplayPriority", 0, -2147483647, 2147483647, 1, &ok, Qt::WindowTitleHint);
+
+	if (!ok) {
+		return;
+	}
+
+	for (int i = 0; i < items.count(); ++i)
+	{
+		context_->session->changeContentDisplayPriority(items[i]->text(0).toStdString(), displayPriority);
+	}
+}
+
 void ManageContentWidget::showMore(int count)
 {
 	while (count > 0)
@@ -301,6 +329,7 @@ void ManageContentWidget::showMore(int count)
 			list << ci.desc.c_str();
 			list << ci.user.c_str();
 			list << ci.upTime.c_str();
+			list << QString("%1").arg(ci.displayPriority);
 			list << ci.state.c_str();
 
 			QTreeWidgetItem* wi = new QTreeWidgetItem(list);

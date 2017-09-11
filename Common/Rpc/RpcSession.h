@@ -274,6 +274,7 @@ struct ContentInfo
     ::std::string desc;
     ::std::string user;
     ::std::string upTime;
+    ::Ice::Int displayPriority;
     ::std::string state;
 
     bool operator==(const ContentInfo& __rhs) const
@@ -331,6 +332,10 @@ struct ContentInfo
             return false;
         }
         if(upTime != __rhs.upTime)
+        {
+            return false;
+        }
+        if(displayPriority != __rhs.displayPriority)
         {
             return false;
         }
@@ -448,6 +453,14 @@ struct ContentInfo
             return true;
         }
         else if(__rhs.upTime < upTime)
+        {
+            return false;
+        }
+        if(displayPriority < __rhs.displayPriority)
+        {
+            return true;
+        }
+        else if(__rhs.displayPriority < displayPriority)
         {
             return false;
         }
@@ -1089,7 +1102,7 @@ template<>
 struct StreamableTraits< ::Rpc::ContentInfo>
 {
     static const StreamHelperCategory helper = StreamHelperCategoryStruct;
-    static const int minWireSize = 17;
+    static const int minWireSize = 21;
     static const bool fixedLength = false;
 };
 
@@ -1111,6 +1124,7 @@ struct StreamWriter< ::Rpc::ContentInfo, S>
         __os->write(v.desc);
         __os->write(v.user);
         __os->write(v.upTime);
+        __os->write(v.displayPriority);
         __os->write(v.state);
     }
 };
@@ -1133,6 +1147,7 @@ struct StreamReader< ::Rpc::ContentInfo, S>
         __is->read(v.desc);
         __is->read(v.user);
         __is->read(v.upTime);
+        __is->read(v.displayPriority);
         __is->read(v.state);
     }
 };
@@ -1488,6 +1503,9 @@ typedef ::IceUtil::Handle< Callback_Session_editContent_Base> Callback_Session_e
 
 class Callback_Session_changeContentState_Base : virtual public ::IceInternal::CallbackBase { };
 typedef ::IceUtil::Handle< Callback_Session_changeContentState_Base> Callback_Session_changeContentStatePtr;
+
+class Callback_Session_changeContentDisplayPriority_Base : virtual public ::IceInternal::CallbackBase { };
+typedef ::IceUtil::Handle< Callback_Session_changeContentDisplayPriority_Base> Callback_Session_changeContentDisplayPriorityPtr;
 
 class Callback_Session_browseEngineVersions_Base : virtual public ::IceInternal::CallbackBase { };
 typedef ::IceUtil::Handle< Callback_Session_browseEngineVersions_Base> Callback_Session_browseEngineVersionsPtr;
@@ -7040,6 +7058,82 @@ private:
     
 public:
 
+    ::Rpc::ErrorCode changeContentDisplayPriority(const ::std::string& __p_id, ::Ice::Int __p_displayPriority)
+    {
+        return changeContentDisplayPriority(__p_id, __p_displayPriority, 0);
+    }
+    ::Rpc::ErrorCode changeContentDisplayPriority(const ::std::string& __p_id, ::Ice::Int __p_displayPriority, const ::Ice::Context& __ctx)
+    {
+        return changeContentDisplayPriority(__p_id, __p_displayPriority, &__ctx);
+    }
+#ifdef ICE_CPP11
+    ::Ice::AsyncResultPtr
+    begin_changeContentDisplayPriority(const ::std::string& __p_id, ::Ice::Int __p_displayPriority, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return __begin_changeContentDisplayPriority(__p_id, __p_displayPriority, 0, __response, __exception, __sent);
+    }
+    ::Ice::AsyncResultPtr
+    begin_changeContentDisplayPriority(const ::std::string& __p_id, ::Ice::Int __p_displayPriority, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_changeContentDisplayPriority(__p_id, __p_displayPriority, 0, ::Ice::newCallback(__completed, __sent), 0);
+    }
+    ::Ice::AsyncResultPtr
+    begin_changeContentDisplayPriority(const ::std::string& __p_id, ::Ice::Int __p_displayPriority, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return __begin_changeContentDisplayPriority(__p_id, __p_displayPriority, &__ctx, __response, __exception, __sent);
+    }
+    ::Ice::AsyncResultPtr
+    begin_changeContentDisplayPriority(const ::std::string& __p_id, ::Ice::Int __p_displayPriority, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_changeContentDisplayPriority(__p_id, __p_displayPriority, &__ctx, ::Ice::newCallback(__completed, __sent));
+    }
+    
+private:
+
+    ::Ice::AsyncResultPtr __begin_changeContentDisplayPriority(const ::std::string& __p_id, ::Ice::Int __p_displayPriority, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent);
+    
+public:
+#endif
+
+    ::Ice::AsyncResultPtr begin_changeContentDisplayPriority(const ::std::string& __p_id, ::Ice::Int __p_displayPriority)
+    {
+        return begin_changeContentDisplayPriority(__p_id, __p_displayPriority, 0, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_changeContentDisplayPriority(const ::std::string& __p_id, ::Ice::Int __p_displayPriority, const ::Ice::Context& __ctx)
+    {
+        return begin_changeContentDisplayPriority(__p_id, __p_displayPriority, &__ctx, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_changeContentDisplayPriority(const ::std::string& __p_id, ::Ice::Int __p_displayPriority, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_changeContentDisplayPriority(__p_id, __p_displayPriority, 0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_changeContentDisplayPriority(const ::std::string& __p_id, ::Ice::Int __p_displayPriority, const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_changeContentDisplayPriority(__p_id, __p_displayPriority, &__ctx, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_changeContentDisplayPriority(const ::std::string& __p_id, ::Ice::Int __p_displayPriority, const ::Rpc::Callback_Session_changeContentDisplayPriorityPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_changeContentDisplayPriority(__p_id, __p_displayPriority, 0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_changeContentDisplayPriority(const ::std::string& __p_id, ::Ice::Int __p_displayPriority, const ::Ice::Context& __ctx, const ::Rpc::Callback_Session_changeContentDisplayPriorityPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_changeContentDisplayPriority(__p_id, __p_displayPriority, &__ctx, __del, __cookie);
+    }
+
+    ::Rpc::ErrorCode end_changeContentDisplayPriority(const ::Ice::AsyncResultPtr&);
+    
+private:
+
+    ::Rpc::ErrorCode changeContentDisplayPriority(const ::std::string&, ::Ice::Int, const ::Ice::Context*);
+    ::Ice::AsyncResultPtr begin_changeContentDisplayPriority(const ::std::string&, ::Ice::Int, const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
+    
+public:
+
     ::Rpc::ErrorCode browseEngineVersions(bool __p_all, ::Rpc::EngineVersionBrowserPrx& __p_browser)
     {
         return browseEngineVersions(__p_all, __p_browser, 0);
@@ -9854,6 +9948,9 @@ public:
 
     virtual ::Rpc::ErrorCode changeContentState(const ::std::string&, const ::std::string&, const ::Ice::Current& = ::Ice::Current()) = 0;
     ::Ice::DispatchStatus ___changeContentState(::IceInternal::Incoming&, const ::Ice::Current&);
+
+    virtual ::Rpc::ErrorCode changeContentDisplayPriority(const ::std::string&, ::Ice::Int, const ::Ice::Current& = ::Ice::Current()) = 0;
+    ::Ice::DispatchStatus ___changeContentDisplayPriority(::IceInternal::Incoming&, const ::Ice::Current&);
 
     virtual ::Rpc::ErrorCode browseEngineVersions(bool, ::Rpc::EngineVersionBrowserPrx&, const ::Ice::Current& = ::Ice::Current()) = 0;
     ::Ice::DispatchStatus ___browseEngineVersions(::IceInternal::Incoming&, const ::Ice::Current&);
@@ -15834,6 +15931,110 @@ template<class T, typename CT> Callback_Session_changeContentStatePtr
 newCallback_Session_changeContentState(T* instance, void (T::*cb)(::Rpc::ErrorCode, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
 {
     return new Callback_Session_changeContentState<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T>
+class CallbackNC_Session_changeContentDisplayPriority : public Callback_Session_changeContentDisplayPriority_Base, public ::IceInternal::TwowayCallbackNC<T>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception&);
+    typedef void (T::*Sent)(bool);
+    typedef void (T::*Response)(::Rpc::ErrorCode);
+
+    CallbackNC_Session_changeContentDisplayPriority(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::TwowayCallbackNC<T>(obj, cb != 0, excb, sentcb), _response(cb)
+    {
+    }
+
+    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+    {
+        ::Rpc::SessionPrx __proxy = ::Rpc::SessionPrx::uncheckedCast(__result->getProxy());
+        ::Rpc::ErrorCode __ret;
+        try
+        {
+            __ret = __proxy->end_changeContentDisplayPriority(__result);
+        }
+        catch(const ::Ice::Exception& ex)
+        {
+            ::IceInternal::CallbackNC<T>::exception(__result, ex);
+            return;
+        }
+        if(_response)
+        {
+            (::IceInternal::CallbackNC<T>::_callback.get()->*_response)(__ret);
+        }
+    }
+
+    private:
+
+    Response _response;
+};
+
+template<class T> Callback_Session_changeContentDisplayPriorityPtr
+newCallback_Session_changeContentDisplayPriority(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_Session_changeContentDisplayPriority<T>(instance, cb, excb, sentcb);
+}
+
+template<class T> Callback_Session_changeContentDisplayPriorityPtr
+newCallback_Session_changeContentDisplayPriority(T* instance, void (T::*cb)(::Rpc::ErrorCode), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_Session_changeContentDisplayPriority<T>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT>
+class Callback_Session_changeContentDisplayPriority : public Callback_Session_changeContentDisplayPriority_Base, public ::IceInternal::TwowayCallback<T, CT>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception& , const CT&);
+    typedef void (T::*Sent)(bool , const CT&);
+    typedef void (T::*Response)(::Rpc::ErrorCode, const CT&);
+
+    Callback_Session_changeContentDisplayPriority(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::TwowayCallback<T, CT>(obj, cb != 0, excb, sentcb), _response(cb)
+    {
+    }
+
+    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+    {
+        ::Rpc::SessionPrx __proxy = ::Rpc::SessionPrx::uncheckedCast(__result->getProxy());
+        ::Rpc::ErrorCode __ret;
+        try
+        {
+            __ret = __proxy->end_changeContentDisplayPriority(__result);
+        }
+        catch(const ::Ice::Exception& ex)
+        {
+            ::IceInternal::Callback<T, CT>::exception(__result, ex);
+            return;
+        }
+        if(_response)
+        {
+            (::IceInternal::Callback<T, CT>::_callback.get()->*_response)(__ret, CT::dynamicCast(__result->getCookie()));
+        }
+    }
+
+    private:
+
+    Response _response;
+};
+
+template<class T, typename CT> Callback_Session_changeContentDisplayPriorityPtr
+newCallback_Session_changeContentDisplayPriority(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_Session_changeContentDisplayPriority<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT> Callback_Session_changeContentDisplayPriorityPtr
+newCallback_Session_changeContentDisplayPriority(T* instance, void (T::*cb)(::Rpc::ErrorCode, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_Session_changeContentDisplayPriority<T, CT>(instance, cb, excb, sentcb);
 }
 
 template<class T>

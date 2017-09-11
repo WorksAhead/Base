@@ -65,7 +65,7 @@ Center::Center()
 		"Id TEXT, ParentId TEXT, "
 		"Title TEXT, Page TEXT, Category TEXT, EngineName TEXT, "
 		"EngineVersion TEXT, Startup TEXT, ImageCount INT, Video TEXT, Desc TEXT, "
-		"User TEXT, UpTime DATETIME, State TEXT)");
+		"User TEXT, UpTime DATETIME, DisplayPriority INT, State TEXT)");
 
 	db_->exec("CREATE TABLE IF NOT EXISTS Extras ("
 		"Id TEXT, ParentId TEXT, Title TEXT, Category TEXT, Setup TEXT, "
@@ -91,7 +91,7 @@ Center::Center()
 		"Name, Version, UpTime)");
 
 	db_->exec("CREATE INDEX IF NOT EXISTS IndexOfContents ON Contents ("
-		"Id, ParentId, Page, Category, EngineName, EngineVersion, User, UpTime, State)");
+		"Id, ParentId, Page, Category, EngineName, EngineVersion, User, UpTime, DisplayPriority, State)");
 
 	db_->exec("CREATE INDEX IF NOT EXISTS IndexOfExtras ON Extras ("
 		"Id, ParentId, Title, Category, User, UpTime, State)");
@@ -382,6 +382,7 @@ bool Center::addContent(const Form& form, const std::string& id)
 	oss << sqlText(form.at("Desc")) << ", ";
 	oss << sqlText(form.at("User")) << ", ";
 	oss << sqlText(getCurrentTimeString()) << ", ";
+	oss << sqlText("0") << ", ";
 	oss << sqlText("Normal") << ")";
 
 	SQLite::Transaction t(*db_);
@@ -440,6 +441,7 @@ bool Center::getContent(Form& form, const std::string& id)
 	form["Desc"] = s.getColumn("Desc").getText();
 	form["User"] = s.getColumn("User").getText();
 	form["UpTime"] = s.getColumn("UpTime").getText();
+	form["DisplayPriority"] = s.getColumn("DisplayPriority").getText();
 	form["State"] = s.getColumn("State").getText();
 
 	return true;
@@ -450,6 +452,21 @@ bool Center::changeContentState(const std::string& id, const std::string& state)
 	std::ostringstream oss;
 	oss << "UPDATE Contents SET State=";
 	oss << sqlText(state);
+	oss << " WHERE Id=";
+	oss << sqlText(id);
+
+	SQLite::Transaction t(*db_);
+	int n = db_->exec(oss.str());
+	t.commit();
+
+	return (n > 0);
+}
+
+bool Center::changeContentDisplayPriority(const std::string& id, int displayPriority)
+{
+	std::ostringstream oss;
+	oss << "UPDATE Contents SET DisplayPriority=";
+	oss << sqlText(std::to_string(displayPriority));
 	oss << " WHERE Id=";
 	oss << sqlText(id);
 

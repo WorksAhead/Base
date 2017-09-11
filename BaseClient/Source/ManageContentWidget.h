@@ -27,6 +27,7 @@ private Q_SLOTS:
 	void onRefresh();
 	void onSubmit();
 	void onEdit();
+	void onChangeDisplayPriority();
 
 private:
 	void showMore(int);

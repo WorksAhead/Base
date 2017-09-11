@@ -117,7 +117,10 @@ void PageContentBrowserWidget::paintEvent(QPaintEvent* e)
 
 void PageContentBrowserWidget::onScroll(int position)
 {
-	if (position == scrollArea_->verticalScrollBar()->maximum()) {
+	QScrollBar* bar = scrollArea_->verticalScrollBar();
+
+	if (bar->value() >= bar->maximum() / 10 * 9)
+	{
 		if (browser_) {
 			showMore(ITEMS_PER_REQUEST);
 		}
@@ -139,6 +142,7 @@ void PageContentBrowserWidget::onTimeout()
 	if (count_ > 0 && browser_ != 0)
 	{
 		const int n = qMin(count_, 5);
+		int m = 0;
 
 		Rpc::ContentItemSeq items;
 		browser_->next(n, items);
@@ -158,9 +162,11 @@ void PageContentBrowserWidget::onTimeout()
 			items_.insert(item.id.c_str(), pi);
 			contentsLayout_->addWidget(pi);
 			context_->contentImageLoader->load(item.id.c_str(), 0);
+
+			++m;
 		}
 
-		count_ -= n;
+		count_ -= m;
 
 		if (items.size() < n) {
 			browser_ = 0;
