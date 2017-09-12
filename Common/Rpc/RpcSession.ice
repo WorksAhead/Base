@@ -49,6 +49,7 @@ module Rpc
 		string unsetup;
 		string uptime;
 		string info;
+		int displayPriority;
 		string state;
 	};
 
@@ -69,6 +70,7 @@ module Rpc
 		string user;
 		string uptime;
 		string info;
+		int displayPriority;
 		string state;
 	};
 
@@ -207,6 +209,7 @@ module Rpc
 		ErrorCode submitEngineVersion(string name, string version, out EngineVersionSubmitter* submitter);
 		ErrorCode updateEngineVersion(string name, string version, out EngineVersionSubmitter* submitter);
 		ErrorCode getEngineVersion(string name, string version, out EngineVersionInfo engineVersion);
+		ErrorCode changeEngineVersionDisplayPriority(string name, string version, int displayPriority);
 
 		ErrorCode browseExtra(string category, string search, out ExtraBrowser* browser);
 		ErrorCode getExtraInfo(string id, out ExtraInfo info);
@@ -215,6 +218,7 @@ module Rpc
 		ErrorCode submitExtra(out ExtraSubmitter* submitter);
 		ErrorCode updateExtra(string id, out ExtraSubmitter* submitter);
 		ErrorCode removeExtra(string id);
+		ErrorCode changeExtraDisplayPriority(string id, int displayPriority);
 
 		ErrorCode browseClient(out ClientBrowser* browser);
 		ErrorCode getClientInfo(string version, out ClientInfo info);

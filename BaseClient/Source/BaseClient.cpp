@@ -292,7 +292,7 @@ BaseClient::BaseClient(const QString& workPath, const QString& version, Rpc::Ses
 	tabWidget_->tabBar()->setObjectName("MainTabBar");
 
 	QFont font = tabWidget_->labelFont();
-	font.setPixelSize(16);
+	font.setPixelSize(14);
 	tabWidget_->setLabelFont(font);
 
 	Rpc::StringSeq pages;
@@ -378,7 +378,7 @@ BaseClient::BaseClient(const QString& workPath, const QString& version, Rpc::Ses
 	}
 
 	library_ = new LibraryWidget(context_);
-	tabWidget_->addTab(QString::fromLocal8Bit("本地内容"), library_);
+	tabWidget_->addTab(QString::fromLocal8Bit("本地库"), library_);
 
 	manage_ = new ManageWidget(context_);
 	tabWidget_->addTab(QString::fromLocal8Bit("管理"), manage_);

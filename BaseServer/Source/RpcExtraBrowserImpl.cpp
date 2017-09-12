@@ -52,7 +52,7 @@ Rpc::ErrorCode RpcExtraBrowserImpl::init(const std::string& category, const std:
 		oss << ")";
 	}
 
-	oss << " ORDER BY UpTime DESC";
+	oss << " ORDER BY DisplayPriority DESC, UpTime DESC";
 
 	s_.reset(new SQLite::Statement(*center_->db(), oss.str()));
 
@@ -99,6 +99,7 @@ Rpc::ErrorCode RpcExtraBrowserImpl::next(Ice::Int n, Rpc::ExtraInfoSeq& seq, con
 		info.user = s_->getColumn("User").getText();
 		info.uptime = s_->getColumn("UpTime").getText();
 		info.info = s_->getColumn("Info").getText();
+		info.displayPriority = s_->getColumn("DisplayPriority").getInt();
 		info.state = s_->getColumn("State").getText();
 
 		seq.push_back(info);

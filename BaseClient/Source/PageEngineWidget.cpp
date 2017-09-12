@@ -15,6 +15,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <map>
 #include <algorithm>
 
 #define ITEMS_PER_REQUEST 100
@@ -78,10 +79,9 @@ void PageEngineWidget::onRefresh()
 		}
 	}
 
-	std::stable_sort(v.begin(), v.end(), [](auto lhs, auto rhs) -> bool
-	{
-		return (lhs.name < rhs.name);
-	});
+	if (v.empty()) {
+		return;
+	}
 
 	VTabWidget* tabWidget = new VTabWidget;
 
@@ -91,39 +91,41 @@ void PageEngineWidget::onRefresh()
 
 	layout_->addWidget(tabWidget);
 
-	std::string lastName;
-
-	QWidget* lastWidget;
-	FlowLayout* lastFlowLayout;
-	QScrollArea* lastScrollArea;
+	std::map<std::string, FlowLayout*> engineNameToLayout;
 
 	for (const Rpc::EngineVersionInfo& info : v)
 	{
-		if (info.name != lastName)
+		FlowLayout* currentFlowLayout;
+
+		if (engineNameToLayout.count(info.name) == 0)
 		{
-			lastWidget = new QWidget;
+			QWidget* widget = new QWidget;
 
-			lastWidget->setObjectName("FlowWidget");
+			widget->setObjectName("FlowWidget");
 
-			lastFlowLayout = new FlowLayout(10, 20, 20);
+			currentFlowLayout = new FlowLayout(10, 20, 20);
 
-			lastWidget->setLayout(lastFlowLayout);
+			widget->setLayout(currentFlowLayout);
 
-			lastScrollArea = new QScrollArea;
+			QScrollArea* scrollArea = new QScrollArea;
 
-			lastScrollArea->setWidget(lastWidget);
-			lastScrollArea->setWidgetResizable(true);
+			scrollArea->setWidget(widget);
+			scrollArea->setWidgetResizable(true);
 
-			tabWidget->addTab(info.name.c_str(), lastScrollArea);
+			tabWidget->addTab(info.name.c_str(), scrollArea);
 
-			lastName = info.name;
+			engineNameToLayout.insert(std::make_pair(info.name, currentFlowLayout));
+		}
+		else
+		{
+			currentFlowLayout = engineNameToLayout[info.name];
 		}
 
 		PageEngineItemWidget* w = new PageEngineItemWidget(context_);
 
 		w->setEngineVersion(qMakePair(info.name.c_str(), info.version.c_str()));
 
-		lastFlowLayout->addWidget(w);
+		currentFlowLayout->addWidget(w);
 	}
 }
 

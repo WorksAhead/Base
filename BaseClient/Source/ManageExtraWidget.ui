@@ -85,6 +85,11 @@
      </column>
      <column>
       <property name="text">
+       <string>DisplayPriority</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
        <string>State</string>
       </property>
      </column>
@@ -162,6 +167,16 @@
       <widget class="QPushButton" name="editButton">
        <property name="text">
         <string>Edit</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="changeDisplayPriorityButton">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="text">
+        <string>Change DisplayPriority</string>
        </property>
       </widget>
      </item>

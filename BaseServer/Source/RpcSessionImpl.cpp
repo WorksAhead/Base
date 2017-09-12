@@ -544,7 +544,29 @@ Rpc::ErrorCode RpcSessionImpl::getEngineVersion(const std::string& name, const s
 	info.unsetup = form.at("UnSetup");
 	info.uptime = form.at("UpTime");
 	info.info = form.at("Info");
+	info.displayPriority = std::stoi(form.at("DisplayPriority"));
 	info.state = form.at("State");
+
+	return Rpc::ec_success;
+}
+
+Rpc::ErrorCode RpcSessionImpl::changeEngineVersionDisplayPriority(const std::string& name, const std::string& version, Ice::Int displayPriority, const Ice::Current&)
+{
+	boost::recursive_mutex::scoped_lock lock(sync_);
+	checkIsDestroyed();
+
+	Form form;
+	if (!context_->center()->getEngineVersion(name, version, form)) {
+		return Rpc::ec_engine_version_does_not_exist;
+	}
+
+	if (context_->userGroup() != "Admin") {
+		return Rpc::ec_access_denied;
+	}
+
+	if (!context_->center()->changeEngineVersionDisplayPriority(name, version, displayPriority)) {
+		return Rpc::ec_operation_failed;
+	}
 
 	return Rpc::ec_success;
 }
@@ -711,6 +733,27 @@ Rpc::ErrorCode RpcSessionImpl::removeExtra(const std::string& id, const Ice::Cur
 	checkIsDestroyed();
 
 	if (!context_->center()->changeExtraState(id, "Removed")) {
+		return Rpc::ec_operation_failed;
+	}
+
+	return Rpc::ec_success;
+}
+
+Rpc::ErrorCode RpcSessionImpl::changeExtraDisplayPriority(const std::string& id, Ice::Int displayPriority, const Ice::Current&)
+{
+	boost::recursive_mutex::scoped_lock lock(sync_);
+	checkIsDestroyed();
+
+	std::map<std::string, std::string> form;
+	if (!context_->center()->getExtra(form, id)) {
+		return Rpc::ec_content_does_not_exist;
+	}
+
+	if (context_->userGroup() != "Admin") {
+		return Rpc::ec_access_denied;
+	}
+
+	if (!context_->center()->changeExtraDisplayPriority(id, displayPriority)) {
 		return Rpc::ec_operation_failed;
 	}
 

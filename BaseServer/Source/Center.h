@@ -74,11 +74,13 @@ public:
 	bool getEngineVersion(const std::string& name, const std::string& version, Form& form);
 	bool getEngineVersionState(const std::string& name, const std::string& version, std::string& outState);
 	bool changeEngineVersionState(const std::string& name, const std::string& version, const std::string& state);
+	bool changeEngineVersionDisplayPriority(const std::string& name, const std::string& version, int displayPriority);
 
 	bool addExtra(const Form& form, const std::string& id);
 	bool updateExtra(const Form& form, const std::string& id);
 	bool getExtra(Form& form, const std::string& id);
 	bool changeExtraState(const std::string& id, const std::string& state);
+	bool changeExtraDisplayPriority(const std::string& id, int displayPriority);
 
 	std::string getNewestClientVersion();
 	bool addClientVersion(const std::string& version, const Form& form);

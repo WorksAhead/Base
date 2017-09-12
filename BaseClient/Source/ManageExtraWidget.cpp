@@ -7,6 +7,7 @@
 #include <QMessageBox>
 #include <QMenu>
 #include <QPixmap>
+#include <QInputDialog>
 
 #include <boost/algorithm/string.hpp>
 
@@ -24,7 +25,12 @@ ManageExtraWidget::ManageExtraWidget(ContextPtr context, QWidget* parent) : QWid
 	QObject::connect(ui_.refreshButton, &QPushButton::clicked, this, &ManageExtraWidget::onRefresh);
 	QObject::connect(ui_.submitButton, &QPushButton::clicked, this, &ManageExtraWidget::onSubmit);
 	QObject::connect(ui_.editButton, &QPushButton::clicked, this, &ManageExtraWidget::onEdit);
+	QObject::connect(ui_.changeDisplayPriorityButton, &QPushButton::clicked, this, &ManageExtraWidget::onChangeDisplayPriority);
 	QObject::connect(ui_.removeButton, &QPushButton::clicked, this, &ManageExtraWidget::onRemove);
+
+	if (context_->currentUserGroup == "Admin") {
+		ui_.changeDisplayPriorityButton->setEnabled(true);
+	}
 
 	firstShow_ = true;
 }
@@ -85,7 +91,7 @@ void ManageExtraWidget::onSubmit()
 	}
 
 	bool copyForm = false;
-	bool fillParentId = false;
+	bool newVersion = false;
 
 	QList<QTreeWidgetItem*> items = ui_.extraList->selectedItems();
 
@@ -94,12 +100,10 @@ void ManageExtraWidget::onSubmit()
 		QMessageBox msgBox(this);
 
 		msgBox.setWindowTitle("Base");
-		msgBox.setIcon(QMessageBox::Question);
-		msgBox.setText(tr("What do you want ?"));
 
-		QPushButton* b0 = msgBox.addButton("A new form", QMessageBox::NoRole);
-		QPushButton* b1 = msgBox.addButton("A copy of the selected form", QMessageBox::NoRole);
-		QPushButton* b2 = msgBox.addButton("A sub-copy of the selected form", QMessageBox::NoRole);
+		QPushButton* b0 = msgBox.addButton("New Extra", QMessageBox::NoRole);
+		QPushButton* b1 = msgBox.addButton("New Version of selected Extra", QMessageBox::NoRole);
+		QPushButton* b2 = msgBox.addButton("Copy selected Extra", QMessageBox::NoRole);
 		QPushButton* b3 = msgBox.addButton("Cancel", QMessageBox::NoRole);
 
 		msgBox.exec();
@@ -109,10 +113,10 @@ void ManageExtraWidget::onSubmit()
 		}
 		else if (msgBox.clickedButton() == b1) {
 			copyForm = true;
+			newVersion = true;
 		}
 		else if (msgBox.clickedButton() == b2) {
 			copyForm = true;
-			fillParentId = true;
 		}
 	}
 
@@ -130,8 +134,8 @@ void ManageExtraWidget::onSubmit()
 
 		d.loadCoverImageFrom(ei.id.c_str());
 
-		if (fillParentId) {
-			d.setParentId(ei.id.c_str());
+		if (newVersion) {
+			d.setParentId(ei.parentId.empty() ? ei.id.c_str() : ei.parentId.c_str());
 		}
 		else {
 			d.setParentId(ei.parentId.c_str());
@@ -280,6 +284,28 @@ void ManageExtraWidget::onRemove()
 		QMessageBox::Yes);
 }
 
+void ManageExtraWidget::onChangeDisplayPriority()
+{
+	QList<QTreeWidgetItem*> items = ui_.extraList->selectedItems();
+
+	if (items.count() == 0) {
+		return;
+	}
+
+	bool ok;
+
+	int displayPriority = QInputDialog::getInt(this, "Base", "DisplayPriority", 0, -2147483647, 2147483647, 1, &ok, Qt::WindowTitleHint);
+
+	if (!ok) {
+		return;
+	}
+
+	for (int i = 0; i < items.count(); ++i)
+	{
+		context_->session->changeExtraDisplayPriority(items[i]->text(0).toStdString(), displayPriority);
+	}
+}
+
 void ManageExtraWidget::showMore(int count)
 {
 	while (count > 0)
@@ -315,6 +341,7 @@ void ManageExtraWidget::showMore(int count)
 			list << item.user.c_str();
 			list << item.uptime.c_str();
 			list << item.info.c_str();
+			list << QString("%1").arg(item.displayPriority);
 			list << item.state.c_str();
 
 			QTreeWidgetItem* wi = new QTreeWidgetItem(list);

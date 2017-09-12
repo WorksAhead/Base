@@ -7,6 +7,7 @@
 
 #include <QPainter>
 #include <QMessageBox>
+#include <QInputDialog>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
@@ -28,9 +29,14 @@ ManageEngineWidget::ManageEngineWidget(ContextPtr context, QWidget* parent) : QW
 	QObject::connect(ui_.showAllButton, &QPushButton::clicked, this, &ManageEngineWidget::onShowAll);
 	QObject::connect(ui_.refreshButton, &QPushButton::clicked, this, &ManageEngineWidget::onRefresh);
 	QObject::connect(ui_.editButton, &QPushButton::clicked, this, &ManageEngineWidget::onEdit);
+	QObject::connect(ui_.changeDisplayPriorityButton, &QPushButton::clicked, this, &ManageEngineWidget::onChangeDisplayPriority);
 	QObject::connect(ui_.removeButton, &QPushButton::clicked, this, &ManageEngineWidget::onRemove);
 
 	QObject::connect(ui_.submitButton, &QPushButton::clicked, this, &ManageEngineWidget::showSubmitDialog);
+
+	if (context_->currentUserGroup == "Admin") {
+		ui_.changeDisplayPriorityButton->setEnabled(true);
+	}
 
 	firstShow_ = true;
 }
@@ -189,6 +195,28 @@ void ManageEngineWidget::showSubmitDialog()
 #undef CHECK_ERROR_CODE
 }
 
+void ManageEngineWidget::onChangeDisplayPriority()
+{
+	QList<QTreeWidgetItem*> items = ui_.engineList->selectedItems();
+
+	if (items.count() == 0) {
+		return;
+	}
+
+	bool ok;
+
+	int displayPriority = QInputDialog::getInt(this, "Base", "DisplayPriority", 0, -2147483647, 2147483647, 1, &ok, Qt::WindowTitleHint);
+
+	if (!ok) {
+		return;
+	}
+
+	for (int i = 0; i < items.count(); ++i)
+	{
+		context_->session->changeEngineVersionDisplayPriority(items[i]->text(0).toStdString(), items[i]->text(1).toStdString(), displayPriority);
+	}
+}
+
 void ManageEngineWidget::showMore(int count)
 {
 	while (count > 0)
@@ -210,6 +238,7 @@ void ManageEngineWidget::showMore(int count)
 			list << engineItems[i].uptime.c_str();
 			boost::replace_all(engineItems[i].info, "\n", "\r");
 			list << engineItems[i].info.c_str();
+			list << QString("%1").arg(engineItems[i].displayPriority);
 			list << engineItems[i].state.c_str();
 			QTreeWidgetItem* item = new QTreeWidgetItem(list);
 			items.append(item);

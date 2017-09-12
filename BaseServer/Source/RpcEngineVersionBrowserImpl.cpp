@@ -19,7 +19,7 @@ Rpc::ErrorCode RpcEngineVersionBrowserImpl::init(bool all)
 		oss << " WHERE State=" << sqlText("Normal");
 	}
 
-	oss << " ORDER BY UpTime DESC";
+	oss << " ORDER BY DisplayPriority DESC, UpTime DESC";
 
 	s_.reset(new SQLite::Statement(*center_->db(), oss.str()));
 
@@ -60,6 +60,7 @@ Rpc::ErrorCode RpcEngineVersionBrowserImpl::next(Ice::Int n, Rpc::EngineVersionS
 		info.unsetup = s_->getColumn("UnSetup").getText();
 		info.uptime = s_->getColumn("UpTime").getText();
 		info.info = s_->getColumn("Info").getText();
+		info.displayPriority = s_->getColumn("DisplayPriority").getInt();
 		info.state = s_->getColumn("State").getText();
 
 		seq.push_back(info);

@@ -66,6 +66,17 @@
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_3">
        <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_8">
+         <item>
+          <widget class="QLineEdit" name="parentIdEdit">
+           <property name="placeholderText">
+            <string>Parent Id</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
         <layout class="QHBoxLayout" name="horizontalLayout_4">
          <item>
           <widget class="QLineEdit" name="titleEdit">
@@ -152,17 +163,6 @@
            </property>
            <property name="autoDefault">
             <bool>false</bool>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_5">
-         <item>
-          <widget class="QLineEdit" name="parentIdEdit">
-           <property name="placeholderText">
-            <string>Parent Id</string>
            </property>
           </widget>
          </item>
@@ -349,10 +349,14 @@
   </customwidget>
  </customwidgets>
  <tabstops>
+  <tabstop>parentIdEdit</tabstop>
   <tabstop>titleEdit</tabstop>
+  <tabstop>categoryEdit</tabstop>
+  <tabstop>editCategoryButton</tabstop>
   <tabstop>locationEdit</tabstop>
   <tabstop>selectLocationButton</tabstop>
   <tabstop>setupEdit</tabstop>
+  <tabstop>macroButton</tabstop>
   <tabstop>setCoverButton</tabstop>
   <tabstop>submitButton</tabstop>
   <tabstop>scrollArea</tabstop>

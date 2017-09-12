@@ -59,7 +59,7 @@ Center::Center()
 	db_->exec("CREATE TABLE IF NOT EXISTS EngineVersions ("
 		"Name TEXT COLLATE NOCASE, Version TEXT COLLATE NOCASE, "
 		"Setup TEXT, UnSetup TEXT, "
-		"UpTime DATETIME, Info TEXT, State TEXT)");
+		"UpTime DATETIME, Info TEXT, DisplayPriority INT, State TEXT)");
 
 	db_->exec("CREATE TABLE IF NOT EXISTS Contents ("
 		"Id TEXT, ParentId TEXT, "
@@ -69,7 +69,7 @@ Center::Center()
 
 	db_->exec("CREATE TABLE IF NOT EXISTS Extras ("
 		"Id TEXT, ParentId TEXT, Title TEXT, Category TEXT, Setup TEXT, "
-		"User TEXT, UpTime DATETIME, Info TEXT, State TEXT)");
+		"User TEXT, UpTime DATETIME, Info TEXT, DisplayPriority INT, State TEXT)");
 
 	db_->exec("CREATE TABLE IF NOT EXISTS Clients ("
 		"Version TEXT COLLATE NOCASE, "
@@ -88,13 +88,13 @@ Center::Center()
 		"\"Group\")");
 
 	db_->exec("CREATE INDEX IF NOT EXISTS IndexOfEngineVersions ON EngineVersions ("
-		"Name, Version, UpTime)");
+		"Name, Version, UpTime, DisplayPriority)");
 
 	db_->exec("CREATE INDEX IF NOT EXISTS IndexOfContents ON Contents ("
 		"Id, ParentId, Page, Category, EngineName, EngineVersion, User, UpTime, DisplayPriority, State)");
 
 	db_->exec("CREATE INDEX IF NOT EXISTS IndexOfExtras ON Extras ("
-		"Id, ParentId, Title, Category, User, UpTime, State)");
+		"Id, ParentId, Title, Category, User, UpTime, DisplayPriority, State)");
 
 	db_->exec("CREATE INDEX IF NOT EXISTS IndexOfClients ON Clients ("
 		"Version, UpTime, State)");
@@ -487,6 +487,7 @@ bool Center::addEngineVersion(const std::string& name, const std::string& versio
 	oss << sqlText(form.at("UnSetup")) << ", ";
 	oss << sqlText(getCurrentTimeString()) << ", ";
 	oss << sqlText(form.at("Info")) << ", ";
+	oss << sqlText("0") << ", ";
 	oss << sqlText("Normal") << ")";
 
 	SQLite::Transaction t(*db_);
@@ -533,6 +534,7 @@ bool Center::getEngineVersion(const std::string& name, const std::string& versio
 	form["UnSetup"] = s.getColumn("UnSetup").getText();
 	form["UpTime"] = s.getColumn("UpTime").getText();
 	form["Info"] = s.getColumn("Info").getText();
+	form["DisplayPriority"] = s.getColumn("DisplayPriority").getText();
 	form["State"] = s.getColumn("State").getText();
 
 	return true;
@@ -574,6 +576,23 @@ bool Center::changeEngineVersionState(const std::string& name, const std::string
 	return (n > 0);
 }
 
+bool Center::changeEngineVersionDisplayPriority(const std::string& name, const std::string& version, int displayPriority)
+{
+	std::ostringstream oss;
+	oss << "UPDATE EngineVersions SET DisplayPriority=";
+	oss << sqlText(std::to_string(displayPriority));
+	oss << " WHERE Name=";
+	oss << sqlText(name);
+	oss << " AND Version=";
+	oss << sqlText(version);
+
+	SQLite::Transaction t(*db_);
+	int n = db_->exec(oss.str());
+	t.commit();
+
+	return (n > 0);
+}
+
 bool Center::addExtra(const Form& form, const std::string& id)
 {
 	std::ostringstream oss;
@@ -586,6 +605,7 @@ bool Center::addExtra(const Form& form, const std::string& id)
 	oss << sqlText(form.at("User")) << ", ";
 	oss << sqlText(getCurrentTimeString()) << ", ";
 	oss << sqlText(form.at("Info")) << ", ";
+	oss << sqlText("0") << ", ";
 	oss << sqlText("Normal") << ")";
 
 	SQLite::Transaction t(*db_);
@@ -633,6 +653,7 @@ bool Center::getExtra(Form& form, const std::string& id)
 	form["User"] = s.getColumn("User").getText();
 	form["UpTime"] = s.getColumn("UpTime").getText();
 	form["Info"] = s.getColumn("Info").getText();
+	form["DisplayPriority"] = s.getColumn("DisplayPriority").getText();
 	form["State"] = s.getColumn("State").getText();
 
 	return true;
@@ -643,6 +664,21 @@ bool Center::changeExtraState(const std::string& id, const std::string& state)
 	std::ostringstream oss;
 	oss << "UPDATE Extras SET State=";
 	oss << sqlText(state);
+	oss << " WHERE Id=";
+	oss << sqlText(id);
+
+	SQLite::Transaction t(*db_);
+	int n = db_->exec(oss.str());
+	t.commit();
+
+	return (n > 0);
+}
+
+bool Center::changeExtraDisplayPriority(const std::string& id, int displayPriority)
+{
+	std::ostringstream oss;
+	oss << "UPDATE Extras SET DisplayPriority=";
+	oss << sqlText(std::to_string(displayPriority));
 	oss << " WHERE Id=";
 	oss << sqlText(id);
 
