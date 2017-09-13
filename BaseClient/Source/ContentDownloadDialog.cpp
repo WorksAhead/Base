@@ -17,25 +17,13 @@ ContentDownloadDialog::~ContentDownloadDialog()
 
 void ContentDownloadDialog::setEngineVersionAboutToBeDownloaded(const QString& name, const QString& version)
 {
-	ui_.installEngineLabel->setText("Install Engine " + name + " " + version);
+	ui_.installEngineCheckBox->setText("Install Engine " + name + " " + version);
 }
 
 bool ContentDownloadDialog::isInstallEngineChecked()
 {
 	return ui_.installEngineCheckBox->isChecked();
 }
-
-//void ContentDownloadDialog::mousePressEvent(QMouseEvent* e)
-//{
-//	if (e->button() == Qt::LeftButton)
-//	{
-//		QPoint pos = ui_.installEngineLabel->mapFrom(this, e->pos());
-//		if (ui_.installEngineLabel->rect().contains(pos))
-//		{
-//			ui_.installEngineCheckBox->setChecked(!ui_.installEngineCheckBox->isChecked());
-//		}
-//	}
-//}
 
 void ContentDownloadDialog::onDownload()
 {

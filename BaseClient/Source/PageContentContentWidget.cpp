@@ -392,8 +392,11 @@ void PageContentContentWidget::onDownload()
 		if (engineState == EngineState::not_installed)
 		{
 			ContentDownloadDialog d;
+
 			d.setEngineVersionAboutToBeDownloaded(engineName, engineVersion);
+
 			int ret = d.exec();
+
 			if (ret != 1) {
 				state = ContentState::downloading;
 				context_->changeContentState(contentId_.toStdString(), state, ContentState::not_downloaded);
@@ -405,7 +408,9 @@ void PageContentContentWidget::onDownload()
 	}
 
 	Rpc::DownloaderPrx downloader;
+
 	Rpc::ErrorCode ec = context_->session->downloadContent(contentId_.toStdString(), downloader);
+
 	if (ec != Rpc::ec_success) {
 		state = ContentState::downloading;
 		context_->changeContentState(contentId_.toStdString(), state, ContentState::not_downloaded);
@@ -414,9 +419,11 @@ void PageContentContentWidget::onDownload()
 	}
 
 	boost::shared_ptr<ASyncDownloadContentTask> task(new ASyncDownloadContentTask(context_, downloader));
+
 	task->setInfoHead(QString("Download %1").arg(ui_.titleLabel->text()).toLocal8Bit().data());
 	task->setContentId(contentId_.toStdString());
 	task->setFilename((fs::path(context_->contentPath(contentId_.toStdString())) / "content").string());
+
 	context_->addTask(task);
 
 	if (installEngine) {

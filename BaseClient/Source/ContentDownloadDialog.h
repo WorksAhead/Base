@@ -14,9 +14,6 @@ public:
 	void setEngineVersionAboutToBeDownloaded(const QString& name, const QString& version);
 	bool isInstallEngineChecked();
 
-protected:
-	//virtual void mousePressEvent(QMouseEvent*);
-
 private Q_SLOTS:
 	void onDownload();
 
