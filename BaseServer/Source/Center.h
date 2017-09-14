@@ -111,6 +111,7 @@ protected:
 	virtual void runTimerTask();
 
 private:
+	void deleteMarkedContents();
 	void loadPagesFromDb();
 	void loadContentCategoriesFromDb();
 	void updateContentCategoryGroup();

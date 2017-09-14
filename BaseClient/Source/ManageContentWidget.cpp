@@ -286,7 +286,10 @@ void ManageContentWidget::showMore(int count)
 				continue;
 			}
 
-			if (ci.state == "Normal" && !ui_.showNormalCheckBox->isChecked()) {
+			if (ci.state == "Deleted") {
+				continue;
+			}
+			else if (ci.state == "Normal" && !ui_.showNormalCheckBox->isChecked()) {
 				continue;
 			}
 			else if (ci.state == "Hidden" && !ui_.showHiddenCheckBox->isChecked()) {

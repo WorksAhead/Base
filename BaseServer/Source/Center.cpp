@@ -105,6 +105,8 @@ Center::Center()
 	db_->exec("CREATE INDEX IF NOT EXISTS IndexOfDownloadCount ON DownloadCount ("
 		"TargetId, Count)");
 
+	deleteMarkedContents();
+
 	loadPagesFromDb();
 	loadContentCategoriesFromDb();
 	loadExtraCategoriesFromDb();
@@ -941,6 +943,27 @@ int Center::onlineUserCount()
 void Center::runTimerTask()
 {
 
+}
+
+void Center::deleteMarkedContents()
+{
+	std::ostringstream oss;
+	oss << "SELECT Id, ImageCount FROM Contents";
+	oss << " WHERE State=" << sqlText("Removed");
+
+	SQLite::Statement s(*db_, oss.str());
+
+	while (s.executeStep())
+	{
+		std::string id = s.getColumn("Id").getText();
+		fs::path p(getContentPath(id));
+
+		boost::system::error_code ec;
+
+		fs::remove_all(p, ec);
+
+		changeContentState(id, "Deleted");
+	}
 }
 
 void Center::loadPagesFromDb()

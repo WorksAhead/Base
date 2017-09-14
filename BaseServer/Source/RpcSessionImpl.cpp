@@ -357,8 +357,13 @@ Rpc::ErrorCode RpcSessionImpl::changeContentState(const std::string& id, const s
 	checkIsDestroyed();
 
 	std::map<std::string, std::string> form;
+
 	if (!context_->center()->getContent(form, id)) {
 		return Rpc::ec_content_does_not_exist;
+	}
+
+	if (form["State"] == "Deleted") {
+		return Rpc::ec_operation_failed;
 	}
 
 	if (!boost::iequals(context_->user(), form.at("User")) && context_->userGroup() != "Admin") {

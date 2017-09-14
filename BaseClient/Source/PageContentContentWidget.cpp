@@ -461,7 +461,7 @@ void PageContentContentWidget::refreshRelatedVersions(int count)
 		const int n = qMin(count, 20);
 
 		Rpc::ContentItemSeq items;
-		browser->next(count, items);
+		browser->next(n, items);
 
 		if (items.size() < n)
 		{
@@ -469,21 +469,23 @@ void PageContentContentWidget::refreshRelatedVersions(int count)
 
 			if (context_->session->getContentInfo(ci.parentId, ci2) == Rpc::ec_success)
 			{
-				if (ci2.state != "Removed") {
+				if (ci2.state == "Normal" || ci2.state == "Hidden") {
 					items.push_back({ci2.id, ci2.title});
 				}
 			}
 
-			count = 0;
+			count = -1;
 		}
 
 		if (versionInfo.str().empty() && !items.empty()) {
 			versionInfo << "Related versions:<br/>";
 		}
 
+		int m = 0;
+
 		for (size_t i = 0; i < items.size(); ++i)
 		{
-			if (items[i].state == "Removed") {
+			if (items[i].state != "Normal" && items[i].state != "Hidden") {
 				continue;
 			}
 
@@ -507,10 +509,13 @@ void PageContentContentWidget::refreshRelatedVersions(int count)
 			percentEncode(pages[0]);
 
 			boost::replace_all(items[i].title, "\r", " ");
+
 			versionInfo << "<a href=\"" << "base://content/?id=" << items[i].id << "&page=" << pages[0] << "\">" << items[i].title << "</a><br/>";
+
+			++m;
 		}
 
-		count -= n;
+		count -= m;
 	}
 
 	if (count == 0) {
