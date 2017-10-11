@@ -470,7 +470,7 @@ void PageContentContentWidget::refreshRelatedVersions(int count)
 			if (context_->session->getContentInfo(ci.parentId, ci2) == Rpc::ec_success)
 			{
 				if (ci2.state == "Normal" || ci2.state == "Hidden") {
-					items.push_back({ci2.id, ci2.title});
+					items.push_back({ci2.id, ci2.title, ci2.state});
 				}
 			}
 
