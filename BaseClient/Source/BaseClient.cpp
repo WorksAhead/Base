@@ -374,7 +374,7 @@ BaseClient::BaseClient(const QString& workPath, const QString& version, Rpc::Ses
 		w->labelSelectorWidget()->setLabels(extraCategoryList);
 		QObject::connect(w, &CategoryFilterWidget::collapsed, w, &CategoryFilterWidget::collapse);
 		QObject::connect(w, &CategoryFilterWidget::extended, w, &CategoryFilterWidget::extend);
-		tabWidget_->addTab(QString::fromLocal8Bit("工具"), pageExtraWidget);
+		tabWidget_->addTab(QString::fromLocal8Bit("安装包"), pageExtraWidget);
 	}
 
 	library_ = new LibraryWidget(context_);
@@ -1121,6 +1121,23 @@ void BaseClient::openUrl(const QString& url)
 								tabWidget_->setCurrentIndex(index);
 								activateWindow();
 							}
+						}
+					}
+				}
+			}
+			else if (path == "base://extra/")
+			{
+				for (int i = 0; i < tabWidget_->count(); ++i)
+				{
+					PageExtraWidget* w = qobject_cast<PageExtraWidget*>(tabWidget_->widget(i));
+
+					if (w)
+					{
+						if (w->openUrl(url))
+						{
+							const int index = tabWidget_->indexOf(w);
+							tabWidget_->setCurrentIndex(index);
+							activateWindow();
 						}
 					}
 				}

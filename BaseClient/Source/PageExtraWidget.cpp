@@ -2,6 +2,7 @@
 #include "PageExtraItemWidget.h"
 #include "FlowLayout.h"
 #include "ExtraImageLoader.h"
+#include "URLUtils.h"
 
 #include <QPainter>
 #include <QScrollArea>
@@ -59,6 +60,24 @@ PageExtraWidget::~PageExtraWidget()
 {
 }
 
+bool PageExtraWidget::openUrl(const QString& url)
+{
+	std::string path;
+	KVMap args;
+
+	if (parseUrl(url.toStdString(), path, args) && path == "base://extra/")
+	{
+		std::string id;
+
+		if (args.lookupValue(id, "id"))
+		{
+			return showExtra(id.c_str());
+		}
+	}
+
+	return false;
+}
+
 CategoryFilterWidget* PageExtraWidget::categoryFilterWidget()
 {
 	return ui_.filterWidget;
@@ -78,54 +97,8 @@ void PageExtraWidget::mousePressEvent(QMouseEvent* e)
 
 				PageExtraItemWidget* pi = qobject_cast<PageExtraItemWidget*>(w);
 
-				if (pi)
-				{
-					Rpc::ExtraInfo item;
-
-					if (context_->session->getExtraInfo(pi->id().toStdString(), item) == Rpc::ec_success)
-					{
-						ui_.titleLabel->setText(pi->text());
-
-						std::ostringstream metaInfo;
-
-						metaInfo << item.user << " " << item.uptime << "\n";
-						metaInfo << "\nId:\n" << item.id << "\n";
-
-						if (!item.parentId.empty()) {
-							metaInfo << "\nParent Id:\n" << item.parentId << "\n";
-						}
-
-						ui_.metaInfoLabel->setText(metaInfo.str().c_str());
-
-						if (boost::istarts_with(item.info, "<!DOCTYPE HTML")) {
-							ui_.description->setHtml(item.info.c_str());
-						}
-						else {
-							ui_.description->setText(item.info.c_str());
-						}
-
-						ui_.stackedWidget->setCurrentIndex(1);
-						ui_.backButton->setVisible(true);
-						ui_.refreshButton->setVisible(false);
-
-						currentId_ = pi->id();
-
-						int downloadCount = 0;
-
-						context_->session->queryDownloadCount(item.id, downloadCount);
-
-						ui_.downloadCountLabel->setText(QString("%1 downloads").arg(downloadCount));
-
-						ui_.commentWidget->setContext(context_);
-
-						QString parentId = QString::fromStdString(item.parentId);
-
-						ui_.commentWidget->setTargetId(parentId.isEmpty() ? pi->id() : parentId);
-
-						ui_.scrollArea_2->verticalScrollBar()->setValue(0);
-
-						repaint();
-					}
+				if (pi) {
+					showExtra(pi->id());
 				}
 			}
 		}
@@ -138,12 +111,14 @@ void PageExtraWidget::mousePressEvent(QMouseEvent* e)
 			{
 				QMenu m;
 
+				QAction* actionCopyUrl = m.addAction("Copy URL");
+				QAction* actionCopyHttpUrl = m.addAction("Copy HTTP Redirection URL");
 				QAction* actionCopyId = m.addAction("Copy Id");
 				QAction* actionCopyParentId = m.addAction("Copy Parent Id");
 
 				QAction* selectedItem = m.exec(QCursor::pos());
 
-				if (selectedItem == actionCopyId || selectedItem == actionCopyParentId)
+				if (selectedItem)
 				{
 					Rpc::ExtraInfo info;
 
@@ -151,11 +126,26 @@ void PageExtraWidget::mousePressEvent(QMouseEvent* e)
 
 					if (ec == Rpc::ec_success)
 					{
-						if (selectedItem == actionCopyId)
+						if (selectedItem == actionCopyUrl)
+						{
+							QApplication::clipboard()->setText(URLQuery("base://extra/").arg("id", info.id).str().c_str());
+						}
+						else if (selectedItem == actionCopyHttpUrl)
+						{
+							URLQuery q("base://extra/");
+							q.arg("id", info.id);
+
+							std::string url = q.str();
+							percentEncode(url);
+
+							QString s = qApp->property("BaseClient.HttpUrlRedir").toString();
+							QApplication::clipboard()->setText(s + "?q=" + url.c_str());
+						}
+						else if (selectedItem == actionCopyId)
 						{
 							QApplication::clipboard()->setText(info.id.c_str());
 						}
-						else /*if (selectedItem == actionCopyParentId)*/
+						else if (selectedItem == actionCopyParentId)
 						{
 							QApplication::clipboard()->setText(info.parentId.c_str());
 						}
@@ -277,6 +267,60 @@ void PageExtraWidget::onTimeout()
 void PageExtraWidget::onAnchorClicked(const QUrl& url)
 {
 	context_->openUrl(url.toString().toStdString());
+}
+
+bool PageExtraWidget::showExtra(const QString& id)
+{
+	Rpc::ExtraInfo item;
+
+	if (context_->session->getExtraInfo(id.toStdString(), item) == Rpc::ec_success)
+	{
+		ui_.titleLabel->setText(item.title.c_str());
+
+		std::ostringstream metaInfo;
+
+		metaInfo << item.user << " " << item.uptime << "\n";
+		metaInfo << "\nId:\n" << item.id << "\n";
+
+		if (!item.parentId.empty()) {
+			metaInfo << "\nParent Id:\n" << item.parentId << "\n";
+		}
+
+		ui_.metaInfoLabel->setText(metaInfo.str().c_str());
+
+		if (boost::istarts_with(item.info, "<!DOCTYPE HTML")) {
+			ui_.description->setHtml(item.info.c_str());
+		}
+		else {
+			ui_.description->setText(item.info.c_str());
+		}
+
+		ui_.stackedWidget->setCurrentIndex(1);
+		ui_.backButton->setVisible(true);
+		ui_.refreshButton->setVisible(false);
+
+		currentId_ = id;
+
+		int downloadCount = 0;
+
+		context_->session->queryDownloadCount(item.id, downloadCount);
+
+		ui_.downloadCountLabel->setText(QString("%1 downloads").arg(downloadCount));
+
+		ui_.commentWidget->setContext(context_);
+
+		QString parentId = QString::fromStdString(item.parentId);
+
+		ui_.commentWidget->setTargetId(parentId.isEmpty() ? id : parentId);
+
+		ui_.scrollArea_2->verticalScrollBar()->setValue(0);
+
+		repaint();
+
+		return true;
+	}
+
+	return false;
 }
 
 void PageExtraWidget::showMore(int n)

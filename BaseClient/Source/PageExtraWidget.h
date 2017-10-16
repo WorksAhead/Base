@@ -25,6 +25,8 @@ public:
 	PageExtraWidget(ContextPtr context, const QString& name, QWidget* parent = 0);
 	~PageExtraWidget();
 
+	bool openUrl(const QString& url);
+
 	CategoryFilterWidget* categoryFilterWidget();
 
 protected:
@@ -43,6 +45,7 @@ private Q_SLOTS:
 	void onAnchorClicked(const QUrl&);
 
 private:
+	bool showExtra(const QString& id);
 	void showMore(int);
 	void clear();
 	QString currentCategory();
