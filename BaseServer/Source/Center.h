@@ -112,6 +112,7 @@ protected:
 
 private:
 	void deleteMarkedContents();
+	void deleteMarkedExtras();
 	void loadPagesFromDb();
 	void loadContentCategoriesFromDb();
 	void updateContentCategoryGroup();

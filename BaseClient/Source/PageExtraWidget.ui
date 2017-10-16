@@ -198,7 +198,7 @@
             <height>603</height>
            </rect>
           </property>
-          <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0,0,0,0,0,1">
+          <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0,0,0,0,0,0,1">
            <property name="spacing">
             <number>20</number>
            </property>
@@ -230,6 +230,19 @@
             <widget class="QLabel" name="metaInfoLabel">
              <property name="text">
               <string>MetaInformation</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="versionInfoLabel">
+             <property name="textFormat">
+              <enum>Qt::RichText</enum>
              </property>
              <property name="alignment">
               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>

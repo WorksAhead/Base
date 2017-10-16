@@ -212,12 +212,13 @@ module Rpc
 		ErrorCode changeEngineVersionDisplayPriority(string name, string version, int displayPriority);
 
 		ErrorCode browseExtra(string category, string search, out ExtraBrowser* browser);
+		ErrorCode browseExtraByParentId(string parentId, out ExtraBrowser* browser);
 		ErrorCode getExtraInfo(string id, out ExtraInfo info);
 		ErrorCode downloadExtraImage(string id, out Downloader* downloader);
 		ErrorCode downloadExtra(string id, out Downloader* downloader);
 		ErrorCode submitExtra(out ExtraSubmitter* submitter);
 		ErrorCode updateExtra(string id, out ExtraSubmitter* submitter);
-		ErrorCode removeExtra(string id);
+		ErrorCode changeExtraState(string id, string state);
 		ErrorCode changeExtraDisplayPriority(string id, int displayPriority);
 
 		ErrorCode browseClient(out ClientBrowser* browser);

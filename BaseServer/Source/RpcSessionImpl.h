@@ -53,12 +53,13 @@ public:
 	virtual Rpc::ErrorCode changeEngineVersionDisplayPriority(const std::string&, const std::string&, Ice::Int, const Ice::Current&);
 
 	virtual Rpc::ErrorCode browseExtra(const std::string&, const std::string&, Rpc::ExtraBrowserPrx&, const Ice::Current&);
+	virtual Rpc::ErrorCode browseExtraByParentId(const std::string&, Rpc::ExtraBrowserPrx&, const Ice::Current&);
 	virtual Rpc::ErrorCode getExtraInfo(const std::string&, Rpc::ExtraInfo&, const Ice::Current&);
 	virtual Rpc::ErrorCode downloadExtraImage(const std::string&, Rpc::DownloaderPrx&, const Ice::Current&);
 	virtual Rpc::ErrorCode downloadExtra(const std::string&, Rpc::DownloaderPrx&, const Ice::Current&);
 	virtual Rpc::ErrorCode submitExtra(Rpc::ExtraSubmitterPrx&, const Ice::Current&);
 	virtual Rpc::ErrorCode updateExtra(const std::string&, Rpc::ExtraSubmitterPrx&, const Ice::Current&);
-	virtual Rpc::ErrorCode removeExtra(const std::string&, const Ice::Current&);
+	virtual Rpc::ErrorCode changeExtraState(const std::string&, const std::string&, const Ice::Current&);
 	virtual Rpc::ErrorCode changeExtraDisplayPriority(const std::string&, Ice::Int, const Ice::Current&);
 
 	virtual Rpc::ErrorCode browseClient(Rpc::ClientBrowserPrx&, const Ice::Current&);

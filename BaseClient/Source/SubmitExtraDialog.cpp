@@ -11,6 +11,8 @@
 
 #include <boost/filesystem.hpp>
 
+#define VERSION_FORMAT R"((0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*))"
+
 namespace fs = boost::filesystem;
 
 SubmitExtraDialog::SubmitExtraDialog(ContextPtr context, QWidget* parent) : context_(context), QDialog(parent)
@@ -18,6 +20,8 @@ SubmitExtraDialog::SubmitExtraDialog(ContextPtr context, QWidget* parent) : cont
 	setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
 	ui_.setupUi(this);
+
+	ui_.versionEdit->setValidator(new QRegExpValidator(QRegExp(VERSION_FORMAT)));
 
 	QMenu* menu = new QMenu;
 
@@ -68,7 +72,10 @@ void SubmitExtraDialog::setParentId(const QString& parentId)
 
 void SubmitExtraDialog::setTitle(const QString& title)
 {
-	ui_.titleEdit->setText(title);
+	QStringList v = title.split('\r');
+
+	ui_.nameEdit->setText((v.count() > 0) ? v[0] : "");
+	ui_.versionEdit->setText((v.count() > 1) ? v[1] : "0.0.0");
 }
 
 void SubmitExtraDialog::setCategory(const QString& category)
@@ -98,7 +105,7 @@ QString SubmitExtraDialog::getParentId() const
 
 QString SubmitExtraDialog::getTitle() const
 {
-	return ui_.titleEdit->text();
+	return ui_.nameEdit->text() + "\r" + ui_.versionEdit->text();
 }
 
 QString SubmitExtraDialog::getLocation() const
@@ -202,8 +209,17 @@ void SubmitExtraDialog::setCover()
 
 void SubmitExtraDialog::submit()
 {
-	if (ui_.titleEdit->text().isEmpty()) {
-		QMessageBox::information(this, "Base", tr("The Title field cannot be left empty."));
+	if (ui_.nameEdit->text().isEmpty()) {
+		QMessageBox::information(this, "Base", tr("The Name field cannot be left empty."));
+		return;
+	}
+	else if (ui_.versionEdit->text().isEmpty()) {
+		QMessageBox::information(this, "Base", tr("The Version field cannot be left empty."));
+		return;
+	}
+
+	if (!QRegExp(VERSION_FORMAT).exactMatch(ui_.versionEdit->text())) {
+		QMessageBox::information(this, "Base", tr("Invalid Version format."));
 		return;
 	}
 

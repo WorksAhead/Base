@@ -175,6 +175,8 @@ const ::std::string __Rpc__Session__changeEngineVersionDisplayPriority_name = "c
 
 const ::std::string __Rpc__Session__browseExtra_name = "browseExtra";
 
+const ::std::string __Rpc__Session__browseExtraByParentId_name = "browseExtraByParentId";
+
 const ::std::string __Rpc__Session__getExtraInfo_name = "getExtraInfo";
 
 const ::std::string __Rpc__Session__downloadExtraImage_name = "downloadExtraImage";
@@ -185,7 +187,7 @@ const ::std::string __Rpc__Session__submitExtra_name = "submitExtra";
 
 const ::std::string __Rpc__Session__updateExtra_name = "updateExtra";
 
-const ::std::string __Rpc__Session__removeExtra_name = "removeExtra";
+const ::std::string __Rpc__Session__changeExtraState_name = "changeExtraState";
 
 const ::std::string __Rpc__Session__changeExtraDisplayPriority_name = "changeExtraDisplayPriority";
 
@@ -7910,6 +7912,128 @@ IceProxy::Rpc::Session::end_browseExtra(::Rpc::ExtraBrowserPrx& __p_browser, con
 }
 
 ::Rpc::ErrorCode
+IceProxy::Rpc::Session::browseExtraByParentId(const ::std::string& __p_parentId, ::Rpc::ExtraBrowserPrx& __p_browser, const ::Ice::Context* __ctx)
+{
+    __checkTwowayOnly(__Rpc__Session__browseExtraByParentId_name);
+    ::IceInternal::Outgoing __og(this, __Rpc__Session__browseExtraByParentId_name, ::Ice::Normal, __ctx);
+    try
+    {
+        ::IceInternal::BasicStream* __os = __og.startWriteParams(::Ice::DefaultFormat);
+        __os->write(__p_parentId);
+        __og.endWriteParams();
+    }
+    catch(const ::Ice::LocalException& __ex)
+    {
+        __og.abort(__ex);
+    }
+    if(!__og.invoke())
+    {
+        try
+        {
+            __og.throwUserException();
+        }
+        catch(const ::Ice::UserException& __ex)
+        {
+            ::Ice::UnknownUserException __uue(__FILE__, __LINE__, __ex.ice_name());
+            throw __uue;
+        }
+    }
+    ::Rpc::ErrorCode __ret;
+    ::IceInternal::BasicStream* __is = __og.startReadParams();
+    __is->read(__p_browser);
+    __is->read(__ret);
+    __og.endReadParams();
+    return __ret;
+}
+
+::Ice::AsyncResultPtr
+IceProxy::Rpc::Session::begin_browseExtraByParentId(const ::std::string& __p_parentId, const ::Ice::Context* __ctx, const ::IceInternal::CallbackBasePtr& __del, const ::Ice::LocalObjectPtr& __cookie)
+{
+    __checkAsyncTwowayOnly(__Rpc__Session__browseExtraByParentId_name);
+    ::IceInternal::OutgoingAsyncPtr __result = new ::IceInternal::OutgoingAsync(this, __Rpc__Session__browseExtraByParentId_name, __del, __cookie);
+    try
+    {
+        __result->prepare(__Rpc__Session__browseExtraByParentId_name, ::Ice::Normal, __ctx);
+        ::IceInternal::BasicStream* __os = __result->startWriteParams(::Ice::DefaultFormat);
+        __os->write(__p_parentId);
+        __result->endWriteParams();
+        __result->invoke();
+    }
+    catch(const ::Ice::Exception& __ex)
+    {
+        __result->abort(__ex);
+    }
+    return __result;
+}
+
+#ifdef ICE_CPP11
+
+::Ice::AsyncResultPtr
+IceProxy::Rpc::Session::__begin_browseExtraByParentId(const ::std::string& __p_parentId, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::ExtraBrowserPrx&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent)
+{
+    class Cpp11CB : public ::IceInternal::Cpp11FnCallbackNC
+    {
+    public:
+
+        Cpp11CB(const ::std::function<void (::Rpc::ErrorCode, const ::Rpc::ExtraBrowserPrx&)>& responseFunc, const ::std::function<void (const ::Ice::Exception&)>& exceptionFunc, const ::std::function<void (bool)>& sentFunc) :
+            ::IceInternal::Cpp11FnCallbackNC(exceptionFunc, sentFunc),
+            _response(responseFunc)
+        {
+            CallbackBase::checkCallback(true, responseFunc || exceptionFunc != nullptr);
+        }
+
+        virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+        {
+            ::Rpc::SessionPrx __proxy = ::Rpc::SessionPrx::uncheckedCast(__result->getProxy());
+            ::Rpc::ExtraBrowserPrx __p_browser;
+            ::Rpc::ErrorCode __ret;
+            try
+            {
+                __ret = __proxy->end_browseExtraByParentId(__p_browser, __result);
+            }
+            catch(const ::Ice::Exception& ex)
+            {
+                Cpp11FnCallbackNC::exception(__result, ex);
+                return;
+            }
+            if(_response != nullptr)
+            {
+                _response(__ret, __p_browser);
+            }
+        }
+    
+    private:
+        
+        ::std::function<void (::Rpc::ErrorCode, const ::Rpc::ExtraBrowserPrx&)> _response;
+    };
+    return begin_browseExtraByParentId(__p_parentId, __ctx, new Cpp11CB(__response, __exception, __sent));
+}
+#endif
+
+::Rpc::ErrorCode
+IceProxy::Rpc::Session::end_browseExtraByParentId(::Rpc::ExtraBrowserPrx& __p_browser, const ::Ice::AsyncResultPtr& __result)
+{
+    ::Ice::AsyncResult::__check(__result, this, __Rpc__Session__browseExtraByParentId_name);
+    ::Rpc::ErrorCode __ret;
+    if(!__result->__wait())
+    {
+        try
+        {
+            __result->__throwUserException();
+        }
+        catch(const ::Ice::UserException& __ex)
+        {
+            throw ::Ice::UnknownUserException(__FILE__, __LINE__, __ex.ice_name());
+        }
+    }
+    ::IceInternal::BasicStream* __is = __result->__startReadParams();
+    __is->read(__p_browser);
+    __is->read(__ret);
+    __result->__endReadParams();
+    return __ret;
+}
+
+::Rpc::ErrorCode
 IceProxy::Rpc::Session::getExtraInfo(const ::std::string& __p_id, ::Rpc::ExtraInfo& __p_info, const ::Ice::Context* __ctx)
 {
     __checkTwowayOnly(__Rpc__Session__getExtraInfo_name);
@@ -8509,14 +8633,15 @@ IceProxy::Rpc::Session::end_updateExtra(::Rpc::ExtraSubmitterPrx& __p_submitter,
 }
 
 ::Rpc::ErrorCode
-IceProxy::Rpc::Session::removeExtra(const ::std::string& __p_id, const ::Ice::Context* __ctx)
+IceProxy::Rpc::Session::changeExtraState(const ::std::string& __p_id, const ::std::string& __p_state, const ::Ice::Context* __ctx)
 {
-    __checkTwowayOnly(__Rpc__Session__removeExtra_name);
-    ::IceInternal::Outgoing __og(this, __Rpc__Session__removeExtra_name, ::Ice::Normal, __ctx);
+    __checkTwowayOnly(__Rpc__Session__changeExtraState_name);
+    ::IceInternal::Outgoing __og(this, __Rpc__Session__changeExtraState_name, ::Ice::Normal, __ctx);
     try
     {
         ::IceInternal::BasicStream* __os = __og.startWriteParams(::Ice::DefaultFormat);
         __os->write(__p_id);
+        __os->write(__p_state);
         __og.endWriteParams();
     }
     catch(const ::Ice::LocalException& __ex)
@@ -8543,15 +8668,16 @@ IceProxy::Rpc::Session::removeExtra(const ::std::string& __p_id, const ::Ice::Co
 }
 
 ::Ice::AsyncResultPtr
-IceProxy::Rpc::Session::begin_removeExtra(const ::std::string& __p_id, const ::Ice::Context* __ctx, const ::IceInternal::CallbackBasePtr& __del, const ::Ice::LocalObjectPtr& __cookie)
+IceProxy::Rpc::Session::begin_changeExtraState(const ::std::string& __p_id, const ::std::string& __p_state, const ::Ice::Context* __ctx, const ::IceInternal::CallbackBasePtr& __del, const ::Ice::LocalObjectPtr& __cookie)
 {
-    __checkAsyncTwowayOnly(__Rpc__Session__removeExtra_name);
-    ::IceInternal::OutgoingAsyncPtr __result = new ::IceInternal::OutgoingAsync(this, __Rpc__Session__removeExtra_name, __del, __cookie);
+    __checkAsyncTwowayOnly(__Rpc__Session__changeExtraState_name);
+    ::IceInternal::OutgoingAsyncPtr __result = new ::IceInternal::OutgoingAsync(this, __Rpc__Session__changeExtraState_name, __del, __cookie);
     try
     {
-        __result->prepare(__Rpc__Session__removeExtra_name, ::Ice::Normal, __ctx);
+        __result->prepare(__Rpc__Session__changeExtraState_name, ::Ice::Normal, __ctx);
         ::IceInternal::BasicStream* __os = __result->startWriteParams(::Ice::DefaultFormat);
         __os->write(__p_id);
+        __os->write(__p_state);
         __result->endWriteParams();
         __result->invoke();
     }
@@ -8565,7 +8691,7 @@ IceProxy::Rpc::Session::begin_removeExtra(const ::std::string& __p_id, const ::I
 #ifdef ICE_CPP11
 
 ::Ice::AsyncResultPtr
-IceProxy::Rpc::Session::__begin_removeExtra(const ::std::string& __p_id, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent)
+IceProxy::Rpc::Session::__begin_changeExtraState(const ::std::string& __p_id, const ::std::string& __p_state, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent)
 {
     class Cpp11CB : public ::IceInternal::Cpp11FnCallbackNC
     {
@@ -8584,7 +8710,7 @@ IceProxy::Rpc::Session::__begin_removeExtra(const ::std::string& __p_id, const :
             ::Rpc::ErrorCode __ret;
             try
             {
-                __ret = __proxy->end_removeExtra(__result);
+                __ret = __proxy->end_changeExtraState(__result);
             }
             catch(const ::Ice::Exception& ex)
             {
@@ -8601,14 +8727,14 @@ IceProxy::Rpc::Session::__begin_removeExtra(const ::std::string& __p_id, const :
         
         ::std::function<void (::Rpc::ErrorCode)> _response;
     };
-    return begin_removeExtra(__p_id, __ctx, new Cpp11CB(__response, __exception, __sent));
+    return begin_changeExtraState(__p_id, __p_state, __ctx, new Cpp11CB(__response, __exception, __sent));
 }
 #endif
 
 ::Rpc::ErrorCode
-IceProxy::Rpc::Session::end_removeExtra(const ::Ice::AsyncResultPtr& __result)
+IceProxy::Rpc::Session::end_changeExtraState(const ::Ice::AsyncResultPtr& __result)
 {
-    ::Ice::AsyncResult::__check(__result, this, __Rpc__Session__removeExtra_name);
+    ::Ice::AsyncResult::__check(__result, this, __Rpc__Session__changeExtraState_name);
     ::Rpc::ErrorCode __ret;
     if(!__result->__wait())
     {
@@ -13071,6 +13197,23 @@ Rpc::Session::___browseExtra(::IceInternal::Incoming& __inS, const ::Ice::Curren
 }
 
 ::Ice::DispatchStatus
+Rpc::Session::___browseExtraByParentId(::IceInternal::Incoming& __inS, const ::Ice::Current& __current)
+{
+    __checkMode(::Ice::Normal, __current.mode);
+    ::IceInternal::BasicStream* __is = __inS.startReadParams();
+    ::std::string __p_parentId;
+    __is->read(__p_parentId);
+    __inS.endReadParams();
+    ::Rpc::ExtraBrowserPrx __p_browser;
+    ::Rpc::ErrorCode __ret = browseExtraByParentId(__p_parentId, __p_browser, __current);
+    ::IceInternal::BasicStream* __os = __inS.__startWriteParams(::Ice::DefaultFormat);
+    __os->write(__p_browser);
+    __os->write(__ret);
+    __inS.__endWriteParams(true);
+    return ::Ice::DispatchOK;
+}
+
+::Ice::DispatchStatus
 Rpc::Session::___getExtraInfo(::IceInternal::Incoming& __inS, const ::Ice::Current& __current)
 {
     __checkMode(::Ice::Normal, __current.mode);
@@ -13153,14 +13296,16 @@ Rpc::Session::___updateExtra(::IceInternal::Incoming& __inS, const ::Ice::Curren
 }
 
 ::Ice::DispatchStatus
-Rpc::Session::___removeExtra(::IceInternal::Incoming& __inS, const ::Ice::Current& __current)
+Rpc::Session::___changeExtraState(::IceInternal::Incoming& __inS, const ::Ice::Current& __current)
 {
     __checkMode(::Ice::Normal, __current.mode);
     ::IceInternal::BasicStream* __is = __inS.startReadParams();
     ::std::string __p_id;
+    ::std::string __p_state;
     __is->read(__p_id);
+    __is->read(__p_state);
     __inS.endReadParams();
-    ::Rpc::ErrorCode __ret = removeExtra(__p_id, __current);
+    ::Rpc::ErrorCode __ret = changeExtraState(__p_id, __p_state, __current);
     ::IceInternal::BasicStream* __os = __inS.__startWriteParams(::Ice::DefaultFormat);
     __os->write(__ret);
     __inS.__endWriteParams(true);
@@ -13454,11 +13599,13 @@ const ::std::string __Rpc__Session_all[] =
     "browseContentByParentId",
     "browseEngineVersions",
     "browseExtra",
+    "browseExtraByParentId",
     "browseUsers",
     "changeContentDisplayPriority",
     "changeContentState",
     "changeEngineVersionDisplayPriority",
     "changeExtraDisplayPriority",
+    "changeExtraState",
     "copyContent",
     "destroy",
     "downloadContent",
@@ -13490,7 +13637,6 @@ const ::std::string __Rpc__Session_all[] =
     "removeClient",
     "removeComment",
     "removeEngineVersion",
-    "removeExtra",
     "removeUser",
     "setContentCategories",
     "setExtraCategories",
@@ -13511,7 +13657,7 @@ const ::std::string __Rpc__Session_all[] =
 ::Ice::DispatchStatus
 Rpc::Session::__dispatch(::IceInternal::Incoming& in, const ::Ice::Current& current)
 {
-    ::std::pair< const ::std::string*, const ::std::string*> r = ::std::equal_range(__Rpc__Session_all, __Rpc__Session_all + 57, current.operation);
+    ::std::pair< const ::std::string*, const ::std::string*> r = ::std::equal_range(__Rpc__Session_all, __Rpc__Session_all + 58, current.operation);
     if(r.first == r.second)
     {
         throw ::Ice::OperationNotExistException(__FILE__, __LINE__, current.id, current.facet, current.operation);
@@ -13549,201 +13695,205 @@ Rpc::Session::__dispatch(::IceInternal::Incoming& in, const ::Ice::Current& curr
         }
         case 7:
         {
-            return ___browseUsers(in, current);
+            return ___browseExtraByParentId(in, current);
         }
         case 8:
         {
-            return ___changeContentDisplayPriority(in, current);
+            return ___browseUsers(in, current);
         }
         case 9:
         {
-            return ___changeContentState(in, current);
+            return ___changeContentDisplayPriority(in, current);
         }
         case 10:
         {
-            return ___changeEngineVersionDisplayPriority(in, current);
+            return ___changeContentState(in, current);
         }
         case 11:
         {
-            return ___changeExtraDisplayPriority(in, current);
+            return ___changeEngineVersionDisplayPriority(in, current);
         }
         case 12:
         {
-            return ___copyContent(in, current);
+            return ___changeExtraDisplayPriority(in, current);
         }
         case 13:
         {
-            return ___destroy(in, current);
+            return ___changeExtraState(in, current);
         }
         case 14:
         {
-            return ___downloadContent(in, current);
+            return ___copyContent(in, current);
         }
         case 15:
         {
-            return ___downloadContentImage(in, current);
+            return ___destroy(in, current);
         }
         case 16:
         {
-            return ___downloadEngineVersion(in, current);
+            return ___downloadContent(in, current);
         }
         case 17:
         {
-            return ___downloadExtra(in, current);
+            return ___downloadContentImage(in, current);
         }
         case 18:
         {
-            return ___downloadExtraImage(in, current);
+            return ___downloadEngineVersion(in, current);
         }
         case 19:
         {
-            return ___editComment(in, current);
+            return ___downloadExtra(in, current);
         }
         case 20:
         {
-            return ___editContent(in, current);
+            return ___downloadExtraImage(in, current);
         }
         case 21:
         {
-            return ___getClientInfo(in, current);
+            return ___editComment(in, current);
         }
         case 22:
         {
-            return ___getComment(in, current);
+            return ___editContent(in, current);
         }
         case 23:
         {
-            return ___getContentCategories(in, current);
+            return ___getClientInfo(in, current);
         }
         case 24:
         {
-            return ___getContentInfo(in, current);
+            return ___getComment(in, current);
         }
         case 25:
         {
-            return ___getCurrentUser(in, current);
+            return ___getContentCategories(in, current);
         }
         case 26:
         {
-            return ___getCurrentUserGroup(in, current);
+            return ___getContentInfo(in, current);
         }
         case 27:
         {
-            return ___getEngineVersion(in, current);
+            return ___getCurrentUser(in, current);
         }
         case 28:
         {
-            return ___getExtraCategories(in, current);
+            return ___getCurrentUserGroup(in, current);
         }
         case 29:
         {
-            return ___getExtraInfo(in, current);
+            return ___getEngineVersion(in, current);
         }
         case 30:
         {
-            return ___getPages(in, current);
+            return ___getExtraCategories(in, current);
         }
         case 31:
         {
-            return ___getUniformInfo(in, current);
+            return ___getExtraInfo(in, current);
         }
         case 32:
         {
-            return ___ice_id(in, current);
+            return ___getPages(in, current);
         }
         case 33:
         {
-            return ___ice_ids(in, current);
+            return ___getUniformInfo(in, current);
         }
         case 34:
         {
-            return ___ice_isA(in, current);
+            return ___ice_id(in, current);
         }
         case 35:
         {
-            return ___ice_ping(in, current);
+            return ___ice_ids(in, current);
         }
         case 36:
         {
-            return ___isUserOnline(in, current);
+            return ___ice_isA(in, current);
         }
         case 37:
         {
-            return ___onlineUserCount(in, current);
+            return ___ice_ping(in, current);
         }
         case 38:
         {
-            return ___queryDownloadCount(in, current);
+            return ___isUserOnline(in, current);
         }
         case 39:
         {
-            return ___refresh(in, current);
+            return ___onlineUserCount(in, current);
         }
         case 40:
         {
-            return ___removeClient(in, current);
+            return ___queryDownloadCount(in, current);
         }
         case 41:
         {
-            return ___removeComment(in, current);
+            return ___refresh(in, current);
         }
         case 42:
         {
-            return ___removeEngineVersion(in, current);
+            return ___removeClient(in, current);
         }
         case 43:
         {
-            return ___removeExtra(in, current);
+            return ___removeComment(in, current);
         }
         case 44:
         {
-            return ___removeUser(in, current);
+            return ___removeEngineVersion(in, current);
         }
         case 45:
         {
-            return ___setContentCategories(in, current);
+            return ___removeUser(in, current);
         }
         case 46:
         {
-            return ___setExtraCategories(in, current);
+            return ___setContentCategories(in, current);
         }
         case 47:
         {
-            return ___setPages(in, current);
+            return ___setExtraCategories(in, current);
         }
         case 48:
         {
-            return ___setUniformInfo(in, current);
+            return ___setPages(in, current);
         }
         case 49:
         {
-            return ___setUserGroup(in, current);
+            return ___setUniformInfo(in, current);
         }
         case 50:
         {
-            return ___submitClient(in, current);
+            return ___setUserGroup(in, current);
         }
         case 51:
         {
-            return ___submitContent(in, current);
+            return ___submitClient(in, current);
         }
         case 52:
         {
-            return ___submitEngineVersion(in, current);
+            return ___submitContent(in, current);
         }
         case 53:
         {
-            return ___submitExtra(in, current);
+            return ___submitEngineVersion(in, current);
         }
         case 54:
         {
-            return ___updateClient(in, current);
+            return ___submitExtra(in, current);
         }
         case 55:
         {
-            return ___updateEngineVersion(in, current);
+            return ___updateClient(in, current);
         }
         case 56:
+        {
+            return ___updateEngineVersion(in, current);
+        }
+        case 57:
         {
             return ___updateExtra(in, current);
         }

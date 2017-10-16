@@ -106,6 +106,7 @@ Center::Center()
 		"TargetId, Count)");
 
 	deleteMarkedContents();
+	deleteMarkedExtras();
 
 	loadPagesFromDb();
 	loadContentCategoriesFromDb();
@@ -963,6 +964,27 @@ void Center::deleteMarkedContents()
 		fs::remove_all(p, ec);
 
 		changeContentState(id, "Deleted");
+	}
+}
+
+void Center::deleteMarkedExtras()
+{
+	std::ostringstream oss;
+	oss << "SELECT Id FROM Extras";
+	oss << " WHERE State=" << sqlText("Removed");
+
+	SQLite::Statement s(*db_, oss.str());
+
+	while (s.executeStep())
+	{
+		std::string id = s.getColumn("Id").getText();
+		fs::path p(getExtraPath(id));
+
+		boost::system::error_code ec;
+
+		fs::remove_all(p, ec);
+
+		changeExtraState(id, "Deleted");
 	}
 }
 

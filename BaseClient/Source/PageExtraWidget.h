@@ -45,6 +45,7 @@ private Q_SLOTS:
 	void onAnchorClicked(const QUrl&);
 
 private:
+	void refreshRelatedVersions(int);
 	bool showExtra(const QString& id);
 	void showMore(int);
 	void clear();

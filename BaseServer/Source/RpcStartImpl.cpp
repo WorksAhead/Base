@@ -31,7 +31,7 @@ RpcStartImpl::RpcStartImpl(CenterPtr center) : center_(center)
 
 std::string RpcStartImpl::getServerVersion(const Ice::Current&)
 {
-	return "1.0.0.14";
+	return "1.0.0.15";
 }
 
 std::string RpcStartImpl::getClientVersion(const Ice::Current&)

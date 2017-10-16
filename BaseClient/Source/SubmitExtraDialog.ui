@@ -79,9 +79,16 @@
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_4">
          <item>
-          <widget class="QLineEdit" name="titleEdit">
+          <widget class="QLineEdit" name="nameEdit">
            <property name="placeholderText">
-            <string>Title</string>
+            <string>Name</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="versionEdit">
+           <property name="placeholderText">
+            <string>Version(d.d.d)</string>
            </property>
           </widget>
          </item>
@@ -350,7 +357,8 @@
  </customwidgets>
  <tabstops>
   <tabstop>parentIdEdit</tabstop>
-  <tabstop>titleEdit</tabstop>
+  <tabstop>nameEdit</tabstop>
+  <tabstop>versionEdit</tabstop>
   <tabstop>categoryEdit</tabstop>
   <tabstop>editCategoryButton</tabstop>
   <tabstop>locationEdit</tabstop>

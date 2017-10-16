@@ -1561,6 +1561,9 @@ typedef ::IceUtil::Handle< Callback_Session_changeEngineVersionDisplayPriority_B
 class Callback_Session_browseExtra_Base : virtual public ::IceInternal::CallbackBase { };
 typedef ::IceUtil::Handle< Callback_Session_browseExtra_Base> Callback_Session_browseExtraPtr;
 
+class Callback_Session_browseExtraByParentId_Base : virtual public ::IceInternal::CallbackBase { };
+typedef ::IceUtil::Handle< Callback_Session_browseExtraByParentId_Base> Callback_Session_browseExtraByParentIdPtr;
+
 class Callback_Session_getExtraInfo_Base : virtual public ::IceInternal::CallbackBase { };
 typedef ::IceUtil::Handle< Callback_Session_getExtraInfo_Base> Callback_Session_getExtraInfoPtr;
 
@@ -1576,8 +1579,8 @@ typedef ::IceUtil::Handle< Callback_Session_submitExtra_Base> Callback_Session_s
 class Callback_Session_updateExtra_Base : virtual public ::IceInternal::CallbackBase { };
 typedef ::IceUtil::Handle< Callback_Session_updateExtra_Base> Callback_Session_updateExtraPtr;
 
-class Callback_Session_removeExtra_Base : virtual public ::IceInternal::CallbackBase { };
-typedef ::IceUtil::Handle< Callback_Session_removeExtra_Base> Callback_Session_removeExtraPtr;
+class Callback_Session_changeExtraState_Base : virtual public ::IceInternal::CallbackBase { };
+typedef ::IceUtil::Handle< Callback_Session_changeExtraState_Base> Callback_Session_changeExtraStatePtr;
 
 class Callback_Session_changeExtraDisplayPriority_Base : virtual public ::IceInternal::CallbackBase { };
 typedef ::IceUtil::Handle< Callback_Session_changeExtraDisplayPriority_Base> Callback_Session_changeExtraDisplayPriorityPtr;
@@ -7778,6 +7781,82 @@ private:
     
 public:
 
+    ::Rpc::ErrorCode browseExtraByParentId(const ::std::string& __p_parentId, ::Rpc::ExtraBrowserPrx& __p_browser)
+    {
+        return browseExtraByParentId(__p_parentId, __p_browser, 0);
+    }
+    ::Rpc::ErrorCode browseExtraByParentId(const ::std::string& __p_parentId, ::Rpc::ExtraBrowserPrx& __p_browser, const ::Ice::Context& __ctx)
+    {
+        return browseExtraByParentId(__p_parentId, __p_browser, &__ctx);
+    }
+#ifdef ICE_CPP11
+    ::Ice::AsyncResultPtr
+    begin_browseExtraByParentId(const ::std::string& __p_parentId, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::ExtraBrowserPrx&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return __begin_browseExtraByParentId(__p_parentId, 0, __response, __exception, __sent);
+    }
+    ::Ice::AsyncResultPtr
+    begin_browseExtraByParentId(const ::std::string& __p_parentId, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_browseExtraByParentId(__p_parentId, 0, ::Ice::newCallback(__completed, __sent), 0);
+    }
+    ::Ice::AsyncResultPtr
+    begin_browseExtraByParentId(const ::std::string& __p_parentId, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::ExtraBrowserPrx&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    {
+        return __begin_browseExtraByParentId(__p_parentId, &__ctx, __response, __exception, __sent);
+    }
+    ::Ice::AsyncResultPtr
+    begin_browseExtraByParentId(const ::std::string& __p_parentId, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    {
+        return begin_browseExtraByParentId(__p_parentId, &__ctx, ::Ice::newCallback(__completed, __sent));
+    }
+    
+private:
+
+    ::Ice::AsyncResultPtr __begin_browseExtraByParentId(const ::std::string& __p_parentId, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode, const ::Rpc::ExtraBrowserPrx&)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent);
+    
+public:
+#endif
+
+    ::Ice::AsyncResultPtr begin_browseExtraByParentId(const ::std::string& __p_parentId)
+    {
+        return begin_browseExtraByParentId(__p_parentId, 0, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_browseExtraByParentId(const ::std::string& __p_parentId, const ::Ice::Context& __ctx)
+    {
+        return begin_browseExtraByParentId(__p_parentId, &__ctx, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_browseExtraByParentId(const ::std::string& __p_parentId, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_browseExtraByParentId(__p_parentId, 0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_browseExtraByParentId(const ::std::string& __p_parentId, const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_browseExtraByParentId(__p_parentId, &__ctx, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_browseExtraByParentId(const ::std::string& __p_parentId, const ::Rpc::Callback_Session_browseExtraByParentIdPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_browseExtraByParentId(__p_parentId, 0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_browseExtraByParentId(const ::std::string& __p_parentId, const ::Ice::Context& __ctx, const ::Rpc::Callback_Session_browseExtraByParentIdPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_browseExtraByParentId(__p_parentId, &__ctx, __del, __cookie);
+    }
+
+    ::Rpc::ErrorCode end_browseExtraByParentId(::Rpc::ExtraBrowserPrx& __p_browser, const ::Ice::AsyncResultPtr&);
+    
+private:
+
+    ::Rpc::ErrorCode browseExtraByParentId(const ::std::string&, ::Rpc::ExtraBrowserPrx&, const ::Ice::Context*);
+    ::Ice::AsyncResultPtr begin_browseExtraByParentId(const ::std::string&, const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
+    
+public:
+
     ::Rpc::ErrorCode getExtraInfo(const ::std::string& __p_id, ::Rpc::ExtraInfo& __p_info)
     {
         return getExtraInfo(__p_id, __p_info, 0);
@@ -8158,79 +8237,79 @@ private:
     
 public:
 
-    ::Rpc::ErrorCode removeExtra(const ::std::string& __p_id)
+    ::Rpc::ErrorCode changeExtraState(const ::std::string& __p_id, const ::std::string& __p_state)
     {
-        return removeExtra(__p_id, 0);
+        return changeExtraState(__p_id, __p_state, 0);
     }
-    ::Rpc::ErrorCode removeExtra(const ::std::string& __p_id, const ::Ice::Context& __ctx)
+    ::Rpc::ErrorCode changeExtraState(const ::std::string& __p_id, const ::std::string& __p_state, const ::Ice::Context& __ctx)
     {
-        return removeExtra(__p_id, &__ctx);
+        return changeExtraState(__p_id, __p_state, &__ctx);
     }
 #ifdef ICE_CPP11
     ::Ice::AsyncResultPtr
-    begin_removeExtra(const ::std::string& __p_id, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    begin_changeExtraState(const ::std::string& __p_id, const ::std::string& __p_state, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
     {
-        return __begin_removeExtra(__p_id, 0, __response, __exception, __sent);
+        return __begin_changeExtraState(__p_id, __p_state, 0, __response, __exception, __sent);
     }
     ::Ice::AsyncResultPtr
-    begin_removeExtra(const ::std::string& __p_id, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    begin_changeExtraState(const ::std::string& __p_id, const ::std::string& __p_state, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
     {
-        return begin_removeExtra(__p_id, 0, ::Ice::newCallback(__completed, __sent), 0);
+        return begin_changeExtraState(__p_id, __p_state, 0, ::Ice::newCallback(__completed, __sent), 0);
     }
     ::Ice::AsyncResultPtr
-    begin_removeExtra(const ::std::string& __p_id, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
+    begin_changeExtraState(const ::std::string& __p_id, const ::std::string& __p_state, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception = ::IceInternal::Function<void (const ::Ice::Exception&)>(), const ::IceInternal::Function<void (bool)>& __sent = ::IceInternal::Function<void (bool)>())
     {
-        return __begin_removeExtra(__p_id, &__ctx, __response, __exception, __sent);
+        return __begin_changeExtraState(__p_id, __p_state, &__ctx, __response, __exception, __sent);
     }
     ::Ice::AsyncResultPtr
-    begin_removeExtra(const ::std::string& __p_id, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
+    begin_changeExtraState(const ::std::string& __p_id, const ::std::string& __p_state, const ::Ice::Context& __ctx, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __completed, const ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>& __sent = ::IceInternal::Function<void (const ::Ice::AsyncResultPtr&)>())
     {
-        return begin_removeExtra(__p_id, &__ctx, ::Ice::newCallback(__completed, __sent));
+        return begin_changeExtraState(__p_id, __p_state, &__ctx, ::Ice::newCallback(__completed, __sent));
     }
     
 private:
 
-    ::Ice::AsyncResultPtr __begin_removeExtra(const ::std::string& __p_id, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent);
+    ::Ice::AsyncResultPtr __begin_changeExtraState(const ::std::string& __p_id, const ::std::string& __p_state, const ::Ice::Context* __ctx, const ::IceInternal::Function<void (::Rpc::ErrorCode)>& __response, const ::IceInternal::Function<void (const ::Ice::Exception&)>& __exception, const ::IceInternal::Function<void (bool)>& __sent);
     
 public:
 #endif
 
-    ::Ice::AsyncResultPtr begin_removeExtra(const ::std::string& __p_id)
+    ::Ice::AsyncResultPtr begin_changeExtraState(const ::std::string& __p_id, const ::std::string& __p_state)
     {
-        return begin_removeExtra(__p_id, 0, ::IceInternal::__dummyCallback, 0);
+        return begin_changeExtraState(__p_id, __p_state, 0, ::IceInternal::__dummyCallback, 0);
     }
 
-    ::Ice::AsyncResultPtr begin_removeExtra(const ::std::string& __p_id, const ::Ice::Context& __ctx)
+    ::Ice::AsyncResultPtr begin_changeExtraState(const ::std::string& __p_id, const ::std::string& __p_state, const ::Ice::Context& __ctx)
     {
-        return begin_removeExtra(__p_id, &__ctx, ::IceInternal::__dummyCallback, 0);
+        return begin_changeExtraState(__p_id, __p_state, &__ctx, ::IceInternal::__dummyCallback, 0);
     }
 
-    ::Ice::AsyncResultPtr begin_removeExtra(const ::std::string& __p_id, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    ::Ice::AsyncResultPtr begin_changeExtraState(const ::std::string& __p_id, const ::std::string& __p_state, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
     {
-        return begin_removeExtra(__p_id, 0, __del, __cookie);
+        return begin_changeExtraState(__p_id, __p_state, 0, __del, __cookie);
     }
 
-    ::Ice::AsyncResultPtr begin_removeExtra(const ::std::string& __p_id, const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    ::Ice::AsyncResultPtr begin_changeExtraState(const ::std::string& __p_id, const ::std::string& __p_state, const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
     {
-        return begin_removeExtra(__p_id, &__ctx, __del, __cookie);
+        return begin_changeExtraState(__p_id, __p_state, &__ctx, __del, __cookie);
     }
 
-    ::Ice::AsyncResultPtr begin_removeExtra(const ::std::string& __p_id, const ::Rpc::Callback_Session_removeExtraPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    ::Ice::AsyncResultPtr begin_changeExtraState(const ::std::string& __p_id, const ::std::string& __p_state, const ::Rpc::Callback_Session_changeExtraStatePtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
     {
-        return begin_removeExtra(__p_id, 0, __del, __cookie);
+        return begin_changeExtraState(__p_id, __p_state, 0, __del, __cookie);
     }
 
-    ::Ice::AsyncResultPtr begin_removeExtra(const ::std::string& __p_id, const ::Ice::Context& __ctx, const ::Rpc::Callback_Session_removeExtraPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    ::Ice::AsyncResultPtr begin_changeExtraState(const ::std::string& __p_id, const ::std::string& __p_state, const ::Ice::Context& __ctx, const ::Rpc::Callback_Session_changeExtraStatePtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
     {
-        return begin_removeExtra(__p_id, &__ctx, __del, __cookie);
+        return begin_changeExtraState(__p_id, __p_state, &__ctx, __del, __cookie);
     }
 
-    ::Rpc::ErrorCode end_removeExtra(const ::Ice::AsyncResultPtr&);
+    ::Rpc::ErrorCode end_changeExtraState(const ::Ice::AsyncResultPtr&);
     
 private:
 
-    ::Rpc::ErrorCode removeExtra(const ::std::string&, const ::Ice::Context*);
-    ::Ice::AsyncResultPtr begin_removeExtra(const ::std::string&, const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
+    ::Rpc::ErrorCode changeExtraState(const ::std::string&, const ::std::string&, const ::Ice::Context*);
+    ::Ice::AsyncResultPtr begin_changeExtraState(const ::std::string&, const ::std::string&, const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
     
 public:
 
@@ -10164,6 +10243,9 @@ public:
     virtual ::Rpc::ErrorCode browseExtra(const ::std::string&, const ::std::string&, ::Rpc::ExtraBrowserPrx&, const ::Ice::Current& = ::Ice::Current()) = 0;
     ::Ice::DispatchStatus ___browseExtra(::IceInternal::Incoming&, const ::Ice::Current&);
 
+    virtual ::Rpc::ErrorCode browseExtraByParentId(const ::std::string&, ::Rpc::ExtraBrowserPrx&, const ::Ice::Current& = ::Ice::Current()) = 0;
+    ::Ice::DispatchStatus ___browseExtraByParentId(::IceInternal::Incoming&, const ::Ice::Current&);
+
     virtual ::Rpc::ErrorCode getExtraInfo(const ::std::string&, ::Rpc::ExtraInfo&, const ::Ice::Current& = ::Ice::Current()) = 0;
     ::Ice::DispatchStatus ___getExtraInfo(::IceInternal::Incoming&, const ::Ice::Current&);
 
@@ -10179,8 +10261,8 @@ public:
     virtual ::Rpc::ErrorCode updateExtra(const ::std::string&, ::Rpc::ExtraSubmitterPrx&, const ::Ice::Current& = ::Ice::Current()) = 0;
     ::Ice::DispatchStatus ___updateExtra(::IceInternal::Incoming&, const ::Ice::Current&);
 
-    virtual ::Rpc::ErrorCode removeExtra(const ::std::string&, const ::Ice::Current& = ::Ice::Current()) = 0;
-    ::Ice::DispatchStatus ___removeExtra(::IceInternal::Incoming&, const ::Ice::Current&);
+    virtual ::Rpc::ErrorCode changeExtraState(const ::std::string&, const ::std::string&, const ::Ice::Current& = ::Ice::Current()) = 0;
+    ::Ice::DispatchStatus ___changeExtraState(::IceInternal::Incoming&, const ::Ice::Current&);
 
     virtual ::Rpc::ErrorCode changeExtraDisplayPriority(const ::std::string&, ::Ice::Int, const ::Ice::Current& = ::Ice::Current()) = 0;
     ::Ice::DispatchStatus ___changeExtraDisplayPriority(::IceInternal::Incoming&, const ::Ice::Current&);
@@ -17076,6 +17158,112 @@ newCallback_Session_browseExtra(T* instance, void (T::*cb)(::Rpc::ErrorCode, con
 }
 
 template<class T>
+class CallbackNC_Session_browseExtraByParentId : public Callback_Session_browseExtraByParentId_Base, public ::IceInternal::TwowayCallbackNC<T>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception&);
+    typedef void (T::*Sent)(bool);
+    typedef void (T::*Response)(::Rpc::ErrorCode, const ::Rpc::ExtraBrowserPrx&);
+
+    CallbackNC_Session_browseExtraByParentId(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::TwowayCallbackNC<T>(obj, cb != 0, excb, sentcb), _response(cb)
+    {
+    }
+
+    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+    {
+        ::Rpc::SessionPrx __proxy = ::Rpc::SessionPrx::uncheckedCast(__result->getProxy());
+        ::Rpc::ExtraBrowserPrx browser;
+        ::Rpc::ErrorCode __ret;
+        try
+        {
+            __ret = __proxy->end_browseExtraByParentId(browser, __result);
+        }
+        catch(const ::Ice::Exception& ex)
+        {
+            ::IceInternal::CallbackNC<T>::exception(__result, ex);
+            return;
+        }
+        if(_response)
+        {
+            (::IceInternal::CallbackNC<T>::_callback.get()->*_response)(__ret, browser);
+        }
+    }
+
+    private:
+
+    Response _response;
+};
+
+template<class T> Callback_Session_browseExtraByParentIdPtr
+newCallback_Session_browseExtraByParentId(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::ExtraBrowserPrx&), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_Session_browseExtraByParentId<T>(instance, cb, excb, sentcb);
+}
+
+template<class T> Callback_Session_browseExtraByParentIdPtr
+newCallback_Session_browseExtraByParentId(T* instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::ExtraBrowserPrx&), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_Session_browseExtraByParentId<T>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT>
+class Callback_Session_browseExtraByParentId : public Callback_Session_browseExtraByParentId_Base, public ::IceInternal::TwowayCallback<T, CT>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception& , const CT&);
+    typedef void (T::*Sent)(bool , const CT&);
+    typedef void (T::*Response)(::Rpc::ErrorCode, const ::Rpc::ExtraBrowserPrx&, const CT&);
+
+    Callback_Session_browseExtraByParentId(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::TwowayCallback<T, CT>(obj, cb != 0, excb, sentcb), _response(cb)
+    {
+    }
+
+    virtual void completed(const ::Ice::AsyncResultPtr& __result) const
+    {
+        ::Rpc::SessionPrx __proxy = ::Rpc::SessionPrx::uncheckedCast(__result->getProxy());
+        ::Rpc::ExtraBrowserPrx browser;
+        ::Rpc::ErrorCode __ret;
+        try
+        {
+            __ret = __proxy->end_browseExtraByParentId(browser, __result);
+        }
+        catch(const ::Ice::Exception& ex)
+        {
+            ::IceInternal::Callback<T, CT>::exception(__result, ex);
+            return;
+        }
+        if(_response)
+        {
+            (::IceInternal::Callback<T, CT>::_callback.get()->*_response)(__ret, browser, CT::dynamicCast(__result->getCookie()));
+        }
+    }
+
+    private:
+
+    Response _response;
+};
+
+template<class T, typename CT> Callback_Session_browseExtraByParentIdPtr
+newCallback_Session_browseExtraByParentId(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::ExtraBrowserPrx&, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_Session_browseExtraByParentId<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT> Callback_Session_browseExtraByParentIdPtr
+newCallback_Session_browseExtraByParentId(T* instance, void (T::*cb)(::Rpc::ErrorCode, const ::Rpc::ExtraBrowserPrx&, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_Session_browseExtraByParentId<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T>
 class CallbackNC_Session_getExtraInfo : public Callback_Session_getExtraInfo_Base, public ::IceInternal::TwowayCallbackNC<T>
 {
 public:
@@ -17606,7 +17794,7 @@ newCallback_Session_updateExtra(T* instance, void (T::*cb)(::Rpc::ErrorCode, con
 }
 
 template<class T>
-class CallbackNC_Session_removeExtra : public Callback_Session_removeExtra_Base, public ::IceInternal::TwowayCallbackNC<T>
+class CallbackNC_Session_changeExtraState : public Callback_Session_changeExtraState_Base, public ::IceInternal::TwowayCallbackNC<T>
 {
 public:
 
@@ -17616,7 +17804,7 @@ public:
     typedef void (T::*Sent)(bool);
     typedef void (T::*Response)(::Rpc::ErrorCode);
 
-    CallbackNC_Session_removeExtra(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+    CallbackNC_Session_changeExtraState(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
         : ::IceInternal::TwowayCallbackNC<T>(obj, cb != 0, excb, sentcb), _response(cb)
     {
     }
@@ -17627,7 +17815,7 @@ public:
         ::Rpc::ErrorCode __ret;
         try
         {
-            __ret = __proxy->end_removeExtra(__result);
+            __ret = __proxy->end_changeExtraState(__result);
         }
         catch(const ::Ice::Exception& ex)
         {
@@ -17645,20 +17833,20 @@ public:
     Response _response;
 };
 
-template<class T> Callback_Session_removeExtraPtr
-newCallback_Session_removeExtra(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+template<class T> Callback_Session_changeExtraStatePtr
+newCallback_Session_changeExtraState(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
 {
-    return new CallbackNC_Session_removeExtra<T>(instance, cb, excb, sentcb);
+    return new CallbackNC_Session_changeExtraState<T>(instance, cb, excb, sentcb);
 }
 
-template<class T> Callback_Session_removeExtraPtr
-newCallback_Session_removeExtra(T* instance, void (T::*cb)(::Rpc::ErrorCode), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+template<class T> Callback_Session_changeExtraStatePtr
+newCallback_Session_changeExtraState(T* instance, void (T::*cb)(::Rpc::ErrorCode), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
 {
-    return new CallbackNC_Session_removeExtra<T>(instance, cb, excb, sentcb);
+    return new CallbackNC_Session_changeExtraState<T>(instance, cb, excb, sentcb);
 }
 
 template<class T, typename CT>
-class Callback_Session_removeExtra : public Callback_Session_removeExtra_Base, public ::IceInternal::TwowayCallback<T, CT>
+class Callback_Session_changeExtraState : public Callback_Session_changeExtraState_Base, public ::IceInternal::TwowayCallback<T, CT>
 {
 public:
 
@@ -17668,7 +17856,7 @@ public:
     typedef void (T::*Sent)(bool , const CT&);
     typedef void (T::*Response)(::Rpc::ErrorCode, const CT&);
 
-    Callback_Session_removeExtra(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+    Callback_Session_changeExtraState(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
         : ::IceInternal::TwowayCallback<T, CT>(obj, cb != 0, excb, sentcb), _response(cb)
     {
     }
@@ -17679,7 +17867,7 @@ public:
         ::Rpc::ErrorCode __ret;
         try
         {
-            __ret = __proxy->end_removeExtra(__result);
+            __ret = __proxy->end_changeExtraState(__result);
         }
         catch(const ::Ice::Exception& ex)
         {
@@ -17697,16 +17885,16 @@ public:
     Response _response;
 };
 
-template<class T, typename CT> Callback_Session_removeExtraPtr
-newCallback_Session_removeExtra(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+template<class T, typename CT> Callback_Session_changeExtraStatePtr
+newCallback_Session_changeExtraState(const IceUtil::Handle<T>& instance, void (T::*cb)(::Rpc::ErrorCode, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
 {
-    return new Callback_Session_removeExtra<T, CT>(instance, cb, excb, sentcb);
+    return new Callback_Session_changeExtraState<T, CT>(instance, cb, excb, sentcb);
 }
 
-template<class T, typename CT> Callback_Session_removeExtraPtr
-newCallback_Session_removeExtra(T* instance, void (T::*cb)(::Rpc::ErrorCode, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+template<class T, typename CT> Callback_Session_changeExtraStatePtr
+newCallback_Session_changeExtraState(T* instance, void (T::*cb)(::Rpc::ErrorCode, const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
 {
-    return new Callback_Session_removeExtra<T, CT>(instance, cb, excb, sentcb);
+    return new Callback_Session_changeExtraState<T, CT>(instance, cb, excb, sentcb);
 }
 
 template<class T>

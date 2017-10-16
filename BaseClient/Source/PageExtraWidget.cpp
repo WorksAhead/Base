@@ -3,6 +3,7 @@
 #include "FlowLayout.h"
 #include "ExtraImageLoader.h"
 #include "URLUtils.h"
+#include "Emoji.h"
 
 #include <QPainter>
 #include <QScrollArea>
@@ -49,6 +50,18 @@ PageExtraWidget::PageExtraWidget(ContextPtr context, const QString& name, QWidge
 	QObject::connect(context_->extraImageLoader, &ExtraImageLoader::loaded, this, &PageExtraWidget::onImageLoaded);
 	QObject::connect(timer_, &QTimer::timeout, this, &PageExtraWidget::onTimeout);
 	QObject::connect(ui_.description, &QTextBrowser::anchorClicked, this, &PageExtraWidget::onAnchorClicked);
+
+	QObject::connect(ui_.versionInfoLabel, &QLabel::linkActivated, [this](const QString& link)
+	{
+		if (link == "All") {
+			refreshRelatedVersions(std::numeric_limits<int>::max());
+		}
+		else {
+			context_->openUrl(link.toStdString());
+		}
+	});
+
+	addEmojiResourcesToDocument(ui_.description->document());
 
 	ui_.backButton->setVisible(false);
 
@@ -242,6 +255,10 @@ void PageExtraWidget::onTimeout()
 		{
 			const Rpc::ExtraInfo& item = items.at(i);
 
+			if (item.state != "Normal") {
+				continue;
+			}
+
 			PageExtraItemWidget* itemWidget = new PageExtraItemWidget;
 			itemWidget->setId(item.id.c_str());
 			itemWidget->setText(item.title.c_str());
@@ -267,6 +284,86 @@ void PageExtraWidget::onTimeout()
 void PageExtraWidget::onAnchorClicked(const QUrl& url)
 {
 	context_->openUrl(url.toString().toStdString());
+}
+
+void PageExtraWidget::refreshRelatedVersions(int count)
+{
+	Rpc::ExtraInfo ei;
+
+	Rpc::ErrorCode ec = context_->session->getExtraInfo(currentId_.toStdString(), ei);
+
+	if (ec != Rpc::ec_success) {
+		return;
+	}
+
+	Rpc::ExtraBrowserPrx browser;
+
+	ec = context_->session->browseExtraByParentId(!ei.parentId.empty() ? ei.parentId : ei.id, browser);
+
+	if (ec != Rpc::ec_success) {
+		return;
+	}
+
+	std::ostringstream versionInfo;
+
+	while (count > 0)
+	{
+		const int n = qMin(count, 20);
+
+		Rpc::ExtraInfoSeq items;
+		browser->next(n, items);
+
+		if (items.size() < n)
+		{
+			Rpc::ExtraInfo ei2;
+
+			if (context_->session->getExtraInfo(ei.parentId, ei2) == Rpc::ec_success)
+			{
+				if (ei2.state == "Normal" || ei2.state == "Hidden") {
+					items.push_back(ei2);
+				}
+			}
+
+			count = -1;
+		}
+
+		if (versionInfo.str().empty() && !items.empty()) {
+			versionInfo << "Related versions:<br/>";
+		}
+
+		int m = 0;
+
+		for (size_t i = 0; i < items.size(); ++i)
+		{
+			if (items[i].state != "Normal" && items[i].state != "Hidden") {
+				continue;
+			}
+
+			Rpc::ExtraInfo ei2;
+
+			if (context_->session->getExtraInfo(items[i].id, ei2) != Rpc::ec_success) {
+				continue;
+			}
+
+			if (ei2.id == ei.id) {
+				continue;
+			}
+
+			boost::replace_all(items[i].title, "\r", " ");
+
+			versionInfo << "<a href=\"" << "base://extra/?id=" << items[i].id << "\">" << items[i].title << "</a><br/>";
+
+			++m;
+		}
+
+		count -= m;
+	}
+
+	if (count == 0) {
+		versionInfo << "<a href=\"All\">Show All</a>";
+	}
+
+	ui_.versionInfoLabel->setText(versionInfo.str().c_str());
 }
 
 bool PageExtraWidget::showExtra(const QString& id)
@@ -314,6 +411,8 @@ bool PageExtraWidget::showExtra(const QString& id)
 		ui_.commentWidget->setTargetId(parentId.isEmpty() ? id : parentId);
 
 		ui_.scrollArea_2->verticalScrollBar()->setValue(0);
+
+		refreshRelatedVersions(5);
 
 		repaint();
 

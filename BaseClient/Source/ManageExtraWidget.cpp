@@ -26,10 +26,49 @@ ManageExtraWidget::ManageExtraWidget(ContextPtr context, QWidget* parent) : QWid
 	QObject::connect(ui_.submitButton, &QPushButton::clicked, this, &ManageExtraWidget::onSubmit);
 	QObject::connect(ui_.editButton, &QPushButton::clicked, this, &ManageExtraWidget::onEdit);
 	QObject::connect(ui_.changeDisplayPriorityButton, &QPushButton::clicked, this, &ManageExtraWidget::onChangeDisplayPriority);
-	QObject::connect(ui_.removeButton, &QPushButton::clicked, this, &ManageExtraWidget::onRemove);
+	QObject::connect(ui_.changeStateButton, &QToolButton::clicked, ui_.changeStateButton, &QToolButton::showMenu);
 
 	if (context_->currentUserGroup == "Admin") {
 		ui_.changeDisplayPriorityButton->setEnabled(true);
+	}
+
+	ui_.changeStateButton->setMenu(new QMenu);
+	{
+		QMenu* menu = ui_.changeStateButton->menu();
+
+		QAction* a1 = menu->addAction("Normal");
+		QAction* a2 = menu->addAction("Removed");
+		QAction* a3 = menu->addAction("Hidden");
+
+		QObject::connect(a1, &QAction::triggered, [this]()
+		{
+			QList<QTreeWidgetItem*> items = ui_.extraList->selectedItems();
+
+			for (int i = 0; i < items.count(); ++i)
+			{
+				context_->session->changeExtraState(items[i]->text(0).toStdString(), "Normal");
+			}
+		});
+
+		QObject::connect(a2, &QAction::triggered, [this]()
+		{
+			QList<QTreeWidgetItem*> items = ui_.extraList->selectedItems();
+
+			for (int i = 0; i < items.count(); ++i)
+			{
+				context_->session->changeExtraState(items[i]->text(0).toStdString(), "Removed");
+			}
+		});
+
+		QObject::connect(a3, &QAction::triggered, [this]()
+		{
+			QList<QTreeWidgetItem*> items = ui_.extraList->selectedItems();
+
+			for (int i = 0; i < items.count(); ++i)
+			{
+				context_->session->changeExtraState(items[i]->text(0).toStdString(), "Hidden");
+			}
+		});
 	}
 
 	firstShow_ = true;
@@ -257,33 +296,6 @@ void ManageExtraWidget::onEdit()
 #undef CHECK_ERROR_CODE
 }
 
-void ManageExtraWidget::onRemove()
-{
-	const int ret = QMessageBox::question(
-		0, "Base",
-		tr("Are you sure you want to remove these Extras ?\nWarning: This operation cannot be undone."),
-		QMessageBox::Yes, QMessageBox::No|QMessageBox::Default);
-
-	if (ret != QMessageBox::Yes) {
-		return;
-	}
-
-	int count = 0;
-
-	QList<QTreeWidgetItem*> items = ui_.extraList->selectedItems();
-	for (int i = 0; i < items.count(); ++i) {
-		Rpc::ErrorCode ec = context_->session->removeExtra(items[i]->text(0).toStdString());
-		if (ec == Rpc::ec_success) {
-			++count;
-			delete items[i];
-		}
-	}
-
-	QMessageBox::information(0, "Base",
-		QString(tr("%1 Contents have been removed.")).arg(count),
-		QMessageBox::Yes);
-}
-
 void ManageExtraWidget::onChangeDisplayPriority()
 {
 	QList<QTreeWidgetItem*> items = ui_.extraList->selectedItems();
@@ -321,6 +333,19 @@ void ManageExtraWidget::showMore(int count)
 		{
 			Rpc::ExtraInfo& item = items[i];
 
+			if (item.state == "Deleted") {
+				continue;
+			}
+			else if (item.state == "Normal" && !ui_.showNormalCheckBox->isChecked()) {
+				continue;
+			}
+			else if (item.state == "Hidden" && !ui_.showHiddenCheckBox->isChecked()) {
+				continue;
+			}
+			else if (item.state == "Removed" && !ui_.showRemovedCheckBox->isChecked()) {
+				continue;
+			}
+
 			std::string::size_type atPos = item.user.find('@');
 			if (atPos != std::string::npos) {
 				item.user.erase(atPos);
@@ -330,6 +355,7 @@ void ManageExtraWidget::showMore(int count)
 				continue;
 			}
 
+			boost::replace_all(item.title, "\r", " ");
 			boost::replace_all(item.info, "\n", "\r");
 
 			QStringList list;

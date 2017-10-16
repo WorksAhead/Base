@@ -16,7 +16,6 @@ Rpc::ErrorCode RpcExtraBrowserImpl::init(const std::string& category, const std:
 {
 	std::ostringstream oss;
 	oss << "SELECT * FROM Extras";
-	oss << " WHERE State=" << sqlText("Normal");
 
 	if (!category.empty())
 	{
@@ -52,6 +51,18 @@ Rpc::ErrorCode RpcExtraBrowserImpl::init(const std::string& category, const std:
 		oss << ")";
 	}
 
+	oss << " ORDER BY DisplayPriority DESC, UpTime DESC";
+
+	s_.reset(new SQLite::Statement(*center_->db(), oss.str()));
+
+	return Rpc::ec_success;
+}
+
+Rpc::ErrorCode RpcExtraBrowserImpl::init(const std::string& parentId)
+{
+	std::ostringstream oss;
+	oss << "SELECT * FROM Extras";
+	oss << " WHERE ParentId=" << sqlText(parentId);
 	oss << " ORDER BY DisplayPriority DESC, UpTime DESC";
 
 	s_.reset(new SQLite::Statement(*center_->db(), oss.str()));

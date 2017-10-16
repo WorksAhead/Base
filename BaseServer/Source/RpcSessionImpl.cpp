@@ -599,6 +599,29 @@ Rpc::ErrorCode RpcSessionImpl::browseExtra(const std::string& category, const st
 }
 
 
+Rpc::ErrorCode RpcSessionImpl::browseExtraByParentId(const std::string& parentId, Rpc::ExtraBrowserPrx& browserPrx, const Ice::Current& c)
+{
+	boost::recursive_mutex::scoped_lock lock(sync_);
+	checkIsDestroyed();
+
+	RpcExtraBrowserImplPtr browser = new RpcExtraBrowserImpl(context_->center());
+
+	Rpc::ErrorCode ec = browser->init(parentId);
+
+	if (ec != Rpc::ec_success) {
+		return ec;
+	}
+
+	browserPrx = Rpc::ExtraBrowserPrx::uncheckedCast(c.adapter->addWithUUID(browser));
+
+	if (!context_->objectManager()->addObject(browserPrx)) {
+		browserPrx->destroy();
+		return Rpc::ec_server_busy;
+	}
+
+	return Rpc::ec_success;
+}
+
 Rpc::ErrorCode RpcSessionImpl::getExtraInfo(const std::string& id, Rpc::ExtraInfo& info, const Ice::Current&)
 {
 	boost::recursive_mutex::scoped_lock lock(sync_);
@@ -732,12 +755,26 @@ Rpc::ErrorCode RpcSessionImpl::updateExtra(const std::string& id, Rpc::ExtraSubm
 	return Rpc::ec_success;
 }
 
-Rpc::ErrorCode RpcSessionImpl::removeExtra(const std::string& id, const Ice::Current&)
+Rpc::ErrorCode RpcSessionImpl::changeExtraState(const std::string& id, const std::string& state, const Ice::Current& c)
 {
 	boost::recursive_mutex::scoped_lock lock(sync_);
 	checkIsDestroyed();
 
-	if (!context_->center()->changeExtraState(id, "Removed")) {
+	Form form;
+
+	if (!context_->center()->getExtra(form, id)) {
+		return Rpc::ec_extra_does_not_exist;
+	}
+
+	if (form["State"] == "Deleted") {
+		return Rpc::ec_operation_failed;
+	}
+
+	if (context_->userGroup() != "Admin") {
+		return Rpc::ec_access_denied;
+	}
+
+	if (!context_->center()->changeExtraState(id, state)) {
 		return Rpc::ec_operation_failed;
 	}
 
