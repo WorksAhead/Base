@@ -17,6 +17,8 @@ Rpc::ErrorCode RpcExtraBrowserImpl::init(const std::string& category, const std:
 	std::ostringstream oss;
 	oss << "SELECT * FROM Extras";
 
+	bool firstCondition = true;
+
 	if (!category.empty())
 	{
 		std::map<std::string, std::string> categories;
@@ -38,14 +40,35 @@ Rpc::ErrorCode RpcExtraBrowserImpl::init(const std::string& category, const std:
 			}
 		}
 
-		for (auto& p : groupedExp) {
-			oss << " AND (" + p.second + ")";
+		if (firstCondition) {
+			oss << " WHERE ";
+			firstCondition = false;
+		}
+		else {
+			oss << " AND ";
+		}
+
+		for (auto it = groupedExp.begin(); it != groupedExp.end(); ++it)
+		{
+			if (it != groupedExp.begin()) {
+				oss << " AND ";
+			}
+
+			oss << "(" + it->second + ")";
 		}
 	}
 
 	if (!search.empty())
 	{
-		oss << " AND (";
+		if (firstCondition) {
+			oss << " WHERE ";
+			firstCondition = false;
+		}
+		else {
+			oss << " AND ";
+		}
+
+		oss << "(";
 		oss << "Title LIKE " << sqlText("%" + search + "%");
 		oss << " OR Info LIKE " << sqlText("%" + search + "%");
 		oss << ")";
