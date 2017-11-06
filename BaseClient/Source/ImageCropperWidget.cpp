@@ -38,28 +38,6 @@ void ImageCropperWidget::setImageAspectRatio(const QSize& size)
 void ImageCropperWidget::setImage(const QPixmap& image)
 {
 	image_ = image;
-
-	updateImageGeometry(size());
-
-	box_->setArea(imageRect_);
-
-	if (imageAspectRatio_ != 0.0f)
-	{
-		int x = imageRect_.x();
-		int y = imageRect_.y();
-		int w = imageRect_.width();
-		int h = imageRect_.height();
-		if (w >= h) {
-			w = h * imageAspectRatio_;
-		}
-		else {
-			h = w / imageAspectRatio_;
-		}
-		box_->setGeometry(x, y, w, h);
-	}
-	else {
-		box_->setGeometry(imageRect_);
-	}
 }
 
 QPixmap ImageCropperWidget::cropImage()
@@ -112,65 +90,25 @@ void ImageCropperWidget::paintEvent(QPaintEvent* e)
 
 void ImageCropperWidget::resizeEvent(QResizeEvent* e)
 {
-	QRect oldImageRect;
-
-	if (imageRect_.contains(box_->geometry())) {
-		oldImageRect = imageRect_;
-	}
-
 	updateImageGeometry(e->size());
 
-	if (oldImageRect.isValid())
+	box_->setArea(imageRect_);
+
+	QRect boxRect = imageRect_;
+
+	if (imageAspectRatio_ != 0.0f)
 	{
-		QRect rect = box_->geometry();
+		float r = (double)imageRect_.width() / (double)imageRect_.height();
 
-		rect.moveTopLeft(rect.topLeft() - oldImageRect.topLeft());
-
-		double s = (double)rect.width() / (double)oldImageRect.width();
-		double t = (double)rect.height() / (double)oldImageRect.height();
-		double u = (double)rect.x() / (double)oldImageRect.width();
-		double v = (double)rect.y() / (double)oldImageRect.height();
-
-		int x, y, w, h;
-
-		if (imageAspectRatio_ >= 1.0f) {
-			w = (imageRect_.width() * s);
-			h = w / imageAspectRatio_;
+		if (r > imageAspectRatio_) {
+			boxRect.setWidth(boxRect.height() * imageAspectRatio_);
 		}
-		else if (imageAspectRatio_ > 0.0f) {
-			h = (imageRect_.height() * t);
-			w = h * imageAspectRatio_;
+		else if (r < imageAspectRatio_) {
+			boxRect.setHeight(boxRect.width() / imageAspectRatio_);
 		}
-		else {
-			w = (imageRect_.width() * s);
-			h = (imageRect_.height() * t);
-		}
-
-		x = (imageRect_.width() * u);
-		y = (imageRect_.height() * v);
-
-		x += imageRect_.x();
-		y += imageRect_.y();
-
-		rect.setSize(QSize(w, h));
-		rect.moveTopLeft(QPoint(x, y));
-
-		box_->setGeometry(rect);
 	}
 
-	if (imageRect_.isValid()) {
-		box_->setArea(imageRect_);
-	}
-	else {
-		box_->setArea(rect());
-	}
-
-	if (imageRect_.isValid()) {
-		box_->setArea(imageRect_);
-	}
-	else {
-		box_->setArea(rect());
-	}
+	box_->setGeometry(boxRect);
 }
 
 void ImageCropperWidget::updateImageGeometry(const QSize& size)

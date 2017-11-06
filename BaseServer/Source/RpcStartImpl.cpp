@@ -109,7 +109,7 @@ bool RpcStartImpl::loginToCYou(const std::string& username, const std::string& c
 	CURLcode res = CURL_LAST;
 
 	std::string user_pwd = username + ":" + clear_pwd;
-	static char *ldap_url = "LDAP://10.1.0.11/OU=Users,OU=Managed,DC=cyou-inc,DC=com";
+	static char *ldap_url = "LDAP://10.1.0.12/OU=Users,OU=Managed,DC=cyou-inc,DC=com";
 
 	curl_global_init(CURL_GLOBAL_ALL);
 
