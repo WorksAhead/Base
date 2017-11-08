@@ -66,9 +66,13 @@ Rpc::ErrorCode RpcContentBrowserImpl::init(const std::string& page, const std::s
 			oss << " AND ";
 		}
 
-		for (auto& p : groupedExp)
+		for (auto it = groupedExp.begin(); it != groupedExp.end(); ++it)
 		{
-			oss << "(" + p.second + ")";
+			if (it != groupedExp.begin()) {
+				oss << " AND ";
+			}
+
+			oss << "(" + it->second + ")";
 		}
 	}
 
