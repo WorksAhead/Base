@@ -831,6 +831,8 @@ void BaseClient::setupExtra(const std::string& id)
 	QString program = args.first();
 	args.removeFirst();
 
+	boost::replace_all(info.title, "\r", " ");
+
 	fs::path stdOutputFilename = fs::path(outputPath()) / (toLocal8bit(info.title) + "-Setup.txt");
 
 	QProcess p;
