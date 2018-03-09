@@ -126,7 +126,7 @@ void ASyncInstallEngineTask::run()
 		}
 	};
 
-	std::unique_ptr<ASyncDownloadTask> downloadTask(new ASyncDownloadTask(downloader_));
+	std::unique_ptr<ASyncDownloadTask> downloadTask(new ASyncDownloadTask(downloader_, true));
 	downloadTask->setInfoHead(infoHead_);
 	downloadTask->setFilename(packageFilename);
 	downloadTask->start();

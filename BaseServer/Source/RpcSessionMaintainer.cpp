@@ -30,7 +30,7 @@ void RpcSessionMaintainer::runTimerTask()
 
 void RpcSessionMaintainer::maintainSessions()
 {
-	const IceUtil::Time timeout(IceUtil::Time::seconds(30));
+	const IceUtil::Time timeout(IceUtil::Time::seconds(300));
 
 	std::list<Session>::iterator p = sessions_.begin();
 
@@ -56,7 +56,7 @@ void RpcSessionMaintainer::maintainSessions()
 
 void RpcSessionMaintainer::maintainClientDownloaders()
 {
-	const IceUtil::Time timeout(IceUtil::Time::seconds(30));
+	const IceUtil::Time timeout(IceUtil::Time::seconds(300));
 
 	std::list<ClientDownloader>::iterator p = clientDownloaders_.begin();
 

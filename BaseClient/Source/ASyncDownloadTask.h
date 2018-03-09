@@ -14,6 +14,7 @@
 class ASyncDownloadTask : public ASyncTask {
 public:
 	explicit ASyncDownloadTask(Rpc::DownloaderPrx downloader);
+	ASyncDownloadTask(Rpc::DownloaderPrx downloader, bool autoRetry);
 	~ASyncDownloadTask();
 
 	void setInfoHead(const std::string&);
@@ -30,9 +31,11 @@ public:
 
 private:
 	void run();
+	bool checkCancelled();
 
 private:
 	Rpc::DownloaderPrx downloader_;
+	bool autoRetry_;
 
 	std::string filename_;
 	std::string infoHead_;

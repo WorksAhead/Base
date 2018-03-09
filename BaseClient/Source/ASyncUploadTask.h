@@ -29,6 +29,7 @@ public:
 
 private:
 	void run();
+	bool checkCancelled();
 
 private:
 	ContextPtr context_;
