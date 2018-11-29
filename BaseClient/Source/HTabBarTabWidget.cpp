@@ -20,16 +20,20 @@ HTabBarTabWidget::~HTabBarTabWidget()
 
 void HTabBarTabWidget::setLabel(const QString& text)
 {
+	const int p = font_.pixelSize();
+	const int l = text.size();
+
+	const int width = qMax(p * (l + 1) + p / 2, p * 6);
+	const int height = p * 3;
+
+	setFixedSize(width, height);
+
 	text_ = text;
 }
 
 void HTabBarTabWidget::setLabelFont(const QFont& font)
 {
 	font_ = font;
-
-	const int p = font_.pixelSize();
-
-	setFixedSize(p * 6, p * 3);
 }
 
 void HTabBarTabWidget::setActive(bool active)
