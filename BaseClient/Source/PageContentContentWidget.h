@@ -41,6 +41,8 @@ private Q_SLOTS:
 	void onVideoSnapshot(const QString& filename);
 	void onDownload();
 	void onAnchorClicked(const QUrl&);
+	void onEdit();
+	void onSubmitNew();
 
 private:
 	void refreshRelatedVersions(int);
@@ -50,6 +52,7 @@ private:
 	void presentImage(const QPixmap&);
 	void presentVideo(const QString&);
 	void takeVideoSnapshot();
+	QStringList queryEngineVersions();
 
 private:
 	ContextPtr context_;

@@ -5,6 +5,7 @@
 #include "ContentImageLoader.h"
 #include "VideoPlayerWidget.h"
 #include "ImageViewerWidget.h"
+#include "SubmitContentDialog.h"
 #include "Emoji.h"
 #include "URLUtils.h"
 
@@ -23,6 +24,8 @@
 #include <sstream>
 #include <string>
 #include <limits>
+
+#define ITEMS_PER_REQUEST 100
 
 namespace fs = boost::filesystem;
 
@@ -72,6 +75,36 @@ PageContentContentWidget::PageContentContentWidget(ContextPtr context, const QSt
 	addEmojiResourcesToDocument(ui_.summary->document());
 	addEmojiResourcesToDocument(ui_.description->document());
 
+	QObject::connect(ui_.submitNewButton, &QPushButton::clicked, this, &PageContentContentWidget::onSubmitNew);
+	QObject::connect(ui_.editButton, &QPushButton::clicked, this, &PageContentContentWidget::onEdit);
+	QObject::connect(ui_.changeStateButton, &QToolButton::clicked, ui_.changeStateButton, &QToolButton::showMenu);
+
+	ui_.changeStateButton->setMenu(new QMenu);
+	{
+		QMenu* menu = ui_.changeStateButton->menu();
+
+		QAction* a1 = menu->addAction("Normal");
+		QAction* a2 = menu->addAction("Removed");
+		QAction* a3 = menu->addAction("Hidden");
+
+		QObject::connect(a1, &QAction::triggered, [this]()
+		{
+			context_->session->changeContentState(contentId_.toStdString(), "Normal");
+		});
+
+		QObject::connect(a2, &QAction::triggered, [this]()
+		{
+			context_->session->changeContentState(contentId_.toStdString(), "Removed");
+		});
+
+		QObject::connect(a3, &QAction::triggered, [this]()
+		{
+			context_->session->changeContentState(contentId_.toStdString(), "Hidden");
+		});
+	}
+
+	ui_.manageWidget->setVisible(false);
+
 	firstShow_ = true;
 }
 
@@ -115,6 +148,16 @@ void PageContentContentWidget::refresh()
 	ui_.metaInfoLabel->setText(metaInfo.str().c_str());
 
 	refreshRelatedVersions(5);
+
+	std::string::size_type atPos = ci.user.find('@');
+
+	if (atPos != std::string::npos) {
+		ci.user.erase(atPos);
+	}
+	
+	if (boost::iequals(context_->currentUser, ci.user) || context_->currentUserGroup == "Admin") {
+		ui_.manageWidget->setVisible(true);
+	}
 
 	if (boost::istarts_with(ci.desc, "<!SUMMARY>"))
 	{
@@ -436,6 +479,77 @@ void PageContentContentWidget::onAnchorClicked(const QUrl& url)
 	context_->openUrl(url.toString().toStdString());
 }
 
+void PageContentContentWidget::onEdit()
+{
+	Rpc::ErrorCode ec;
+
+	Rpc::ContentInfo ci;
+	if ((ec = context_->session->getContentInfo(contentId_.toStdString(), ci)) != Rpc::ec_success) {
+		context_->promptRpcError(ec);
+		return;
+	}
+
+	std::string command;
+	std::string workDir;
+	std::istringstream stream(ci.startup);
+	getline(stream, command);
+	getline(stream, workDir);
+
+	SubmitContentDialog d(context_, this);
+
+	d.setEngineVersions(queryEngineVersions());
+
+	d.switchToEditMode(ci.id.c_str());
+
+	d.setParentId(ci.parentId.c_str());
+	d.setTitle(ci.title.c_str());
+	d.setPage(ci.page.c_str());
+	d.setCategory(ci.category.c_str());
+	d.setEngineNameAndVersion(ci.engineName.c_str(), ci.engineVersion.c_str());
+	d.setCommand(command.c_str());
+	d.setWorkingDir(workDir.c_str());
+	d.setVideo(ci.video.c_str());
+	d.setDesc(ci.desc.c_str());
+
+	d.exec();
+}
+
+void PageContentContentWidget::onSubmitNew()
+{
+	Rpc::ErrorCode ec;
+
+	Rpc::ContentInfo ci;
+	if ((ec = context_->session->getContentInfo(contentId_.toStdString(), ci)) != Rpc::ec_success) {
+		context_->promptRpcError(ec);
+		return;
+	}
+
+	SubmitContentDialog d(context_, this);
+
+	d.setEngineVersions(queryEngineVersions());
+
+	d.loadImagesFrom(ci.id.c_str(), ci.imageCount);
+
+	std::string command;
+	std::string workDir;
+	std::istringstream stream(ci.startup);
+	getline(stream, command);
+	getline(stream, workDir);
+
+	d.setParentId(ci.parentId.empty() ? ci.id.c_str() : ci.parentId.c_str());
+
+	d.setTitle(ci.title.c_str());
+	d.setPage(ci.page.c_str());
+	d.setCategory(ci.category.c_str());
+	d.setEngineNameAndVersion(ci.engineName.c_str(), ci.engineVersion.c_str());
+	d.setCommand(command.c_str());
+	d.setWorkingDir(workDir.c_str());
+	d.setVideo(ci.video.c_str());
+	d.setDesc(ci.desc.c_str());
+
+	d.exec();
+}
+
 void PageContentContentWidget::refreshRelatedVersions(int count)
 {
 	Rpc::ContentInfo ci;
@@ -661,5 +775,44 @@ void PageContentContentWidget::takeVideoSnapshot()
 			player->openAndPlay(videos_[videoSnapshot_]);
 		}
 	}
+}
+
+QStringList PageContentContentWidget::queryEngineVersions()
+{
+	QStringList result;
+
+	Rpc::EngineVersionBrowserPrx browser;
+
+	context_->session->browseEngineVersions(false, browser);
+
+	if (browser)
+	{
+		std::vector<std::string> v;
+
+		for (;;)
+		{
+			Rpc::EngineVersionSeq items;
+
+			browser->next(ITEMS_PER_REQUEST, items);
+
+			for (size_t i = 0; i < items.size(); ++i)
+			{
+				v.push_back(items[i].name + "\r" + items[i].version);
+			}
+
+			if (items.size() < ITEMS_PER_REQUEST) {
+				break;
+			}
+		}
+
+		std::stable_sort(v.begin(), v.end());
+
+		for (size_t i = 0; i < v.size(); ++i)
+		{
+			result.append(v[i].c_str());
+		}
+	}
+
+	return result;
 }
 
