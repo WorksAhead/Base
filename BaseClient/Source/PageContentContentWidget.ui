@@ -47,7 +47,7 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>493</width>
+             <width>347</width>
              <height>118</height>
             </rect>
            </property>
@@ -208,14 +208,7 @@
            <number>0</number>
           </property>
           <item>
-           <widget class="QPushButton" name="submitNewButton">
-            <property name="text">
-             <string>Submit New</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer_2">
+           <spacer name="horizontalSpacer">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
@@ -228,9 +221,26 @@
            </spacer>
           </item>
           <item>
+           <widget class="QPushButton" name="submitNewButton">
+            <property name="text">
+             <string>Submit New</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QPushButton" name="editButton">
             <property name="text">
              <string>Edit</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="changeDisplayPriorityButton">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>Change DisplayPriority</string>
             </property>
            </widget>
           </item>

@@ -254,9 +254,26 @@ void ManageContentWidget::onChangeDisplayPriority()
 		return;
 	}
 
+	int oldValue = 0;
+
+	if (items.count() == 1)
+	{
+		Rpc::ContentInfo ci;
+
+		Rpc::ErrorCode ec;
+
+		if ((ec = context_->session->getContentInfo(items[0]->text(0).toStdString(), ci)) != Rpc::ec_success)
+		{
+			context_->promptRpcError(ec);
+			return;
+		}
+
+		oldValue = ci.displayPriority;
+	}
+
 	bool ok;
 
-	int displayPriority = QInputDialog::getInt(this, "Base", "DisplayPriority", 0, -2147483647, 2147483647, 1, &ok, Qt::WindowTitleHint);
+	int displayPriority = QInputDialog::getInt(this, "Base", "DisplayPriority", oldValue, -2147483647, 2147483647, 1, &ok, Qt::WindowTitleHint);
 
 	if (!ok) {
 		return;

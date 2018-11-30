@@ -16,6 +16,7 @@
 #include <QGridLayout>
 #include <QMenu>
 #include <QClipboard>
+#include <QInputDialog>
 
 #include <boost/filesystem.hpp>
 #include <boost/algorithm/string.hpp>
@@ -77,7 +78,12 @@ PageContentContentWidget::PageContentContentWidget(ContextPtr context, const QSt
 
 	QObject::connect(ui_.submitNewButton, &QPushButton::clicked, this, &PageContentContentWidget::onSubmitNew);
 	QObject::connect(ui_.editButton, &QPushButton::clicked, this, &PageContentContentWidget::onEdit);
+	QObject::connect(ui_.changeDisplayPriorityButton, &QPushButton::clicked, this, &PageContentContentWidget::onChangeDisplayPriority);
 	QObject::connect(ui_.changeStateButton, &QToolButton::clicked, ui_.changeStateButton, &QToolButton::showMenu);
+
+	if (context_->currentUserGroup == "Admin") {
+		ui_.changeDisplayPriorityButton->setEnabled(true);
+	}
 
 	ui_.changeStateButton->setMenu(new QMenu);
 	{
@@ -512,6 +518,29 @@ void PageContentContentWidget::onEdit()
 	d.setDesc(ci.desc.c_str());
 
 	d.exec();
+}
+
+void PageContentContentWidget::onChangeDisplayPriority()
+{
+	Rpc::ContentInfo ci;
+
+	Rpc::ErrorCode ec;
+
+	if ((ec = context_->session->getContentInfo(contentId_.toStdString(), ci)) != Rpc::ec_success)
+	{
+		context_->promptRpcError(ec);
+		return;
+	}
+
+	bool ok;
+
+	int displayPriority = QInputDialog::getInt(this, "Base", "DisplayPriority", ci.displayPriority, -2147483647, 2147483647, 1, &ok, Qt::WindowTitleHint);
+
+	if (!ok) {
+		return;
+	}
+
+	context_->session->changeContentDisplayPriority(contentId_.toStdString(), displayPriority);
 }
 
 void PageContentContentWidget::onSubmitNew()

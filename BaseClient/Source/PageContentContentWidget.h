@@ -42,6 +42,7 @@ private Q_SLOTS:
 	void onDownload();
 	void onAnchorClicked(const QUrl&);
 	void onEdit();
+	void onChangeDisplayPriority();
 	void onSubmitNew();
 
 private:
