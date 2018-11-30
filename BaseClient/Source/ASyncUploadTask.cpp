@@ -207,6 +207,24 @@ void ASyncUploadTask::run()
 	{
 		if (retry)
 		{
+			if (!is.seekg(transferred))
+			{
+				boost::mutex::scoped_lock lock(sync_);
+				infoBody_ = "Failed to read file \"" + filename_ + "\"";
+				state_ = ASyncTask::state_failed;
+				return;
+			}
+
+			for (Buffer& buf : buffers) {
+				buf.second = 0;
+			}
+
+			current = 0;
+
+			offset = transferred;
+			lastOffset = transferred;
+			remain = length - transferred;
+
 			retry = false;
 
 			{
@@ -214,7 +232,7 @@ void ASyncUploadTask::run()
 				infoBody_ = "Waiting for retry";
 			}
 
-			for (int i = 0; i < 50; ++i)
+			for (int i = 0; i < 10; ++i)
 			{
 				if (checkCancelled()) {
 					return;
@@ -312,26 +330,12 @@ void ASyncUploadTask::run()
 
 			break;
 		}
+		catch (Ice::TimeoutException&)
+		{
+			retry = true;
+		}
 		catch (Ice::SocketException&)
 		{
-			if (!is.seekg(transferred))
-			{
-				boost::mutex::scoped_lock lock(sync_);
-				infoBody_ = "Failed to read file \"" + filename_ + "\"";
-				state_ = ASyncTask::state_failed;
-				return;
-			}
-
-			for (Buffer& buf : buffers) {
-				buf.second = 0;
-			}
-
-			current = 0;
-
-			offset = transferred;
-			lastOffset = transferred;
-			remain = length - transferred;
-
 			retry = true;
 		}
 	}

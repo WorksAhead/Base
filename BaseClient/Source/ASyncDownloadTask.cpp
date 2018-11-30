@@ -214,6 +214,15 @@ void ASyncDownloadTask::run()
 	{
 		if (retry)
 		{
+			for (Ice::AsyncResultPtr& result : asyncResults) {
+				result = 0;
+			}
+
+			current = 0;
+			lastOffset = wrote;
+			offset = wrote;
+			remain = length - wrote;
+
 			retry = false;
 
 			{
@@ -221,7 +230,7 @@ void ASyncDownloadTask::run()
 				infoBody_ = "Waiting for retry";
 			}
 
-			for (int i = 0; i < 50; ++i)
+			for (int i = 0; i < 10; ++i)
 			{
 				if (checkCancelled()) {
 					return;
@@ -313,26 +322,22 @@ void ASyncDownloadTask::run()
 
 			break;
 		}
-		catch (Ice::SocketException& e)
+		catch (Ice::TimeoutException& e)
 		{
-			if (autoRetry_)
-			{
-				for (Ice::AsyncResultPtr& result : asyncResults) {
-					result = 0;
-				}
-
-				current = 0;
-				lastOffset = wrote;
-				offset = wrote;
-				remain = length - wrote;
+			if (autoRetry_) {
 				retry = true;
 			}
-			else
-			{
-				boost::mutex::scoped_lock lock(sync_);
-				infoBody_ = "Network error";
-				state_ = ASyncTask::state_failed;
-				return;
+			else {
+				throw;
+			}
+		}
+		catch (Ice::SocketException& e)
+		{
+			if (autoRetry_) {
+				retry = true;
+			}
+			else {
+				throw;
 			}
 		}
 	}
