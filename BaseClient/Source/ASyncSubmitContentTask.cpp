@@ -38,6 +38,11 @@ void ASyncSubmitContentTask::addImageFile(const std::string& path)
 	imageFiles_.push_back(path);
 }
 
+void ASyncSubmitContentTask::setPostEvent(std::function<void()> f)
+{
+	postEvent_ = f;
+}
+
 void ASyncSubmitContentTask::start()
 {
 	t_.reset(new std::thread([this](){
@@ -196,6 +201,10 @@ void ASyncSubmitContentTask::run()
 		info_ = infoHead_ + " - " + std::string("Rpc: ") + errorMessage(ec);
 		state_ = ASyncTask::state_failed;
 		return;
+	}
+
+	if (postEvent_) {
+		postEvent_();
 	}
 
 	{

@@ -90,6 +90,12 @@ void RpcContentSubmitterImpl::destroy(const Ice::Current& c)
 	}
 }
 
+Rpc::ErrorCode RpcContentSubmitterImpl::getId(std::string& id, const Ice::Current&)
+{
+	id = id_;
+	return Rpc::ec_success;
+}
+
 Rpc::ErrorCode RpcContentSubmitterImpl::setTitle(const std::string& title, const Ice::Current&)
 {
 	boost::recursive_mutex::scoped_lock lock(sync_);

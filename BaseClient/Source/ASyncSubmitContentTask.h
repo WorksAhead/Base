@@ -12,6 +12,7 @@
 #include <memory>
 #include <thread>
 #include <string>
+#include <functional>
 
 class ASyncSubmitContentTask : public ASyncTask {
 public:
@@ -22,6 +23,8 @@ public:
 
 	void setContentLocation(const std::string&);
 	void addImageFile(const std::string&);
+
+	virtual void setPostEvent(std::function<void()>);
 
 	virtual void start();
 	virtual void cancel();
@@ -46,6 +49,8 @@ private:
 	int state_;
 	int progress_;
 	bool cancelled_;
+
+	std::function<void()> postEvent_;
 
 	boost::mutex sync_;
 	std::shared_ptr<std::thread> t_;

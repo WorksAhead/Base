@@ -97,6 +97,7 @@ module Rpc
 
 	interface ContentSubmitter extends ManagedObject
 	{
+		ErrorCode getId(out string id);
 		ErrorCode setTitle(string title);
 		ErrorCode setPage(string page);
 		ErrorCode setCategory(string category);

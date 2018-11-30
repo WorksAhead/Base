@@ -731,6 +731,83 @@ void SubmitContentDialog::onSubmit()
 			task->addImageFile(imageFilename);
 		}
 
+		if (ui_.hideOtherVersions->isChecked() && !ui_.parentIdEdit->text().isEmpty())
+		{
+			ContextPtr context = context_;
+
+			std::string contentId;
+
+			submitter->getId(contentId);
+
+			std::string parentId = ui_.parentIdEdit->text().toStdString();
+
+			task->setPostEvent([context, contentId, parentId]()
+			{
+				Rpc::ContentBrowserPrx browser;
+
+				Rpc::ErrorCode ec = context->session->browseContentByParentId(parentId, browser);
+
+				if (ec != Rpc::ec_success) {
+					return;
+				}
+
+				for (;;)
+				{
+					Rpc::ContentItemSeq items;
+
+					browser->next(20, items);
+
+					Rpc::ContentInfo ci;
+
+					for (size_t i = 0; i < items.size(); ++i)
+					{
+						if (items[i].state != "Normal") {
+							continue;
+						}
+
+						if (context->session->getContentInfo(items[i].id, ci) != Rpc::ec_success) {
+							continue;
+						}
+
+						if (ci.id == contentId) {
+							continue;
+						}
+
+						std::string::size_type atPos = ci.user.find('@');
+
+						if (atPos != std::string::npos) {
+							ci.user.erase(atPos);
+						}
+
+						if (ci.user != context->currentUser && context->currentUserGroup != "Admin") {
+							continue;
+						}
+
+						context->session->changeContentState(ci.id, "Hidden");
+					}
+
+					if (items.size() < 20)
+					{
+						if (context->session->getContentInfo(parentId, ci) == Rpc::ec_success && ci.state == "Normal")
+						{
+							std::string::size_type atPos = ci.user.find('@');
+
+							if (atPos != std::string::npos) {
+								ci.user.erase(atPos);
+							}
+
+							if (ci.user == context->currentUser || context->currentUserGroup == "Admin")
+							{
+								context->session->changeContentState(ci.id, "Hidden");
+							}
+						}
+
+						break;
+					}
+				}
+			});
+		}
+
 		context_->addTask(task);
 	}
 	else

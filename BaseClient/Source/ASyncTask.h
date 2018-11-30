@@ -21,6 +21,8 @@ public:
 	{
 	}
 
+	virtual void setPostEvent(std::function<void()>) {}
+
 	virtual void start() = 0;
 	virtual void cancel() = 0;
 

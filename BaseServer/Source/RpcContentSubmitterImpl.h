@@ -32,6 +32,8 @@ public:
 
 	virtual void destroy(const Ice::Current&);
 
+	virtual Rpc::ErrorCode getId(std::string&, const Ice::Current&);
+
 	virtual Rpc::ErrorCode setTitle(const std::string&, const Ice::Current&);
 
 	virtual Rpc::ErrorCode setPage(const std::string&, const Ice::Current&);
