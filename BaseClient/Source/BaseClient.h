@@ -8,6 +8,7 @@
 #include "ui_DecoratorWidget.h"
 #include "ui_ExpressWidget.h"
 #include "LowerPaneWidget.h"
+#include "HistoryDialog.h"
 #include "ASyncTaskManagerDialog.h"
 
 #include <QTabWidget>
@@ -42,7 +43,10 @@ protected:
 
 private:
 	void addTask(ASyncTaskPtr);
-	
+
+	std::string getLastViewTime();
+	void setLastViewTime(std::string);
+
 	std::string uniquePath();
 	std::string workPath();
 	std::string cachePath();
@@ -95,6 +99,7 @@ private Q_SLOTS:
 	void promptEngineState(const EngineVersion&, int);
 	void promptExtraState(const std::string& title, int);
 	void addLibraryNotification();
+	void onShowHistory();
 	void onShowTaskManager();
 	void onNewConnection();
 	void onRefreshTasks();
@@ -105,6 +110,7 @@ private:
 	void loadInstalledEnginesFromDb();
 	void loadDownloadedExtrasFromDb();
 	void loadProjectsFromDb();
+	void lightUpShowHistoryButton();
 
 private:
 	Ui::ExpressWidget expressWidgetUi_;
@@ -119,6 +125,8 @@ private:
 	DatabasePtr db_;
 
 	ContextPtr context_;
+
+	HistoryDialog* historyDialog_;
 
 	ASyncTaskManagerDialog* taskManagerDialog_;
 

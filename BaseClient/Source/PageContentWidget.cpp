@@ -58,19 +58,29 @@ bool PageContentWidget::openUrl(const QString& url)
 {
 	std::string path;
 	KVMap args;
-	if (parseUrl(url.toStdString(), path, args) && path == "base://content/") {
+
+	if (parseUrl(url.toStdString(), path, args) && path == "base://content/")
+	{
 		std::string page;
-		if (args.lookupValue(page, "page") && page == name_.toStdString()) {
+
+		if (args.lookupValue(page, "page") && page == name_.toStdString())
+		{
 			std::string id;
-			if (args.lookupValue(id, "id")) {
+
+			if (args.lookupValue(id, "id"))
+			{
 				return openContent(QString::fromStdString(id));
 			}
-			else {
+			else
+			{
 				std::string category;
 				args.lookupValue(category, "category");
+
 				std::string search;
 				args.lookupValue(search, "search");
+
 				openBrowser(category.c_str(), search.c_str());
+
 				return true;
 			}
 		}
@@ -97,6 +107,7 @@ bool PageContentWidget::openContent(const QString& id)
 		ui_.stackedWidget->addWidget(w);
 		ui_.stackedWidget->setCurrentWidget(w);
 		ui_.urlEdit->setText(url);
+		ui_.urlEdit->setCursorPosition(0);
 
 		ui_.filterWidget->setVisible(false);
 	}
@@ -180,10 +191,15 @@ void PageContentWidget::onUrlEdited()
 
 	const QString& cachedUrl = ui_.stackedWidget->currentWidget()->property("cached_url").toString();
 
-	if (ui_.urlEdit->text() != cachedUrl) {
-		if (!openUrl(ui_.urlEdit->text())) {
+	if (ui_.urlEdit->text() != cachedUrl)
+	{
+		if (!openUrl(ui_.urlEdit->text()))
+		{
 			const QString& url = ui_.urlEdit->text();
+
 			ui_.urlEdit->setText(cachedUrl);
+			ui_.urlEdit->setCursorPosition(0);
+
 			Q_EMIT unresolvedUrl(url);
 		}
 	}
@@ -284,6 +300,7 @@ void PageContentWidget::openBrowser(const QString& category, const QString& sear
 	ui_.stackedWidget->addWidget(w);
 	ui_.stackedWidget->setCurrentWidget(w);
 	ui_.urlEdit->setText(url);
+	ui_.urlEdit->setCursorPosition(0);
 
 	ui_.filterWidget->setVisible(true);
 
@@ -342,6 +359,7 @@ void PageContentWidget::restore(int index)
 	ui_.filterWidget->labelSelectorWidget()->setSelectedLabels(list);
 
 	ui_.urlEdit->setText(url);
+	ui_.urlEdit->setCursorPosition(0);
 
 	if (qobject_cast<PageContentBrowserWidget*>(w)) {
 		ui_.filterWidget->setVisible(true);

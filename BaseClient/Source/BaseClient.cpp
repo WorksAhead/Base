@@ -14,6 +14,7 @@
 #include "ContentImageLoader.h"
 #include "ExtraImageLoader.h"
 #include "ErrorMessage.h"
+#include "Datetime.h"
 #include "QtUtils.h"
 #include "URLUtils.h"
 
@@ -105,6 +106,8 @@ BaseClient::BaseClient(const QString& workPath, const QString& version, Rpc::Ses
 
 	context_->contentImageLoader = new ContentImageLoader(context_, this);
 	context_->extraImageLoader = new ExtraImageLoader(context_, this);
+	context_->getLastViewTime = std::bind(&BaseClient::getLastViewTime, this);
+	context_->setLastViewTime = std::bind(&BaseClient::setLastViewTime, this, std::placeholders::_1);
 	context_->addTask = std::bind(&BaseClient::addTask, this, std::placeholders::_1);
 	context_->showTaskManager = std::bind(&BaseClient::onShowTaskManager, this);
 	context_->uniquePath = std::bind(&BaseClient::uniquePath, this);
@@ -272,7 +275,9 @@ BaseClient::BaseClient(const QString& workPath, const QString& version, Rpc::Ses
 	loadDownloadedExtrasFromDb();
 	loadProjectsFromDb();
 
-	taskManagerDialog_ = new ASyncTaskManagerDialog;
+	historyDialog_ = new HistoryDialog(context_, this);
+
+	taskManagerDialog_ = new ASyncTaskManagerDialog(this);
 
 	QWidget* expressWidget = new QWidget;
 	expressWidgetUi_.setupUi(expressWidget);
@@ -394,7 +399,8 @@ BaseClient::BaseClient(const QString& workPath, const QString& version, Rpc::Ses
 
 	QObject::connect(localServer_, &QLocalServer::newConnection, this, &BaseClient::onNewConnection);
 
-	QObject::connect(decoratorWidgetUi_.taskButton, &QPushButton::clicked, this, &BaseClient::onShowTaskManager);
+	QObject::connect(decoratorWidgetUi_.listButton, &QPushButton::clicked, this, &BaseClient::onShowHistory);
+
 	QObject::connect(taskManagerDialog_, &ASyncTaskManagerDialog::cleared, lowerPane_, &LowerPaneWidget::clear);
 
 	if (!url.isEmpty()) {
@@ -407,6 +413,8 @@ BaseClient::BaseClient(const QString& workPath, const QString& version, Rpc::Ses
 	refreshTaskTimer->start();
 
 	QObject::connect(refreshTaskTimer, &QTimer::timeout, this, &BaseClient::onRefreshTasks);
+
+	lightUpShowHistoryButton();
 }
 
 BaseClient::~BaseClient()
@@ -427,10 +435,14 @@ void BaseClient::closeEvent(QCloseEvent* e)
 			"One or more tasks are running in the background, do you want to quit anyway ?",
 			QMessageBox::Yes, QMessageBox::No|QMessageBox::Default);
 
-		if (rc == QMessageBox::No) {
+		if (rc == QMessageBox::No)
+		{
 			e->ignore();
+			return;
 		}
 	}
+
+	setLastViewTime(getCurrentTimeString());
 }
 
 void BaseClient::addTask(ASyncTaskPtr task)
@@ -443,6 +455,34 @@ void BaseClient::addTask(ASyncTaskPtr task)
 
 	lowerPane_->addTask(task);
 	taskManagerDialog_->listWidget()->addTask(task);
+}
+
+std::string BaseClient::getLastViewTime()
+{
+	std::ostringstream oss;
+
+	oss << "SELECT Value FROM Infos";
+	oss << " WHERE Key = 'LastViewTime'";
+
+	SQLite::Statement s(*db_, oss.str());
+
+	if (!s.executeStep()) {
+		return timeToString(0);
+	}
+
+	return s.getColumn("Value").getText();
+}
+
+void BaseClient::setLastViewTime(std::string time)
+{
+	std::ostringstream oss;
+	oss << "INSERT OR REPLACE INTO Infos VALUES ('LastViewTime', ";
+	oss << sqlText(time);
+	oss << ")";
+
+	SQLite::Transaction t(*db_);
+	db_->exec(oss.str());
+	t.commit();
 }
 
 std::string BaseClient::uniquePath()
@@ -1285,6 +1325,18 @@ void BaseClient::addLibraryNotification()
 	}
 }
 
+void BaseClient::onShowHistory()
+{
+	decoratorWidgetUi_.listButton->setIcon(QIcon(":/Icons/List.png"));
+
+	if (historyDialog_->isHidden()) {
+		historyDialog_->show();
+	}
+	else if (!historyDialog_->isActiveWindow()) {
+		QApplication::setActiveWindow(historyDialog_);
+	}
+}
+
 void BaseClient::onShowTaskManager()
 {
 	if (taskManagerDialog_->isHidden()) {
@@ -1353,6 +1405,8 @@ void BaseClient::initDb()
 
 	db_->exec("CREATE TABLE IF NOT EXISTS Projects ("
 		"Id TEXT, ContentId TEXT, Location TEXT, Name TEXT, DefaultEngineVersion TEXT, Startup TEXT)");
+
+	db_->exec("CREATE TABLE IF NOT EXISTS Infos (Key TEXT UNIQUE, Value TEXT)");
 }
 
 void BaseClient::loadDownloadedContentsFromDb()
@@ -1431,6 +1485,49 @@ void BaseClient::loadProjectsFromDb()
 		pi.defaultEngineVersion = s.getColumn("DefaultEngineVersion").getText();
 		pi.startup = toLocal8bit(s.getColumn("Startup").getText());
 		projectTabel_.insert(std::make_pair(pi.id, pi));
+	}
+}
+
+void BaseClient::lightUpShowHistoryButton()
+{
+	Rpc::ContentBrowserPrx browser;
+
+	if (context_->session->browseContent("", "", "", browser) != Rpc::ec_success) {
+		return;
+	}
+
+	std::string lastViewTime = getLastViewTime();
+
+	for (;;)
+	{
+		Rpc::ContentItemSeq items;
+
+		if (browser->next(20, items) != Rpc::ec_success) {
+			return;
+		}
+
+		if (items.empty()) {
+			break;
+		}
+
+		for (size_t i = 0; i < items.size(); ++i)
+		{
+			if (items[i].state == "Normal")
+			{
+				Rpc::ContentInfo ci;
+
+				if (context_->session->getContentInfo(items[i].id, ci) != Rpc::ec_success) {
+					break;
+				}
+
+				if (ci.upTime > lastViewTime)
+				{
+					decoratorWidgetUi_.listButton->setIcon(QIcon(":/Icons/ListNew.png"));
+				}
+
+				break;
+			}
+		}
 	}
 }
 

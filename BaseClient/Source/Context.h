@@ -93,6 +93,9 @@ struct Context
 
 	std::function<void(ASyncTaskPtr)> addTask;
 
+	std::function<std::string()> getLastViewTime;
+	std::function<void(std::string)> setLastViewTime;
+
 	std::function<void()> showTaskManager;
 
 	std::function<std::string()> uniquePath;

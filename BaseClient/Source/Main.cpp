@@ -37,7 +37,7 @@
 #include <windows.h>
 #endif
 
-#define BASE_CURRENT_VERSION "1.0.0.63"
+#define BASE_CURRENT_VERSION "1.0.0.64"
 
 namespace fs = boost::filesystem;
 
@@ -200,13 +200,17 @@ int main(int argc, char* argv[])
 		QString cmd = QSettings("HKEY_CLASSES_ROOT\\base\\shell\\open\\command", QSettings::NativeFormat).value("Default", "").toString();
 		QStringList args = parseCombinedArgString(cmd);
 		if (args.isEmpty()) {
-			msgBox.setText("There is no default Base Client to handle Base URL Protocol, do you want to make current Base Client the default ?\n"
-				"(This operation requires administrative privileges)");
+			/*msgBox.setText("There is no default Base Client to handle Base URL Protocol, do you want to make current Base Client the default ?\n"
+				"(This operation requires administrative privileges)");*/
+			msgBox.setText(QString::fromLocal8Bit("是否将当前 Base 客户端设置为打开 Base URL 协议的默认客户端 ?\n"
+				"(该操作需要管理员权限)"));
 			notRegistered = true;
 		}
 		else if (!fs::equivalent(fs::path(toLocal8bit(args.front())).parent_path(), workDir)) {
-			msgBox.setText("Current Base Client is not the default Client to handle Base URL Protocol, do you want to make current Base Client the default ?\n"
-				"(This operation requires administrative privileges)");
+			/*msgBox.setText("Current Base Client is not the default Client to handle Base URL Protocol, do you want to make current Base Client the default ?\n"
+				"(This operation requires administrative privileges)");*/
+			msgBox.setText(QString::fromLocal8Bit("当前 Base 客户端不是打开 Base URL 协议的默认客户端, 是否设为默认 ?\n"
+				"(该操作需要管理员权限)"));
 			notRegistered = true;
 		}
 

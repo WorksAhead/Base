@@ -42,7 +42,7 @@
     <number>0</number>
    </property>
    <item>
-    <widget class="QPushButton" name="taskButton">
+    <widget class="QPushButton" name="listButton">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
        <horstretch>0</horstretch>
@@ -63,7 +63,8 @@
      </property>
      <property name="icon">
       <iconset resource="../Resources/BaseClient.qrc">
-       <normaloff>:/Icons/Task.png</normaloff>:/Icons/Task.png</iconset>
+       <normaloff>:/Icons/List.png</normaloff>
+       <normalon>:/Icons/ListNew.png</normalon>:/Icons/List.png</iconset>
      </property>
      <property name="iconSize">
       <size>
