@@ -15,7 +15,7 @@ RpcContentBrowserImpl::~RpcContentBrowserImpl()
 Rpc::ErrorCode RpcContentBrowserImpl::init(const std::string& page, const std::string& category, const std::string& search)
 {
 	std::ostringstream oss;
-	oss << "SELECT Id, Title, State FROM Contents";
+	oss << "SELECT rowid, Id, Title, State FROM Contents";
 
 	bool firstCondition = true;
 
@@ -102,7 +102,7 @@ Rpc::ErrorCode RpcContentBrowserImpl::init(const std::string& page, const std::s
 Rpc::ErrorCode RpcContentBrowserImpl::init(const std::string& parentId)
 {
 	std::ostringstream oss;
-	oss << "SELECT Id, Title, State FROM Contents";
+	oss << "SELECT rowid, Id, Title, State FROM Contents";
 	oss << " WHERE ParentId=" << sqlText(parentId);
 	oss << " ORDER BY DisplayPriority DESC, UpTime DESC";
 
@@ -139,6 +139,7 @@ Rpc::ErrorCode RpcContentBrowserImpl::next(Ice::Int n, Rpc::ContentItemSeq& item
 		}
 
 		Rpc::ContentItem item;
+		item.rowid = s_->getColumn("rowid").getInt64();
 		item.id = s_->getColumn("Id").getText();
 		item.title = s_->getColumn("Title").getText();
 		item.state = s_->getColumn("State").getText();

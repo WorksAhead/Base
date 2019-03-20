@@ -213,10 +213,12 @@ Rpc::ErrorCode RpcSessionImpl::getContentInfo(const std::string& id, Rpc::Conten
 	checkIsDestroyed();
 
 	std::map<std::string, std::string> form;
+
 	if (!context_->center()->getContent(form, id)) {
 		return Rpc::ec_content_does_not_exist;
 	}
 
+	info.rowid = std::stoll(form.at("rowid"));
 	info.id = form.at("Id");
 	info.parentId = form.at("ParentId");
 	info.title = form.at("Title");

@@ -4,9 +4,11 @@
 
 #include <QTextDocument>
 #include <QTextBlock>
+#include <QScrollBar>
 
 #include <boost/algorithm/string.hpp>
 
+#define ITEMS_FIRST_REQUEST 60
 #define ITEMS_PER_REQUEST 20
 
 HistoryDialog::HistoryDialog(ContextPtr context, QWidget* parent) : QDialog(parent), context_(context)
@@ -18,12 +20,43 @@ HistoryDialog::HistoryDialog(ContextPtr context, QWidget* parent) : QDialog(pare
 	timer_ = new QTimer(this);
 	timer_->setInterval(100);
 
+	QObject::connect(ui_.markButton, &QPushButton::clicked, this, &HistoryDialog::onMark);
+	QObject::connect(ui_.refreshButton, &QPushButton::clicked, this, &HistoryDialog::onRefresh);
+	QObject::connect(ui_.content->verticalScrollBar(), &QScrollBar::valueChanged, this, &HistoryDialog::onScroll);
 	QObject::connect(ui_.content, &QTextBrowser::anchorClicked, this, &HistoryDialog::onAnchorClicked);
 	QObject::connect(timer_, &QTimer::timeout, this, &HistoryDialog::onTimeout);
+
+	lastViewStamp_ = 0;
+	latestTime_ = 0;
 }
 
 HistoryDialog::~HistoryDialog()
 {
+}
+
+void HistoryDialog::onMark()
+{
+	if (latestTime_)
+	{
+		context_->setLastViewStamp(latestTime_);
+	}
+}
+
+void HistoryDialog::onRefresh()
+{
+	ui_.content->clear();
+
+	latestTime_ = 0;
+
+	lastViewStamp_ = context_->getLastViewStamp();
+
+	if (context_->session->browseContent("", "", "", browser_) != Rpc::ec_success) {
+		return;
+	}
+
+	count_ = 0;
+
+	showMore(ITEMS_FIRST_REQUEST);
 }
 
 void HistoryDialog::onAnchorClicked(const QUrl& url)
@@ -31,58 +64,86 @@ void HistoryDialog::onAnchorClicked(const QUrl& url)
 	context_->openUrl(url.toString().toStdString());
 }
 
+void HistoryDialog::onScroll(int)
+{
+	QScrollBar* bar = ui_.content->verticalScrollBar();
+
+	if (bar->value() >= bar->maximum() / 10 * 9)
+	{
+		if (browser_) {
+			showMore(ITEMS_PER_REQUEST);
+		}
+	}
+}
+
 void HistoryDialog::onTimeout()
 {
-	Rpc::ContentItemSeq items;
-
-	if (browser_->next(ITEMS_PER_REQUEST, items) != Rpc::ec_success) {
-		return;
-	}
-
-	if (items.empty())
+	if (count_ > 0 && browser_)
 	{
-		timer_->stop();
-		return;
-	}
+		const int n = qMin(count_, 5);
+		int m = 0;
 
-	for (size_t i = 0; i < items.size(); ++i)
-	{
-		if (items[i].state == "Normal")
+		Rpc::ContentItemSeq items;
+
+		if (browser_->next(n, items) != Rpc::ec_success) {
+			return;
+		}
+
+		for (size_t i = 0; i < items.size(); ++i)
 		{
-			Rpc::ContentInfo ci;
-
-			if (context_->session->getContentInfo(items[i].id, ci) != Rpc::ec_success) {
-				continue;
-			}
-
-			QTextCursor cursor = ui_.content->textCursor();
-
-			QString html;
-
-			if (!lastViewTime_.empty() && ci.upTime <= lastViewTime_)
+			if (items[i].state == "Normal")
 			{
-				lastViewTime_.clear();
+				Rpc::ContentInfo ci;
 
-				html += "<hr />";
+				if (context_->session->getContentInfo(items[i].id, ci) != Rpc::ec_success) {
+					continue;
+				}
+
+				if (!latestTime_) {
+					latestTime_ = ci.rowid;
+				}
+
+				QString html;
+
+				if (lastViewStamp_ && ci.rowid <= lastViewStamp_)
+				{
+					lastViewStamp_ = 0;
+
+					html += "<hr />";
+				}
+
+				boost::replace_all(ci.title, "\r", " ");
+
+				std::vector<std::string> pages;
+				boost::split(pages, ci.page, boost::is_any_of(","));
+
+				if (pages.empty()) {
+					continue;
+				}
+
+				percentEncode(pages[0]);
+
+				html += QString::fromStdString("<p><a href=\"base://content/?id=" + ci.id +
+					"&page=" + pages[0] + "\">" +
+					ci.title + "</a>" + "<br />" + ci.upTime + "</p>");
+
+				QTextCursor cursor(ui_.content->document());
+
+				cursor.movePosition(QTextCursor::End);
+				cursor.insertHtml(html);
+				cursor.insertBlock();
+
+				++m;
 			}
+		}
 
-			boost::replace_all(ci.title, "\r", " ");
+		count_ -= m;
 
-			std::vector<std::string> pages;
-			boost::split(pages, ci.page, boost::is_any_of(","));
-
-			if (pages.empty()) {
-				continue;
-			}
-
-			percentEncode(pages[0]);
-
-			html += QString::fromStdString("<p><a href=\"base://content/?id=" + ci.id +
-				"&page=" + pages[0] + "\">" +
-				ci.title + "</a>" + "<br />" + ci.upTime + "</p>");
-
-			cursor.insertHtml(html);
-			cursor.insertBlock();
+		if (items.size() < n)
+		{
+			browser_ = 0;
+			count_ = 0;
+			timer_->stop();
 		}
 	}
 }
@@ -91,16 +152,18 @@ void HistoryDialog::showEvent(QShowEvent* e)
 {
 	QDialog::showEvent(e);
 
-	lastViewTime_ = context_->getLastViewTime();
+	onRefresh();
+}
 
-	//context_->setLastViewTime(getCurrentTimeString());
+void HistoryDialog::closeEvent(QCloseEvent*)
+{
+	browser_ = 0;
+	timer_->stop();
+}
 
-	if (context_->session->browseContent("", "", "", browser_) != Rpc::ec_success) {
-		return;
-	}
-
-	ui_.content->clear();
-
+void HistoryDialog::showMore(int n)
+{
+	count_ += n;
 	timer_->start();
 }
 

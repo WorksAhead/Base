@@ -106,8 +106,8 @@ BaseClient::BaseClient(const QString& workPath, const QString& version, Rpc::Ses
 
 	context_->contentImageLoader = new ContentImageLoader(context_, this);
 	context_->extraImageLoader = new ExtraImageLoader(context_, this);
-	context_->getLastViewTime = std::bind(&BaseClient::getLastViewTime, this);
-	context_->setLastViewTime = std::bind(&BaseClient::setLastViewTime, this, std::placeholders::_1);
+	context_->getLastViewStamp = std::bind(&BaseClient::getLastViewStamp, this);
+	context_->setLastViewStamp = std::bind(&BaseClient::setLastViewStamp, this, std::placeholders::_1);
 	context_->addTask = std::bind(&BaseClient::addTask, this, std::placeholders::_1);
 	context_->showTaskManager = std::bind(&BaseClient::onShowTaskManager, this);
 	context_->uniquePath = std::bind(&BaseClient::uniquePath, this);
@@ -414,7 +414,14 @@ BaseClient::BaseClient(const QString& workPath, const QString& version, Rpc::Ses
 
 	QObject::connect(refreshTaskTimer, &QTimer::timeout, this, &BaseClient::onRefreshTasks);
 
-	lightUpShowHistoryButton();
+	QTimer* checkNewContentsTimer = new QTimer(this);
+
+	checkNewContentsTimer->setInterval(10000);
+	checkNewContentsTimer->start();
+
+	QObject::connect(checkNewContentsTimer, &QTimer::timeout, this, &BaseClient::onCheckNewContents);
+
+	onCheckNewContents();
 }
 
 BaseClient::~BaseClient()
@@ -441,8 +448,6 @@ void BaseClient::closeEvent(QCloseEvent* e)
 			return;
 		}
 	}
-
-	setLastViewTime(getCurrentTimeString());
 }
 
 void BaseClient::addTask(ASyncTaskPtr task)
@@ -457,32 +462,36 @@ void BaseClient::addTask(ASyncTaskPtr task)
 	taskManagerDialog_->listWidget()->addTask(task);
 }
 
-std::string BaseClient::getLastViewTime()
+int64_t BaseClient::getLastViewStamp()
 {
 	std::ostringstream oss;
 
 	oss << "SELECT Value FROM Infos";
-	oss << " WHERE Key = 'LastViewTime'";
+	oss << " WHERE Key = 'LastViewStamp'";
 
 	SQLite::Statement s(*db_, oss.str());
 
 	if (!s.executeStep()) {
-		return timeToString(0);
+		return 0;
 	}
 
-	return s.getColumn("Value").getText();
+	return std::stoll(s.getColumn("Value").getText());
 }
 
-void BaseClient::setLastViewTime(std::string time)
+void BaseClient::setLastViewStamp(int64_t stamp)
 {
-	std::ostringstream oss;
-	oss << "INSERT OR REPLACE INTO Infos VALUES ('LastViewTime', ";
-	oss << sqlText(time);
-	oss << ")";
+	{
+		std::ostringstream oss;
+		oss << "INSERT OR REPLACE INTO Infos VALUES ('LastViewStamp', ";
+		oss << "'" << stamp << "'";
+		oss << ")";
 
-	SQLite::Transaction t(*db_);
-	db_->exec(oss.str());
-	t.commit();
+		SQLite::Transaction t(*db_);
+		db_->exec(oss.str());
+		t.commit();
+	}
+
+	onCheckNewContents();
 }
 
 std::string BaseClient::uniquePath()
@@ -1327,8 +1336,6 @@ void BaseClient::addLibraryNotification()
 
 void BaseClient::onShowHistory()
 {
-	decoratorWidgetUi_.listButton->setIcon(QIcon(":/Icons/List.png"));
-
 	if (historyDialog_->isHidden()) {
 		historyDialog_->show();
 	}
@@ -1384,6 +1391,45 @@ void BaseClient::onRefreshTasks()
 		default:
 			++it;
 			break;
+		}
+	}
+}
+
+void BaseClient::onCheckNewContents()
+{
+	Rpc::ContentBrowserPrx browser;
+
+	if (context_->session->browseContent("", "", "", browser) != Rpc::ec_success) {
+		return;
+	}
+
+	int64_t lastViewStamp = getLastViewStamp();
+
+	while (browser)
+	{
+		Rpc::ContentItemSeq items;
+
+		if (browser->next(20, items) != Rpc::ec_success) {
+			return;
+		}
+
+		if (items.size() < 20) {
+			browser = 0;
+		}
+
+		for (size_t i = 0; i < items.size(); ++i)
+		{
+			if (items[i].state == "Normal")
+			{
+				if (items[i].rowid > lastViewStamp) {
+					decoratorWidgetUi_.listButton->setIcon(QIcon(":/Icons/ListNew.png"));
+				}
+				else {
+					decoratorWidgetUi_.listButton->setIcon(QIcon(":/Icons/List.png"));
+				}
+
+				return;
+			}
 		}
 	}
 }
@@ -1485,49 +1531,6 @@ void BaseClient::loadProjectsFromDb()
 		pi.defaultEngineVersion = s.getColumn("DefaultEngineVersion").getText();
 		pi.startup = toLocal8bit(s.getColumn("Startup").getText());
 		projectTabel_.insert(std::make_pair(pi.id, pi));
-	}
-}
-
-void BaseClient::lightUpShowHistoryButton()
-{
-	Rpc::ContentBrowserPrx browser;
-
-	if (context_->session->browseContent("", "", "", browser) != Rpc::ec_success) {
-		return;
-	}
-
-	std::string lastViewTime = getLastViewTime();
-
-	for (;;)
-	{
-		Rpc::ContentItemSeq items;
-
-		if (browser->next(20, items) != Rpc::ec_success) {
-			return;
-		}
-
-		if (items.empty()) {
-			break;
-		}
-
-		for (size_t i = 0; i < items.size(); ++i)
-		{
-			if (items[i].state == "Normal")
-			{
-				Rpc::ContentInfo ci;
-
-				if (context_->session->getContentInfo(items[i].id, ci) != Rpc::ec_success) {
-					break;
-				}
-
-				if (ci.upTime > lastViewTime)
-				{
-					decoratorWidgetUi_.listButton->setIcon(QIcon(":/Icons/ListNew.png"));
-				}
-
-				break;
-			}
-		}
 	}
 }
 

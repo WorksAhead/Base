@@ -93,8 +93,8 @@ struct Context
 
 	std::function<void(ASyncTaskPtr)> addTask;
 
-	std::function<std::string()> getLastViewTime;
-	std::function<void(std::string)> setLastViewTime;
+	std::function<int64_t()> getLastViewStamp;
+	std::function<void(int64_t)> setLastViewStamp;
 
 	std::function<void()> showTaskManager;
 

@@ -44,8 +44,8 @@ protected:
 private:
 	void addTask(ASyncTaskPtr);
 
-	std::string getLastViewTime();
-	void setLastViewTime(std::string);
+	int64_t getLastViewStamp();
+	void setLastViewStamp(int64_t);
 
 	std::string uniquePath();
 	std::string workPath();
@@ -103,6 +103,7 @@ private Q_SLOTS:
 	void onShowTaskManager();
 	void onNewConnection();
 	void onRefreshTasks();
+	void onCheckNewContents();
 
 private:
 	void initDb();
@@ -110,7 +111,6 @@ private:
 	void loadInstalledEnginesFromDb();
 	void loadDownloadedExtrasFromDb();
 	void loadProjectsFromDb();
-	void lightUpShowHistoryButton();
 
 private:
 	Ui::ExpressWidget expressWidgetUi_;

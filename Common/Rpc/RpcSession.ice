@@ -10,6 +10,7 @@ module Rpc
 {
 	struct ContentItem
 	{
+		long rowid;
 		string id;
 		string title;
 		string state;
@@ -17,6 +18,7 @@ module Rpc
 
 	struct ContentInfo
 	{
+		long rowid;
 		string id;
 		string parentId;
 		string title;

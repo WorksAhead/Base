@@ -183,6 +183,7 @@ namespace Rpc
 
 struct ContentItem
 {
+    ::Ice::Long rowid;
     ::std::string id;
     ::std::string title;
     ::std::string state;
@@ -192,6 +193,10 @@ struct ContentItem
         if(this == &__rhs)
         {
             return true;
+        }
+        if(rowid != __rhs.rowid)
+        {
+            return false;
         }
         if(id != __rhs.id)
         {
@@ -211,6 +216,14 @@ struct ContentItem
     bool operator<(const ContentItem& __rhs) const
     {
         if(this == &__rhs)
+        {
+            return false;
+        }
+        if(rowid < __rhs.rowid)
+        {
+            return true;
+        }
+        else if(__rhs.rowid < rowid)
         {
             return false;
         }
@@ -261,6 +274,7 @@ struct ContentItem
 
 struct ContentInfo
 {
+    ::Ice::Long rowid;
     ::std::string id;
     ::std::string parentId;
     ::std::string title;
@@ -282,6 +296,10 @@ struct ContentInfo
         if(this == &__rhs)
         {
             return true;
+        }
+        if(rowid != __rhs.rowid)
+        {
+            return false;
         }
         if(id != __rhs.id)
         {
@@ -349,6 +367,14 @@ struct ContentInfo
     bool operator<(const ContentInfo& __rhs) const
     {
         if(this == &__rhs)
+        {
+            return false;
+        }
+        if(rowid < __rhs.rowid)
+        {
+            return true;
+        }
+        else if(__rhs.rowid < rowid)
         {
             return false;
         }
@@ -1098,7 +1124,7 @@ template<>
 struct StreamableTraits< ::Rpc::ContentItem>
 {
     static const StreamHelperCategory helper = StreamHelperCategoryStruct;
-    static const int minWireSize = 3;
+    static const int minWireSize = 11;
     static const bool fixedLength = false;
 };
 
@@ -1107,6 +1133,7 @@ struct StreamWriter< ::Rpc::ContentItem, S>
 {
     static void write(S* __os, const ::Rpc::ContentItem& v)
     {
+        __os->write(v.rowid);
         __os->write(v.id);
         __os->write(v.title);
         __os->write(v.state);
@@ -1118,6 +1145,7 @@ struct StreamReader< ::Rpc::ContentItem, S>
 {
     static void read(S* __is, ::Rpc::ContentItem& v)
     {
+        __is->read(v.rowid);
         __is->read(v.id);
         __is->read(v.title);
         __is->read(v.state);
@@ -1128,7 +1156,7 @@ template<>
 struct StreamableTraits< ::Rpc::ContentInfo>
 {
     static const StreamHelperCategory helper = StreamHelperCategoryStruct;
-    static const int minWireSize = 21;
+    static const int minWireSize = 29;
     static const bool fixedLength = false;
 };
 
@@ -1137,6 +1165,7 @@ struct StreamWriter< ::Rpc::ContentInfo, S>
 {
     static void write(S* __os, const ::Rpc::ContentInfo& v)
     {
+        __os->write(v.rowid);
         __os->write(v.id);
         __os->write(v.parentId);
         __os->write(v.title);
@@ -1160,6 +1189,7 @@ struct StreamReader< ::Rpc::ContentInfo, S>
 {
     static void read(S* __is, ::Rpc::ContentInfo& v)
     {
+        __is->read(v.rowid);
         __is->read(v.id);
         __is->read(v.parentId);
         __is->read(v.title);

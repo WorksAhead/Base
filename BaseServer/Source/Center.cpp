@@ -422,7 +422,7 @@ bool Center::updateContent(const Form& form, const std::string& id)
 bool Center::getContent(Form& form, const std::string& id)
 {
 	std::ostringstream oss;
-	oss << "SELECT * FROM Contents";
+	oss << "SELECT rowid, * FROM Contents";
 	oss << " WHERE ";
 	oss << "Id=" << sqlText(id);
 
@@ -431,6 +431,7 @@ bool Center::getContent(Form& form, const std::string& id)
 		return false;
 	}
 	
+	form["rowid"] = s.getColumn("rowid").getText();
 	form["Id"] = s.getColumn("Id").getText();
 	form["ParentId"] = s.getColumn("ParentId").getText();
 	form["Title"] = s.getColumn("Title").getText();

@@ -18,22 +18,32 @@ public:
 	~HistoryDialog();
 
 private Q_SLOTS:
+	void onMark();
+	void onRefresh();
 	void onAnchorClicked(const QUrl&);
+	void onScroll(int);
 	void onTimeout();
 
 protected:
 	void showEvent(QShowEvent*);
+	void closeEvent(QCloseEvent*);
+
+private:
+	void showMore(int);
 
 private:
 	ContextPtr context_;
 
 	QTimer* timer_;
 
+	int count_;
+
 	Rpc::ContentBrowserPrx browser_;
 
 	Ui::HistoryDialog ui_;
 
-	std::string lastViewTime_;
+	int64_t lastViewStamp_;
+	int64_t latestTime_;
 };
 
 #endif // HISTORYDIALOG_HEADER
