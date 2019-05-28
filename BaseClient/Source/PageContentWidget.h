@@ -54,6 +54,7 @@ private Q_SLOTS:
 	void onBack();
 	void onForward();
 	void onRefresh();
+	void onHome();
 	void onUrlEdited();
 	void onCopyUrl();
 	void onCopyHttpUrl();

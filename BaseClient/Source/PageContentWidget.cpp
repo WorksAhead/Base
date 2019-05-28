@@ -33,6 +33,7 @@ PageContentWidget::PageContentWidget(ContextPtr context, const QString& name, QW
 	QObject::connect(ui_.backButton, &QPushButton::clicked, this, &PageContentWidget::onBack);
 	QObject::connect(ui_.forwardButton, &QPushButton::clicked, this, &PageContentWidget::onForward);
 	QObject::connect(ui_.refreshButton, &QPushButton::clicked, this, &PageContentWidget::onRefresh);
+	QObject::connect(ui_.homeButton, &QPushButton::clicked, this, &PageContentWidget::onHome);
 	QObject::connect(ui_.urlEdit, &QLineEdit::returnPressed, this, &PageContentWidget::onUrlEdited);
 
 	QObject::connect(copyBaseUrlAction, &QAction::triggered, this, &PageContentWidget::onCopyUrl);
@@ -183,6 +184,11 @@ void PageContentWidget::onRefresh()
 	else if (qobject_cast<PageContentContentWidget*>(w)) {
 		((PageContentContentWidget*)w)->refresh();
 	}
+}
+
+void PageContentWidget::onHome()
+{
+	openBrowser();
 }
 
 void PageContentWidget::onUrlEdited()

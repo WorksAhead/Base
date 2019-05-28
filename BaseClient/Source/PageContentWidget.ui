@@ -126,6 +126,35 @@
          </property>
         </widget>
        </item>
+       <item>
+        <widget class="QPushButton" name="homeButton">
+         <property name="minimumSize">
+          <size>
+           <width>24</width>
+           <height>24</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>24</width>
+           <height>24</height>
+          </size>
+         </property>
+         <property name="icon">
+          <iconset resource="../Resources/BaseClient.qrc">
+           <normaloff>:/Icons/NavHome.png</normaloff>:/Icons/NavHome.png</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>20</width>
+           <height>20</height>
+          </size>
+         </property>
+         <property name="flat">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
       </layout>
      </item>
      <item>

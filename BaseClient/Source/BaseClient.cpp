@@ -354,11 +354,6 @@ BaseClient::BaseClient(const QString& workPath, const QString& version, Rpc::Ses
 		}
 	}
 
-	PageWebWidget* webBrowser = new PageWebWidget(context_, "WebBrowser");
-	webBrowser->setUrl(QUrl("http://www.bing.com"));
-
-	tabWidget_->addTab(QString::fromLocal8Bit("ä¯ÀÀ"), webBrowser);
-
 	tabWidget_->addTab(QString::fromLocal8Bit("ÒýÇæ"), new PageEngineWidget(context_, "Engine"));
 
 	PageExtraWidget* pageExtraWidget = new PageExtraWidget(context_, "Extra");

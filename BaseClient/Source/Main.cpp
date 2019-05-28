@@ -37,7 +37,7 @@
 #include <windows.h>
 #endif
 
-#define BASE_CURRENT_VERSION "1.0.0.64"
+#define BASE_CURRENT_VERSION "1.0.0.65"
 
 namespace fs = boost::filesystem;
 
@@ -324,7 +324,7 @@ int main(int argc, char* argv[])
 		BaseClient w(QString::fromLocal8Bit(workDir.parent_path().string().c_str()), BASE_CURRENT_VERSION, ld.session(), url.c_str());
 
 		w.setMinimumSize(800, 500);
-		w.resize(1280, 800);
+		w.resize(1440, 900);
 		w.show();
 
 		QFile changeLogFile(QString::fromLocal8Bit((workDir / "ChangeLog").string().c_str()));
