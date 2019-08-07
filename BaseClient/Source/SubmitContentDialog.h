@@ -7,6 +7,7 @@
 #include "ui_SubmitContentDialog.h"
 
 #include <QStringList>
+#include <QMovie>
 
 class SubmitContentDialog : public QDialog {
 private:
@@ -41,14 +42,16 @@ private Q_SLOTS:
 	void onRemoveEngineVersion();
 	void onBrowseLocation();
 	void onBrowseProjectLocation();
-	void onSetCover();
+	void onSetImageCover();
+	void onSetGifCover();
 	void onPrevScreenshot();
 	void onNextScreenshot();
 	void onAddScreenshot();
 	void onRemoveScreenshot();
 	void onSubmit();
 
-	void onImageLoaded(const QString& id, int index, const QPixmap&);
+	void onImageLoaded(const QString& id, int index, QPixmap*);
+	void onAnimationLoaded(const QString& id, int index, QMovie*);
 
 protected:
 	virtual void keyPressEvent(QKeyEvent*);

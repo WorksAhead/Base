@@ -9,6 +9,7 @@
 #include <QWidget>
 #include <QScrollArea>
 #include <QPixmap>
+#include <QMovie>
 #include <QString>
 #include <QMap>
 #include <QTimer>
@@ -38,7 +39,8 @@ protected:
 
 private Q_SLOTS:
 	void onScroll(int);
-	void onImageLoaded(const QString& id, int index, const QPixmap&);
+	void onImageLoaded(const QString& id, int index, QPixmap*);
+	void onAnimationLoaded(const QString& id, int index, QMovie*);
 	void onTimeout();
 
 private:

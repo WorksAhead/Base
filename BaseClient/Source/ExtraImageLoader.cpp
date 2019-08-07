@@ -109,7 +109,7 @@ void ExtraImageLoader::onTick()
 QString ExtraImageLoader::makeImageFilename(const QString& id)
 {
 	fs::path path = context_->cachePath();
-	path /= id.toStdString() + "_image_0.jpg";
+	path /= id.toStdString() + "_image_0";
 	return QString::fromLocal8Bit(path.string().c_str());
 }
 

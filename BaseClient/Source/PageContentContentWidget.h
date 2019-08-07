@@ -37,7 +37,7 @@ protected:
 	virtual void paintEvent(QPaintEvent*);
 
 private Q_SLOTS:
-	void onImageLoaded(const QString& id, int index, const QPixmap&);
+	void onImageLoaded(const QString& id, int index, QPixmap*);
 	void onVideoSnapshot(const QString& filename);
 	void onDownload();
 	void onAnchorClicked(const QUrl&);
@@ -50,7 +50,7 @@ private:
 	void initView();
 	VideoPlayerWidget* findVideoPlayerWidget(int);
 	ImageViewerWidget* findImageViewerWidget();
-	void presentImage(const QPixmap&);
+	void presentImage(QPixmap*);
 	void presentVideo(const QString&);
 	void takeVideoSnapshot();
 	QStringList queryEngineVersions();
@@ -68,7 +68,7 @@ private:
 	QPair<QString, QString> supportedEngineVersion_;
 
 	QVector<QString> videos_;
-	QVector<QPixmap> screenshots_;
+	QVector<QPixmap*> screenshots_;
 
 	int videoSnapshot_;
 

@@ -39,7 +39,10 @@ PageContentBrowserWidget::PageContentBrowserWidget(ContextPtr context, const QSt
 	timer_->setInterval(30);
 
 	QObject::connect(scrollArea_->verticalScrollBar(), &QScrollBar::valueChanged, this, &PageContentBrowserWidget::onScroll);
-	QObject::connect(context_->contentImageLoader, &ContentImageLoader::loaded, this, &PageContentBrowserWidget::onImageLoaded);
+
+	QObject::connect(context_->contentImageLoader, &ContentImageLoader::imageLoaded, this, &PageContentBrowserWidget::onImageLoaded);
+	QObject::connect(context_->contentImageLoader, &ContentImageLoader::animationLoaded, this, &PageContentBrowserWidget::onAnimationLoaded);
+
 	QObject::connect(timer_, &QTimer::timeout, this, &PageContentBrowserWidget::onTimeout);
 
 	browser_ = 0;
@@ -127,12 +130,26 @@ void PageContentBrowserWidget::onScroll(int position)
 	}
 }
 
-void PageContentBrowserWidget::onImageLoaded(const QString& id, int index, const QPixmap& image)
+void PageContentBrowserWidget::onImageLoaded(const QString& id, int index, QPixmap* image)
 {
-	if (index == 0) {
+	if (index == 0)
+	{
 		PageContentItemWidget* pi = items_.value(id, 0);
-		if (pi) {
+
+		if (pi && !pi->hasBackground()) {
 			pi->setBackground(image);
+		}
+	}
+}
+
+void PageContentBrowserWidget::onAnimationLoaded(const QString& id, int index, QMovie* movie)
+{
+	if (index == 0)
+	{
+		PageContentItemWidget* pi = items_.value(id, 0);
+
+		if (pi && !pi->hasBackground()) {
+			pi->setBackground(movie);
 		}
 	}
 }
@@ -156,11 +173,15 @@ void PageContentBrowserWidget::onTimeout()
 			}
 
 			PageContentItemWidget* pi = new PageContentItemWidget(this);
+
 			pi->setSize(coverSize_);
 			pi->setId(item.id.c_str());
 			pi->setText(item.title.c_str());
+
 			items_.insert(item.id.c_str(), pi);
+
 			contentsLayout_->addWidget(pi);
+
 			context_->contentImageLoader->load(item.id.c_str(), 0);
 
 			++m;
@@ -180,12 +201,16 @@ void PageContentBrowserWidget::clear()
 {
 	items_.clear();
 
-	for (;;) {
+	for (;;)
+	{
 		QLayoutItem* li = contentsLayout_->takeAt(0);
+
 		if (!li) {
 			break;
 		}
+
 		li->widget()->deleteLater();
+
 		delete li;
 	}
 }

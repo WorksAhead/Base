@@ -8,6 +8,7 @@
 
 #include <QMap>
 #include <QList>
+#include <QMovie>
 
 // forward declaration
 class LibraryProjectItemWidget;
@@ -32,7 +33,8 @@ protected:
 	virtual void paintEvent(QPaintEvent*);
 
 private Q_SLOTS:
-	void onImageLoaded(const QString& id, int index, const QPixmap&);
+	void onImageLoaded(const QString& id, int index, QPixmap*);
+	void onAnimationLoaded(const QString& id, int index, QMovie*);
 
 private:
 	void refresh();

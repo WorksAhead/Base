@@ -6,6 +6,9 @@
 
 PageContentItemWidget::PageContentItemWidget(QWidget* parent) : QWidget(parent)
 {
+	bg_ = 0;
+	movie_ = 0;
+
 	size_ = 1;
 
 	setSize(size_);
@@ -13,6 +16,7 @@ PageContentItemWidget::PageContentItemWidget(QWidget* parent) : QWidget(parent)
 
 PageContentItemWidget::~PageContentItemWidget()
 {
+	clear();
 }
 
 void PageContentItemWidget::setId(const QString& id)
@@ -35,10 +39,30 @@ QString PageContentItemWidget::text() const
 	return text_;
 }
 
-void PageContentItemWidget::setBackground(const QPixmap& bg)
+void PageContentItemWidget::setBackground(QPixmap* bg)
 {
+	clear();
+
 	bg_ = bg;
-	updateBackground(size());
+	scaledBg_ = bg_->scaled(size(), Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
+
+	repaint();
+}
+
+void PageContentItemWidget::setBackground(QMovie* movie)
+{
+	clear();
+
+	movie_ = movie;
+
+	QObject::connect(movie_, SIGNAL(updated(QRect)), this, SLOT(onBackgroundUpdated(QRect)));
+
+	movie_->start();
+}
+
+bool PageContentItemWidget::hasBackground()
+{
+	return (bg_ || movie_);
 }
 
 void PageContentItemWidget::setSize(int size)
@@ -53,9 +77,20 @@ void PageContentItemWidget::setSize(int size)
 	}
 }
 
+void PageContentItemWidget::onBackgroundUpdated(QRect)
+{
+	if (movie_ && movie_->isValid())
+	{
+		scaledBg_ = movie_->currentPixmap().scaled(size(), Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
+
+		repaint();
+	}
+}
+
 void PageContentItemWidget::paintEvent(QPaintEvent* e)
 {
 	QPainter painter(this);
+
 	painter.drawPixmap(QPoint(0, 0), scaledBg_);
 
 	if (size_ == 0)
@@ -91,14 +126,24 @@ void PageContentItemWidget::paintEvent(QPaintEvent* e)
 
 void PageContentItemWidget::resizeEvent(QResizeEvent* e)
 {
-	updateBackground(e->size());
+	if (bg_)
+	{
+		scaledBg_ = bg_->scaled(size(), Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
+	}
 }
 
-void PageContentItemWidget::updateBackground(const QSize& s)
+void PageContentItemWidget::clear()
 {
-	if (!bg_.isNull()) {
-		scaledBg_ = bg_.scaled(s, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
-		repaint();
+	if (bg_) {
+		bg_ = 0;
 	}
+
+	if (movie_)
+	{
+		QObject::disconnect(movie_, SIGNAL(updated(QRect)), this, SLOT(onBackgroundUpdated(QRect)));
+		movie_ = 0;
+	}
+
+	scaledBg_ = QPixmap();
 }
 

@@ -30,22 +30,26 @@ public:
 	void load(const QString& id, int index, bool highPriority = false);
 
 Q_SIGNALS:
-	void loaded(const QString& id, int index, const QPixmap&);
+	void imageLoaded(const QString& id, int index, QPixmap*);
+	void animationLoaded(const QString& id, int index, QMovie*);
 
 private Q_SLOTS:
 	void onTick();
 
 private:
 	QString makeImageFilename(const ImageIndex&);
-	void setImage(const ImageIndex& imageIndex);
+	bool loadFromLocalFile(const ImageIndex&);
 
 private:
 	ContextPtr context_;
 
 	QTimer* timer_;
 
-	QSet<ImageIndex> loadedImages_;
+	QMap<ImageIndex, QPixmap*> loadedImages_;
+	QMap<ImageIndex, QMovie*> loadedAnimations_;
+
 	QMap<ImageIndex, ASyncDownloadTask*> imageLoadTasks_;
+
 	QList<ImageIndex> pendingImages_;
 };
 

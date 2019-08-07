@@ -36,7 +36,8 @@ LibraryContentWidget::LibraryContentWidget(ContextPtr context, QWidget* parent) 
 
 	setLayout(layout);
 
-	QObject::connect(context_->contentImageLoader, &ContentImageLoader::loaded, this, &LibraryContentWidget::onImageLoaded);
+	QObject::connect(context_->contentImageLoader, &ContentImageLoader::imageLoaded, this, &LibraryContentWidget::onImageLoaded);
+	QObject::connect(context_->contentImageLoader, &ContentImageLoader::animationLoaded, this, &LibraryContentWidget::onAnimationLoaded);
 
 	firstShow_ = true;
 }
@@ -197,19 +198,29 @@ void LibraryContentWidget::refresh()
 	}
 }
 
-void LibraryContentWidget::onImageLoaded(const QString& id, int index, const QPixmap& image)
+void LibraryContentWidget::onImageLoaded(const QString& id, int index, QPixmap* image)
 {
 	LibraryContentItemWidget* w = contentItemWidgets_.value(id, 0);
+
 	if (w && index == 0) {
-		w->setImage(image);
+		w->setImage(*image);
 	}
 
 	auto it = projectItemsOfContentItem_.find(id);
 	if (it != projectItemsOfContentItem_.end()) {
 		QList<LibraryProjectItemWidget*>& list = *it;
 		for (LibraryProjectItemWidget* p : list) {
-			p->setImage(image);
+			p->setImage(*image);
 		}
+	}
+}
+
+void LibraryContentWidget::onAnimationLoaded(const QString& id, int index, QMovie* movie)
+{
+	if (movie->isValid())
+	{
+		QPixmap pixmap = movie->currentPixmap();
+		onImageLoaded(id, index, &pixmap);
 	}
 }
 

@@ -59,9 +59,9 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>-1302</y>
+        <y>-246</y>
         <width>581</width>
-        <height>1900</height>
+        <height>1802</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -249,118 +249,142 @@
         </layout>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="2,0">
-         <item>
-          <widget class="QLineEdit" name="locationEdit">
-           <property name="readOnly">
-            <bool>true</bool>
-           </property>
-           <property name="placeholderText">
-            <string>Location</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="browseLocationButton">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>23</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>60</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>Browse</string>
-           </property>
-           <property name="autoDefault">
-            <bool>false</bool>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_14" stretch="0,1">
-         <item>
-          <widget class="QCheckBox" name="projectInSubDirCheckBox">
-           <property name="text">
-            <string>Project in sub-directory:</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_5">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_15" stretch="8,0">
-         <item>
-          <widget class="QLineEdit" name="projectLocationEdit">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="readOnly">
-            <bool>true</bool>
-           </property>
-           <property name="placeholderText">
-            <string>Project Location</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="browseProjectLocationButton">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>23</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>60</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>Browse</string>
-           </property>
-           <property name="autoDefault">
-            <bool>false</bool>
-           </property>
-          </widget>
-         </item>
-        </layout>
+        <widget class="QFrame" name="locationFrame">
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_5">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="2,0">
+            <item>
+             <widget class="QLineEdit" name="locationEdit">
+              <property name="readOnly">
+               <bool>true</bool>
+              </property>
+              <property name="placeholderText">
+               <string>Location</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="browseLocationButton">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>23</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>60</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>Browse</string>
+              </property>
+              <property name="autoDefault">
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_14" stretch="0,1">
+            <item>
+             <widget class="QCheckBox" name="projectInSubDirCheckBox">
+              <property name="text">
+               <string>Project in sub-directory:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_5">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_15" stretch="8,0">
+            <item>
+             <widget class="QLineEdit" name="projectLocationEdit">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="readOnly">
+               <bool>true</bool>
+              </property>
+              <property name="placeholderText">
+               <string>Project Location</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="browseProjectLocationButton">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>23</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>60</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>Browse</string>
+              </property>
+              <property name="autoDefault">
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
        </item>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_3">
@@ -450,30 +474,40 @@
              </widget>
             </item>
             <item>
-             <widget class="ImageViewerWidget" name="coverViewer">
+             <widget class="QLabel" name="coverViewer">
               <property name="minimumSize">
                <size>
-                <width>0</width>
-                <height>400</height>
+                <width>300</width>
+                <height>300</height>
                </size>
               </property>
               <property name="maximumSize">
                <size>
-                <width>16777215</width>
-                <height>400</height>
+                <width>300</width>
+                <height>300</height>
                </size>
               </property>
-              <property name="frameShape">
-               <enum>QFrame::Box</enum>
+              <property name="text">
+               <string notr="true"/>
               </property>
              </widget>
             </item>
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout_7">
               <item>
-               <widget class="QPushButton" name="setCoverButton">
+               <widget class="QPushButton" name="setImgCoverButton">
                 <property name="text">
-                 <string>Set</string>
+                 <string>Set Image</string>
+                </property>
+                <property name="autoDefault">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="setGifCoverButton">
+                <property name="text">
+                 <string>Set Gif Animation</string>
                 </property>
                 <property name="autoDefault">
                  <bool>false</bool>
@@ -729,12 +763,6 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>ImageViewerWidget</class>
-   <extends>QFrame</extends>
-   <header>ImageViewerWidget.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>AutoExpandTextEdit</class>
    <extends>QPlainTextEdit</extends>
    <header>AutoExpandTextEdit.h</header>
@@ -757,16 +785,11 @@
   <tabstop>engineVersionEdit</tabstop>
   <tabstop>addEngineVersionButton</tabstop>
   <tabstop>removeEngineVersionButton</tabstop>
-  <tabstop>locationEdit</tabstop>
-  <tabstop>browseLocationButton</tabstop>
-  <tabstop>projectInSubDirCheckBox</tabstop>
-  <tabstop>projectLocationEdit</tabstop>
-  <tabstop>browseProjectLocationButton</tabstop>
   <tabstop>commandEdit</tabstop>
   <tabstop>macroButton1</tabstop>
   <tabstop>workDirEdit</tabstop>
   <tabstop>macroButton2</tabstop>
-  <tabstop>setCoverButton</tabstop>
+  <tabstop>setImgCoverButton</tabstop>
   <tabstop>videoEdit</tabstop>
   <tabstop>addScreenshotButton</tabstop>
   <tabstop>removeScreenshotButton</tabstop>
@@ -776,38 +799,5 @@
   <tabstop>scrollArea</tabstop>
  </tabstops>
  <resources/>
- <connections>
-  <connection>
-   <sender>projectInSubDirCheckBox</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>projectLocationEdit</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>110</x>
-     <y>199</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>105</x>
-     <y>230</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>projectInSubDirCheckBox</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>browseProjectLocationButton</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>170</x>
-     <y>199</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>541</x>
-     <y>227</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>

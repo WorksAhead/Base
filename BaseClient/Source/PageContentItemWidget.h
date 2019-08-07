@@ -5,6 +5,7 @@
 #include <QImage>
 #include <QBoxLayout>
 #include <QString>
+#include <QMovie>
 
 class PageContentItemWidget : public QWidget {
 private:
@@ -20,22 +21,31 @@ public:
 	void setText(const QString&);
 	QString text() const;
 
-	void setBackground(const QPixmap&);
+	void setBackground(QPixmap*);
+	void setBackground(QMovie*);
+	bool hasBackground();
 
 	void setSize(int);
+
+private Q_SLOTS:
+	void onBackgroundUpdated(QRect);
 
 protected:
 	virtual void paintEvent(QPaintEvent*);
 	virtual void resizeEvent(QResizeEvent*);
 
 private:
-	void updateBackground(const QSize&);
+	void clear();
 
 private:
 	QString id_;
 	QString text_;
-	QPixmap bg_;
+
+	QPixmap* bg_;
+	QMovie* movie_;
+
 	QPixmap scaledBg_;
+	
 	int size_;
 };
 

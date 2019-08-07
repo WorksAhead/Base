@@ -93,7 +93,8 @@ SubmitContentDialog::SubmitContentDialog(ContextPtr context, QWidget* parent) : 
 		generateCommandAndWorkDir();
 	});
 
-	QObject::connect(ui_.setCoverButton, &QPushButton::clicked, this, &SubmitContentDialog::onSetCover);
+	QObject::connect(ui_.setImgCoverButton, &QPushButton::clicked, this, &SubmitContentDialog::onSetImageCover);
+	QObject::connect(ui_.setGifCoverButton, &QPushButton::clicked, this, &SubmitContentDialog::onSetGifCover);
 
 	QObject::connect(ui_.prevScreenshotButton, &QPushButton::clicked, this, &SubmitContentDialog::onPrevScreenshot);
 	QObject::connect(ui_.nextScreenshotButton, &QPushButton::clicked, this, &SubmitContentDialog::onNextScreenshot);
@@ -105,6 +106,9 @@ SubmitContentDialog::SubmitContentDialog(ContextPtr context, QWidget* parent) : 
 	QShortcut* showAllShortcut = new QShortcut(QKeySequence(Qt::Key_F12), this);
 
 	QObject::connect(showAllShortcut, &QShortcut::activated, this, &SubmitContentDialog::onShowAll);
+
+	QObject::connect(context_->contentImageLoader, &ContentImageLoader::imageLoaded, this, &SubmitContentDialog::onImageLoaded);
+	QObject::connect(context_->contentImageLoader, &ContentImageLoader::animationLoaded, this, &SubmitContentDialog::onAnimationLoaded);
 
 	ui_.prevScreenshotButton->setEnabled(false);
 	ui_.nextScreenshotButton->setEnabled(false);
@@ -135,18 +139,25 @@ void SubmitContentDialog::switchToEditMode(const QString& contentId)
 {
 	setWindowTitle(tr("Edit Content"));
 
+	ui_.locationFrame->setVisible(false);
 	ui_.locationEdit->setEnabled(false);
 	ui_.browseLocationButton->setEnabled(false);
 	ui_.projectInSubDirCheckBox->setEnabled(false);
+
+	ui_.coverFrame->setVisible(false);
 	ui_.coverLabel->setEnabled(false);
 	ui_.coverViewer->setEnabled(false);
-	ui_.setCoverButton->setEnabled(false);
+	ui_.setImgCoverButton->setEnabled(false);
+
+	ui_.screenshotFrame->setVisible(false);
 	ui_.screenshotLabel->setEnabled(false);
 	ui_.screenshotWidget->setEnabled(false);
 	ui_.addScreenshotButton->setEnabled(false);
 	ui_.removeScreenshotButton->setEnabled(false);
 	ui_.prevScreenshotButton->setEnabled(false);
 	ui_.nextScreenshotButton->setEnabled(false);
+
+	ui_.hideOtherVersions->setVisible(false);
 
 	onShowAll();
 
@@ -168,9 +179,7 @@ void SubmitContentDialog::switchToCopyMode(const QString& contentId)
 
 void SubmitContentDialog::loadImagesFrom(const QString& contentId, int count)
 {
-	QObject::connect(context_->contentImageLoader, &ContentImageLoader::loaded, this, &SubmitContentDialog::onImageLoaded);
-
-	setProperty("image id", contentId);
+	setProperty("content_id", contentId);
 
 	for (int i = 0; i < count; ++i) {
 		context_->contentImageLoader->load(contentId, i);
@@ -484,14 +493,48 @@ void SubmitContentDialog::onBrowseProjectLocation()
 	}
 }
 
-void SubmitContentDialog::onSetCover()
+void SubmitContentDialog::onSetImageCover()
 {
 	QPixmap pixmap = getImage(QSize(1, 1));
+
 	if (pixmap.isNull()) {
 		return;
 	}
 
-	ui_.coverViewer->setPixmap(pixmap);
+	ui_.coverViewer->setPixmap(pixmap.scaled(QSize(300, 300), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+}
+
+void SubmitContentDialog::onSetGifCover()
+{
+	QString path = QFileDialog::getOpenFileName(this, "Open File", QString(), "Images (*.gif)");
+
+	if (path.isEmpty() || !QFileInfo(path).exists()) {
+		return;
+	}
+
+	QSize size = QPixmap(path).size();
+
+	if (size.width() < 50 || size.width() > 300 || size.width() != size.height() || QFileInfo(path).size() > 1024*1024*2)
+	{
+		QMessageBox::information(this, "Base", tr("The animated cover must be a square GIF larger than 50x50 and smaller than 300x300, and the capacity is within 2M."));
+		return;
+	}
+
+	QMovie* movie = new QMovie(path);
+
+	if (!movie->isValid())
+	{
+		delete movie;
+		QMessageBox::warning(this, "Base", tr("Invalid animation file."));
+		return;
+	}
+
+	movie->setParent(this);
+	movie->setScaledSize(QSize(300, 300));
+
+	ui_.coverViewer->setMovie(movie);
+
+	movie->start();
 }
 
 void SubmitContentDialog::onPrevScreenshot()
@@ -680,7 +723,7 @@ void SubmitContentDialog::onSubmit()
 
 	if (!editMode_)
 	{
-		if (!ui_.coverViewer->pixmap()) {
+		if (!ui_.coverViewer->movie() && !ui_.coverViewer->pixmap()) {
 			QMessageBox::information(this, "Base", tr("The Cover is not set."));
 			return;
 		}
@@ -712,11 +755,18 @@ void SubmitContentDialog::onSubmit()
 
 		std::string imageFilename;
 
-		imageFilename = context_->uniquePath() + ".jpg";
+		if (ui_.coverViewer->movie())
+		{
+			imageFilename = ui_.coverViewer->movie()->fileName().toStdString();
+		}
+		else
+		{
+			imageFilename = context_->uniquePath() + ".jpg";
 
-		if (!ui_.coverViewer->pixmap().scaled(QSize(300, 300), Qt::KeepAspectRatio, Qt::SmoothTransformation).save(imageFilename.c_str(), "JPG", 90)) {
-			QMessageBox::information(this, "Base", tr("Failed to save image"));
-			return;
+			if (!ui_.coverViewer->pixmap()->save(imageFilename.c_str(), "JPG", 90)) {
+				QMessageBox::information(this, "Base", tr("Failed to save image"));
+				return;
+			}
 		}
 
 		task->addImageFile(imageFilename);
@@ -821,17 +871,17 @@ void SubmitContentDialog::onSubmit()
 #undef CHECK_ERROR_CODE
 }
 
-void SubmitContentDialog::onImageLoaded(const QString& contentId, int index, const QPixmap& pixmap)
+void SubmitContentDialog::onImageLoaded(const QString& contentId, int index, QPixmap* pixmap)
 {
-	if (property("image id").toString() == contentId)
+	if (property("content_id").toString() == contentId)
 	{
 		if (index == 0) {
-			ui_.coverViewer->setPixmap(pixmap);
+			ui_.coverViewer->setPixmap(*pixmap);
 		}
 		else if (index > 0)
 		{
 			ImageViewerWidget* imageViewer = new ImageViewerWidget;
-			imageViewer->setPixmap(pixmap);
+			imageViewer->setPixmap(*pixmap);
 
 			ui_.screenshotWidget->insertWidget(index - 1, imageViewer);
 
@@ -849,6 +899,17 @@ void SubmitContentDialog::onImageLoaded(const QString& contentId, int index, con
 			/*if (count >= 5) {
 				ui_.addScreenshotButton->setEnabled(false);
 			}*/
+		}
+	}
+}
+
+void SubmitContentDialog::onAnimationLoaded(const QString& contentId, int index, QMovie* movie)
+{
+	if (property("content_id").toString() == contentId)
+	{
+		if (index == 0)
+		{
+			ui_.coverViewer->setMovie(movie);			
 		}
 	}
 }

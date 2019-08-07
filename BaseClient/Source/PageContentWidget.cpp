@@ -14,7 +14,7 @@
 
 #include <string>
 
-#define MAX_HISTORY 64
+#define MAX_HISTORY 16
 
 PageContentWidget::PageContentWidget(ContextPtr context, const QString& name, QWidget* parent) : QWidget(parent), context_(context), name_(name)
 {
@@ -315,14 +315,18 @@ void PageContentWidget::openBrowser(const QString& category, const QString& sear
 
 void PageContentWidget::clearOldAndForwardHistory()
 {
-	while (ui_.stackedWidget->currentIndex() + 1 < ui_.stackedWidget->count()) {
+	while (ui_.stackedWidget->currentIndex() + 1 < ui_.stackedWidget->count())
+	{
 		const int index = ui_.stackedWidget->currentIndex() + 1;
 		QWidget* w = ui_.stackedWidget->widget(index);
+		w->deleteLater();
 		ui_.stackedWidget->removeWidget(w);
 	}
 
-	while (ui_.stackedWidget->count() > MAX_HISTORY) {
+	while (ui_.stackedWidget->count() > MAX_HISTORY)
+	{
 		QWidget* w = ui_.stackedWidget->widget(0);
+		w->deleteLater();
 		ui_.stackedWidget->removeWidget(w);
 	}
 }

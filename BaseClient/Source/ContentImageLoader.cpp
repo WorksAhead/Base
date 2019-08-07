@@ -3,6 +3,8 @@
 #include "QtUtils.h"
 
 #include <QTime>
+#include <QImageReader>
+#include <QMovie>
 
 #include <boost/filesystem.hpp>
 
@@ -19,7 +21,9 @@ ContentImageLoader::ContentImageLoader(ContextPtr context, QObject* parent) : co
 ContentImageLoader::~ContentImageLoader()
 {
 	QMapIterator<ImageIndex, ASyncDownloadTask*> it(imageLoadTasks_);
-	while (it.hasNext()) {
+
+	while (it.hasNext())
+	{
 		it.next();
 		ASyncDownloadTask* task = it.value();
 		task->cancel();
@@ -28,14 +32,40 @@ ContentImageLoader::~ContentImageLoader()
 
 	imageLoadTasks_.clear();
 	pendingImages_.clear();
+
+	QMapIterator<ImageIndex, QPixmap*> it2(loadedImages_);
+
+	while (it2.hasNext())
+	{
+		it2.next();
+		delete it2.value();
+	}
+
+	QMapIterator<ImageIndex, QMovie*> it3(loadedAnimations_);
+
+	while (it3.hasNext())
+	{
+		it3.next();
+		delete it3.value();
+	}
 }
 
 void ContentImageLoader::load(const QString& id, int index, bool highPriority)
 {
 	ImageIndex imageIndex(id, index);
 
-	if (loadedImages_.contains(imageIndex)) {
-		setImage(imageIndex);
+	if (loadedAnimations_.contains(imageIndex))
+	{
+		Q_EMIT animationLoaded(imageIndex.first, imageIndex.second, loadedAnimations_[imageIndex]);
+		return;
+	}
+	else if (loadedImages_.contains(imageIndex))
+	{
+		Q_EMIT imageLoaded(imageIndex.first, imageIndex.second, loadedImages_[imageIndex]);
+		return;
+	}
+
+	if (loadFromLocalFile(imageIndex)) {
 		return;
 	}
 
@@ -60,8 +90,17 @@ void ContentImageLoader::onTick()
 	{
 		const ImageIndex& imageIndex = pendingImages_.at(index);
 
-		if (loadedImages_.contains(imageIndex)) {
-			setImage(imageIndex);
+		if (loadedAnimations_.contains(imageIndex))
+		{
+			Q_EMIT animationLoaded(imageIndex.first, imageIndex.second, loadedAnimations_[imageIndex]);
+
+			pendingImages_.removeAt(index);
+			continue;
+		}
+		else if (loadedImages_.contains(imageIndex))
+		{
+			Q_EMIT imageLoaded(imageIndex.first, imageIndex.second, loadedImages_[imageIndex]);
+
 			pendingImages_.removeAt(index);
 			continue;
 		}
@@ -72,12 +111,13 @@ void ContentImageLoader::onTick()
 		{
 			const int state = task->state();
 
-			if (state == ASyncTask::state_finished) {
-				setImage(imageIndex);
-				loadedImages_.insert(imageIndex);
+			if (state == ASyncTask::state_finished)
+			{
+				loadFromLocalFile(imageIndex);
 			}
 
-			if (state == ASyncTask::state_finished || state == ASyncTask::state_failed) {
+			if (state == ASyncTask::state_finished || state == ASyncTask::state_failed)
+			{
 				delete task;
 				imageLoadTasks_.remove(imageIndex);
 				pendingImages_.removeAt(index);
@@ -89,6 +129,7 @@ void ContentImageLoader::onTick()
 			Rpc::DownloaderPrx downloader;
 
 			Rpc::ErrorCode ec = context_->session->downloadContentImage(imageIndex.first.toStdString(), imageIndex.second, downloader);
+
 			if (ec != Rpc::ec_success) {
 				pendingImages_.removeAt(index);
 				continue;
@@ -111,18 +152,48 @@ void ContentImageLoader::onTick()
 QString ContentImageLoader::makeImageFilename(const ImageIndex& imageIndex)
 {
 	fs::path path = context_->cachePath();
+
 	if (imageIndex.second == 0) {
-		path /= imageIndex.first.toStdString() + "_cover.jpg";
+		path /= imageIndex.first.toStdString() + "_cover";
 	}
 	else {
-		path /= imageIndex.first.toStdString() + "_image_" + std::to_string(imageIndex.second) + ".jpg";
+		path /= imageIndex.first.toStdString() + "_image_" + std::to_string(imageIndex.second);
 	}
+
 	return QString::fromLocal8Bit(path.string().c_str());
 }
 
-void ContentImageLoader::setImage(const ImageIndex& imageIndex)
+bool ContentImageLoader::loadFromLocalFile(const ImageIndex& imageIndex)
 {
-	const QPixmap& image = QPixmap(makeImageFilename(imageIndex), "JPG");
-	Q_EMIT loaded(imageIndex.first, imageIndex.second, image);
+	QString path = makeImageFilename(imageIndex);
+
+	QImageReader reader(path);
+
+	QImage image = reader.read();
+
+	if (image.isNull()) {
+		return false;
+	}
+
+	if (reader.supportsAnimation())
+	{
+		QMovie* movie = new QMovie(path);
+
+		movie->start();
+
+		loadedAnimations_.insert(imageIndex, movie);
+
+		Q_EMIT animationLoaded(imageIndex.first, imageIndex.second, movie);
+	}
+	else
+	{
+		QPixmap* pixmap = new QPixmap(QPixmap::fromImage(image));
+
+		loadedImages_.insert(imageIndex, pixmap);
+
+		Q_EMIT imageLoaded(imageIndex.first, imageIndex.second, pixmap);
+	}
+
+	return true;
 }
 

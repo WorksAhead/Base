@@ -68,7 +68,7 @@ PageContentContentWidget::PageContentContentWidget(ContextPtr context, const QSt
 		}
 	});
 
-	QObject::connect(context_->contentImageLoader, &ContentImageLoader::loaded, this, &PageContentContentWidget::onImageLoaded);
+	QObject::connect(context_->contentImageLoader, &ContentImageLoader::imageLoaded, this, &PageContentContentWidget::onImageLoaded);
 	QObject::connect(ui_.downloadButton, &QPushButton::clicked, this, &PageContentContentWidget::onDownload);
 	QObject::connect(ui_.summary, &QTextBrowser::anchorClicked, this, &PageContentContentWidget::onAnchorClicked);
 	QObject::connect(ui_.description, &QTextBrowser::anchorClicked, this, &PageContentContentWidget::onAnchorClicked);
@@ -365,7 +365,7 @@ void PageContentContentWidget::paintEvent(QPaintEvent* e)
 	style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
-void PageContentContentWidget::onImageLoaded(const QString& id, int index, const QPixmap& pixmap)
+void PageContentContentWidget::onImageLoaded(const QString& id, int index, QPixmap* pixmap)
 {
 	if (id == contentId_ && index > 0)
 	{
@@ -375,7 +375,7 @@ void PageContentContentWidget::onImageLoaded(const QString& id, int index, const
 		if (li && li->widget()) {
 			QLabel* label = qobject_cast<QLabel*>(li->widget());
 			if (label) {
-				label->setPixmap(pixmap.scaled(192, 108, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+				label->setPixmap(pixmap->scaled(192, 108, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 			}
 		}
 
@@ -703,7 +703,7 @@ void PageContentContentWidget::initView()
 	if (screenshots_.count() > 0)
 	{
 		ImageViewerWidget* viewer = new ImageViewerWidget;
-		viewer->setPixmap(QPixmap());
+		//viewer->setPixmap(QPixmap());
 		ui_.stackedWidget->addWidget(viewer);
 	}
 
@@ -771,7 +771,7 @@ ImageViewerWidget* PageContentContentWidget::findImageViewerWidget()
 	return 0;
 }
 
-void PageContentContentWidget::presentImage(const QPixmap& pixmap)
+void PageContentContentWidget::presentImage(QPixmap* pixmap)
 {
 	VideoPlayerWidget* player;
 	if ((player = findVideoPlayerWidget(0)) != 0) {
@@ -779,9 +779,11 @@ void PageContentContentWidget::presentImage(const QPixmap& pixmap)
 	}
 
 	ImageViewerWidget* viewer;
-	if ((viewer = findImageViewerWidget()) != 0) {
+
+	if ((viewer = findImageViewerWidget()) != 0)
+	{
 		ui_.stackedWidget->setCurrentWidget(viewer);
-		viewer->setPixmap(pixmap);
+		viewer->setPixmap(*pixmap);
 	}
 }
 
