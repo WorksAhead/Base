@@ -13,7 +13,7 @@ bool BaseServer::start(int argc, char* argv[], int& status)
 		timer->scheduleRepeated(center, IceUtil::Time::seconds(5));
 
 		adapter_ = communicator()->createObjectAdapter("BaseServer");
-		adapter_->add(new RpcStartImpl(center), communicator()->stringToIdentity("Start"));
+		adapter_->add(new RpcStartImpl(center), Ice::stringToIdentity("Start"));
 		adapter_->activate();
 	}
 	catch (Ice::LocalException&) {

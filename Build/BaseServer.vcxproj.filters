@@ -292,5 +292,6 @@
     <None Include="..\Common\Rpc\RpcUploader.ice">
       <Filter>Common</Filter>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>
