@@ -106,8 +106,6 @@ Rpc::ErrorCode RpcStartImpl::login(const std::string& username, const std::strin
 
 bool RpcStartImpl::loginToCYou(const std::string& username, const std::string& clear_pwd)
 {
-	return true;
-
 	CURLcode res = CURL_LAST;
 
 	std::string user_pwd = username + ":" + clear_pwd;
