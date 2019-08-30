@@ -77,7 +77,7 @@ private:
 	void Xor(char* buff, char const* chain)
 	{
 		if(false==m_bKeyInit)
-			throw exception(sm_szErrorMsg1);
+			throw runtime_error(sm_szErrorMsg1);
 		for(int i=0; i<m_blockSize; i++)
 			*(buff++) ^= *(chain++);	
 	}
@@ -113,7 +113,7 @@ public:
 	int GetKeyLength()
 	{
 		if(false==m_bKeyInit)
-			throw exception(sm_szErrorMsg1);
+			throw runtime_error(sm_szErrorMsg1);
 		return m_keylength;
 	}
 
@@ -121,7 +121,7 @@ public:
 	int	GetBlockSize()
 	{
 		if(false==m_bKeyInit)
-			throw exception(sm_szErrorMsg1);
+			throw runtime_error(sm_szErrorMsg1);
 		return m_blockSize;
 	}
 	
@@ -129,7 +129,7 @@ public:
 	int GetRounds()
 	{
 		if(false==m_bKeyInit)
-			throw exception(sm_szErrorMsg1);
+			throw runtime_error(sm_szErrorMsg1);
 		return m_iROUNDS;
 	}
 

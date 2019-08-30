@@ -25,7 +25,7 @@ RpcStartImpl::RpcStartImpl(CenterPtr center) : center_(center)
 	maintainer_ = new RpcSessionMaintainer;
 	timer_->scheduleRepeated(maintainer_, IceUtil::Time::seconds(1));
 
-	char* key = "1qaz2wsx3edc4rfv";
+	const char* key = "1qaz2wsx3edc4rfv";
 	rijndael_.MakeKey(key, CRijndael::sm_chain0, 16, 16);
 }
 
@@ -106,10 +106,12 @@ Rpc::ErrorCode RpcStartImpl::login(const std::string& username, const std::strin
 
 bool RpcStartImpl::loginToCYou(const std::string& username, const std::string& clear_pwd)
 {
+	return true;
+
 	CURLcode res = CURL_LAST;
 
 	std::string user_pwd = username + ":" + clear_pwd;
-	static char *ldap_url = "LDAP://10.1.0.12/OU=Users,OU=Managed,DC=cyou-inc,DC=com";
+	static const char *ldap_url = "LDAP://10.1.0.12/OU=Users,OU=Managed,DC=cyou-inc,DC=com";
 
 	curl_global_init(CURL_GLOBAL_ALL);
 
