@@ -145,14 +145,9 @@ void PageExtraWidget::mousePressEvent(QMouseEvent* e)
 						}
 						else if (selectedItem == actionCopyHttpUrl)
 						{
-							URLQuery q("base://extra/");
-							q.arg("id", info.id);
+							std::string host = qApp->property("BaseClient.HttpUrlRedir").toString().toStdString();
 
-							std::string url = q.str();
-							percentEncode(url);
-
-							QString s = qApp->property("BaseClient.HttpUrlRedir").toString();
-							QApplication::clipboard()->setText(s + "?q=" + url.c_str());
+							QApplication::clipboard()->setText(URLQuery("http://" + host + "/extra/").arg("id", info.id).str().c_str());
 						}
 						else if (selectedItem == actionCopyId)
 						{

@@ -1021,6 +1021,7 @@
     <ClCompile Include="..\BaseClient\Source\VTabWidget.cpp" />
     <ClCompile Include="..\BaseClient\Source\WebEngineView.cpp" />
     <ClCompile Include="..\BaseClient\Source\Window.cpp" />
+    <ClCompile Include="..\Common\Base64Url.cpp" />
     <ClCompile Include="..\Common\Crc.cpp" />
     <ClCompile Include="..\Common\ErrorMessage.cpp" />
     <ClCompile Include="..\Common\Rpc\RpcDownloader.cpp" />
@@ -2080,6 +2081,7 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DWIN64 -DQT_DLL -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DQT_NETWORK_LIB -D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS -D_WINSOCK_DEPRECATED_NO_WARNINGS  "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtWebEngine" "-I$(QTDIR)\include\QtWebEngineWidgets" "-I.\..\BaseClient\GeneratedFiles" "-I.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I$(QTDIR)\include\QtNetwork" "-I.\..\Ext\VLC-Qt\include" "-I.\..\Ext\sqlite3" "-I.\..\Ext\SQLiteCpp\include" "-I.\..\Ext\zlib" "-I.\..\Ext\gumbo" "-I.\..\Ext\gumbo\visualc" "-I.\..\Ext\lua\include" "-I.\..\Ext\kaguya" "-I.\..\Common" "-I.\..\Common\Rpc" "-IC:\Work\_lib\boost_1_62_0" "-IC:\Work\_lib\Ice-3.6.3\include"</Command>
     </CustomBuild>
+    <ClInclude Include="..\Common\Base64Url.h" />
     <ClInclude Include="..\Common\Crc.h" />
     <ClInclude Include="..\Common\Rpc\RpcDownloader.h" />
     <ClInclude Include="..\Common\Rpc\RpcManagedObject.h" />

@@ -2,6 +2,7 @@
 #include "PageContentBrowserWidget.h"
 #include "PageContentContentWidget.h"
 #include "LabelSelectorDialog.h"
+#include "Base64Url.h"
 #include "URLUtils.h"
 #include "QtUtils.h"
 
@@ -64,25 +65,32 @@ bool PageContentWidget::openUrl(const QString& url)
 	{
 		std::string page;
 
-		if (args.lookupValue(page, "page") && page == name_.toStdString())
+		if (args.lookupValue(page, "page"))
 		{
-			std::string id;
+			page = base64url_decode(page);
 
-			if (args.lookupValue(id, "id"))
+			if (page == name_.toStdString())
 			{
-				return openContent(QString::fromStdString(id));
-			}
-			else
-			{
-				std::string category;
-				args.lookupValue(category, "category");
+				std::string id;
 
-				std::string search;
-				args.lookupValue(search, "search");
+				if (args.lookupValue(id, "id"))
+				{
+					return openContent(QString::fromStdString(id));
+				}
+				else
+				{
+					std::string category;
+					args.lookupValue(category, "category");
+					category = base64url_decode(category);
 
-				openBrowser(category.c_str(), search.c_str());
+					std::string search;
+					args.lookupValue(search, "search");
+					search = base64url_decode(search);
 
-				return true;
+					openBrowser(category.c_str(), search.c_str());
+
+					return true;
+				}
 			}
 		}
 	}
@@ -96,7 +104,7 @@ bool PageContentWidget::openContent(const QString& id)
 
 	const QString& cachedUrl = ui_.stackedWidget->currentWidget()->property("cached_url").toString();
 
-	const QString& url = URLQuery("base://content/").arg("page", name_.toStdString()).arg("id", id.toStdString()).str().c_str();
+	const QString& url = URLQuery("base://content/").arg("page", base64url_encode(name_.toStdString())).arg("id", id.toStdString()).str().c_str();
 
 	if (url != cachedUrl)
 	{
@@ -213,23 +221,16 @@ void PageContentWidget::onUrlEdited()
 
 void PageContentWidget::onCopyUrl()
 {
-	ui_.urlEdit->clearFocus();
-
-	QClipboard* clipboard = QApplication::clipboard();
-	clipboard->setText(ui_.urlEdit->text());
+	QApplication::clipboard()->setText(ui_.stackedWidget->currentWidget()->property("cached_url").toString());
 }
 
 void PageContentWidget::onCopyHttpUrl()
 {
-	ui_.urlEdit->clearFocus();
+	std::string url = ui_.stackedWidget->currentWidget()->property("cached_url").toString().toStdString();
 
-	QString s = qApp->property("BaseClient.HttpUrlRedir").toString();
+	std::string host = qApp->property("BaseClient.HttpUrlRedir").toString().toStdString();
 
-	std::string url = ui_.urlEdit->text().toStdString();
-	percentEncode(url);
-
-	QClipboard* clipboard = QApplication::clipboard();
-	clipboard->setText(QString::fromStdString(s.toStdString() + "?q=" + url));
+	QApplication::clipboard()->setText(("http://" + host + "/" + url.substr(7)).c_str());
 }
 
 void PageContentWidget::onSmallIcon()
@@ -275,11 +276,11 @@ void PageContentWidget::openBrowser(const QString& category, const QString& sear
 
 	URLQuery q("base://content/");
 
-	q.arg("page", name_.toStdString());
+	q.arg("page", base64url_encode(name_.toStdString()));
 
 	if (!category.isEmpty())
 	{
-		q.arg("category", category.toStdString());
+		q.arg("category", base64url_encode(category.toStdString()));
 
 		std::vector<std::string> v;
 		boost::split(v, category.toStdString(), boost::is_any_of(","));
@@ -295,7 +296,7 @@ void PageContentWidget::openBrowser(const QString& category, const QString& sear
 
 	if (!search.isEmpty())
 	{
-		q.arg("search", search.toStdString());
+		q.arg("search", base64url_encode(search.toStdString()));
 
 		ui_.searchEdit->setText(search);
 	}

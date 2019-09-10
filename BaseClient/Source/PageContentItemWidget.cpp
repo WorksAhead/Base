@@ -16,7 +16,6 @@ PageContentItemWidget::PageContentItemWidget(QWidget* parent) : QWidget(parent)
 
 PageContentItemWidget::~PageContentItemWidget()
 {
-	clear();
 }
 
 void PageContentItemWidget::setId(const QString& id)

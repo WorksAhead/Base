@@ -1,5 +1,6 @@
 #include "HistoryDialog.h"
 #include "Datetime.h"
+#include "Base64Url.h"
 #include "URLUtils.h"
 
 #include <QTextDocument>
@@ -121,10 +122,8 @@ void HistoryDialog::onTimeout()
 					continue;
 				}
 
-				percentEncode(pages[0]);
-
 				html += QString::fromStdString("<p><a href=\"base://content/?id=" + ci.id +
-					"&page=" + pages[0] + "\">" +
+					"&page=" + base64url_encode(pages[0]) + "\">" +
 					ci.title + "</a>" + "<br />" + ci.upTime + "</p>");
 
 				QTextCursor cursor(ui_.content->document());

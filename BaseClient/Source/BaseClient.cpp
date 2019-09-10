@@ -16,6 +16,7 @@
 #include "ErrorMessage.h"
 #include "Datetime.h"
 #include "QtUtils.h"
+#include "Base64Url.h"
 #include "URLUtils.h"
 
 #include <SQLiteCpp/Database.h>
@@ -1155,6 +1156,8 @@ void BaseClient::openUrl(const QString& url)
 
 				if (args.lookupValue(page, "page"))
 				{
+					page = base64url_decode(page);
+
 					for (int i = 0; i < tabWidget_->count(); ++i)
 					{
 						PageContentWidget* w = qobject_cast<PageContentWidget*>(tabWidget_->widget(i));
@@ -1165,6 +1168,11 @@ void BaseClient::openUrl(const QString& url)
 							{
 								const int index = tabWidget_->indexOf(w);
 								tabWidget_->setCurrentIndex(index);
+
+								if (windowState() == Qt::WindowMinimized) {
+									showNormal();
+								}
+
 								activateWindow();
 							}
 						}
@@ -1183,6 +1191,11 @@ void BaseClient::openUrl(const QString& url)
 						{
 							const int index = tabWidget_->indexOf(w);
 							tabWidget_->setCurrentIndex(index);
+
+							if (windowState() == Qt::WindowMinimized) {
+								showNormal();
+							}
+							
 							activateWindow();
 						}
 					}

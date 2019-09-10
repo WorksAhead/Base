@@ -7,6 +7,7 @@
 #include "ImageViewerWidget.h"
 #include "SubmitContentDialog.h"
 #include "Emoji.h"
+#include "Base64Url.h"
 #include "URLUtils.h"
 
 #include <QPainter>
@@ -649,11 +650,9 @@ void PageContentContentWidget::refreshRelatedVersions(int count)
 				continue;
 			}
 
-			percentEncode(pages[0]);
-
 			boost::replace_all(items[i].title, "\r", " ");
 
-			versionInfo << "<a href=\"" << "base://content/?id=" << items[i].id << "&page=" << pages[0] << "\">" << items[i].title << "</a><br/>";
+			versionInfo << "<a href=\"" << "base://content/?id=" << items[i].id << "&page=" << base64url_encode(pages[0]) << "\">" << items[i].title << "</a><br/>";
 
 			++m;
 		}

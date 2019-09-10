@@ -10,8 +10,6 @@
 
 #include <boost/filesystem.hpp>
 
-#include "Security/Base64.h"
-
 namespace fs = boost::filesystem;
 
 LoginDialog::LoginDialog(const QString& workPath, Rpc::StartPrx startPrx, QWidget* parent) : QDialog(parent), startPrx_(startPrx)
