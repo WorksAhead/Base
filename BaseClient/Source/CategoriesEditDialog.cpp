@@ -1,6 +1,7 @@
 #include "CategoriesEditDialog.h"
 
 #include <QTextStream>
+#include <QRegularExpression>
 
 CategoriesEditDialog::CategoriesEditDialog(const QString& text, QWidget* parent) : QDialog(parent)
 {

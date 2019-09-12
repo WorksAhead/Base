@@ -14,6 +14,7 @@
 #include <QDesktopServices>
 #include <QInputDialog>
 #include <QMessageBox>
+#include <QStyleOption>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>

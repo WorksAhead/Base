@@ -6,6 +6,7 @@
 #include <QScrollArea>
 #include <QPainter>
 #include <QGridLayout>
+#include <QStyleOption>
 
 #include <algorithm>
 

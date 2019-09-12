@@ -8,6 +8,7 @@
 #include <QPushButton>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QStyleOption>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>

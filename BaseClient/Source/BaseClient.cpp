@@ -1205,10 +1205,11 @@ void BaseClient::openUrl(const QString& url)
 	}
 	else if (url.startsWith("http:", Qt::CaseInsensitive) || url.startsWith("https:", Qt::CaseInsensitive))
 	{
-		//QDesktopServices::openUrl(url);
-		for (int i = 0; i < tabWidget_->count(); ++i)
+		int index = 0;
+
+		for (; index < tabWidget_->count(); ++index)
 		{
-			PageWebWidget* w = qobject_cast<PageWebWidget*>(tabWidget_->widget(tabWidget_->count() - i - 1));
+			PageWebWidget* w = qobject_cast<PageWebWidget*>(tabWidget_->widget(tabWidget_->count() - index - 1));
 
 			if (w)
 			{
@@ -1218,6 +1219,10 @@ void BaseClient::openUrl(const QString& url)
 				activateWindow();
 				break;
 			}
+		}
+
+		if (index == tabWidget_->count()) {
+			QDesktopServices::openUrl(url);
 		}
 	}
 }

@@ -2732,7 +2732,7 @@
   </ImportGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties MocDir=".\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)" UicDir=".\..\BaseClient\GeneratedFiles" RccDir=".\..\BaseClient\GeneratedFiles" lupdateOptions="" lupdateOnBuild="1" lreleaseOptions="" Qt5Version_x0020_Win32="Qt5.7.0(32)" Qt5Version_x0020_x64="Qt5.5.1(64)" MocOptions="" />
+      <UserProperties MocDir=".\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)" UicDir=".\..\BaseClient\GeneratedFiles" RccDir=".\..\BaseClient\GeneratedFiles" lupdateOptions="" lupdateOnBuild="1" lreleaseOptions="" Qt5Version_x0020_Win32="Qt5.13.1(32)" Qt5Version_x0020_x64="Qt5.13.1(64)" MocOptions="" />
     </VisualStudio>
   </ProjectExtensions>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

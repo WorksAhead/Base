@@ -10,6 +10,7 @@
 #include <QMouseEvent>
 #include <QClipboard>
 #include <QMenu>
+#include <QStyleOption>
 
 #include <boost/algorithm/string.hpp>
 

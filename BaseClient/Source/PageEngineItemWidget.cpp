@@ -3,6 +3,7 @@
 
 #include <QPainter>
 #include <QMouseEvent>
+#include <QStyleOption>
 
 PageEngineItemWidget::PageEngineItemWidget(ContextPtr context, QWidget* parent) : QWidget(parent), context_(context)
 {

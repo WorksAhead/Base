@@ -8,6 +8,7 @@
 #include <QScrollBar>
 #include <QTime>
 #include <QGridLayout>
+#include <QStyleOption>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>

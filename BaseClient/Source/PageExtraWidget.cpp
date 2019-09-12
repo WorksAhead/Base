@@ -13,6 +13,7 @@
 #include <QMessageBox>
 #include <QMenu>
 #include <QClipboard>
+#include <QStyleOption>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>

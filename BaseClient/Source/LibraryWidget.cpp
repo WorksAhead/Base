@@ -7,6 +7,7 @@
 #include <QBoxLayout>
 #include <QPainter>
 #include <QTextEdit>
+#include <QStyleOption>
 
 LibraryWidget::LibraryWidget(ContextPtr context, QWidget* parent) : QWidget(parent), context_(context)
 {

@@ -18,6 +18,7 @@
 #include <QMenu>
 #include <QClipboard>
 #include <QInputDialog>
+#include <QStyleOption>
 
 #include <boost/filesystem.hpp>
 #include <boost/algorithm/string.hpp>

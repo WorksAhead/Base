@@ -7,6 +7,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <QByteArray>
+#include <QTabBar>
 
 #include <boost/filesystem.hpp>
 
