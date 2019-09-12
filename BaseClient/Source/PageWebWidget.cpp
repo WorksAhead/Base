@@ -2,13 +2,56 @@
 
 #include <QStyleOption>
 #include <QPainter>
-
+#include <QPushButton>
 #include <QDebug>
+
+#include <boost/algorithm/string.hpp>
+
+#include <string>
+#include <sstream>
 
 PageWebWidget::PageWebWidget(ContextPtr context, const QString& name, QWidget* parent)
 	: context_(context), name_(name), QWidget(parent)
 {
 	ui_.setupUi(this);
+
+	std::string bookmarks;
+
+	Rpc::ErrorCode ec;
+
+	if ((ec = context_->session->getUniformInfo("Bookmarks", bookmarks)) == Rpc::ec_success)
+	{
+		std::istringstream is(bookmarks);
+		std::string line;
+
+		int count = 0;
+
+		while (std::getline(is, line))
+		{
+			std::vector<std::string> v;
+			boost::split(v, line, boost::is_any_of(","));
+
+			if (v.size() == 2)
+			{
+				QPushButton* button = new QPushButton(QString::fromUtf8(v[0].c_str()));
+
+				std::string url = v[1];
+
+				QObject::connect(button, &QPushButton::clicked, [this, url]()
+				{
+					ui_.webView->load(QString::fromUtf8(url.c_str()));
+				});
+
+				ui_.favLayout->addWidget(button);
+
+				++count;
+			}
+		}
+
+		if (count > 0) {
+			ui_.favLayout->addStretch();
+		}
+	}
 
 	QObject::connect(ui_.backButton, &QPushButton::clicked, this, &PageWebWidget::onBack);
 	QObject::connect(ui_.forwardButton, &QPushButton::clicked, this, &PageWebWidget::onForward);

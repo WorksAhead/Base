@@ -10,7 +10,7 @@
     <height>699</height>
    </rect>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout" stretch="0,1">
+  <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,1">
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,4,1">
      <property name="spacing">
@@ -184,6 +184,9 @@
       </spacer>
      </item>
     </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="favLayout"/>
    </item>
    <item>
     <layout class="QHBoxLayout" name="viewLayout" stretch="0">

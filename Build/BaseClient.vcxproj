@@ -148,6 +148,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_BookmarksEditDialog.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_CategoriesEditDialog.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">true</ExcludedFromBuild>
@@ -413,6 +417,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_BaseClient.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_BookmarksEditDialog.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
@@ -684,6 +692,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_BookmarksEditDialog.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_CategoriesEditDialog.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">true</ExcludedFromBuild>
@@ -949,6 +961,7 @@
     <ClCompile Include="..\BaseClient\Source\ASyncUnpackTask.cpp" />
     <ClCompile Include="..\BaseClient\Source\ASyncUpdateClientTask.cpp" />
     <ClCompile Include="..\BaseClient\Source\AutoExpandTextEdit.cpp" />
+    <ClCompile Include="..\BaseClient\Source\BookmarksEditDialog.cpp" />
     <ClCompile Include="..\BaseClient\Source\CategoriesEditDialog.cpp" />
     <ClCompile Include="..\BaseClient\Source\CategoryFilterWidget.cpp" />
     <ClCompile Include="..\BaseClient\Source\CommentEditDialog.cpp" />
@@ -1073,6 +1086,7 @@
   <ItemGroup>
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_ASyncTaskManagerDialog.h" />
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_ASyncTaskWidget.h" />
+    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_BookmarksEditDialog.h" />
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_CategoriesEditDialog.h" />
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_CommentEditDialog.h" />
     <ClInclude Include="..\BaseClient\GeneratedFiles\ui_CommentWidget.h" />
@@ -1311,6 +1325,20 @@
       <Message Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">Moc%27ing CommentEditDialog.h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DWIN64 -DQT_DLL -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DQT_NETWORK_LIB -D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS -D_WINSOCK_DEPRECATED_NO_WARNINGS  "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtWebEngine" "-I$(QTDIR)\include\QtWebEngineWidgets" "-I.\..\BaseClient\GeneratedFiles" "-I.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I$(QTDIR)\include\QtNetwork" "-I.\..\Ext\VLC-Qt\include" "-I.\..\Ext\sqlite3" "-I.\..\Ext\SQLiteCpp\include" "-I.\..\Ext\zlib" "-I.\..\Ext\gumbo" "-I.\..\Ext\gumbo\visualc" "-I.\..\Ext\lua\include" "-I.\..\Ext\kaguya" "-I.\..\Common" "-I.\..\Common\Rpc" "-IC:\Work\_lib\boost_1_62_0" "-IC:\Work\_lib\Ice-3.6.3\include"</Command>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\BookmarksEditDialog.h">
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">Moc%27ing %(Identity)...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DWIN64 -DQT_DLL -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DQT_NETWORK_LIB -D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS -D_WINSOCK_DEPRECATED_NO_WARNINGS "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtWebEngine" "-I$(QTDIR)\include\QtWebEngineWidgets" "-I.\..\BaseClient\GeneratedFiles" "-I.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I$(QTDIR)\include\QtNetwork" "-I.\..\Ext\VLC-Qt\include" "-I.\..\Ext\sqlite3" "-I.\..\Ext\SQLiteCpp\include" "-I.\..\Ext\zlib" "-I.\..\Ext\gumbo" "-I.\..\Ext\gumbo\visualc" "-I.\..\Ext\lua\include" "-I.\..\Ext\kaguya" "-I.\..\Common" "-I.\..\Common\Rpc" "-IC:\Work\_lib\boost_1_62_0"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Moc%27ing %(Identity)...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DWIN64 -DQT_DLL -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DQT_NETWORK_LIB -D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS -D_WINSOCK_DEPRECATED_NO_WARNINGS "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtWebEngine" "-I$(QTDIR)\include\QtWebEngineWidgets" "-I.\..\BaseClient\GeneratedFiles" "-I.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I$(QTDIR)\include\QtNetwork" "-I.\..\Ext\VLC-Qt\include" "-I.\..\Ext\sqlite3" "-I.\..\Ext\SQLiteCpp\include" "-I.\..\Ext\zlib" "-I.\..\Ext\gumbo" "-I.\..\Ext\gumbo\visualc" "-I.\..\Ext\lua\include" "-I.\..\Ext\kaguya" "-I.\..\Common" "-I.\..\Common\Rpc" "-IC:\Work\_lib\boost_1_62_0"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">Moc%27ing %(Identity)...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DWIN64 -DQT_DLL -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DQT_NETWORK_LIB -D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS -D_WINSOCK_DEPRECATED_NO_WARNINGS "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtWebEngine" "-I$(QTDIR)\include\QtWebEngineWidgets" "-I.\..\BaseClient\GeneratedFiles" "-I.\..\BaseClient\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I$(QTDIR)\include\QtNetwork" "-I.\..\Ext\VLC-Qt\include" "-I.\..\Ext\sqlite3" "-I.\..\Ext\SQLiteCpp\include" "-I.\..\Ext\zlib" "-I.\..\Ext\gumbo" "-I.\..\Ext\gumbo\visualc" "-I.\..\Ext\lua\include" "-I.\..\Ext\kaguya" "-I.\..\Common" "-I.\..\Common\Rpc" "-IC:\Work\_lib\boost_1_62_0"</Command>
     </CustomBuild>
     <ClInclude Include="..\BaseClient\Source\Context.h" />
     <CustomBuild Include="..\BaseClient\Source\CreateProjectDialog.h">
@@ -2705,6 +2733,20 @@
       <Command Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">"$(QTDIR)\bin\uic.exe" -o ".\..\BaseClient\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
     </CustomBuild>
     <CustomBuild Include="..\BaseClient\Source\HistoryDialog.ui">
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">Uic%27ing %(Identity)...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">.\..\BaseClient\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">"$(QTDIR)\bin\uic.exe" -o ".\..\BaseClient\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Uic%27ing %(Identity)...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\..\BaseClient\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\uic.exe" -o ".\..\BaseClient\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">Uic%27ing %(Identity)...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">.\..\BaseClient\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='ReleaseConsole|Win32'">"$(QTDIR)\bin\uic.exe" -o ".\..\BaseClient\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\BookmarksEditDialog.ui">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">Uic%27ing %(Identity)...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='DebugConsole|Win32'">.\..\BaseClient\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>

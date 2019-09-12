@@ -2,6 +2,7 @@
 #include "PagesEditDialog.h"
 #include "CategoriesEditDialog.h"
 #include "LuaEditDialog.h"
+#include "BookmarksEditDialog.h"
 
 #include <QMessageBox>
 #include <QTextStream>
@@ -123,6 +124,20 @@ void ManageInfoWidget::onRefresh()
 		formattedCode.replace('\n', '\r');
 
 		ui_.list->addTopLevelItem(new QTreeWidgetItem(QStringList() << "CustomEngine.lua" << formattedCode));
+	}
+
+	{
+		std::string bookmarks;
+
+		if ((ec = context_->session->getUniformInfo("Bookmarks", bookmarks)) != Rpc::ec_success) {
+			context_->promptRpcError(ec);
+			return;
+		}
+
+		QString formattedBookmarks(bookmarks.c_str());
+		formattedBookmarks.replace('\n', '\r');
+
+		ui_.list->addTopLevelItem(new QTreeWidgetItem(QStringList() << "Bookmarks" << formattedBookmarks));
 	}
 }
 
@@ -262,6 +277,27 @@ void ManageInfoWidget::onEdit()
 		if (d.exec())
 		{
 			Rpc::ErrorCode ec = context_->session->setUniformInfo("CustomEngine.lua", d.text().toStdString());
+
+			if (ec == Rpc::ec_success)
+			{
+				s = d.text();
+				s.replace('\n', '\r');
+				items[0]->setText(1, s);
+			}
+
+			context_->promptRpcError(ec);
+		}
+	}
+	else if (items[0]->text(0) == "Bookmarks")
+	{
+		QString s = items[0]->text(1);
+		s.replace('\r', '\n');
+
+		BookmarksEditDialog d(s, this);
+
+		if (d.exec())
+		{
+			Rpc::ErrorCode ec = context_->session->setUniformInfo("Bookmarks", d.text().toStdString());
 
 			if (ec == Rpc::ec_success)
 			{

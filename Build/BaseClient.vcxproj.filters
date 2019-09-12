@@ -385,6 +385,12 @@
     <CustomBuild Include="..\BaseClient\Source\HistoryDialog.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\BookmarksEditDialog.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\BaseClient\Source\BookmarksEditDialog.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\BaseClient\Source\Main.cpp">
@@ -1395,6 +1401,18 @@
     <ClCompile Include="..\Common\Base64Url.cpp">
       <Filter>Common</Filter>
     </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\DebugConsole\moc_BookmarksEditDialog.cpp">
+      <Filter>Generated Files\DebugConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\Release\moc_BookmarksEditDialog.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\GeneratedFiles\Win32\ReleaseConsole\moc_BookmarksEditDialog.cpp">
+      <Filter>Generated Files\ReleaseConsole_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BaseClient\Source\BookmarksEditDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\BaseClient\Resources\BaseClient.rc">
@@ -1716,6 +1734,9 @@
     </ClInclude>
     <ClInclude Include="..\Common\Base64Url.h">
       <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BaseClient\GeneratedFiles\ui_BookmarksEditDialog.h">
+      <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
