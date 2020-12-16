@@ -129,7 +129,7 @@ private:
 
 	int frame_;
 
-	QPoint dragStartPos_;
+	QPoint lastDraggingPos_;
 	bool cursorChanged_;
 	bool dragging_;
 };

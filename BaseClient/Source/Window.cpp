@@ -403,26 +403,37 @@ bool Window::event(QEvent* e)
 
 void Window::mousePressEvent(QMouseEvent* e)
 {
-	if (e->button() == Qt::LeftButton) {
+	if (e->button() == Qt::LeftButton)
+	{
 		dragDetector_.update(e->x(), e->y(), QWidget::width(), QWidget::height());
-		dragStartPos_ = e->pos();
-		dragging_ = true;
+
+		if (dragDetector_.onEdges())
+		{
+			lastDraggingPos_ = QCursor::pos();
+			dragging_ = true;
+		}
+		else if (titleWidget_->geometry().contains(e->pos()))
+		{
+			lastDraggingPos_ = QCursor::pos();
+			dragging_ = true;
+		}
 	}
 }
 
 void Window::mouseReleaseEvent(QMouseEvent* e)
 {
-	if (e->button() == Qt::LeftButton) {
+	if (e->button() == Qt::LeftButton)
+	{
 		dragDetector_.reset();
-		dragStartPos_ = QPoint(0, 0);
 		dragging_ = false;
 	}
 }
 
 void Window::mouseMoveEvent(QMouseEvent* e)
 {
-	if (dragging_) {
-		onDrag(e->pos());
+	if (dragging_)
+	{
+		onDrag(QCursor::pos());
 	}
 	else {
 		onHover(e->pos());
@@ -492,98 +503,50 @@ void Window::onStateChange()
 	}
 }
 
-void Window::onDrag(const QPoint& pos)
+void Window::onDrag(const QPoint& cursorPos)
 {
 	if (isMaximized() || isFullScreen()) {
 		return;
 	}
 
-	const QRect& rect = frameGeometry();
+	const QPoint offset = cursorPos - lastDraggingPos_;
+	lastDraggingPos_ = cursorPos;
 
-	int left = rect.left();
-	int top = rect.top();
-	int right = rect.right();
-	int bottom = rect.bottom();
+	QRect rect = frameGeometry();
 
-	rect.getCoords(&left, &top, &right, &bottom);
-
-	if (dragDetector_.onTopLeftEdge()) {
-		top = top + pos.y() - dragDetector_.yOffset();
-		left = left + pos.x() - dragDetector_.xOffset();
-	}
-	else if (dragDetector_.onBottomLeftEdge()) {
-		bottom = top + pos.y() + dragDetector_.yOffset();
-		left = left + pos.x() - dragDetector_.xOffset();
-	}
-	else if (dragDetector_.onTopRightEdge()) {
-		top = top + pos.y() - dragDetector_.yOffset();
-		right = left + pos.x() + dragDetector_.xOffset();
-	}
-	else if (dragDetector_.onBottomRightEdge()) {
-		bottom = top + pos.y() + dragDetector_.yOffset();
-		right = left + pos.x() + dragDetector_.xOffset();
-	}
-	else if (dragDetector_.onLeftEdge()) {
-		left = left + pos.x() - dragDetector_.xOffset();
-	}
-	else if (dragDetector_.onRightEdge()) {
-		right = left + pos.x() + dragDetector_.xOffset();
-	}
-	else if (dragDetector_.onTopEdge()) {
-		top = top + pos.y() - dragDetector_.yOffset();
-	}
-	else if (dragDetector_.onBottomEdge()) {
-		bottom = top + pos.y() + dragDetector_.yOffset();
-	}
-	else if (titleWidget_->geometry().contains(dragStartPos_)) {
-		left = left + pos.x() - dragStartPos_.x();
-		right = right + pos.x() - dragStartPos_.x();
-		top = top + pos.y() - dragStartPos_.y();
-		bottom = bottom + pos.y() - dragStartPos_.y();
-	}
-
-	QRect newRect(QPoint(left, top), QPoint(right, bottom));
-
-	const int maximumWidth = QWidget::maximumWidth();
-	const int minimumWidth = QWidget::minimumWidth();
-	const int maximumHeight = QWidget::maximumHeight();
-	const int minimumHeight = QWidget::minimumHeight();
-
-	if (newRect.width() > maximumWidth) {
-		if (left != rect.left()) {
-			newRect.setLeft(newRect.right() - maximumWidth + 1);
+	if (dragDetector_.onEdges())
+	{
+		if (dragDetector_.onTopLeftEdge()) {
+			rect.setTopLeft(rect.topLeft() + offset);
 		}
-		else {
-			newRect.setRight(newRect.left() + maximumWidth - 1);
+		else if (dragDetector_.onBottomLeftEdge()) {
+			rect.setBottomLeft(rect.bottomLeft() + offset);
+		}
+		else if (dragDetector_.onTopRightEdge()) {
+			rect.setTopRight(rect.topRight() + offset);
+		}
+		else if (dragDetector_.onBottomRightEdge()) {
+			rect.setBottomRight(rect.bottomRight() + offset);
+		}
+		else if (dragDetector_.onLeftEdge()) {
+			rect.setLeft(rect.left() + offset.x());
+		}
+		else if (dragDetector_.onRightEdge()) {
+			rect.setRight(rect.right() + offset.x());
+		}
+		else if (dragDetector_.onTopEdge()) {
+			rect.setTop(rect.top() + offset.y());
+		}
+		else if (dragDetector_.onBottomEdge()) {
+			rect.setBottom(rect.bottom() + offset.y());
 		}
 	}
-	else if (newRect.width() < minimumWidth) {
-		if (left != rect.left()) {
-			newRect.setLeft(newRect.right() - minimumWidth + 1);
-		}
-		else {
-			newRect.setRight(newRect.left() + minimumWidth - 1);
-		}
+	else
+	{
+		rect.translate(offset);
 	}
 
-	if (newRect.height() > maximumHeight) {
-		if (top != rect.top()) {
-			newRect.setTop(newRect.bottom() - maximumHeight + 1);
-		}
-		else {
-			newRect.setBottom(newRect.top() + maximumHeight - 1);
-		}
-	}
-	else if (newRect.height() < minimumHeight) {
-		if (top != rect.top()) {
-			newRect.setTop(newRect.bottom() - minimumHeight + 1);
-		}
-		else {
-			newRect.setBottom(newRect.top() + minimumHeight - 1);
-		}
-	}
-
-	setFrameGeometry(newRect);
+	setFrameGeometry(rect);
 }
 
 void Window::onHover(const QPoint& pos)
